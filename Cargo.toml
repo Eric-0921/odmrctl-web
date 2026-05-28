@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/odmr-types",
+    "crates/odmr-config",
+    "crates/odmr-device",
+    "crates/odmr-safety",
+    "crates/odmr-recipe",
+    "crates/odmr-compiler",
+    "crates/odmr-executor",
+    "crates/odmr-logging",
+    "crates/odmr-replay",
+    "crates/odmr-harness",
+    "crates/odmr-smb100a",
+    "crates/odmr-oe1022d",
+]

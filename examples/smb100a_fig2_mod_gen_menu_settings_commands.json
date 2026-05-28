@@ -1,0 +1,863 @@
+{
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图2 Mod Gen菜单参数设置指令",
+  "source_manual": {
+    "file": "SMB100A_OperatingManual_en_23.pdf_by_PaddleOCR-VL-1.5.md",
+    "document_title": "R&S SMB100A RF and Microwave Signal Generator Operating Manual, Version 23",
+    "note": "依据当前会话提供的SMB100A用户使用文档OCR Markdown整理。"
+  },
+  "assumptions": [
+    "图2指第二张SMB100A照片，对应本地图片 /mnt/data/2_odmr磁场设置(2)_頁面_06.jpg。",
+    "图2是Mod Gen菜单树打开的界面，菜单项本身没有SCPI命令；SCPI只能设置菜单后面对应对话框中的真实参数。",
+    "图2没有显示LF Generator / Output对话框内的具体数值，因此具体数值用占位符表示；图3中才显示137 mV、500 Hz、Square、Low等值。",
+    "SCPI中的<hw>、<ch>是硬件/通道后缀；单通道SMB100A通常可以省略。"
+  ],
+  "figure2_snapshot": {
+    "image_path": "/mnt/data/2_odmr磁场设置(2)_頁面_06.jpg",
+    "screen_header": {
+      "frequency": {
+        "value": 2.882,
+        "unit": "GHz",
+        "display": "2.882 000 000 000 GHz"
+      },
+      "rf_output_state": {
+        "value": "OFF",
+        "display": "RF OFF"
+      },
+      "modulation_global_state": {
+        "value": "OFF",
+        "display": "MOD OFF"
+      },
+      "rf_level": {
+        "value": -15.0,
+        "unit": "dBm",
+        "display": "-15.00 dBm"
+      },
+      "alc_state": {
+        "value": "AUTO",
+        "display": "ALC-Auto"
+      }
+    },
+    "menu_tree_visible": {
+      "opened_from_block": "Mod Gen > config...",
+      "menu_title": "Modulation Generator",
+      "visible_entries": [
+        "LF Generator / Output",
+        "LF Frequency Sweep..."
+      ],
+      "highlighted_entry": "LF Generator / Output"
+    },
+    "other_visible_blocks": {
+      "modulation_block": "config...入口可见，未勾选On；顶部显示MOD OFF",
+      "rf_block": "config...入口和On复选框可见，未勾选；顶部显示RF OFF"
+    }
+  },
+  "front_panel_steps_to_reproduce_figure2_menu": [
+    {
+      "step": 1,
+      "instruction": "返回主功能框图界面。"
+    },
+    {
+      "step": 2,
+      "instruction": "用旋钮/方向键选中 Mod Gen 块中的 config...。"
+    },
+    {
+      "step": 3,
+      "instruction": "按旋钮或 [ENTER] 打开 Modulation Generator 菜单树。"
+    },
+    {
+      "step": 4,
+      "instruction": "将高亮停在 LF Generator / Output；按 [ENTER] 会进入图3那样的LF Generator / Output对话框。"
+    }
+  ],
+  "safe_scpi_sequence_for_visible_signal_state_only": [
+    {
+      "step": 1,
+      "command": "OUTP OFF",
+      "purpose": "保持图2 RF OFF。"
+    },
+    {
+      "step": 2,
+      "command": "MOD:STAT OFF",
+      "purpose": "保持图2 MOD OFF。"
+    },
+    {
+      "step": 3,
+      "command": "FREQ:MODE CW",
+      "purpose": "确保RF为固定频率模式。"
+    },
+    {
+      "step": 4,
+      "command": "FREQ 2.882GHz",
+      "purpose": "设置顶部Freq为2.882 GHz。"
+    },
+    {
+      "step": 5,
+      "command": "POW -15dBm",
+      "purpose": "设置顶部Level为-15.00 dBm。"
+    },
+    {
+      "step": 6,
+      "command": "POW:ALC AUTO",
+      "purpose": "设置ALC-Auto。"
+    }
+  ],
+  "visible_header_parameters": [
+    {
+      "id": "rf_frequency",
+      "chinese_name": "射频载波频率",
+      "figure2_display": "Freq = 2.882 000 000 000 GHz",
+      "set_value_for_figure2": {
+        "value": 2.882,
+        "unit": "GHz",
+        "equivalent_hz": 2882000000.0
+      },
+      "function": "设置RF输出信号的CW载波频率。图2仍然显示2.882 GHz。",
+      "front_panel_instruction": "按 [FREQ]，输入 2.882，选择 GHz 或确认；也可在主界面频率框直接编辑。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FREQuency:CW|FIXed <Fixed>",
+        "command_syntax_short": "FREQ <Fixed>",
+        "example_short": "FREQ 2.882GHz",
+        "example_long": "SOURce:FREQuency:CW 2.882GHz",
+        "query_short": "FREQ?",
+        "query_long": "SOURce:FREQuency:CW?"
+      },
+      "manual_reference": {
+        "section": "6.13.4 SOURce:FREQuency Subsystem / [:SOURCE<hw>]:FREQUENCY[:CW|FIXed]",
+        "ocr_line_range_in_uploaded_markdown": "19709-19742"
+      }
+    },
+    {
+      "id": "rf_output_state",
+      "chinese_name": "RF输出开关",
+      "figure2_display": "RF OFF；RF块On复选框未勾选",
+      "set_value_for_figure2": "OFF",
+      "function": "关闭实际RF微波输出。图2显示配置菜单时仍未输出RF。",
+      "front_panel_instruction": "按 [RF ON/OFF] 切换；或选中 RF 块 On 复选框后按 [ON/OFF TOGGLE]。",
+      "scpi": {
+        "command_syntax": "OUTPut<hw>:STATe <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "example": "OUTP OFF",
+        "query": "OUTP?"
+      },
+      "manual_reference": {
+        "section": "6.11 OUTPUT Subsystem / OUTPut<hw>:STATe",
+        "ocr_line_range_in_uploaded_markdown": "17960-17974"
+      }
+    },
+    {
+      "id": "modulation_global_state",
+      "chinese_name": "模拟调制总开关",
+      "figure2_display": "MOD OFF",
+      "set_value_for_figure2": "OFF",
+      "function": "总控AM/FM/PM/Pulse等模拟调制是否作用到RF信号。图2中总调制关闭。",
+      "front_panel_instruction": "按 [MOD ON/OFF] 切换模拟调制总开关。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:MODulation:ALL:STATe <State>",
+        "command_syntax_short": "MOD:STAT <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "example_short": "MOD:STAT OFF",
+        "example_long": "SOURce:MODulation:ALL:STATe OFF",
+        "query_short": "MOD:STAT?",
+        "query_long": "SOURce:MODulation:ALL:STATe?"
+      },
+      "manual_reference": {
+        "section": "6.13.8 SOURCE:MODulation Subsystem / MODulation:ALL:STATe",
+        "ocr_line_range_in_uploaded_markdown": "21171-21189"
+      }
+    },
+    {
+      "id": "rf_level",
+      "chinese_name": "RF输出电平",
+      "figure2_display": "Level = -15.00 dBm",
+      "set_value_for_figure2": {
+        "value": -15.0,
+        "unit": "dBm"
+      },
+      "function": "设置RF输出端口的功率电平；即使RF OFF，电平设定仍保留。",
+      "front_panel_instruction": "按 [LEVEL]，输入 -15，选择 dBm 或确认。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:LEVel:IMMediate:AMPLitude <Amplitude>",
+        "command_syntax_short": "POW <Amplitude>",
+        "example_short": "POW -15dBm",
+        "example_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude -15dBm",
+        "query_short": "POW?",
+        "query_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude?"
+      },
+      "manual_reference": {
+        "section": "6.13.12 SOURce:POWer Subsystem / POWER:LEVEL:IMMediate:AMPLitude",
+        "ocr_line_range_in_uploaded_markdown": "21641-21680"
+      }
+    },
+    {
+      "id": "alc_state",
+      "chinese_name": "自动电平控制 ALC 状态",
+      "figure2_display": "ALC-Auto",
+      "set_value_for_figure2": "AUTO",
+      "function": "自动稳定RF输出电平。",
+      "front_panel_instruction": "RF > config... > RF Level/Automatic Level Control > State = Auto。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:ALC:STATe <State>",
+        "command_syntax_short": "POW:ALC <State>",
+        "allowed_values": [
+          "ON",
+          "OFF",
+          "AUTO"
+        ],
+        "example_short": "POW:ALC AUTO",
+        "example_long": "SOURce:POWer:ALC:STATe AUTO",
+        "query_short": "POW:ALC?",
+        "query_long": "SOURce:POWer:ALC:STATe?"
+      },
+      "manual_reference": {
+        "section": "6.13.12 SOURce:POWer Subsystem / POWER:ALC:STATe",
+        "ocr_line_range_in_uploaded_markdown": "21569-21595"
+      }
+    }
+  ],
+  "mod_gen_menu_entries": [
+    {
+      "id": "modulation_generator_menu",
+      "display_text": "Modulation Generator",
+      "type": "menu_header",
+      "front_panel_instruction": "Mod Gen > config... 打开该菜单。",
+      "function": "Mod Gen块用于配置内部调制源、LF输出和LF频率扫描。",
+      "scpi": {
+        "command_syntax": null,
+        "reason": "这是菜单标题/菜单树节点，不是仪器输出状态；远程控制应使用下面的LFOutput、LFOutput:SWEep等子系统命令设置真实参数。"
+      },
+      "manual_reference": {
+        "sections": [
+          "3.5.1.3 Display / menu tree",
+          "4.5 Modulation Generator and LF Output"
+        ],
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "3536-3542",
+          "12677-12699"
+        ]
+      }
+    },
+    {
+      "id": "lf_generator_output_dialog",
+      "display_text": "LF Generator / Output",
+      "type": "dialog_entry",
+      "highlighted_in_figure2": true,
+      "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output；也可在Mod Gen下使用[MENU]键进入。",
+      "function": "进入LF输出和内部LF发生器设置；可设置LF Output State、Voltage、LF Gen Freq、LF Gen Shape、Source Impedance。",
+      "scpi": {
+        "command_syntax": null,
+        "reason": "打开对话框没有SCPI命令；对话框里的参数由SOURCE:LFOutput子系统设置。",
+        "main_subsystem": "SOURce:LFOutput"
+      },
+      "dialog_parameter_command_templates": [
+        {
+          "id": "lf_output_state",
+          "dialog_parameter": "LF Output State",
+          "chinese_name": "LF输出开关",
+          "function": "打开或关闭前面板LF output接口输出。手册说明该设置不影响AM/FM/PM等调制本身，只影响LF接口是否输出低频信号。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output > LF Output State = On/Off。",
+          "scpi": {
+            "command_syntax_long": "SOURce:LFOutput:STATe <State>",
+            "command_syntax_short": "LFO <State>",
+            "allowed_values": [
+              "0",
+              "1",
+              "OFF",
+              "ON"
+            ],
+            "example_on": "LFO ON",
+            "example_off": "LFO OFF",
+            "query": "LFO?"
+          },
+          "manual_reference": {
+            "section": "4.5.2.1 LF Output Dialog / LF Output State; 6.13.6 LFOutput:STATE",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12749-12755",
+              "20084-20092"
+            ]
+          }
+        },
+        {
+          "id": "lf_output_voltage",
+          "dialog_parameter": "LF Output Voltage",
+          "chinese_name": "LF输出电压峰值",
+          "function": "设置LF输出信号电压峰值。图2尚未显示具体数值；图3才显示为137 mV。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output > LF Output Voltage，输入数值并选择单位。",
+          "scpi": {
+            "command_syntax_long": "SOURce:LFOutput:VOLTage <Voltage>",
+            "command_syntax_short": "LFO:VOLT <Voltage>",
+            "placeholder_example": "LFO:VOLT <voltage>",
+            "example_from_next_figure": "LFO:VOLT 137mV",
+            "query": "LFO:VOLT?"
+          },
+          "manual_reference": {
+            "section": "4.5.2.1 LF Output Dialog / LF Output Voltage; 6.13.6 LFOutput:VOLTAGE",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12757-12763",
+              "20458-20480"
+            ]
+          }
+        },
+        {
+          "id": "lf_gen_frequency",
+          "dialog_parameter": "LF Gen Freq",
+          "chinese_name": "LF发生器频率",
+          "function": "设置内部LF发生器频率；所有使用内部LF generator作为调制源的模拟调制会受该频率影响。图2尚未显示具体数值；图3才显示为500 Hz。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output > LF Gen Freq，输入数值并选择Hz/kHz等单位。",
+          "scpi": {
+            "command_syntax_long": "SOURce:LFOutput<ch>:FREQuency <Frequency>",
+            "command_syntax_short": "LFO:FREQ <Frequency>",
+            "placeholder_example": "LFO:FREQ <frequency>",
+            "example_from_next_figure": "LFO:FREQ 500Hz",
+            "query": "LFO:FREQ?"
+          },
+          "manual_reference": {
+            "section": "4.5.2.1 LF Output Dialog / LF Gen Freq; 6.13.6 LFOutput:FREQUency",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12767-12777",
+              "19995-20018"
+            ]
+          }
+        },
+        {
+          "id": "lf_gen_shape",
+          "dialog_parameter": "LF Gen Shape",
+          "chinese_name": "LF发生器波形",
+          "function": "选择LF信号波形。手册列出的可选值包括Sine、Square、Triangle、Sawtooth、Inv. Sawtooth；实际可用项取决于硬件配置。图2未显示具体值；图3为Square。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output > LF Gen Shape，打开下拉列表选择波形。",
+          "scpi": {
+            "command_syntax_long": "SOURce:LFOutput:SHAPe <Shape>",
+            "command_syntax_short": "LFO:SHAP <Shape>",
+            "allowed_values": [
+              "SINE",
+              "SQUARE",
+              "TRIANGLE",
+              "SAWTOOTH",
+              "ISAWTOOTH"
+            ],
+            "placeholder_example": "LFO:SHAP <shape>",
+            "example_from_next_figure": "LFO:SHAP SQU",
+            "query": "LFO:SHAP?"
+          },
+          "manual_reference": {
+            "section": "4.5.2.1 LF Output Dialog / LF Gen Shape; 6.13.6 LFOutput:SHAPe",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12783-12791",
+              "20387-20421"
+            ]
+          }
+        },
+        {
+          "id": "lf_source_impedance",
+          "dialog_parameter": "LF Source Impedance",
+          "chinese_name": "LF源输出阻抗",
+          "function": "选择LF发生器输出阻抗；手册列出LOW和600 Ohm可选。图2未显示具体值；图3为Low。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Generator / Output > Source Impedance，选择Low或600 Ohm。",
+          "scpi": {
+            "command_syntax_long": "SOURce:LFOutput:SIMPedance <SImpedance>",
+            "command_syntax_short": "LFO:SIMP <SImpedance>",
+            "allowed_values": [
+              "LOW",
+              "G600"
+            ],
+            "placeholder_example": "LFO:SIMP <LOW|G600>",
+            "example_from_next_figure": "LFO:SIMP LOW",
+            "query": "LFO:SIMP?"
+          },
+          "manual_reference": {
+            "section": "4.5.2.1 LF Output Dialog / LF Source Impedance; 6.13.6 LFOutput:SIMPedance",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12795-12797",
+              "20422-20456"
+            ]
+          }
+        }
+      ],
+      "manual_reference": {
+        "sections": [
+          "4.5.2 LF Output",
+          "4.5.2.1 LF Output Dialog",
+          "6.13.6 SOURCE:LFOutput Subsystem"
+        ],
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12701-12737",
+          "12749-12797",
+          "19951-19993"
+        ]
+      }
+    },
+    {
+      "id": "lf_frequency_sweep_dialog",
+      "display_text": "LF Frequency Sweep...",
+      "type": "dialog_entry",
+      "highlighted_in_figure2": false,
+      "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep；也可在Mod Gen下使用[MENU]键进入。",
+      "function": "配置并激活LF频率扫频；可设置State、Mode、Start/Stop Freq、Current Freq、Spacing、Shape、Step、Dwell等。",
+      "scpi": {
+        "command_syntax": null,
+        "reason": "打开对话框没有SCPI命令；对话框里的参数由SOURCE:LFOutput:FREQuency和SOURCE:LFOutput:SWEep子系统设置。",
+        "main_subsystems": [
+          "SOURce:LFOutput:FREQuency",
+          "SOURce:LFOutput:SWEep:FREQuency",
+          "TRIGger:LFFSweep"
+        ]
+      },
+      "dialog_parameter_command_templates": [
+        {
+          "id": "lf_sweep_state",
+          "dialog_parameter": "State",
+          "chinese_name": "LF频率扫描开关/状态",
+          "function": "激活LF frequency sweep信号生成；激活扫频模式会自动关闭其他sweep和list mode。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > State = On/Off。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:FREQuency:MODE <Mode>",
+            "command_syntax_short": "LFO:FREQ:MODE <Mode>",
+            "allowed_values_interpreted_from_manual": [
+              "CW",
+              "FIXed",
+              "SWEep"
+            ],
+            "activate_sweep_example": "LFO:FREQ:MODE SWE",
+            "return_to_fixed_lf_example": "LFO:FREQ:MODE CW",
+            "query": "LFO:FREQ:MODE?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / State; 6.13.6 LFOutput:FREQUency:MODE",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12823-12835",
+              "20038-20044"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_mode",
+          "dialog_parameter": "Mode",
+          "chinese_name": "LF频率扫描模式",
+          "function": "选择LF扫频循环方式，例如Auto连续自动扫、Single单次扫、Step步进扫、外触发相关模式。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Mode，选择Auto/Single/Step/Extern Single/External Step/Extern Start-Stop。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:MODE <Mode>",
+            "command_syntax_short": "LFO:SWE:FREQ:MODE <Mode>",
+            "allowed_values_from_command_table": [
+              "AUTO",
+              "MANual",
+              "STEP"
+            ],
+            "typical_trigger_command": "TRIGger<hw>:LFFSweep:SOURce <AUTO|SINGle|EXTernal|EAUTo>",
+            "examples": [
+              "LFO:SWE:FREQ:MODE AUTO",
+              "TRIG:LFFS:SOUR AUTO",
+              "LFO:FREQ:MODE SWE"
+            ],
+            "query": "LFO:SWE:FREQ:MODE?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Mode; 6.13.6 LFOutput:SWEep:FREQUency:MODE",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12837-12947",
+              "20132-20172"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_execute_single",
+          "dialog_parameter": "Execute Single Sweep",
+          "chinese_name": "执行单次LF扫频",
+          "function": "在Single模式下立即启动一个LF频率扫频周期。",
+          "front_panel_instruction": "在LF Frequency Sweep对话框中选择/按 Execute Single Sweep。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:EXECute",
+            "command_syntax_short": "LFO:SWE:FREQ:EXEC",
+            "alternate_trigger_commands": [
+              "TRIGger<hw>:LFFSweep",
+              "TRIGger<hw>:LFFSweep:IMMediate",
+              "TRIGger<hw>:IMMediate",
+              "*TRG"
+            ],
+            "example": "LFO:SWE:FREQ:EXEC"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Execute Single Sweep; 6.13.6 LFOutput:SWEep:FREQUency:EXECute",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12955-12963",
+              "20116-20124"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_reset",
+          "dialog_parameter": "Reset Sweep",
+          "chinese_name": "复位扫频",
+          "function": "把扫频复位到初始值，下一次触发从起始值开始。",
+          "front_panel_instruction": "在LF Frequency Sweep对话框中选择Reset Sweep。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:SWEep:RESet:ALL",
+            "command_syntax_short": "SOUR:SWE:RES:ALL",
+            "example": "SOUR:SWE:RES:ALL"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Reset Sweep",
+            "ocr_line_range_in_uploaded_markdown": "12970-12977"
+          }
+        },
+        {
+          "id": "lf_sweep_start_frequency",
+          "dialog_parameter": "Start Freq",
+          "chinese_name": "LF扫频起始频率",
+          "function": "设置LF扫频的起点频率。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Start Freq，输入起始频率。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:FREQuency:STARt <Start>",
+            "command_syntax_short": "LFO:FREQ:STAR <Start>",
+            "placeholder_example": "LFO:FREQ:STAR <start_frequency>",
+            "query": "LFO:FREQ:STAR?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Start Freq; 6.13.6 LFOutput:FREQUency:STARt",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12987-12991",
+              "20046-20067"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_stop_frequency",
+          "dialog_parameter": "Stop Freq",
+          "chinese_name": "LF扫频终止频率",
+          "function": "设置LF扫频的终点频率。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Stop Freq，输入终止频率。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:FREQuency:STOP <Stop>",
+            "command_syntax_short": "LFO:FREQ:STOP <Stop>",
+            "placeholder_example": "LFO:FREQ:STOP <stop_frequency>",
+            "query": "LFO:FREQ:STOP?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Stop Freq; 6.13.6 LFOutput:FREQUency:STOP",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "12995-13001",
+              "20071-20080"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_current_frequency",
+          "dialog_parameter": "Current Freq",
+          "chinese_name": "LF扫频当前/手动频率",
+          "function": "显示当前LF扫频频率；在Step模式中可输入下一步频率或触发下一步。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Current Freq，Step模式下可编辑。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:FREQuency:MANual <Manual>",
+            "command_syntax_short": "LFO:FREQ:MAN <Manual>",
+            "placeholder_example": "LFO:FREQ:MAN <frequency>",
+            "query": "LFO:FREQ:MAN?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Current Freq; 6.13.6 LFOutput:FREQUency:MANual",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "13005-13013",
+              "20021-20036"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_spacing",
+          "dialog_parameter": "Spacing",
+          "chinese_name": "扫频间隔计算方式",
+          "function": "选择线性或对数扫频间隔。Linear按固定Hz步进；Logarithmic按百分比步进。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Spacing，选择Linear或Logarithmic。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:SPACing <Spacing>",
+            "command_syntax_short": "LFO:SWE:FREQ:SPAC <Spacing>",
+            "allowed_values": [
+              "LINear",
+              "LOGarithmic"
+            ],
+            "examples": [
+              "LFO:SWE:FREQ:SPAC LIN",
+              "LFO:SWE:FREQ:SPAC LOG"
+            ],
+            "query": "LFO:SWE:FREQ:SPAC?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Spacing; 6.13.6 LFOutput:SWEep:FREQUency:SPACing",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "13017-13029",
+              "20251-20276"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_shape",
+          "dialog_parameter": "Shape",
+          "chinese_name": "扫频循环形状",
+          "function": "选择扫频序列形状。Sawtooth从起点扫到终点后回到起点；Triangle从起点到终点再扫回。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Shape，选择Sawtooth或Triangle。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:SHAPe <Shape>",
+            "command_syntax_short": "LFO:SWE:FREQ:SHAP <Shape>",
+            "allowed_values": [
+              "SAWTooth",
+              "TRIangle"
+            ],
+            "examples": [
+              "LFO:SWE:FREQ:SHAP SAWT",
+              "LFO:SWE:FREQ:SHAP TRI"
+            ],
+            "query": "LFO:SWE:FREQ:SHAP?"
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:SHAPe",
+            "ocr_line_range_in_uploaded_markdown": "20226-20249"
+          }
+        },
+        {
+          "id": "lf_sweep_step_linear",
+          "dialog_parameter": "Step Lin",
+          "chinese_name": "线性扫频步进",
+          "function": "设置线性LF频率扫频每一步的频率间隔。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Step Lin，输入步进频率。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:STEP:LINear <Linear>",
+            "command_syntax_short": "LFO:SWE:FREQ:STEP:LIN <Linear>",
+            "placeholder_example": "LFO:SWE:FREQ:STEP:LIN <step_frequency>",
+            "query": "LFO:SWE:FREQ:STEP:LIN?"
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:STEP:LINEAR",
+            "ocr_line_range_in_uploaded_markdown": "20278-20321"
+          }
+        },
+        {
+          "id": "lf_sweep_step_logarithmic",
+          "dialog_parameter": "Step Log",
+          "chinese_name": "对数扫频步进",
+          "function": "设置对数LF频率扫频每一步的百分比间隔。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Step Log，输入百分比。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:STEP:LOGarithmic <Logarithmic>",
+            "command_syntax_short": "LFO:SWE:FREQ:STEP:LOG <Logarithmic>",
+            "placeholder_example": "LFO:SWE:FREQ:STEP:LOG <percent>PCT",
+            "query": "LFO:SWE:FREQ:STEP:LOG?"
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:STEP:LOGarithmic",
+            "ocr_line_range_in_uploaded_markdown": "20323-20385"
+          }
+        },
+        {
+          "id": "lf_sweep_dwell_time",
+          "dialog_parameter": "Dwell Time",
+          "chinese_name": "每点驻留时间",
+          "function": "设置LF扫频每个频率点的驻留时间。短驻留时间时手册建议关闭Display Update以优化扫频性能。",
+          "front_panel_instruction": "Mod Gen > Configure > LF Frequency Sweep > Dwell Time，输入时间值。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:DWELL <Dwell>",
+            "command_syntax_short": "LFO:SWE:FREQ:DWEL <Dwell>",
+            "placeholder_example": "LFO:SWE:FREQ:DWEL <time>",
+            "example": "LFO:SWE:FREQ:DWEL 20ms",
+            "query": "LFO:SWE:FREQ:DWEL?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Dwell Time; 6.13.6 LFOutput:SWEep:FREQUency:DWELL",
+            "ocr_line_ranges_in_uploaded_markdown": [
+              "13735-13749",
+              "20096-20112"
+            ]
+          }
+        },
+        {
+          "id": "lf_sweep_points",
+          "dialog_parameter": "Points",
+          "chinese_name": "扫频点数",
+          "function": "设置LF扫频范围内的步数/点数；与扫频步进相关联。",
+          "front_panel_instruction": "若界面显示Points参数，可在LF Frequency Sweep中编辑点数。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:POINts <Points>",
+            "command_syntax_short": "LFO:SWE:FREQ:POIN <Points>",
+            "placeholder_example": "LFO:SWE:FREQ:POIN <points>",
+            "query": "LFO:SWE:FREQ:POIN?"
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:POINTs",
+            "ocr_line_range_in_uploaded_markdown": "20175-20224"
+          }
+        },
+        {
+          "id": "lf_sweep_retrace",
+          "dialog_parameter": "Retrace",
+          "chinese_name": "回扫/回到起点功能",
+          "function": "在Sawtooth的Single或External Single模式中，可让信号等待下一次触发时回到Start Frequency。",
+          "front_panel_instruction": "若界面显示Retrace参数，可在LF Frequency Sweep中打开/关闭。",
+          "scpi": {
+            "command_syntax_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:RETRace <State>",
+            "command_syntax_short": "LFO:SWE:FREQ:RETR <State>",
+            "allowed_values": [
+              "0",
+              "1",
+              "OFF",
+              "ON"
+            ],
+            "example": "LFO:SWE:FREQ:RETR ON",
+            "query": "LFO:SWE:FREQ:RETR?"
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:RETRace",
+            "ocr_line_range_in_uploaded_markdown": "20194-20217"
+          }
+        },
+        {
+          "id": "lf_sweep_running_query",
+          "dialog_parameter": "Running?",
+          "chinese_name": "扫频运行状态查询",
+          "function": "查询当前LF频率扫频是否正在运行。",
+          "front_panel_instruction": "无前面板设置值；用于远程查询。",
+          "scpi": {
+            "query_long": "SOURce<hw>:LFOutput:SWEep:FREQuency:RUNNING?",
+            "query_short": "LFO:SWE:FREQ:RUNN?",
+            "return_values": [
+              "0/OFF",
+              "1/ON"
+            ]
+          },
+          "manual_reference": {
+            "section": "6.13.6 LFOutput:SWEep:FREQUency:RUNNING?",
+            "ocr_line_range_in_uploaded_markdown": "20219-20224"
+          }
+        },
+        {
+          "id": "ext_trigger_input_slope",
+          "dialog_parameter": "Ext. Trigger Input Slope",
+          "chinese_name": "外部触发输入边沿",
+          "function": "设置INST TRIG输入的有效边沿，Positive为上升沿，Negative为下降沿。",
+          "front_panel_instruction": "若使用外触发LF Sweep，在LF Frequency Sweep对话框中设置Ext. Trigger Input Slope。",
+          "scpi": {
+            "command_syntax_long": "SOURce:INPut:TRIGger:SLOPe <Slope>",
+            "command_syntax_short": "INP:TRIG:SLOP <Slope>",
+            "allowed_values_interpreted": [
+              "POSitive",
+              "NEGative"
+            ],
+            "placeholder_example": "INP:TRIG:SLOP POS",
+            "query": "INP:TRIG:SLOP?"
+          },
+          "manual_reference": {
+            "section": "4.5.3 LF Frequency Sweep / Ext. Trigger Input Slope",
+            "ocr_line_range_in_uploaded_markdown": "13753-13759"
+          }
+        }
+      ],
+      "manual_reference": {
+        "sections": [
+          "4.5.3 LF Frequency Sweep",
+          "6.13.6 SOURCE:LFOutput Subsystem"
+        ],
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12803-12947",
+          "19951-20385"
+        ]
+      }
+    }
+  ],
+  "ready_to_use_command_examples": [
+    {
+      "name": "复现图2顶部状态但不打开任何输出",
+      "commands": [
+        "OUTP OFF",
+        "MOD:STAT OFF",
+        "FREQ:MODE CW",
+        "FREQ 2.882GHz",
+        "POW -15dBm",
+        "POW:ALC AUTO"
+      ],
+      "note": "远程SCPI不能真正把本机屏幕停在图2菜单树，只能复现图2中可见的信号状态。"
+    },
+    {
+      "name": "进入LF Generator / Output后设置图3所示典型LF输出",
+      "commands": [
+        "LFO:FREQ:MODE CW",
+        "LFO:FREQ 500Hz",
+        "LFO:SHAP SQU",
+        "LFO:VOLT 137mV",
+        "LFO:SIMP LOW",
+        "LFO ON"
+      ],
+      "note": "这组数值来自下一张图，不是图2本身显示的数值。"
+    },
+    {
+      "name": "LF Frequency Sweep模板：线性自动扫频",
+      "commands": [
+        "LFO:FREQ:STAR <start_frequency>",
+        "LFO:FREQ:STOP <stop_frequency>",
+        "LFO:SWE:FREQ:SPAC LIN",
+        "LFO:SWE:FREQ:STEP:LIN <step_frequency>",
+        "LFO:SWE:FREQ:DWEL <dwell_time>",
+        "LFO:SWE:FREQ:MODE AUTO",
+        "TRIG:LFFS:SOUR AUTO",
+        "LFO:FREQ:MODE SWE"
+      ],
+      "note": "把尖括号替换成实际参数后执行。"
+    },
+    {
+      "name": "关闭LF Frequency Sweep，回到固定LF频率模式",
+      "commands": [
+        "LFO:FREQ:MODE CW"
+      ],
+      "note": "某些固件也接受FIXed作为固定LF频率模式名称。"
+    }
+  ],
+  "validation_queries": [
+    {
+      "parameter": "rf_frequency",
+      "query": "FREQ?",
+      "expected": "约2.882E9"
+    },
+    {
+      "parameter": "rf_output_state",
+      "query": "OUTP?",
+      "expected": "0或OFF"
+    },
+    {
+      "parameter": "modulation_global_state",
+      "query": "MOD:STAT?",
+      "expected": "0或OFF"
+    },
+    {
+      "parameter": "rf_level",
+      "query": "POW?",
+      "expected": "约-15"
+    },
+    {
+      "parameter": "alc_state",
+      "query": "POW:ALC?",
+      "expected": "AUTO"
+    },
+    {
+      "parameter": "lf_output_state",
+      "query": "LFO?",
+      "expected": "0/1或OFF/ON"
+    },
+    {
+      "parameter": "lf_frequency_sweep_state",
+      "query": "LFO:FREQ:MODE?",
+      "expected": "CW/FIXed/SWEep之一"
+    }
+  ],
+  "notes_for_use": [
+    "图2打开的是Mod Gen菜单树，不是参数对话框；因此‘LF Generator / Output’和‘LF Frequency Sweep...’本身无设置值。",
+    "若只想做500 Hz方波锁相参考，应进入LF Generator / Output并设置LFO:FREQ、LFO:SHAP、LFO:VOLT、LFO:SIMP、LFO ON。",
+    "若启用LF Frequency Sweep，LF发生器频率会由扫频参数控制；这可能与固定500 Hz锁相参考冲突。",
+    "如果使用远程控制，执行含输出的命令前建议保持OUTP OFF，确认参数后再决定是否打开RF输出。"
+  ]
+}

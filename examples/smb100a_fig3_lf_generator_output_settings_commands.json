@@ -1,0 +1,593 @@
+{
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图3 LF Generator / Output 参数设置指令",
+  "source_manual": {
+    "file": "SMB100A_OperatingManual_en_23.pdf_by_PaddleOCR-VL-1.5.md",
+    "document_title": "R&S SMB100A RF and Microwave Signal Generator Operating Manual, Version 23",
+    "manual_sections_used": [
+      "4.5.2.1 LF Output Dialog",
+      "6.13.6 SOURce:LFOutput Subsystem",
+      "6.13.4 SOURce:FREQuency Subsystem",
+      "6.13.12 SOURce:POWer Subsystem",
+      "OUTPUT Subsystem",
+      "6.13.8 SOURce:MODulation Subsystem"
+    ],
+    "note": "依据当前会话提供的 SMB100A 用户使用文档 OCR Markdown 整理；SCPI 中的 SOURce/OUTPut 后缀 <hw>、LFOutput 的 <ch> 在单通道 SMB100A 上通常可省略。"
+  },
+  "assumptions": [
+    "图3指第三张 SMB100A 照片，即 LF Generator / Output 对话框，当前本地图片为 /mnt/data/2_odmr磁场设置(2)_頁面_07.jpg。",
+    "图3中真正新增的可设置参数是 LF Output State、LF Output Voltage、LF Gen Freq、LF Gen Shape、Source Impedance；顶部 Freq、RF OFF、MOD OFF、Level、ALC-Auto 仍一并列出，方便完整复现画面。",
+    "图3中的 LF Output State 只打开/关闭前面板 LF 输出口；说明书明确指出该设置对调制本身没有影响。若要让 RF 微波被 FM/AM/PhiM 调制，还必须另外设置相应调制菜单并打开 MOD 总开关。",
+    "LF Output Voltage 按说明书为 LF 输出信号的峰值电压；图中 137 mV 在 JSON 中同时给出 137 mV 和 0.137 V 两种表示。",
+    "为了安全复现，建议先关闭 RF 输出和 MOD 总开关，再设置 LF 参数，最后打开 LF Output State。"
+  ],
+  "figure3_snapshot": {
+    "image_path": "/mnt/data/2_odmr磁场设置(2)_頁面_07.jpg",
+    "dialog_title": "LF Generator / Output",
+    "screen_header": {
+      "frequency": {
+        "value": 2.882,
+        "unit": "GHz",
+        "display": "2.882 000 000 000 GHz"
+      },
+      "rf_output_state": {
+        "value": "OFF",
+        "display": "RF OFF"
+      },
+      "modulation_global_state": {
+        "value": "OFF",
+        "display": "MOD OFF"
+      },
+      "rf_level": {
+        "value": -15.0,
+        "unit": "dBm",
+        "display": "-15.00 dBm"
+      },
+      "alc_state": {
+        "value": "AUTO",
+        "display": "ALC-Auto"
+      }
+    },
+    "lf_generator_output_dialog": {
+      "lf_output_state": {
+        "value": "ON",
+        "display": "LF Output State = On"
+      },
+      "lf_output_voltage": {
+        "value": 137,
+        "unit": "mV",
+        "equivalent_volt": 0.137,
+        "display": "LF Output Voltage = 137 mV"
+      },
+      "lf_gen_frequency": {
+        "value": 500.0,
+        "unit": "Hz",
+        "display": "LF Gen Freq = 500.00 Hz"
+      },
+      "lf_gen_shape": {
+        "value": "SQUARE",
+        "display": "LF Gen Shape = Square"
+      },
+      "lf_source_impedance": {
+        "value": "LOW",
+        "display": "Source Impedance = Low"
+      }
+    },
+    "underlying_visible_blocks": {
+      "rf_block": "RF config... 窗口背后可见，但顶部状态为 RF OFF；RF 输出未打开。",
+      "dialog_close_button": "右上角 X 只是关闭当前 GUI 对话框，没有对应的信号设置 SCPI。"
+    }
+  },
+  "front_panel_steps_to_reproduce_figure3_view": [
+    {
+      "step": 1,
+      "operation": "从主界面选中 Mod Gen 功能块中的 config...。",
+      "scpi_equivalent": null,
+      "note": "这是 GUI 导航，不是仪器信号参数。"
+    },
+    {
+      "step": 2,
+      "operation": "在图2菜单中选择 LF Generator / Output。",
+      "scpi_equivalent": null,
+      "note": "进入对话框本身无 SCPI 命令；对话框内参数由 SOURCE:LFOutput 子系统设置。"
+    },
+    {
+      "step": 3,
+      "operation": "把 LF Output State 设为 On。",
+      "scpi_equivalent": "LFO ON"
+    },
+    {
+      "step": 4,
+      "operation": "把 LF Output Voltage 设为 137 mV。",
+      "scpi_equivalent": "LFO:VOLT 137mV"
+    },
+    {
+      "step": 5,
+      "operation": "把 LF Gen Freq 设为 500.00 Hz。",
+      "scpi_equivalent": "LFO:FREQ 500Hz"
+    },
+    {
+      "step": 6,
+      "operation": "把 LF Gen Shape 设为 Square。",
+      "scpi_equivalent": "LFO:SHAP SQU"
+    },
+    {
+      "step": 7,
+      "operation": "把 Source Impedance 设为 Low。",
+      "scpi_equivalent": "LFO:SIMP LOW"
+    }
+  ],
+  "safe_scpi_sequence_to_reproduce_figure3": [
+    {
+      "step": 1,
+      "command": "OUTP OFF",
+      "long_form": "OUTPut:STATe OFF",
+      "purpose": "保持 RF 微波输出关闭，避免设置过程中输出微波。",
+      "expected_display": "RF OFF"
+    },
+    {
+      "step": 2,
+      "command": "MOD:STAT OFF",
+      "long_form": "SOURce:MODulation:ALL:STATe OFF",
+      "purpose": "保持模拟调制总开关关闭，使顶部显示 MOD OFF。",
+      "expected_display": "MOD OFF"
+    },
+    {
+      "step": 3,
+      "command": "FREQ:MODE CW",
+      "long_form": "SOURce:FREQuency:MODE CW",
+      "purpose": "确保 RF 频率处于固定频率 CW 模式。",
+      "expected_display": "固定频率模式"
+    },
+    {
+      "step": 4,
+      "command": "FREQ 2.882GHz",
+      "long_form": "SOURce:FREQuency:CW 2.882GHz",
+      "purpose": "设置顶部 Freq = 2.882 GHz。",
+      "expected_display": "2.882 000 000 000 GHz"
+    },
+    {
+      "step": 5,
+      "command": "POW -15dBm",
+      "long_form": "SOURce:POWer:LEVel:IMMediate:AMPLitude -15dBm",
+      "purpose": "设置顶部 Level = -15.00 dBm。",
+      "expected_display": "-15.00 dBm"
+    },
+    {
+      "step": 6,
+      "command": "POW:ALC AUTO",
+      "long_form": "SOURce:POWer:ALC:STATe AUTO",
+      "purpose": "设置 ALC-Auto。",
+      "expected_display": "ALC-Auto"
+    },
+    {
+      "step": 7,
+      "command": "LFO OFF",
+      "long_form": "SOURce:LFOutput:STATe OFF",
+      "purpose": "先关 LF 输出，避免在设电压/频率/波形时输出错误低频信号。",
+      "expected_display": "LF Output State 暂时 Off"
+    },
+    {
+      "step": 8,
+      "command": "LFO:FREQ:MODE CW",
+      "long_form": "SOURce:LFOutput:FREQuency:MODE CW",
+      "purpose": "确保 LF 发生器处于固定频率模式，而不是 LF Frequency Sweep 模式。",
+      "expected_display": "LF 固定频率模式"
+    },
+    {
+      "step": 9,
+      "command": "LFO:VOLT 137mV",
+      "long_form": "SOURce:LFOutput:VOLTage 137mV",
+      "purpose": "设置图3的 LF Output Voltage = 137 mV peak。",
+      "expected_display": "137 mV"
+    },
+    {
+      "step": 10,
+      "command": "LFO:FREQ 500Hz",
+      "long_form": "SOURce:LFOutput:FREQuency 500Hz",
+      "purpose": "设置图3的 LF Gen Freq = 500.00 Hz。",
+      "expected_display": "500.00 Hz"
+    },
+    {
+      "step": 11,
+      "command": "LFO:SHAP SQU",
+      "long_form": "SOURce:LFOutput:SHAPe SQUARE",
+      "purpose": "设置图3的 LF Gen Shape = Square。",
+      "expected_display": "Square"
+    },
+    {
+      "step": 12,
+      "command": "LFO:SIMP LOW",
+      "long_form": "SOURce:LFOutput:SIMPedance LOW",
+      "purpose": "设置图3的 Source Impedance = Low。",
+      "expected_display": "Low"
+    },
+    {
+      "step": 13,
+      "command": "LFO ON",
+      "long_form": "SOURce:LFOutput:STATe ON",
+      "purpose": "最后打开 LF 输出，使对话框显示 LF Output State = On。",
+      "expected_display": "LF Output State = On"
+    }
+  ],
+  "commands_only_minimal_for_figure3_lf_dialog": [
+    "LFO OFF",
+    "LFO:FREQ:MODE CW",
+    "LFO:VOLT 137mV",
+    "LFO:FREQ 500Hz",
+    "LFO:SHAP SQU",
+    "LFO:SIMP LOW",
+    "LFO ON"
+  ],
+  "commands_only_full_safe_sequence": [
+    "OUTP OFF",
+    "MOD:STAT OFF",
+    "FREQ:MODE CW",
+    "FREQ 2.882GHz",
+    "POW -15dBm",
+    "POW:ALC AUTO",
+    "LFO OFF",
+    "LFO:FREQ:MODE CW",
+    "LFO:VOLT 137mV",
+    "LFO:FREQ 500Hz",
+    "LFO:SHAP SQU",
+    "LFO:SIMP LOW",
+    "LFO ON"
+  ],
+  "query_sequence_to_verify_figure3": [
+    {
+      "query": "OUTP?",
+      "expected": "0 或 OFF"
+    },
+    {
+      "query": "MOD:STAT?",
+      "expected": "0 或 OFF"
+    },
+    {
+      "query": "FREQ?",
+      "expected": "约 2.882E9"
+    },
+    {
+      "query": "POW?",
+      "expected": "约 -15"
+    },
+    {
+      "query": "POW:ALC?",
+      "expected": "AUTO"
+    },
+    {
+      "query": "LFO?",
+      "expected": "1 或 ON"
+    },
+    {
+      "query": "LFO:VOLT?",
+      "expected": "约 1.37E-1"
+    },
+    {
+      "query": "LFO:FREQ?",
+      "expected": "约 5.00E2"
+    },
+    {
+      "query": "LFO:SHAP?",
+      "expected": "SQUARE 或 SQU"
+    },
+    {
+      "query": "LFO:SIMP?",
+      "expected": "LOW"
+    }
+  ],
+  "visible_header_parameters": [
+    {
+      "id": "rf_frequency",
+      "chinese_name": "射频载波频率",
+      "figure3_display": "Freq = 2.882 000 000 000 GHz",
+      "set_value_for_figure3": {
+        "value": 2.882,
+        "unit": "GHz",
+        "equivalent_hz": 2882000000.0
+      },
+      "function": "设置 RF 输出信号的固定载波频率；图3顶部仍显示 2.882 GHz。",
+      "front_panel_instruction": "按 [FREQ]，输入 2.882，选择 GHz 或确认；也可在主界面频率框直接编辑。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FREQuency:CW|FIXed <Fixed>",
+        "command_syntax_short": "FREQ <Fixed>",
+        "example_short": "FREQ 2.882GHz",
+        "example_long": "SOURce:FREQuency:CW 2.882GHz",
+        "query_short": "FREQ?",
+        "query_long": "SOURce:FREQuency:CW?"
+      },
+      "manual_reference": {
+        "section": "6.13.4 SOURce:FREQuency Subsystem / [:SOURce<hw>]:FREQuency[:CW|FIXed]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "19697-19715"
+        ]
+      }
+    },
+    {
+      "id": "rf_output_state",
+      "chinese_name": "RF 输出开关",
+      "figure3_display": "RF OFF",
+      "set_value_for_figure3": "OFF",
+      "function": "关闭实际 RF 微波输出。",
+      "front_panel_instruction": "按 [RF ON/OFF] 切换；或选中 RF 块的 On 复选框后按 [ON/OFF TOGGLE]。",
+      "scpi": {
+        "command_syntax_long": "OUTPut<hw>:STATe <State>",
+        "command_syntax_short": "OUTP <State>",
+        "example_short": "OUTP OFF",
+        "example_long": "OUTPut:STATe OFF",
+        "query_short": "OUTP?",
+        "query_long": "OUTPut:STATe?"
+      },
+      "manual_reference": {
+        "section": "OUTPUT Subsystem / :OUTPut<hw>[:STATe]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "17960-17974"
+        ]
+      }
+    },
+    {
+      "id": "modulation_global_state",
+      "chinese_name": "模拟调制总开关",
+      "figure3_display": "MOD OFF",
+      "set_value_for_figure3": "OFF",
+      "function": "关闭模拟调制总开关；图3只是设置 LF 输出，不代表 RF 调制已经开启。",
+      "front_panel_instruction": "按 [MOD ON/OFF] 切换。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:MODulation:ALL:STATe <State>",
+        "command_syntax_short": "MOD:STAT <State>",
+        "example_short": "MOD:STAT OFF",
+        "example_long": "SOURce:MODulation:ALL:STATe OFF",
+        "query_short": "MOD:STAT?",
+        "query_long": "SOURce:MODulation:ALL:STATe?"
+      },
+      "manual_reference": {
+        "section": "6.13.8 SOURCE:MODulation Subsystem / [:SOURce<hw>]:MODulation[:ALL][:STATe]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "21171-21189"
+        ]
+      }
+    },
+    {
+      "id": "rf_level",
+      "chinese_name": "RF 输出电平",
+      "figure3_display": "Level = -15.00 dBm",
+      "set_value_for_figure3": {
+        "value": -15.0,
+        "unit": "dBm"
+      },
+      "function": "设置 RF 输出功率电平；图3顶部保持 -15.00 dBm。",
+      "front_panel_instruction": "按 [LEVEL]，输入 -15，选择 dBm 或确认。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:LEVel:IMMediate:AMPLitude <Amplitude>",
+        "command_syntax_short": "POW <Amplitude>",
+        "example_short": "POW -15dBm",
+        "example_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude -15dBm",
+        "query_short": "POW?",
+        "query_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude?"
+      },
+      "manual_reference": {
+        "section": "6.13.12 SOURce:POWer Subsystem / [:SOURCE<hw>]:POWER[:LEVEL][:IMMediate][:AMPLitude]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "21641-21680"
+        ]
+      }
+    },
+    {
+      "id": "alc_state",
+      "chinese_name": "自动电平控制 ALC 状态",
+      "figure3_display": "ALC-Auto",
+      "set_value_for_figure3": "AUTO",
+      "function": "自动稳定 RF 输出电平，使信息行显示 ALC-Auto。",
+      "front_panel_instruction": "进入 RF/Level 相关设置，将 ALC State 设为 Auto。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:ALC:STATe <State>",
+        "command_syntax_short": "POW:ALC <State>",
+        "example_short": "POW:ALC AUTO",
+        "example_long": "SOURce:POWer:ALC:STATe AUTO",
+        "query_short": "POW:ALC?",
+        "query_long": "SOURce:POWer:ALC:STATe?"
+      },
+      "manual_reference": {
+        "section": "6.13.12 SOURce:POWer Subsystem / [:SOURCE<hw>]:POWER:ALC[:STATE]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "21569-21595"
+        ]
+      }
+    }
+  ],
+  "lf_generator_output_parameters": [
+    {
+      "id": "lf_output_state",
+      "chinese_name": "LF 输出状态",
+      "figure3_display": "LF Output State = On",
+      "set_value_for_figure3": "ON",
+      "function": "打开前面板 LF output connector 的低频输出。说明书说明该设置只控制 LF 输出口，对 AM/FM/PhiM 等调制本身没有影响。",
+      "front_panel_instruction": {
+        "menu_path": "Mod Gen > config... > LF Generator / Output > LF Output State",
+        "operation": "选择 LF Output State，将值改为 On。"
+      },
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:STATe <State>",
+        "command_syntax_short": "LFO <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "factory_or_rst_value": "OFF / 0",
+        "example_short": "LFO ON",
+        "example_long": "SOURce:LFOutput:STATe ON",
+        "query_short": "LFO?",
+        "query_long": "SOURce:LFOutput:STATe?",
+        "expected_query_result": "1 或 ON"
+      },
+      "manual_reference": {
+        "section": "4.5.2.1 LF Output Dialog / LF Output State; 6.13.6 [:SOURCE]:LFOutput[:STATE]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12741-12749",
+          "20084-20094"
+        ]
+      }
+    },
+    {
+      "id": "lf_output_voltage",
+      "chinese_name": "LF 输出电压",
+      "figure3_display": "LF Output Voltage = 137 mV",
+      "set_value_for_figure3": {
+        "value": 137,
+        "unit": "mV",
+        "equivalent_volt": 0.137,
+        "voltage_type": "peak"
+      },
+      "function": "设置 LF 输出信号的峰值电压。",
+      "front_panel_instruction": {
+        "menu_path": "Mod Gen > config... > LF Generator / Output > LF Output Voltage",
+        "operation": "输入 137，并选择 mV。"
+      },
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:VOLTage <Voltage>",
+        "command_syntax_short": "LFO:VOLT <Voltage>",
+        "parameter_type": "float with voltage unit",
+        "factory_or_rst_value": "1 V",
+        "example_short": "LFO:VOLT 137mV",
+        "example_long": "SOURce:LFOutput:VOLTage 137mV",
+        "alternative_example_volt": "LFO:VOLT 0.137V",
+        "query_short": "LFO:VOLT?",
+        "query_long": "SOURce:LFOutput:VOLTage?",
+        "expected_query_result": "约 0.137"
+      },
+      "manual_reference": {
+        "section": "4.5.2.1 LF Output Dialog / LF Output Voltage; 6.13.6 [:SOURCE]:LFOutput:VOLTAGE",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12751-12757",
+          "20396-20414"
+        ]
+      }
+    },
+    {
+      "id": "lf_gen_frequency",
+      "chinese_name": "LF 发生器频率",
+      "figure3_display": "LF Gen Freq = 500.00 Hz",
+      "set_value_for_figure3": {
+        "value": 500.0,
+        "unit": "Hz"
+      },
+      "function": "设置内部 LF generator 的频率；说明书说明该设置会影响所有使用 LF generator 作为内部调制源的模拟调制。",
+      "front_panel_instruction": {
+        "menu_path": "Mod Gen > config... > LF Generator / Output > LF Gen Freq",
+        "operation": "输入 500.00，并选择 Hz。"
+      },
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:FREQuency <Frequency>",
+        "command_syntax_short": "LFO:FREQ <Frequency>",
+        "parameter_type": "float with frequency unit",
+        "factory_or_rst_value": "1000 Hz",
+        "example_short": "LFO:FREQ 500Hz",
+        "example_long": "SOURce:LFOutput:FREQuency 500Hz",
+        "query_short": "LFO:FREQ?",
+        "query_long": "SOURce:LFOutput:FREQuency?",
+        "expected_query_result": "约 500"
+      },
+      "related_mode_command": {
+        "purpose": "若仪器处在 LF Sweep 模式，先切回固定频率模式。",
+        "command_short": "LFO:FREQ:MODE CW",
+        "command_long": "SOURce:LFOutput:FREQuency:MODE CW",
+        "note": "OCR 文档中该命令说明不完整，但 LFOutput:FREQuency 命令明确说明其在 CW|FIXED 模式下设置 LF 频率。"
+      },
+      "manual_reference": {
+        "section": "4.5.2.1 LF Output Dialog / LF Gen Freq; 6.13.6 [:SOURCE]:LFOutput<ch>:FREQUency",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12759-12767",
+          "19995-20019"
+        ]
+      }
+    },
+    {
+      "id": "lf_gen_shape",
+      "chinese_name": "LF 发生器波形",
+      "figure3_display": "LF Gen Shape = Square",
+      "set_value_for_figure3": "SQUARE",
+      "function": "选择 LF 信号波形；图3设置为方波。",
+      "front_panel_instruction": {
+        "menu_path": "Mod Gen > config... > LF Generator / Output > LF Gen Shape",
+        "operation": "从下拉列表选择 Square。"
+      },
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:SHAPe <Shape>",
+        "command_syntax_short": "LFO:SHAP <Shape>",
+        "allowed_values": [
+          "SINE",
+          "SQUARE",
+          "TRIANGLE",
+          "SAWTOOTH",
+          "ISAWTOOTH"
+        ],
+        "factory_or_rst_value": "SINE",
+        "example_short": "LFO:SHAP SQU",
+        "example_long": "SOURce:LFOutput:SHAPe SQUARE",
+        "query_short": "LFO:SHAP?",
+        "query_long": "SOURce:LFOutput:SHAPe?",
+        "expected_query_result": "SQUARE 或 SQU"
+      },
+      "manual_reference": {
+        "section": "4.5.2.1 LF Output Dialog / LF Gen Shape; 6.13.6 [:SOURCE]:LFOutput:SHAPe",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12769-12783",
+          "20366-20378"
+        ]
+      }
+    },
+    {
+      "id": "lf_source_impedance",
+      "chinese_name": "LF 源输出阻抗",
+      "figure3_display": "Source Impedance = Low",
+      "set_value_for_figure3": "LOW",
+      "function": "选择 LF generator 输出阻抗；说明书给出 LOW 和 600 Ohm 两种选择。图3为 Low。",
+      "front_panel_instruction": {
+        "menu_path": "Mod Gen > config... > LF Generator / Output > Source Impedance",
+        "operation": "从下拉列表选择 Low。"
+      },
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:SIMPedance <SImpedance>",
+        "command_syntax_short": "LFO:SIMP <SImpedance>",
+        "allowed_values": [
+          "LOW",
+          "G600"
+        ],
+        "value_meaning": {
+          "LOW": "低输出阻抗",
+          "G600": "600 Ohm"
+        },
+        "factory_or_rst_value": "LOW",
+        "example_short": "LFO:SIMP LOW",
+        "example_long": "SOURce:LFOutput:SIMPedance LOW",
+        "query_short": "LFO:SIMP?",
+        "query_long": "SOURce:LFOutput:SIMPedance?",
+        "expected_query_result": "LOW"
+      },
+      "manual_reference": {
+        "section": "4.5.2.1 LF Output Dialog / LF Source Impedance; 6.13.6 [:SOURCE]:LFOutput:SIMPedance",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "12785-12795",
+          "20380-20390"
+        ]
+      }
+    }
+  ],
+  "important_notes": [
+    {
+      "topic": "LF Output State 与 RF 调制不是一回事",
+      "note": "LFO ON 只会让 LF 信号从前面板 LF 输出口输出；若要让 RF 频率/幅度/相位被该 500 Hz 方波调制，还需要在 FM/AM/PhiM 里选择 Internal 作为源，并打开相应 modulation state 和 MOD 总开关。"
+    },
+    {
+      "topic": "137 mV 的单位",
+      "note": "说明书对 LF Output Voltage 的定义是 peak voltage；如果下游仪器按 Vrms 标注，需注意峰值与有效值换算。"
+    },
+    {
+      "topic": "Low 阻抗",
+      "note": "LOW 适合作为一般低频参考输出；若要匹配特定 600 Ohm 负载，可改用 LFO:SIMP G600。"
+    }
+  ]
+}

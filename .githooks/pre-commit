@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Pre-commit hook: run consistency checks when controlled files change.
+# Enable: git config core.hooksPath .githooks
+
+STAGED=$(git diff --cached --name-only)
+
+# Only run if controlled files are staged
+if echo "$STAGED" | grep -qE '^(README|AGENTS|Cargo\.toml|docs/(prd|adr|architecture)/|crates/)'; then
+    echo "[pre-commit] running consistency checks..."
+    bash scripts/check-consistency.sh || exit 1
+fi
+exit 0

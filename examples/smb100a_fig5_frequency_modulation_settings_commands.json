@@ -1,0 +1,676 @@
+{
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图5 Frequency Modulation 对话框参数与设置指令",
+  "source_manual": {
+    "file": "SMB100A_OperatingManual_en_23.pdf_by_PaddleOCR-VL-1.5.md",
+    "document_title": "R&S SMB100A RF and Microwave Signal Generator Operating Manual, Version 23",
+    "manual_sections_used": [
+      "4.3.1.1 RF Output / RF On / RF Output State",
+      "4.3.2.2 Setting the RF Frequency / RF Freq",
+      "4.3.3 Level / ALC",
+      "4.4.1.1 Enabling/Disabling Analog Modulations using the MOD On/Off Key",
+      "4.4.3 Frequency Modulation (FM)",
+      "4.4.3.1 Frequency Modulation Settings",
+      "6.13.3 SOURCE:FM Subsystem",
+      "6.13.4 SOURCE:FREQuency Subsystem",
+      "6.13.6 SOURCE:LFOutput Subsystem",
+      "6.13.8 SOURCE:MODulation Subsystem",
+      "OUTPUT Subsystem / OUTPut:STATe"
+    ],
+    "note": "依据当前会话提供的 SMB100A 用户使用文档 OCR Markdown 整理。SCPI 中的 SOURce/OUTPut 后缀 <hw> 在单通道 SMB100A 上通常可省略。图5中的Frequency Modulation窗口是前面板GUI状态；远程控制时直接发送FM、LFO、MOD、OUTP等子系统命令。"
+  },
+  "assumptions": [
+    "图5指第五张 SMB100A 照片，即 Frequency Modulation 对话框上半部分，当前本地图片为 /mnt/data/2_odmr磁场设置(2)_頁面_09.jpg。",
+    "图5顶部显示 RF OFF 与 MOD OFF，因此复现图5显示时不打开RF输出，也不打开模拟调制总开关。",
+    "图5中 Frequency Modulation 的 State 显示 Off，因此FM单项开关应设置为 FM:STAT OFF。下一张图6才是 State = On。",
+    "图5中 FM Source = Int 表示使用内部LF generator作为频率调制源；因此下方的 LFGen Freq 和 LFGen Shape 会影响FM内部调制。",
+    "LFGen Shape = Square 在图5底部只露出一部分，但结合图3/图6的同一设置，按 Square 整理。",
+    "FM Deviation = 4.0000 MHz 的SCPI可写作 FM:DEV 4MHz 或 FM:DEV 4E6；二者等价。",
+    "仅设置FM参数不等于真正输出调制微波；真实测量还需要根据需要打开 FM:STAT ON、MOD:STAT ON、OUTP ON。"
+  ],
+  "figure5_snapshot": {
+    "image_path": "/mnt/data/2_odmr磁场设置(2)_頁面_09.jpg",
+    "screen_header": {
+      "frequency": {
+        "value": 2.882,
+        "unit": "GHz",
+        "display": "2.882 000 000 000 GHz"
+      },
+      "rf_output_state": {
+        "value": "OFF",
+        "display": "RF OFF"
+      },
+      "modulation_global_state": {
+        "value": "OFF",
+        "display": "MOD OFF"
+      },
+      "rf_level": {
+        "value": -15.0,
+        "unit": "dBm",
+        "display": "-15.00 dBm"
+      },
+      "alc_state": {
+        "value": "AUTO",
+        "display": "ALC-Auto"
+      }
+    },
+    "dialog": {
+      "name": "Frequency Modulation",
+      "visible_parameters": {
+        "state": {
+          "display": "Off",
+          "value": "OFF"
+        },
+        "fm_source": {
+          "display": "Int",
+          "value": "INTernal"
+        },
+        "fm_mode": {
+          "display": "High Deviation",
+          "value": "HDEViation"
+        },
+        "fm_deviation": {
+          "display": "4.0000 MHz",
+          "value": 4.0,
+          "unit": "MHz",
+          "equivalent_hz": 4000000.0
+        },
+        "internal_source_section": "FM Source = Internal",
+        "lf_gen_freq": {
+          "display": "500.00 Hz",
+          "value": 500.0,
+          "unit": "Hz"
+        },
+        "lf_gen_shape": {
+          "display": "Square",
+          "value": "SQUARE",
+          "visibility": "partially visible at bottom of figure"
+        }
+      }
+    }
+  },
+  "front_panel_steps_to_reproduce_figure5_view": [
+    {
+      "step": 1,
+      "operation": "保持或设置顶部主参数：Freq = 2.882 GHz，Level = -15.00 dBm，RF OFF，MOD OFF，ALC-Auto。",
+      "scpi_equivalent": [
+        "OUTP OFF",
+        "MOD:STAT OFF",
+        "FREQ:MODE CW",
+        "FREQ 2.882GHz",
+        "POW -15dBm",
+        "POW:ALC AUTO"
+      ]
+    },
+    {
+      "step": 2,
+      "operation": "从主界面进入 Modulation > config... > Frequency Modulation...。",
+      "scpi_equivalent": null,
+      "note": "打开前面板对话框是GUI导航动作，没有SCPI等效命令；远程控制时直接发送FM子系统命令。"
+    },
+    {
+      "step": 3,
+      "operation": "在 Frequency Modulation 对话框中设置 State = Off。",
+      "scpi_equivalent": "FM:STAT OFF"
+    },
+    {
+      "step": 4,
+      "operation": "设置 FM Source = Int。",
+      "scpi_equivalent": "FM:SOUR INT"
+    },
+    {
+      "step": 5,
+      "operation": "设置 FM Mode = High Deviation。",
+      "scpi_equivalent": "FM:MODE HDEV"
+    },
+    {
+      "step": 6,
+      "operation": "设置 FM Deviation = 4.0000 MHz。",
+      "scpi_equivalent": "FM:DEV 4MHz"
+    },
+    {
+      "step": 7,
+      "operation": "在 FM Source = Internal 区域设置 LFGen Freq = 500.00 Hz，LFGen Shape = Square。",
+      "scpi_equivalent": [
+        "LFO:FREQ 500Hz",
+        "LFO:SHAP SQU"
+      ]
+    }
+  ],
+  "safe_scpi_sequence_to_reproduce_figure5": [
+    {
+      "step": 1,
+      "command": "OUTP OFF",
+      "long_form": "OUTPut:STATe OFF",
+      "purpose": "关闭RF输出，匹配顶部RF OFF，并避免配置时误输出微波。",
+      "expected_display": "RF OFF"
+    },
+    {
+      "step": 2,
+      "command": "MOD:STAT OFF",
+      "long_form": "SOURce:MODulation:ALL:STATe OFF",
+      "purpose": "关闭模拟调制总开关，匹配顶部MOD OFF。",
+      "expected_display": "MOD OFF"
+    },
+    {
+      "step": 3,
+      "command": "FREQ:MODE CW",
+      "long_form": "SOURce:FREQuency:MODE CW",
+      "purpose": "确保顶部频率为固定频率模式，而不是RF sweep模式。",
+      "expected_display": "固定频率模式"
+    },
+    {
+      "step": 4,
+      "command": "FREQ 2.882GHz",
+      "long_form": "SOURce:FREQuency:CW 2.882GHz",
+      "purpose": "设置顶部RF频率。",
+      "expected_display": "2.882 000 000 000 GHz"
+    },
+    {
+      "step": 5,
+      "command": "POW -15dBm",
+      "long_form": "SOURce:POWer:LEVel:IMMediate:AMPLitude -15dBm",
+      "purpose": "设置顶部RF Level。",
+      "expected_display": "-15.00 dBm"
+    },
+    {
+      "step": 6,
+      "command": "POW:ALC AUTO",
+      "long_form": "SOURce:POWer:ALC:STATe AUTO",
+      "purpose": "设置自动电平控制。",
+      "expected_display": "ALC-Auto"
+    },
+    {
+      "step": 7,
+      "command": "FM:SOUR INT",
+      "long_form": "SOURce:FM:SOURce INTernal",
+      "purpose": "选择内部LF generator作为FM调制源。",
+      "expected_display": "FM Source = Int"
+    },
+    {
+      "step": 8,
+      "command": "FM:MODE HDEV",
+      "long_form": "SOURce:FM:MODE HDEViation",
+      "purpose": "设置FM模式为High Deviation。",
+      "expected_display": "FM Mode = High Deviation"
+    },
+    {
+      "step": 9,
+      "command": "FM:DEV 4MHz",
+      "long_form": "SOURce:FM:DEViation 4MHz",
+      "purpose": "设置FM频偏为4 MHz。",
+      "expected_display": "FM Deviation = 4.0000 MHz"
+    },
+    {
+      "step": 10,
+      "command": "LFO:FREQ 500Hz",
+      "long_form": "SOURce:LFOutput:FREQuency 500Hz",
+      "purpose": "设置内部LF generator频率；FM Source=Internal时，该频率就是内部FM调制频率。",
+      "expected_display": "LFGen Freq = 500.00 Hz"
+    },
+    {
+      "step": 11,
+      "command": "LFO:SHAP SQU",
+      "long_form": "SOURce:LFOutput:SHAPe SQUare",
+      "purpose": "设置内部LF generator波形为方波。",
+      "expected_display": "LFGen Shape = Square"
+    },
+    {
+      "step": 12,
+      "command": "FM:STAT OFF",
+      "long_form": "SOURce:FM:STATe OFF",
+      "purpose": "保持FM单项开关关闭，匹配图5窗口中的State Off。",
+      "expected_display": "Frequency Modulation State = Off"
+    }
+  ],
+  "commands_only_minimal_for_figure5_fm_dialog": [
+    "FM:STAT OFF",
+    "FM:SOUR INT",
+    "FM:MODE HDEV",
+    "FM:DEV 4MHz",
+    "LFO:FREQ 500Hz",
+    "LFO:SHAP SQU"
+  ],
+  "commands_only_full_safe_sequence": [
+    "OUTP OFF",
+    "MOD:STAT OFF",
+    "FREQ:MODE CW",
+    "FREQ 2.882GHz",
+    "POW -15dBm",
+    "POW:ALC AUTO",
+    "FM:SOUR INT",
+    "FM:MODE HDEV",
+    "FM:DEV 4MHz",
+    "LFO:FREQ 500Hz",
+    "LFO:SHAP SQU",
+    "FM:STAT OFF"
+  ],
+  "query_sequence_to_verify_figure5": [
+    {
+      "purpose": "确认RF输出关闭",
+      "query": "OUTP?",
+      "expected": "0 或 OFF"
+    },
+    {
+      "purpose": "确认总调制关闭",
+      "query": "MOD:STAT?",
+      "expected": "0 或 OFF"
+    },
+    {
+      "purpose": "确认RF频率",
+      "query": "FREQ?",
+      "expected": "约 2.882E9"
+    },
+    {
+      "purpose": "确认RF电平",
+      "query": "POW?",
+      "expected": "约 -15"
+    },
+    {
+      "purpose": "确认ALC状态",
+      "query": "POW:ALC?",
+      "expected": "AUTO"
+    },
+    {
+      "purpose": "确认FM单项状态",
+      "query": "FM:STAT?",
+      "expected": "0 或 OFF"
+    },
+    {
+      "purpose": "确认FM调制源",
+      "query": "FM:SOUR?",
+      "expected": "INT 或 INTERNAL"
+    },
+    {
+      "purpose": "确认FM模式",
+      "query": "FM:MODE?",
+      "expected": "HDEV 或 HDEViation"
+    },
+    {
+      "purpose": "确认FM频偏",
+      "query": "FM:DEV?",
+      "expected": "约 4.0E6"
+    },
+    {
+      "purpose": "确认内部LF频率",
+      "query": "LFO:FREQ?",
+      "expected": "约 500"
+    },
+    {
+      "purpose": "确认内部LF波形",
+      "query": "LFO:SHAP?",
+      "expected": "SQU 或 SQUARE"
+    }
+  ],
+  "visible_header_parameters": [
+    {
+      "id": "rf_frequency",
+      "chinese_name": "射频载波频率",
+      "figure5_display": "Freq = 2.882 000 000 000 GHz",
+      "set_value_for_figure5": {
+        "value": 2.882,
+        "unit": "GHz",
+        "equivalent_hz": 2882000000.0
+      },
+      "function": "设置RF输出信号的CW载波频率；图5顶部显示2.882 GHz。",
+      "front_panel_instruction": "按[FREQ]，输入2.882，选择GHz/确认；也可在主界面频率框直接编辑。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FREQuency:CW|FIXed <Fixed>",
+        "command_syntax_short": "FREQ <Fixed>",
+        "example_short": "FREQ 2.882GHz",
+        "example_long": "SOURce:FREQuency:CW 2.882GHz",
+        "query_short": "FREQ?",
+        "query_long": "SOURce:FREQuency:CW?",
+        "expected_query_result": "约 2.882E9"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.3.2.2 Setting the RF Frequency / RF Freq",
+        "remote_command_section": "6.13.4 SOURCE:FREQuency Subsystem / [:SOURCE<hw>]:FREQuency[:CW|FIXed]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "7073-7085",
+          "19709-19742"
+        ]
+      }
+    },
+    {
+      "id": "rf_output_state",
+      "chinese_name": "RF输出开关",
+      "figure5_display": "RF OFF",
+      "set_value_for_figure5": "OFF",
+      "function": "关闭实际RF微波输出；图5是在配置FM窗口，微波未输出。",
+      "front_panel_instruction": "按[RF ON/OFF]切换；或选中RF块On复选框后按[ON/OFF TOGGLE]。",
+      "scpi": {
+        "command_syntax": "OUTPut<hw>:STATe <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "example": "OUTP OFF",
+        "query": "OUTP?",
+        "expected_query_result": "0 或 OFF"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.3.1.1 RF Output / RF On / RF Output State",
+        "remote_command_section": "OUTPUT Subsystem / :OUTPut<hw>[:STATe]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "6880-6969",
+          "17960-17974"
+        ]
+      }
+    },
+    {
+      "id": "modulation_global_state",
+      "chinese_name": "模拟调制总开关",
+      "figure5_display": "MOD OFF",
+      "set_value_for_figure5": "OFF",
+      "function": "关闭模拟调制总开关。即使FM参数已设置，MOD OFF时模拟调制不会真正加到RF输出上。",
+      "front_panel_instruction": "按[MOD ON/OFF]切换；图5保持关闭。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:MODulation:ALL:STATe <State>",
+        "command_syntax_short": "MOD:STAT <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "example_short": "MOD:STAT OFF",
+        "example_long": "SOURce:MODulation:ALL:STATe OFF",
+        "query_short": "MOD:STAT?",
+        "query_long": "SOURce:MODulation:ALL:STATe?",
+        "expected_query_result": "0 或 OFF"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.1.1 Enabling/Disabling Analog Modulations using the MOD On/Off Key",
+        "remote_command_section": "6.13.8 SOURCE:MODulation Subsystem / [:SOURCE<hw>]:MODulation[:ALL][:STATE]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11480-11528",
+          "21171-21189"
+        ]
+      }
+    },
+    {
+      "id": "rf_level",
+      "chinese_name": "RF输出电平",
+      "figure5_display": "Level = -15.00 dBm",
+      "set_value_for_figure5": {
+        "value": -15.0,
+        "unit": "dBm"
+      },
+      "function": "设置RF输出功率电平；即使RF OFF，设定值仍显示在顶部。",
+      "front_panel_instruction": "按[LEVEL]，输入-15，选择dBm/确认；也可在主界面Level框直接编辑。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:LEVel:IMMediate:AMPLitude <Amplitude>",
+        "command_syntax_short": "POW <Amplitude>",
+        "example_short": "POW -15dBm",
+        "example_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude -15dBm",
+        "query_short": "POW?",
+        "query_long": "SOURce:POWer:LEVel:IMMediate:AMPLitude?",
+        "expected_query_result": "约 -15"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.3.3 Level",
+        "remote_command_section": "SOURce:POWer subsystem / POWer:LEVel:IMMediate:AMPLitude",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "7410-7445",
+          "20440-20520"
+        ]
+      }
+    },
+    {
+      "id": "alc_state",
+      "chinese_name": "自动电平控制状态",
+      "figure5_display": "ALC-Auto",
+      "set_value_for_figure5": "AUTO",
+      "function": "保持自动电平控制，用于稳定RF输出电平。",
+      "front_panel_instruction": "RF/Level相关设置中选择 ALC = Auto。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:POWer:ALC:STATe <State>",
+        "command_syntax_short": "POW:ALC <State>",
+        "allowed_values": [
+          "AUTO",
+          "ON",
+          "OFF"
+        ],
+        "example_short": "POW:ALC AUTO",
+        "query_short": "POW:ALC?",
+        "expected_query_result": "AUTO"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.3.3 Level / ALC",
+        "remote_command_section": "SOURce:POWer subsystem / POWer:ALC:STATe",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "7410-7445",
+          "20440-20520"
+        ]
+      }
+    }
+  ],
+  "frequency_modulation_parameters": [
+    {
+      "id": "fm_state",
+      "chinese_name": "FM单项开关",
+      "figure5_display": "State = Off",
+      "set_value_for_figure5": "OFF",
+      "function": "激活或关闭频率调制单项。图5为关闭状态；手册说明激活FM会关闭相位调制。",
+      "front_panel_instruction": "Modulation > Configure > Frequency Modulation > State = Off。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FM:STATe <State>",
+        "command_syntax_short": "FM:STAT <State>",
+        "allowed_values": [
+          "0",
+          "1",
+          "OFF",
+          "ON"
+        ],
+        "example_short": "FM:STAT OFF",
+        "example_long": "SOURce:FM:STATe OFF",
+        "query_short": "FM:STAT?",
+        "query_long": "SOURce:FM:STATe?",
+        "expected_query_result": "0 或 OFF"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / State",
+        "remote_command_section": "6.13.3 SOURCE:FM Subsystem / [:SOURCE<hw>]:FM:STATe",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11850-11863",
+          "19508-19527"
+        ]
+      }
+    },
+    {
+      "id": "fm_source",
+      "chinese_name": "FM调制源",
+      "figure5_display": "FM Source = Int",
+      "set_value_for_figure5": "INTernal",
+      "function": "选择FM信号来源。Internal表示使用内部LF generator作为FM调制源。",
+      "front_panel_instruction": "Frequency Modulation > FM Source = Int。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FM:SOURce <Source>",
+        "command_syntax_short": "FM:SOUR <Source>",
+        "allowed_values": [
+          "INTernal",
+          "EXTernal",
+          "INT,EXT"
+        ],
+        "example_short": "FM:SOUR INT",
+        "example_long": "SOURce:FM:SOURce INTernal",
+        "query_short": "FM:SOUR?",
+        "query_long": "SOURce:FM:SOURce?",
+        "expected_query_result": "INT 或 INTERNAL"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / FM Source",
+        "remote_command_section": "6.13.3 SOURCE:FM Subsystem / [:SOURCE<hw>]:FM:SOURce",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11864-11879",
+          "19490-19508"
+        ]
+      }
+    },
+    {
+      "id": "fm_mode",
+      "chinese_name": "FM模式",
+      "figure5_display": "FM Mode = High Deviation",
+      "set_value_for_figure5": "HDEViation",
+      "function": "选择FM模式。High Deviation提供完整的FM频偏设置范围，但调制带宽范围降低。",
+      "front_panel_instruction": "Frequency Modulation > FM Mode = High Deviation。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FM:MODE <Mode>",
+        "command_syntax_short": "FM:MODE <Mode>",
+        "allowed_values": [
+          "NORMal",
+          "LNOise",
+          "HDEViation"
+        ],
+        "example_short": "FM:MODE HDEV",
+        "example_long": "SOURce:FM:MODE HDEViation",
+        "query_short": "FM:MODE?",
+        "query_long": "SOURce:FM:MODE?",
+        "expected_query_result": "HDEV 或 HDEVIATION"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / FM Mode",
+        "remote_command_section": "6.13.3 SOURCE:FM Subsystem / [:SOURCE<hw>]:FM:MODE",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11880-11895",
+          "19452-19468"
+        ]
+      }
+    },
+    {
+      "id": "fm_deviation",
+      "chinese_name": "FM频偏",
+      "figure5_display": "FM Deviation = 4.0000 MHz",
+      "set_value_for_figure5": {
+        "value": 4.0,
+        "unit": "MHz",
+        "equivalent_hz": 4000000.0
+      },
+      "function": "设置频率调制偏移量。内部方波源下，可理解为RF频率围绕载波频率进行约±4 MHz的频率切换/偏移，实际解释取决于仪器FM定义和调制波形。",
+      "front_panel_instruction": "Frequency Modulation > FM Deviation = 4.0000 MHz。",
+      "scpi": {
+        "command_syntax_long": "SOURce<hw>:FM:DEViation <Deviation>",
+        "command_syntax_short": "FM:DEV <Deviation>",
+        "range": "0 to dynamic，最大值取决于RF频率和FM模式",
+        "example_short": "FM:DEV 4MHz",
+        "example_numeric_hz": "FM:DEV 4E6",
+        "query_short": "FM:DEV?",
+        "query_long": "SOURce:FM:DEViation?",
+        "expected_query_result": "约 4.0E6"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / FM Deviation",
+        "remote_command_section": "6.13.3 SOURCE:FM Subsystem / [:SOURCE<hw>]:FM[:DEViation]",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11896-11914",
+          "19375-19392"
+        ]
+      }
+    },
+    {
+      "id": "lf_gen_freq_for_internal_fm",
+      "chinese_name": "内部LF发生器频率",
+      "figure5_display": "LFGen Freq = 500.00 Hz",
+      "set_value_for_figure5": {
+        "value": 500.0,
+        "unit": "Hz"
+      },
+      "function": "设置内部LF generator频率。FM Source = Internal时，该频率就是FM内部调制频率；也会影响所有使用同一个LF generator作为内部源的模拟调制。",
+      "front_panel_instruction": "Frequency Modulation窗口下方 FM Source = Internal 区域 > LFGen Freq = 500.00 Hz。",
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput<ch>:FREQuency <Frequency>",
+        "command_syntax_short": "LFO:FREQ <Frequency>",
+        "example_short": "LFO:FREQ 500Hz",
+        "example_long": "SOURce:LFOutput:FREQuency 500Hz",
+        "query_short": "LFO:FREQ?",
+        "query_long": "SOURce:LFOutput:FREQuency?",
+        "expected_query_result": "约 500"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / LF Gen Freq",
+        "remote_command_section": "6.13.6 SOURCE:LFOutput Subsystem / [:SOURCE]:LFOutput<ch>:FREQuency",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11916-11924",
+          "19995-20020"
+        ]
+      }
+    },
+    {
+      "id": "lf_gen_shape_for_internal_fm",
+      "chinese_name": "内部LF发生器波形",
+      "figure5_display": "LFGen Shape = Square",
+      "set_value_for_figure5": "SQUARE",
+      "function": "设置内部LF generator的波形。Square表示用方波作为内部FM调制波形。",
+      "front_panel_instruction": "Frequency Modulation窗口下方 FM Source = Internal 区域 > LFGen Shape = Square。",
+      "scpi": {
+        "command_syntax_long": "SOURce:LFOutput:SHAPe <Shape>",
+        "command_syntax_short": "LFO:SHAP <Shape>",
+        "allowed_values": [
+          "SINE",
+          "SQUARE",
+          "TRIANGLE",
+          "SAWTOOTH",
+          "ISAWTOOTH"
+        ],
+        "example_short": "LFO:SHAP SQU",
+        "example_long": "SOURce:LFOutput:SHAPe SQUare",
+        "query_short": "LFO:SHAP?",
+        "query_long": "SOURce:LFOutput:SHAPe?",
+        "expected_query_result": "SQU 或 SQUARE"
+      },
+      "manual_reference": {
+        "front_panel_section": "4.4.3.1 Frequency Modulation Settings / LF Gen Shape",
+        "remote_command_section": "6.13.6 SOURCE:LFOutput Subsystem / [:SOURCE]:LFOutput:SHAPe",
+        "ocr_line_ranges_in_uploaded_markdown": [
+          "11926-11939",
+          "20366-20386"
+        ]
+      }
+    }
+  ],
+  "parameters_in_same_dialog_but_not_visible_in_figure5": [
+    {
+      "name": "FM Sensitivity",
+      "visibility": "not visible in figure5 upper view",
+      "when_relevant": "FM Source为External或涉及外部调制输入时用于查询外部FM灵敏度。",
+      "related_query": "FM:SENS?"
+    },
+    {
+      "name": "Adjust FM Offset",
+      "visibility": "not visible in figure5 upper view",
+      "when_relevant": "用于FM/PhiM调制器DC offset校准。",
+      "related_query_or_command": "CAL:FMOF? / CALibration<hw>:FMOFfset:MEASure?"
+    },
+    {
+      "name": "Mod Ext Coupling / Ext. Impedance / Ignore Overvoltage Warning",
+      "visibility": "not visible and not active for FM Source = Int",
+      "when_relevant": "FM Source选择External或Internal+External时才需要重点设置。",
+      "related_commands": [
+        "FM:EXT:COUP AC|DC",
+        "INP:MODE:IMP HIGH|G600",
+        "INP:MODE:WIGN ON|OFF"
+      ]
+    }
+  ],
+  "important_notes": [
+    "图5匹配命令中 FM:STAT OFF 是为了复现图片状态；如果要开始实际FM-ODMR测量，通常需要改为 FM:STAT ON，并同时打开 MOD:STAT ON 和 OUTP ON。",
+    "MOD:STAT OFF 是模拟调制总开关关闭；FM:STAT OFF 是FM单项关闭。两者是不同层级。",
+    "FM:SOUR INT 时，LFO:FREQ 与 LFO:SHAP 同时影响内部FM调制；如果同一个LF generator还被AM/PM或LF输出使用，设置会联动影响这些功能。",
+    "FM:MODE HDEV 允许较大的FM deviation，但牺牲部分调制带宽。由于图5调制频率只有500 Hz，通常不会首先受带宽限制。",
+    "FM Deviation 的可用最大值受RF频率和FM模式限制；如果设置超过当前条件允许范围，仪器可能自动限制到最大值并产生错误信息。",
+    "图5顶部RF OFF和MOD OFF说明此时是配置界面，不代表实验已经在输出微波或调制微波。"
+  ],
+  "optional_sequence_for_actual_measurement_not_matching_figure5": {
+    "purpose": "在确认参数正确、负载和样品安全后，用于真正输出FM调制微波；这会改变图5顶部显示，不再匹配截图。",
+    "commands": [
+      "FM:STAT ON",
+      "MOD:STAT ON",
+      "OUTP ON"
+    ],
+    "warning": "开启前应确认功率、天线/放大器链路、样品位置和锁相参考输入均安全。"
+  }
+}
