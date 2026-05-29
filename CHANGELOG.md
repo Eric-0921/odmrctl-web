@@ -4,6 +4,13 @@
 
 ### Added
 
+- **GUI-M0-05: Dry Run, Safety, Events, Raw Data, and About pages**
+  - Dry Run: device/action parsed from `device_actions` instead of hardcoded; parameters show full sweep coordinate key=value
+  - Safety: findings severity badge with color + text label (info/warning/error); empty state preserved
+  - Events: level badge expanded to support error/danger/unknown levels gracefully
+  - Raw Data: added Manifest metadata section (run ID, recipe hash, resolved recipe ID, safety report ID, created at)
+  - About: boundary statement, Allowed/Forbidden lists, M1/M2 integration path — already complete
+
 - **GUI-M0-04: Dashboard, Devices, and Recipe pages**
   - Dashboard: added "Run name" and "Required devices" summary cards; fixed 4 disabled button helper texts to match spec
   - Devices: added "Last known state: static bundled data" to all 4 device cards; adjusted disabled control labels to Connect/Probe/Configure/Output ON/MOD ON; added "Mock viewer only" helper label

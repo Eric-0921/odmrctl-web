@@ -1,5 +1,19 @@
 import { getEvents, getRunSummary } from "../mock-data/helpers";
 
+function levelStyle(level: string) {
+  switch (level) {
+    case "info":
+      return { bg: "var(--color-success-soft)", color: "var(--color-success)" };
+    case "warning":
+      return { bg: "var(--color-warning-soft)", color: "var(--color-warning)" };
+    case "error":
+    case "danger":
+      return { bg: "var(--color-danger-soft)", color: "var(--color-danger)" };
+    default:
+      return { bg: "var(--color-disabled-bg)", color: "var(--color-disabled-text)" };
+  }
+}
+
 export default function EventsPage() {
   const events = getEvents();
   const summary = getRunSummary();
@@ -59,12 +73,12 @@ export default function EventsPage() {
       >
         <table style={{ width: "100%", fontSize: "var(--font-size-sm)", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "var(--color-surface-alt)" }}>
+            <tr>
               {["timestamp", "event_type", "step_id", "level", "message"].map((h) => (
                 <th
                   key={h}
                   style={{
-                    padding: "10px 12px",
+                    padding: "var(--table-density-cell-padding)",
                     textAlign: "left",
                     fontWeight: 600,
                     borderBottom: "1px solid var(--color-border)",
@@ -76,29 +90,33 @@ export default function EventsPage() {
             </tr>
           </thead>
           <tbody>
-            {displayEvents.map((evt, i) => (
-              <tr key={i} style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
-                  {new Date(evt.timestamp_unix_ms).toISOString()}
-                </td>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)" }}>{evt.event_type}</td>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)" }}>{evt.step_id || "—"}</td>
-                <td style={{ padding: "8px 12px" }}>
-                  <span
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      padding: "2px 8px",
-                      borderRadius: "var(--radius-sm)",
-                      background: evt.level === "info" ? "var(--color-success-soft)" : "var(--color-warning-soft)",
-                      color: evt.level === "info" ? "var(--color-success)" : "var(--color-warning)",
-                    }}
-                  >
-                    {evt.level}
-                  </span>
-                </td>
-                <td style={{ padding: "8px 12px" }}>{evt.message}</td>
-              </tr>
-            ))}
+            {displayEvents.map((evt, i) => {
+              const lStyle = levelStyle(evt.level);
+              return (
+                <tr key={i}>
+                  <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
+                    {new Date(evt.timestamp_unix_ms).toISOString()}
+                  </td>
+                  <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)" }}>{evt.event_type}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)" }}>{evt.step_id || "—"}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>
+                    <span
+                      style={{
+                        fontSize: "var(--font-size-xs)",
+                        padding: "2px 8px",
+                        borderRadius: "var(--radius-sm)",
+                        background: lStyle.bg,
+                        color: lStyle.color,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {evt.level}
+                    </span>
+                  </td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>{evt.message}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div

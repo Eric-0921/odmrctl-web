@@ -82,16 +82,17 @@ export default function RawDataPreviewPage() {
           borderRadius: "var(--radius-md)",
           border: "1px solid var(--color-border)",
           overflow: "hidden",
+          marginBottom: "var(--space-6)",
         }}
       >
         <table style={{ width: "100%", fontSize: "var(--font-size-sm)", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "var(--color-surface-alt)" }}>
+            <tr>
               {["path", "type", "size", "role", "parsed by GUI-M0"].map((h) => (
                 <th
                   key={h}
                   style={{
-                    padding: "10px 12px",
+                    padding: "var(--table-density-cell-padding)",
                     textAlign: "left",
                     fontWeight: 600,
                     borderBottom: "1px solid var(--color-border)",
@@ -104,14 +105,14 @@ export default function RawDataPreviewPage() {
           </thead>
           <tbody>
             {artifacts.map((art) => (
-              <tr key={art.path} style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
+              <tr key={art.path}>
+                <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
                   {art.path}
                 </td>
-                <td style={{ padding: "8px 12px" }}>{art.type}</td>
-                <td style={{ padding: "8px 12px" }}>{art.size}</td>
-                <td style={{ padding: "8px 12px" }}>{art.role}</td>
-                <td style={{ padding: "8px 12px" }}>
+                <td style={{ padding: "var(--table-density-cell-padding)" }}>{art.type}</td>
+                <td style={{ padding: "var(--table-density-cell-padding)" }}>{art.size}</td>
+                <td style={{ padding: "var(--table-density-cell-padding)" }}>{art.role}</td>
+                <td style={{ padding: "var(--table-density-cell-padding)" }}>
                   <span
                     style={{
                       fontSize: "var(--font-size-xs)",
@@ -125,11 +126,41 @@ export default function RawDataPreviewPage() {
                         art.parsed === "Yes"
                           ? "var(--color-success)"
                           : "var(--color-danger)",
+                      fontWeight: 600,
                     }}
                   >
                     {art.parsed}
                   </span>
                 </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        style={{
+          background: "var(--color-surface)",
+          borderRadius: "var(--radius-md)",
+          padding: "var(--space-4)",
+          border: "1px solid var(--color-border)",
+        }}
+      >
+        <h3 style={{ marginBottom: "var(--space-3)", fontSize: "var(--font-size-lg)" }}>
+          Manifest metadata
+        </h3>
+        <table style={{ width: "100%", fontSize: "var(--font-size-sm)", borderCollapse: "collapse" }}>
+          <tbody>
+            {[
+              { key: "Run ID", value: manifest.run_id },
+              { key: "Recipe hash", value: manifest.recipe_hash.slice(0, 16) + "..." + manifest.recipe_hash.slice(-8) },
+              { key: "Resolved recipe ID", value: manifest.resolved_recipe_id },
+              { key: "Safety report ID", value: manifest.safety_report_id },
+              { key: "Created at", value: new Date(manifest.created_at_unix_ms).toISOString() },
+            ].map((row) => (
+              <tr key={row.key} style={{ borderBottom: "1px solid var(--color-border)" }}>
+                <td style={{ padding: "8px 0", color: "var(--color-text-muted)", width: "30%" }}>{row.key}</td>
+                <td style={{ padding: "8px 0", fontFamily: "var(--font-mono)" }}>{row.value}</td>
               </tr>
             ))}
           </tbody>

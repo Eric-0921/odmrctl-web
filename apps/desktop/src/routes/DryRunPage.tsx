@@ -1,5 +1,13 @@
 import { getDryRunPlan, getDryRunSteps } from "../mock-data/helpers";
 
+function parseDeviceAction(action: string): { device: string; actionName: string } {
+  const parts = action.split(": ");
+  return {
+    device: parts[0] || "—",
+    actionName: parts[1] || action,
+  };
+}
+
 export default function DryRunPage() {
   const plan = getDryRunPlan();
   const steps = getDryRunSteps();
@@ -59,12 +67,12 @@ export default function DryRunPage() {
       >
         <table style={{ width: "100%", fontSize: "var(--font-size-sm)", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "var(--color-surface-alt)" }}>
+            <tr>
               {["#", "step_id", "device", "action", "parameters", "duration", "safety"].map((h) => (
                 <th
                   key={h}
                   style={{
-                    padding: "10px 12px",
+                    padding: "var(--table-density-cell-padding)",
                     textAlign: "left",
                     fontWeight: 600,
                     borderBottom: "1px solid var(--color-border)",
@@ -76,31 +84,36 @@ export default function DryRunPage() {
             </tr>
           </thead>
           <tbody>
-            {steps.slice(0, 50).map((step, idx) => (
-              <tr key={step.step_id} style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <td style={{ padding: "8px 12px" }}>{idx + 1}</td>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)" }}>{step.step_id}</td>
-                <td style={{ padding: "8px 12px" }}>smb100a_01</td>
-                <td style={{ padding: "8px 12px" }}>set_rf_frequency</td>
-                <td style={{ padding: "8px 12px", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
-                  freq={Object.values(step.sweep_coordinate)[0].toLocaleString()} Hz
-                </td>
-                <td style={{ padding: "8px 12px" }}>{step.estimated_duration_ms} ms</td>
-                <td style={{ padding: "8px 12px" }}>
-                  <span
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      padding: "2px 8px",
-                      borderRadius: "var(--radius-sm)",
-                      background: "var(--color-success-soft)",
-                      color: "var(--color-success)",
-                    }}
-                  >
-                    safe
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {steps.slice(0, 50).map((step, idx) => {
+              const { device, actionName } = parseDeviceAction(step.device_actions[0] || "");
+              return (
+                <tr key={step.step_id}>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>{idx + 1}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)" }}>{step.step_id}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>{device}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>{actionName}</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-xs)" }}>
+                    {Object.entries(step.sweep_coordinate).map(([k, v]) => (
+                      <span key={k}>{k}={v.toLocaleString()}</span>
+                    ))}
+                  </td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>{step.estimated_duration_ms} ms</td>
+                  <td style={{ padding: "var(--table-density-cell-padding)" }}>
+                    <span
+                      style={{
+                        fontSize: "var(--font-size-xs)",
+                        padding: "2px 8px",
+                        borderRadius: "var(--radius-sm)",
+                        background: "var(--color-success-soft)",
+                        color: "var(--color-success)",
+                      }}
+                    >
+                      safe
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div
