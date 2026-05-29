@@ -24,7 +24,8 @@ for schema in \
     "${WS_ROOT}/schemas/resolved_recipe.schema.json" \
     "${WS_ROOT}/schemas/run_event.schema.json" \
     "${WS_ROOT}/schemas/dry_run_plan.schema.json" \
-    "${WS_ROOT}/schemas/safety_report.schema.json"; do
+    "${WS_ROOT}/schemas/safety_report.schema.json" \
+    "${WS_ROOT}/schemas/run_manifest.schema.json"; do
     if [[ ! -f "$schema" ]]; then
         echo "ERROR: Missing schema file: $schema"
         exit 1

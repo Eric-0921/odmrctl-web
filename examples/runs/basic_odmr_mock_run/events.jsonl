@@ -1,0 +1,3 @@
+{"schema_version":"0.2.0","kind":"run_event","run_id":"basic_odmr_mock_run","event_id":"evt_000001","timestamp_unix_ms":1780033340490,"level":"info","event_type":"run_created","message":"Run directory created"}
+{"schema_version":"0.2.0","kind":"run_event","run_id":"basic_odmr_mock_run","event_id":"evt_000002","timestamp_unix_ms":1780033340490,"level":"info","event_type":"artifact_written","message":"Locked artifacts written","data":{"artifacts":["manifest.json","metadata/resolved_recipe.lock.json"]}}
+{"schema_version":"0.2.0","kind":"run_event","run_id":"basic_odmr_mock_run","event_id":"evt_000003","timestamp_unix_ms":1780033340490,"level":"info","event_type":"safety_checked","message":"Safety report loaded from pre-computed check"}

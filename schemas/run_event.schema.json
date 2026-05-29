@@ -2,38 +2,80 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://odmrctl.io/schemas/run_event.schema.json",
   "title": "RunEvent",
-  "description": "Single event emitted during an experiment run. Stored as newline-delimited JSON (JSONL) in runs/{run_id}/events.jsonl. This is a minimal placeholder schema for M1.",
+  "description": "Single event emitted during an experiment run. Stored as newline-delimited JSON (JSONL) in runs/{run_id}/events.jsonl.",
   "type": "object",
-  "required": ["timestamp", "event_type"],
+  "required": [
+    "schema_version",
+    "kind",
+    "run_id",
+    "event_id",
+    "timestamp_unix_ms",
+    "level",
+    "event_type",
+    "message"
+  ],
   "properties": {
-    "timestamp": {
+    "schema_version": {
       "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 timestamp with timezone"
+      "description": "Schema version of the event format"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["run_event"],
+      "description": "Discriminator for event documents"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Run identifier"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "Unique event identifier within the run"
+    },
+    "timestamp_unix_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Wall-clock timestamp in milliseconds since Unix epoch"
+    },
+    "timestamp_monotonic_ns": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Optional monotonic timestamp in nanoseconds"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["debug", "info", "warning", "error", "critical"],
+      "description": "Event severity level"
     },
     "event_type": {
       "type": "string",
       "enum": [
+        "run_created",
+        "artifact_written",
+        "safety_checked",
         "run_started",
-        "run_completed",
-        "run_failed",
         "step_started",
         "step_completed",
-        "device_command_sent",
-        "device_response_received",
-        "device_error",
-        "acquisition_frame",
-        "safety_violation",
-        "interlock_triggered"
+        "run_completed",
+        "run_failed"
       ],
       "description": "Event classification"
     },
-    "run_id": { "type": "string", "description": "Run identifier" },
-    "step_id": { "type": "string", "description": "Recipe step identifier, if applicable" },
-    "device_id": { "type": "string", "description": "Device identifier, if applicable" },
-    "payload": {
+    "step_id": {
+      "type": "string",
+      "description": "Recipe step identifier, if applicable"
+    },
+    "device_id": {
+      "type": "string",
+      "description": "Device identifier, if applicable"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable event message"
+    },
+    "data": {
       "type": "object",
-      "description": "Event-specific data"
+      "description": "Optional event-specific structured data"
     }
   }
 }
