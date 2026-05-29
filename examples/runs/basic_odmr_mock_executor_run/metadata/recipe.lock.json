@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "recipe",
+  "id": "basic_odmr_mock",
+  "name": "Basic ODMR Frequency Sweep (Mock)",
+  "created_by": "human",
+  "created_at": "2026-05-28T00:00:00Z",
+  "description": "A minimal CW ODMR recipe for bootstrap validation.",
+  "station_id": "station_nv_lab_01",
+  "intent": {
+    "experiment_type": "cw_odmr",
+    "description": "Sweep SMB100A RF frequency around 2.87 GHz and acquire OE1022D Ch-B X signal."
+  },
+  "profiles": [
+    "smb100a_default_fm_500hz",
+    "oe1022d_chb_default",
+    "mag_xyz_default"
+  ],
+  "blocks": [
+    "block_smb_fm_500hz_4mhz"
+  ],
+  "sweeps": [
+    {
+      "sweep_id": "rf_frequency_sweep",
+      "axis": "smb100a.rf.frequency_hz",
+      "start": 2820000000.0,
+      "stop": 2920000000.0,
+      "step": 500000.0,
+      "order": "ascending"
+    }
+  ],
+  "acquisition": {
+    "device_id": "oe1022d_01",
+    "channel": "B",
+    "readout": [
+      "x",
+      "y",
+      "r",
+      "theta",
+      "freq",
+      "noise"
+    ],
+    "pre_discard_ms": 300,
+    "window_ms": 500,
+    "average": {
+      "mode": "mean",
+      "repeat": 1
+    }
+  },
+  "timing": {
+    "default_dwell_ms": 500,
+    "default_settle_ms": 500
+  },
+  "metadata": {
+    "notes": "Initial v0.2 schema example.",
+    "operator": "manual",
+    "sample_id": "diamond_nv_sample_01"
+  }
+}

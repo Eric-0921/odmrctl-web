@@ -1,28 +1,37 @@
-# odmr-executor
+# `odmr-executor`
 
-**Layer 3** — Recipe 执行引擎。
+Layer 3 recipe execution engine for the ODMR automation system.
 
-## 职责
+## Responsibilities
 
-- 执行状态机（Idle → Running → Paused → Stopped → Error）
-- Step 调度与时序控制
-- 设备命令编排（通过 odmr-device trait）
-- 实时采集协调（OE1022D 数据流管理）
-- 急停响应
+- Load and compile recipes
+- Run safety checks
+- Create run directories via `odmr-logging`
+- Execute resolved steps against fake (mock) or real devices
+- Write events, index entries, and raw frames
+- Produce execution reports
 
-## 依赖
+## Mock-Run API
 
-- `odmr-device`（通过 trait）
-- `odmr-recipe`
-- `odmr-safety`
-- `odmr-logging`
+```rust
+use odmr_executor::{run_mock, MockRunConfig};
 
-## 不负责
+let config = MockRunConfig {
+    recipe_path: "examples/recipes/basic_odmr_mock.recipe.json".into(),
+    station_path: "examples/station.mock.json".into(),
+    run_root: "./runs".into(),
+    run_id: "run_20260528_001".into(),
+    safety_limits: None,
+};
 
-- GUI 控制逻辑
-- 数据格式转换
+let report = run_mock(config)?;
+// report.decision == ExecutionDecision::Completed
+// report.steps_completed == 201
+```
 
-## 参考
+## What this crate does NOT do
 
-- `docs/prd/05_recipe_compiler_executor_prd_v0.2.md`
-- `docs/prd/06_timing_sync_averaging_prd_v0.2.md`
+- Access real hardware in mock mode
+- Write CSV or Parquet
+- Run GUI code
+- Parse real OE1022D RALL? frames (M1.5 uses mock frames)

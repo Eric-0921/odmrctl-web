@@ -214,6 +214,19 @@ dependencies = [
 [[package]]
 name = "odmr-executor"
 version = "0.1.0"
+dependencies = [
+ "odmr-compiler",
+ "odmr-device",
+ "odmr-logging",
+ "odmr-oe1022d",
+ "odmr-recipe",
+ "odmr-safety",
+ "odmr-smb100a",
+ "odmr-types",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
 
 [[package]]
 name = "odmr-harness"

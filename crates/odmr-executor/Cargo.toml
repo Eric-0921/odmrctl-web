@@ -3,3 +3,18 @@ name = "odmr-executor"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
+
+[dependencies]
+odmr-recipe = { path = "../odmr-recipe" }
+odmr-compiler = { path = "../odmr-compiler" }
+odmr-safety = { path = "../odmr-safety" }
+odmr-logging = { path = "../odmr-logging" }
+odmr-device = { path = "../odmr-device" }
+odmr-smb100a = { path = "../odmr-smb100a" }
+odmr-oe1022d = { path = "../odmr-oe1022d" }
+odmr-types = { path = "../odmr-types" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"

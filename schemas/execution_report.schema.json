@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://odmrctl.io/schemas/execution_report.schema.json",
+  "title": "ExecutionReport",
+  "description": "Final report produced after a mock or real experiment run.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "run_id",
+    "decision",
+    "resolved_recipe_id",
+    "safety_report_id",
+    "steps_total",
+    "steps_completed",
+    "events_written",
+    "raw_frames_written",
+    "run_directory"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version of the execution report format"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["execution_report"],
+      "description": "Discriminator for execution report documents"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Run identifier"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["completed", "rejected_by_safety", "failed"],
+      "description": "Overall outcome of the run"
+    },
+    "resolved_recipe_id": {
+      "type": "string",
+      "description": "Identifier of the resolved recipe executed"
+    },
+    "safety_report_id": {
+      "type": "string",
+      "description": "Identifier of the safety report used"
+    },
+    "steps_total": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of steps in the resolved recipe"
+    },
+    "steps_completed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of steps successfully completed"
+    },
+    "events_written": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of events written to events.jsonl"
+    },
+    "raw_frames_written": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of raw frames written to rawbin"
+    },
+    "run_directory": {
+      "type": "string",
+      "description": "Absolute or relative path to the run directory"
+    }
+  }
+}

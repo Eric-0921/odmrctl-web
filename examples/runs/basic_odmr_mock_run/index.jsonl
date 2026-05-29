@@ -1,2 +1,2 @@
-{"schema_version":"0.2.0","kind":"raw_index_entry","run_id":"basic_odmr_mock_run","stream_id":"oe1022d","offset_bytes":0,"length_bytes":8,"timestamp_unix_ms":1780033340490,"step_id":"step_000001","sample_count":2}
-{"schema_version":"0.2.0","kind":"raw_index_entry","run_id":"basic_odmr_mock_run","stream_id":"oe1022d","offset_bytes":8,"length_bytes":12,"timestamp_unix_ms":1780033340490,"step_id":"step_000002","sample_count":3}
+{"schema_version":"0.2.0","kind":"raw_index_entry","run_id":"basic_odmr_mock_run","stream_id":"oe1022d","offset_bytes":0,"length_bytes":8,"timestamp_unix_ms":1780041488613,"step_id":"step_000001","sample_count":2}
+{"schema_version":"0.2.0","kind":"raw_index_entry","run_id":"basic_odmr_mock_run","stream_id":"oe1022d","offset_bytes":8,"length_bytes":12,"timestamp_unix_ms":1780041488613,"step_id":"step_000002","sample_count":3}
