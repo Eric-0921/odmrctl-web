@@ -1,6 +1,7 @@
 import TopStatusBar from "./TopStatusBar";
 import SideNav from "./SideNav";
 import MockOnlyBanner from "./MockOnlyBanner";
+import { MockModeProvider } from "../context/MockModeContext";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -8,37 +9,39 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        overflow: "hidden",
-      }}
-    >
-      <TopStatusBar />
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        <SideNav />
-        <main
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          <MockOnlyBanner />
-          <div
+    <MockModeProvider>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        <TopStatusBar />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <SideNav />
+          <main
             style={{
               flex: 1,
-              overflow: "auto",
-              padding: "var(--space-6)",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
             }}
           >
-            {children}
-          </div>
-        </main>
+            <MockOnlyBanner />
+            <div
+              style={{
+                flex: 1,
+                overflow: "auto",
+                padding: "var(--space-6)",
+              }}
+            >
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </MockModeProvider>
   );
 }

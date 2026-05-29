@@ -1,5 +1,3 @@
-import { getRecipe } from "../mock-data/helpers";
-
 const devices = [
   {
     name: "SMB100A",
@@ -60,11 +58,6 @@ const disabledControls: Record<string, { label: string; reason: string }[]> = {
 };
 
 export default function DevicesPage() {
-  const recipe = getRecipe();
-  const requiredDevices = recipe.profiles
-    .filter((p) => p.includes("smb") || p.includes("oe1022d"))
-    .map((p) => (p.includes("smb") ? "SMB100A" : "OE1022D"));
-
   return (
     <div>
       <h1 style={{ fontSize: "var(--font-size-2xl)", marginBottom: "var(--space-4)" }}>

@@ -24,3 +24,61 @@ button {
 code, pre {
   font-family: var(--font-mono);
 }
+
+/* Visible keyboard focus */
+*:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* Table base styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+th, td {
+  padding: var(--table-density-cell-padding);
+  border-bottom: 1px solid var(--table-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--table-header-bg);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+tr:hover {
+  background: var(--color-surface-alt);
+}
+
+/* Interactive element transitions */
+button, a, [role="button"] {
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+/* Scrollbar styling for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
