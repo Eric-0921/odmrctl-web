@@ -37,12 +37,12 @@ pub fn load_safety_limits(path: &std::path::Path) -> Result<SafetyLimit, RecipeE
 /// no extra whitespace).  This gives a stable identifier for a given recipe
 /// content regardless of formatting or field ordering in the source file.
 pub fn compute_recipe_hash(recipe: &Recipe) -> Result<String, RecipeError> {
-    let canonical = serde_json::to_string_pretty(recipe)?;
-    use std::hash::{Hash, Hasher};
-    let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    canonical.hash(&mut hasher);
-    let hash = hasher.finish();
-    Ok(format!("{:016x}", hash))
+    let canonical = serde_json::to_string(recipe)?;
+    use sha2::{Digest, Sha256};
+    let mut hasher = Sha256::new();
+    hasher.update(canonical.as_bytes());
+    let hash = hasher.finalize();
+    Ok(hex::encode(hash))
 }
 
 // ---------------------------------------------------------------------------
@@ -216,5 +216,114 @@ mod tests {
         let h2 = compute_recipe_hash(&recipe).unwrap();
         assert_eq!(h1, h2);
         assert!(!h1.is_empty());
+    }
+
+    #[test]
+    fn hash_length_is_64_chars() {
+        let recipe = Recipe {
+            header: CommonHeader {
+                schema_version: "0.2.0".into(),
+                kind: "recipe".into(),
+                id: "r1".into(),
+                name: None,
+                created_by: None,
+                created_at: None,
+                description: None,
+            },
+            station_id: "s1".into(),
+            intent: RecipeIntent {
+                experiment_type: "cw_odmr".into(),
+                description: None,
+            },
+            profiles: vec![],
+            blocks: vec![],
+            sweeps: vec![],
+            acquisition: AcquisitionConfig {
+                device_id: "oe1022d_01".into(),
+                channel: "B".into(),
+                readout: vec!["x".into()],
+                pre_discard_ms: None,
+                window_ms: None,
+                average: None,
+            },
+            timing: None,
+            metadata: None,
+        };
+        let h = compute_recipe_hash(&recipe).unwrap();
+        assert_eq!(h.len(), 64, "SHA-256 hex string must be 64 characters");
+    }
+
+    #[test]
+    fn same_recipe_same_hash() {
+        let recipe = Recipe {
+            header: CommonHeader {
+                schema_version: "0.2.0".into(),
+                kind: "recipe".into(),
+                id: "r1".into(),
+                name: None,
+                created_by: None,
+                created_at: None,
+                description: None,
+            },
+            station_id: "s1".into(),
+            intent: RecipeIntent {
+                experiment_type: "cw_odmr".into(),
+                description: None,
+            },
+            profiles: vec![],
+            blocks: vec![],
+            sweeps: vec![],
+            acquisition: AcquisitionConfig {
+                device_id: "oe1022d_01".into(),
+                channel: "B".into(),
+                readout: vec!["x".into()],
+                pre_discard_ms: None,
+                window_ms: None,
+                average: None,
+            },
+            timing: None,
+            metadata: None,
+        };
+        let h1 = compute_recipe_hash(&recipe).unwrap();
+        let h2 = compute_recipe_hash(&recipe).unwrap();
+        assert_eq!(h1, h2);
+    }
+
+    #[test]
+    fn different_recipe_different_hash() {
+        let recipe_a = Recipe {
+            header: CommonHeader {
+                schema_version: "0.2.0".into(),
+                kind: "recipe".into(),
+                id: "r1".into(),
+                name: None,
+                created_by: None,
+                created_at: None,
+                description: None,
+            },
+            station_id: "s1".into(),
+            intent: RecipeIntent {
+                experiment_type: "cw_odmr".into(),
+                description: None,
+            },
+            profiles: vec![],
+            blocks: vec![],
+            sweeps: vec![],
+            acquisition: AcquisitionConfig {
+                device_id: "oe1022d_01".into(),
+                channel: "B".into(),
+                readout: vec!["x".into()],
+                pre_discard_ms: None,
+                window_ms: None,
+                average: None,
+            },
+            timing: None,
+            metadata: None,
+        };
+        let mut recipe_b = recipe_a.clone();
+        recipe_b.header.id = "r2".into();
+        let h_a = compute_recipe_hash(&recipe_a).unwrap();
+        let h_b = compute_recipe_hash(&recipe_b).unwrap();
+        assert_ne!(h_a, h_b, "changing recipe id must change hash");
     }
 }

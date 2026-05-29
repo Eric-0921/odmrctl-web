@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://odmrctl.io/schemas/recipe.schema.json",
+  "title": "Recipe",
+  "description": "Human- or AI-authored experiment plan. See examples/basic_odmr_mock.recipe.json.",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "station_id", "intent", "acquisition"],
+  "properties": {
+    "schema_version": { "type": "string", "description": "Schema version, e.g. 0.2.0" },
+    "kind": { "const": "recipe", "description": "Discriminator: must be 'recipe'" },
+    "id": { "type": "string", "description": "Unique recipe identifier" },
+    "name": { "type": "string" },
+    "created_by": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "description": { "type": "string" },
+    "station_id": { "type": "string", "description": "Reference to a Station document" },
+    "intent": { "$ref": "#/definitions/RecipeIntent" },
+    "profiles": { "type": "array", "items": { "type": "string" } },
+    "blocks": { "type": "array", "items": { "type": "string" } },
+    "sweeps": { "type": "array", "items": { "$ref": "#/definitions/SweepDefinition" } },
+    "acquisition": { "$ref": "#/definitions/AcquisitionConfig" },
+    "timing": { "$ref": "#/definitions/TimingConfig" },
+    "metadata": { "type": "object" }
+  },
+  "definitions": {
+    "RecipeIntent": {
+      "type": "object",
+      "required": ["experiment_type"],
+      "properties": {
+        "experiment_type": { "type": "string", "examples": ["cw_odmr", "pulsed_odmr", "rabi"] },
+        "description": { "type": "string" }
+      }
+    },
+    "SweepDefinition": {
+      "type": "object",
+      "required": ["sweep_id", "axis", "start", "stop", "step"],
+      "properties": {
+        "sweep_id": { "type": "string" },
+        "axis": { "type": "string", "description": "e.g. smb100a.rf.frequency_hz" },
+        "start": { "type": "number" },
+        "stop": { "type": "number" },
+        "step": { "type": "number" },
+        "order": { "type": "string", "enum": ["ascending", "descending"], "default": "ascending" },
+        "dwell_ms": { "type": "integer", "minimum": 0 },
+        "settle_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "AcquisitionConfig": {
+      "type": "object",
+      "required": ["device_id", "channel", "readout"],
+      "properties": {
+        "device_id": { "type": "string" },
+        "channel": { "type": "string", "examples": ["A", "B"] },
+        "readout": { "type": "array", "items": { "type": "string" }, "examples": [["x"], ["x", "y"], ["r", "theta"]] },
+        "pre_discard_ms": { "type": "integer", "minimum": 0 },
+        "window_ms": { "type": "integer", "minimum": 0 },
+        "average": { "$ref": "#/definitions/AverageConfig" }
+      }
+    },
+    "AverageConfig": {
+      "type": "object",
+      "required": ["mode", "repeat"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["mean", "median", "none"] },
+        "repeat": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "TimingConfig": {
+      "type": "object",
+      "properties": {
+        "default_dwell_ms": { "type": "integer", "minimum": 0 },
+        "default_settle_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

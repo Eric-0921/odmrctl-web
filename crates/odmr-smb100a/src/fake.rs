@@ -17,10 +17,12 @@ pub struct Smb100aState {
     pub lf_frequency_hz: f64,
     pub lf_voltage_v: f64,
     pub lf_shape: String,
-    pub sweep_start_hz: f64,
-    pub sweep_stop_hz: f64,
+    pub freq_start_hz: f64,
+    pub freq_stop_hz: f64,
     pub sweep_step_hz: f64,
     pub sweep_dwell_ms: u64,
+    pub sweep_spacing: String,
+    pub sweep_mode: String,
 }
 
 impl Default for Smb100aState {
@@ -37,10 +39,12 @@ impl Default for Smb100aState {
             lf_frequency_hz: 1000.0,
             lf_voltage_v: 0.0,
             lf_shape: "SINE".to_string(),
-            sweep_start_hz: 1e9,
-            sweep_stop_hz: 2e9,
+            freq_start_hz: 1e9,
+            freq_stop_hz: 2e9,
             sweep_step_hz: 1e6,
             sweep_dwell_ms: 10,
+            sweep_spacing: "LIN".to_string(),
+            sweep_mode: "AUTO".to_string(),
         }
     }
 }
@@ -193,20 +197,20 @@ impl FakeSmb100a {
                 self.state.fm_deviation_hz = parse_freq(val)?;
                 Ok(DeviceResponse::Ack)
             }
-            "SWE:FREQ:STAR" => {
+            "FREQ:STAR" => {
                 let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
                     cmd: cmd.to_string(),
                     reason: "missing start value".to_string(),
                 })?;
-                self.state.sweep_start_hz = parse_freq(val)?;
+                self.state.freq_start_hz = parse_freq(val)?;
                 Ok(DeviceResponse::Ack)
             }
-            "SWE:FREQ:STOP" => {
+            "FREQ:STOP" => {
                 let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
                     cmd: cmd.to_string(),
                     reason: "missing stop value".to_string(),
                 })?;
-                self.state.sweep_stop_hz = parse_freq(val)?;
+                self.state.freq_stop_hz = parse_freq(val)?;
                 Ok(DeviceResponse::Ack)
             }
             "SWE:FREQ:STEP" => {
@@ -223,6 +227,22 @@ impl FakeSmb100a {
                     reason: "missing dwell value".to_string(),
                 })?;
                 self.state.sweep_dwell_ms = parse_time_ms(val)?;
+                Ok(DeviceResponse::Ack)
+            }
+            "SWE:SPAC" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing spacing".to_string(),
+                })?;
+                self.state.sweep_spacing = val.to_ascii_uppercase();
+                Ok(DeviceResponse::Ack)
+            }
+            "SWE:MODE" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing mode".to_string(),
+                })?;
+                self.state.sweep_mode = val.to_ascii_uppercase();
                 Ok(DeviceResponse::Ack)
             }
             _ => Err(DeviceError::UnknownCommand(cmd.to_string())),
@@ -245,10 +265,12 @@ impl FakeSmb100a {
             "FM:STAT" => on_off_str(self.state.fm_enabled).to_string(),
             "FM:SOUR" => self.state.fm_source.clone(),
             "FM:DEV" => format!("{:.0}", self.state.fm_deviation_hz),
-            "SWE:FREQ:STAR" => format!("{:.0}", self.state.sweep_start_hz),
-            "SWE:FREQ:STOP" => format!("{:.0}", self.state.sweep_stop_hz),
+            "FREQ:STAR" => format!("{:.0}", self.state.freq_start_hz),
+            "FREQ:STOP" => format!("{:.0}", self.state.freq_stop_hz),
             "SWE:FREQ:STEP" => format!("{:.0}", self.state.sweep_step_hz),
             "SWE:FREQ:DWEL" => format!("{}", self.state.sweep_dwell_ms),
+            "SWE:SPAC" => self.state.sweep_spacing.clone(),
+            "SWE:MODE" => self.state.sweep_mode.clone(),
             _ => {
                 return Err(DeviceError::UnknownCommand(cmd.to_string()));
             }

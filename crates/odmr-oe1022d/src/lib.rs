@@ -24,8 +24,16 @@ mod tests {
     }
 
     #[test]
-    fn golden_ch_b_ref_slope_command() {
+    fn golden_ch_b_ref_slope_ttl_rising() {
         // Source: oe1022d_labview_reference_signal_commands.json
+        // V1.5: 0 = TTL Rising Edge
+        assert_eq!(set_ref_slope(2, 0), "RSLPD 2,0");
+    }
+
+    #[test]
+    fn golden_ch_b_ref_slope_sine_zero_crossing() {
+        // Source: oe1022d_labview_reference_signal_commands.json
+        // V1.5: 1 = Sine Zero Crossing
         assert_eq!(set_ref_slope(2, 1), "RSLPD 2,1");
     }
 
@@ -80,6 +88,7 @@ mod tests {
         let dev = FakeOe1022d::new(DeviceId::new("oe1022d_01"));
         let ch_b = dev.channel(2).unwrap();
         assert_eq!(ch_b.reference_source, 0); // External
+        assert_eq!(ch_b.ref_slope, 0); // TTL Rising Edge (V1.5)
         assert_eq!(ch_b.input_coupling, 0); // AC
         assert_eq!(ch_b.dynamic_reserve, 1); // Normal
     }
@@ -127,5 +136,19 @@ mod tests {
 
         assert_eq!(dev.channel(1).unwrap().phase_deg, 10.0);
         assert_eq!(dev.channel(2).unwrap().phase_deg, 20.0);
+    }
+
+    #[test]
+    fn fake_rslpd_query_returns_correct_value() {
+        let mut dev = FakeOe1022d::new(DeviceId::new("oe1022d_01"));
+
+        // Default is TTL Rising Edge (0) per V1.5
+        let resp = dev.query("RSLPD? 2").unwrap();
+        assert_eq!(resp.to_string(), "0");
+
+        // Change to Sine Zero Crossing (1)
+        dev.send_command("RSLPD 2,1").unwrap();
+        let resp = dev.query("RSLPD? 2").unwrap();
+        assert_eq!(resp.to_string(), "1");
     }
 }

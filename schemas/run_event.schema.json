@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://odmrctl.io/schemas/run_event.schema.json",
+  "title": "RunEvent",
+  "description": "Single event emitted during an experiment run. Stored as newline-delimited JSON (JSONL) in runs/{run_id}/events.jsonl. This is a minimal placeholder schema for M1.",
+  "type": "object",
+  "required": ["timestamp", "event_type"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp with timezone"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "run_started",
+        "run_completed",
+        "run_failed",
+        "step_started",
+        "step_completed",
+        "device_command_sent",
+        "device_response_received",
+        "device_error",
+        "acquisition_frame",
+        "safety_violation",
+        "interlock_triggered"
+      ],
+      "description": "Event classification"
+    },
+    "run_id": { "type": "string", "description": "Run identifier" },
+    "step_id": { "type": "string", "description": "Recipe step identifier, if applicable" },
+    "device_id": { "type": "string", "description": "Device identifier, if applicable" },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data"
+    }
+  }
+}

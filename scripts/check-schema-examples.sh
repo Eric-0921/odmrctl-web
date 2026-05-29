@@ -16,4 +16,19 @@ echo "=== Validating example JSON files ==="
 cargo test --test recipe_integration_tests -- all_example_json_files_are_covered_by_tests
 
 echo ""
+echo "=== Checking schema files exist ==="
+for schema in \
+    "${WS_ROOT}/schemas/station.schema.json" \
+    "${WS_ROOT}/schemas/recipe.schema.json" \
+    "${WS_ROOT}/schemas/safety_limit.schema.json" \
+    "${WS_ROOT}/schemas/resolved_recipe.schema.json" \
+    "${WS_ROOT}/schemas/run_event.schema.json"; do
+    if [[ ! -f "$schema" ]]; then
+        echo "ERROR: Missing schema file: $schema"
+        exit 1
+    fi
+    echo "OK: $(basename "$schema")"
+done
+
+echo ""
 echo "=== Schema example check complete ==="

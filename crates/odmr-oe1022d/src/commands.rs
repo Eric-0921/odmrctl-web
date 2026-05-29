@@ -35,7 +35,7 @@ pub fn query_reference_source(channel: u8) -> String {
 
 /// `RSLPD i,j` — set external reference trigger / slope for channel i.
 ///
-/// j values: 0 = Sine, 1 = TTL Rising, 2 = TTL Falling (V1.5 manual)
+/// j values (V1.5): 0 = TTL Rising Edge, 1 = Sine Zero Crossing
 ///
 /// Source: oe1022d_labview_reference_signal_commands.json
 pub fn set_ref_slope(channel: u8, slope: u8) -> String {

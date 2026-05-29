@@ -212,28 +212,34 @@ pub fn query_fm_deviation() -> &'static str {
 }
 
 // ---------------------------------------------------------------------------
-// Sweep (RF frequency sweep)
+// Frequency sweep range (FREQ subsystem)
 // ---------------------------------------------------------------------------
+// Source: docs/equipment_manual/smb100a/06l_source_subsystem.md
+// Start/stop belong to SOURce:FREQuency, not SOURce:SWEep.
 
-/// `SWE:FREQ:STAR <val>Hz` — set sweep start frequency.
-pub fn set_sweep_start_hz(hz: f64) -> String {
-    format!("SWE:FREQ:STAR {hz}Hz")
+/// `FREQ:STAR <val>Hz` — set sweep start frequency.
+pub fn set_freq_start_hz(hz: f64) -> String {
+    format!("FREQ:STAR {hz}Hz")
 }
 
-/// `SWE:FREQ:STAR?` — query sweep start frequency.
-pub fn query_sweep_start() -> &'static str {
-    "SWE:FREQ:STAR?"
+/// `FREQ:STAR?` — query sweep start frequency.
+pub fn query_freq_start() -> &'static str {
+    "FREQ:STAR?"
 }
 
-/// `SWE:FREQ:STOP <val>Hz` — set sweep stop frequency.
-pub fn set_sweep_stop_hz(hz: f64) -> String {
-    format!("SWE:FREQ:STOP {hz}Hz")
+/// `FREQ:STOP <val>Hz` — set sweep stop frequency.
+pub fn set_freq_stop_hz(hz: f64) -> String {
+    format!("FREQ:STOP {hz}Hz")
 }
 
-/// `SWE:FREQ:STOP?` — query sweep stop frequency.
-pub fn query_sweep_stop() -> &'static str {
-    "SWE:FREQ:STOP?"
+/// `FREQ:STOP?` — query sweep stop frequency.
+pub fn query_freq_stop() -> &'static str {
+    "FREQ:STOP?"
 }
+
+// ---------------------------------------------------------------------------
+// Sweep parameters (SWEep subsystem)
+// ---------------------------------------------------------------------------
 
 /// `SWE:FREQ:STEP <val>Hz` — set sweep step size.
 pub fn set_sweep_step_hz(hz: f64) -> String {
@@ -253,4 +259,24 @@ pub fn set_sweep_dwell_ms(ms: u64) -> String {
 /// `SWE:FREQ:DWEL?` — query sweep dwell time.
 pub fn query_sweep_dwell() -> &'static str {
     "SWE:FREQ:DWEL?"
+}
+
+/// `SWE:SPAC LIN|LOG` — set sweep spacing mode.
+pub fn set_sweep_spacing(spacing: &str) -> String {
+    format!("SWE:SPAC {spacing}")
+}
+
+/// `SWE:SPAC?` — query sweep spacing mode.
+pub fn query_sweep_spacing() -> &'static str {
+    "SWE:SPAC?"
+}
+
+/// `SWE:MODE AUTO|MAN|STEP` — set sweep mode.
+pub fn set_sweep_mode(mode: &str) -> String {
+    format!("SWE:MODE {mode}")
+}
+
+/// `SWE:MODE?` — query sweep mode.
+pub fn query_sweep_mode() -> &'static str {
+    "SWE:MODE?"
 }

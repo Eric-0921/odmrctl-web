@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://odmrctl.io/schemas/resolved_recipe.schema.json",
+  "title": "ResolvedRecipe",
+  "description": "Compiler-generated final execution plan with expanded sweep steps. See crates/odmr-recipe/src/types.rs ResolvedRecipe.",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "source_recipe_id", "source_recipe_hash", "station_id", "estimated_duration_s", "safety_report_id", "steps"],
+  "properties": {
+    "schema_version": { "type": "string", "description": "Schema version, e.g. 0.2.0" },
+    "kind": { "const": "resolved_recipe", "description": "Discriminator: must be 'resolved_recipe'" },
+    "id": { "type": "string", "description": "Unique resolved recipe identifier" },
+    "name": { "type": "string" },
+    "created_by": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "description": { "type": "string" },
+    "source_recipe_id": { "type": "string", "description": "Original recipe that produced this plan" },
+    "source_recipe_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 hex digest of the canonical source recipe" },
+    "station_id": { "type": "string" },
+    "estimated_duration_s": { "type": "number", "minimum": 0 },
+    "safety_report_id": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/RecipeStep" }
+    }
+  },
+  "definitions": {
+    "RecipeStep": {
+      "type": "object",
+      "required": ["step_id", "phase", "device_actions", "expected_state"],
+      "properties": {
+        "step_id": { "type": "string" },
+        "phase": { "type": "string", "enum": ["init", "sweep", "acquire", "cleanup"] },
+        "device_actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DeviceAction" }
+        },
+        "expected_state": { "type": "object" },
+        "timing": { "$ref": "#/definitions/TimingConfig" },
+        "acquisition": { "$ref": "#/definitions/AcquisitionConfig" },
+        "sweep_coordinates": { "type": "object" },
+        "source_block_id": { "type": "string" }
+      }
+    },
+    "DeviceAction": {
+      "type": "object",
+      "required": ["device_id", "action"],
+      "properties": {
+        "device_id": { "type": "string" },
+        "action": { "type": "string" },
+        "params": { "type": "object" }
+      }
+    },
+    "AcquisitionConfig": {
+      "type": "object",
+      "required": ["device_id", "channel", "readout"],
+      "properties": {
+        "device_id": { "type": "string" },
+        "channel": { "type": "string" },
+        "readout": { "type": "array", "items": { "type": "string" } },
+        "pre_discard_ms": { "type": "integer" },
+        "window_ms": { "type": "integer" },
+        "average": { "type": "object" }
+      }
+    },
+    "TimingConfig": {
+      "type": "object",
+      "properties": {
+        "default_dwell_ms": { "type": "integer" },
+        "default_settle_ms": { "type": "integer" }
+      }
+    }
+  }
+}

@@ -97,11 +97,33 @@ mod tests {
     }
 
     #[test]
-    fn golden_set_sweep_params() {
-        assert_eq!(set_sweep_start_hz(2.82e9), "SWE:FREQ:STAR 2820000000Hz");
-        assert_eq!(set_sweep_stop_hz(2.92e9), "SWE:FREQ:STOP 2920000000Hz");
+    fn golden_freq_start_stop_commands_match_manual() {
+        // Source: docs/equipment_manual/smb100a/06l_source_subsystem.md
+        // FREQ:STAR and FREQ:STOP belong to FREQUENCY subsystem, not SWEep.
+        assert_eq!(set_freq_start_hz(1e9), "FREQ:STAR 1000000000Hz");
+        assert_eq!(set_freq_stop_hz(5e9), "FREQ:STOP 5000000000Hz");
+        assert_eq!(query_freq_start(), "FREQ:STAR?");
+        assert_eq!(query_freq_stop(), "FREQ:STOP?");
+    }
+
+    #[test]
+    fn golden_sweep_step_dwell_commands() {
         assert_eq!(set_sweep_step_hz(500_000.0), "SWE:FREQ:STEP 500000Hz");
         assert_eq!(set_sweep_dwell_ms(500), "SWE:FREQ:DWEL 500ms");
+        assert_eq!(query_sweep_step(), "SWE:FREQ:STEP?");
+        assert_eq!(query_sweep_dwell(), "SWE:FREQ:DWEL?");
+    }
+
+    #[test]
+    fn golden_sweep_spacing_command_is_swe_spac() {
+        assert_eq!(set_sweep_spacing("LIN"), "SWE:SPAC LIN");
+        assert_eq!(query_sweep_spacing(), "SWE:SPAC?");
+    }
+
+    #[test]
+    fn golden_sweep_mode_command_is_swe_mode() {
+        assert_eq!(set_sweep_mode("AUTO"), "SWE:MODE AUTO");
+        assert_eq!(query_sweep_mode(), "SWE:MODE?");
     }
 
     // -----------------------------------------------------------------------
@@ -173,5 +195,26 @@ mod tests {
         assert!(dev.state().fm_enabled);
         assert_eq!(dev.state().fm_source, "INT");
         assert_eq!(dev.state().fm_deviation_hz, 4e6);
+    }
+
+    #[test]
+    fn fake_device_parses_freq_star_stop() {
+        let mut dev = FakeSmb100a::new(DeviceId::new("smb100a_01"));
+
+        dev.send_command("FREQ:STAR 1GHz").unwrap();
+        dev.send_command("FREQ:STOP 5GHz").unwrap();
+        dev.send_command("SWE:SPAC LIN").unwrap();
+        dev.send_command("SWE:MODE AUTO").unwrap();
+
+        assert_eq!(dev.state().freq_start_hz, 1e9);
+        assert_eq!(dev.state().freq_stop_hz, 5e9);
+        assert_eq!(dev.state().sweep_spacing, "LIN");
+        assert_eq!(dev.state().sweep_mode, "AUTO");
+
+        let resp = dev.query("FREQ:STAR?").unwrap();
+        assert_eq!(resp.to_string(), "1000000000");
+
+        let resp = dev.query("FREQ:STOP?").unwrap();
+        assert_eq!(resp.to_string(), "5000000000");
     }
 }

@@ -7,7 +7,7 @@ use odmr_types::{DeviceId, DeviceKind};
 #[derive(Debug, Clone, PartialEq)]
 pub struct ChannelState {
     pub reference_source: u8, // 0=Ext, 1=Int, 2=IntSweep
-    pub ref_slope: u8,        // 0=Sine, 1=TTL Rise, 2=TTL Fall
+    pub ref_slope: u8,        // 0=TTL Rising Edge, 1=Sine Zero Crossing
     pub reference_frequency_hz: f64,
     pub phase_deg: f64,
     pub input_source: u8,        // 0=A, 1=A-B, 2=I(1M), 3=I(100M)
@@ -25,7 +25,7 @@ impl Default for ChannelState {
     fn default() -> Self {
         Self {
             reference_source: 0, // External
-            ref_slope: 1,        // TTL Rising
+            ref_slope: 0,        // TTL Rising Edge
             reference_frequency_hz: 500.0,
             phase_deg: 0.0,
             input_source: 0,         // A (single-ended voltage)
