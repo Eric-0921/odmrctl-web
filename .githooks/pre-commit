@@ -1,12 +1,43 @@
 #!/usr/bin/env bash
-# Pre-commit hook: run consistency checks when controlled files change.
+# Pre-commit hook: run mechanical checks when controlled files change.
 # Enable: git config core.hooksPath .githooks
 
 STAGED=$(git diff --cached --name-only)
 
-# Only run if controlled files are staged
+# Run consistency checks when repo structure files change
 if echo "$STAGED" | grep -qE '^(README|AGENTS|Cargo\.toml|docs/(prd|adr|architecture)/|crates/)'; then
     echo "[pre-commit] running consistency checks..."
     bash scripts/check-consistency.sh || exit 1
 fi
+
+# Run schema example check when examples or schemas change
+if echo "$STAGED" | grep -qE '^(examples/|schemas/|crates/odmr-recipe/)'; then
+    echo "[pre-commit] running schema example checks..."
+    bash scripts/check-schema-examples.sh || exit 1
+fi
+
+# Run command catalog check when device crates or examples change
+if echo "$STAGED" | grep -qE '^(examples/.*commands\.json|crates/odmr-smb100a/|crates/odmr-oe1022d/|crates/odmr-device/)'; then
+    echo "[pre-commit] running command catalog checks..."
+    bash scripts/check-command-catalog.sh || exit 1
+fi
+
+# Run docs link check when docs change
+if echo "$STAGED" | grep -qE '^docs/'; then
+    echo "[pre-commit] running docs link checks..."
+    bash scripts/check-docs-links.sh || exit 1
+fi
+
+# Run frontend hardware check when frontend changes
+if echo "$STAGED" | grep -qE '^apps/desktop/'; then
+    echo "[pre-commit] running frontend hardware access checks..."
+    bash scripts/check-frontend-hardware.sh || exit 1
+fi
+
+# Run realtime CSV check when realtime crates change
+if echo "$STAGED" | grep -qE '^(crates/odmr-executor/|crates/odmr-oe1022d/|crates/odmr-logging/|crates/odmr-harness/)'; then
+    echo "[pre-commit] running realtime CSV checks..."
+    bash scripts/check-realtime-csv.sh || exit 1
+fi
+
 exit 0

@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "station",
+  "id": "station_nv_lab_01",
+  "name": "NV ODMR Station 01",
+  "created_by": "human",
+  "created_at": "2026-05-28T00:00:00Z",
+  "description": "Mock station for bootstrap testing.",
+  "devices": [
+    {
+      "device_id": "smb100a_01",
+      "device_type": "smb100a",
+      "transport": {
+        "kind": "tcp_scpi",
+        "host": "192.168.0.20",
+        "port": 5025
+      },
+      "profile_id": "smb100a_default_fm_500hz",
+      "required": true
+    },
+    {
+      "device_id": "oe1022d_01",
+      "device_type": "oe1022d",
+      "transport": {
+        "kind": "serial",
+        "port": "COM3",
+        "baud_rate": 115200
+      },
+      "profile_id": "oe1022d_chb_default",
+      "required": true
+    },
+    {
+      "device_id": "laser_01",
+      "device_type": "laser",
+      "transport": {
+        "kind": "serial",
+        "port": "COM4"
+      },
+      "required": false
+    },
+    {
+      "device_id": "mag_xyz_01",
+      "device_type": "magnet_xyz",
+      "transport": {
+        "kind": "serial_group",
+        "ports": ["COM5", "COM6", "COM7"]
+      },
+      "profile_id": "mag_xyz_default",
+      "required": true
+    }
+  ],
+  "safety_profile_id": "safety_nv_station_default",
+  "calibration_snapshot_id": "calibration_2026_05_28"
+}

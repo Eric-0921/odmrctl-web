@@ -1,0 +1,10 @@
+[package]
+name = "odmr-oe1022d"
+version = "0.1.0"
+edition = "2021"
+description = "OE1022D DSP lock-in amplifier — command catalog and fake device."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+odmr-types = { path = "../odmr-types" }
+odmr-device = { path = "../odmr-device" }

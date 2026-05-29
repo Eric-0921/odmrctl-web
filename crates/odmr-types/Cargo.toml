@@ -1,0 +1,8 @@
+[package]
+name = "odmr-types"
+version = "0.1.0"
+edition = "2021"
+description = "Layer 0 — shared base types for the ODMR automation system. Zero external dependencies."
+license = "MIT OR Apache-2.0"
+
+[dependencies]

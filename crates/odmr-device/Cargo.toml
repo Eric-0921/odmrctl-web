@@ -1,0 +1,9 @@
+[package]
+name = "odmr-device"
+version = "0.1.0"
+edition = "2021"
+description = "Device abstraction traits and shared types for the ODMR automation system."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+odmr-types = { path = "../odmr-types" }
