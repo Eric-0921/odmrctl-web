@@ -77,6 +77,7 @@ export default function EventsPage() {
               {["timestamp", "event_type", "step_id", "level", "message"].map((h) => (
                 <th
                   key={h}
+                  scope="col"
                   style={{
                     padding: "var(--table-density-cell-padding)",
                     textAlign: "left",

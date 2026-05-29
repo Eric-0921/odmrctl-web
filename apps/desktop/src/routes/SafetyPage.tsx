@@ -101,7 +101,7 @@ export default function SafetyPage() {
             <thead>
               <tr>
                 {["severity", "code", "message", "step_id", "device"].map((h) => (
-                  <th key={h} style={{ padding: "var(--table-density-cell-padding)", textAlign: "left", fontWeight: 600, borderBottom: "1px solid var(--color-border)" }}>{h}</th>
+                  <th key={h} scope="col" style={{ padding: "var(--table-density-cell-padding)", textAlign: "left", fontWeight: 600, borderBottom: "1px solid var(--color-border)" }}>{h}</th>
                 ))}
               </tr>
             </thead>

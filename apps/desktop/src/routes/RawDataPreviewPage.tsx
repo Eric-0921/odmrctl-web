@@ -91,6 +91,7 @@ export default function RawDataPreviewPage() {
               {["path", "type", "size", "role", "parsed by GUI-M0"].map((h) => (
                 <th
                   key={h}
+                  scope="col"
                   style={{
                     padding: "var(--table-density-cell-padding)",
                     textAlign: "left",

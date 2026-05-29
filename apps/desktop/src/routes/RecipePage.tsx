@@ -151,6 +151,7 @@ export default function RecipePage() {
           <h3 style={{ fontSize: "var(--font-size-lg)" }}>Recipe JSON preview</h3>
           <button
             onClick={() => setShowJson((s) => !s)}
+            aria-expanded={showJson}
             style={{
               padding: "4px 12px",
               borderRadius: "var(--radius-sm)",

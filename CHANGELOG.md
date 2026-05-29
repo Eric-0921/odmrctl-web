@@ -4,6 +4,13 @@
 
 ### Added
 
+- **GUI-M0-06: Final audit, accessibility pass, README, and acceptance checklist**
+  - Boundary audit: zero executable hardware-control logic; no prohibited npm/Rust dependencies
+  - Button audit: all real-control buttons verified disabled with helper text and `cursor: not-allowed`
+  - Accessibility: added `scope="col"` to all table `<th>` elements; added `aria-expanded` to Recipe JSON preview toggle
+  - Root `README.md`: added GUI-M0 run instructions, known limitations, and mock-only boundary section
+  - `docs/gui/GUI-M0-implementation-notes.md`: created — pages, components, mock data strategy, disabled controls, boundary checklist, M1/M2 roadmap
+
 - **GUI-M0-05: Dry Run, Safety, Events, Raw Data, and About pages**
   - Dry Run: device/action parsed from `device_actions` instead of hardcoded; parameters show full sweep coordinate key=value
   - Safety: findings severity badge with color + text label (info/warning/error); empty state preserved

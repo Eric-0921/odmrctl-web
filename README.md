@@ -51,6 +51,28 @@ bash scripts/check-consistency.sh
 git config core.hooksPath .githooks   # 启用 pre-commit
 ```
 
+## GUI-M0 Mock Viewer
+
+`apps/desktop/` 是 GUI-M0 的 mock-only Tauri + React 前端。它展示静态 bundl 的 mock 实验数据，不做任何硬件访问。
+
+### 运行 GUI-M0
+
+```bash
+cd apps/desktop
+pnpm install
+pnpm tauri dev        # 开发模式，热重载
+# 或
+pnpm tauri build      # 发布构建
+```
+
+### GUI-M0 已知限制
+
+- **Mock-only**：所有数据来自构建时 bundl 的静态 snapshot，运行时无 fs/fetch
+- **无硬件访问**：无 serial / USB / VISA / TCP / SCPI 代码
+- **无 executor 连接**：Start Run / Pause / Stop / Emergency Stop 等按钮全部禁用
+- **无 rawbin 解析**：Raw Data Preview 仅展示元数据，二进制解析由 Rust 后端负责
+- **无实时订阅**：Events 页面展示静态事件日志，无 WebSocket / SSE
+
 ## 技术栈
 
 Rust workspace（12 crates）+ Tauri + Web 前端 + Python 离线分析

@@ -71,6 +71,7 @@ export default function DryRunPage() {
               {["#", "step_id", "device", "action", "parameters", "duration", "safety"].map((h) => (
                 <th
                   key={h}
+                  scope="col"
                   style={{
                     padding: "var(--table-density-cell-padding)",
                     textAlign: "left",
