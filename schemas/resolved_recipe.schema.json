@@ -39,7 +39,11 @@
         "timing": { "$ref": "#/definitions/TimingConfig" },
         "acquisition": { "$ref": "#/definitions/AcquisitionConfig" },
         "sweep_coordinates": { "type": "object" },
-        "source_block_id": { "type": "string" }
+        "source_block_id": { "type": "string" },
+        "source_sweep_id": { "type": "string", "description": "Which sweep definition this step was expanded from" },
+        "point_index": { "type": "integer", "minimum": 0, "description": "Zero-based index within the parent sweep" },
+        "total_points": { "type": "integer", "minimum": 1, "description": "Total number of points in the parent sweep" },
+        "estimated_duration_ms": { "type": "integer", "minimum": 0, "description": "Estimated duration of this step in milliseconds" }
       }
     },
     "DeviceAction": {

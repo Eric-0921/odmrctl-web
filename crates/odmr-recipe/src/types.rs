@@ -179,6 +179,18 @@ pub struct RecipeStep {
     pub sweep_coordinates: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub source_block_id: Option<String>,
+    /// Which sweep definition this step was expanded from.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub source_sweep_id: Option<String>,
+    /// Zero-based index within the sweep.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub point_index: Option<usize>,
+    /// Total number of points in the parent sweep.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub total_points: Option<usize>,
+    /// Estimated duration of this step in milliseconds.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub estimated_duration_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
