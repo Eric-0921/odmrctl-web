@@ -6,9 +6,7 @@
 //!
 //! No hardware access. No fake devices. No executor. No GUI.
 
-use odmr_recipe::{
-    CommonHeader, DeviceAction, Recipe, RecipeStep, ResolvedRecipe, TimingConfig,
-};
+use odmr_recipe::{CommonHeader, DeviceAction, Recipe, RecipeStep, ResolvedRecipe, TimingConfig};
 use std::path::Path;
 
 // ---------------------------------------------------------------------------

@@ -164,6 +164,10 @@ fn validate_sweep(sweep: &SweepDefinition) -> Result<(), ValidationError> {
 /// In production this is handled by `odmr-safety`.  For the bootstrap milestone
 /// we perform a coarse check on sweep parameters that are known to map to
 /// device settings.
+#[deprecated(
+    since = "0.1.0",
+    note = "Deprecated after M1.3; use odmr-safety::check_resolved_recipe instead"
+)]
 pub fn validate_recipe_safety(
     recipe: &Recipe,
     limits: &SafetyLimit,

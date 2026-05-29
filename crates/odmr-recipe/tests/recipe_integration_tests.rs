@@ -1,5 +1,7 @@
 //! Integration tests for recipe loading, validation, and schema examples.
 
+#![allow(deprecated)]
+
 use odmr_recipe::{compute_recipe_hash, load_recipe, load_station, validate_recipe_safety};
 use std::path::PathBuf;
 
@@ -49,6 +51,7 @@ fn invalid_recipe_fails() {
         max_mag_ramp_rate_a_per_s: Some(0.1),
     };
 
+    #[allow(deprecated)]
     let result = validate_recipe_safety(&recipe, &limits);
     assert!(
         result.is_err(),

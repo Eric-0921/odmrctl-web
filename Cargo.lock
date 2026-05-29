@@ -250,6 +250,12 @@ version = "0.1.0"
 [[package]]
 name = "odmr-safety"
 version = "0.1.0"
+dependencies = [
+ "odmr-recipe",
+ "odmr-types",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "odmr-smb100a"

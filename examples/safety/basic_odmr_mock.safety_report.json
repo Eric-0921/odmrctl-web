@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "safety_report",
+  "id": "safety_resolved_basic_odmr_mock",
+  "resolved_recipe_id": "resolved_basic_odmr_mock",
+  "decision": "allow",
+  "summary": {
+    "checked_steps": 201,
+    "checked_actions": 201,
+    "info_count": 0,
+    "warning_count": 0,
+    "error_count": 0
+  },
+  "findings": []
+}
