@@ -19,6 +19,7 @@ export default function DashboardPage() {
         }}
       >
         {[
+          { title: "Run name", value: summary.name },
           { title: "System phase", value: "M1 mock complete / M2 pending" },
           { title: "Current mode", value: "GUI-M0 MOCK ONLY" },
           { title: "Safety decision", value: summary.safetyDecision },
@@ -26,7 +27,7 @@ export default function DashboardPage() {
           { title: "Estimated duration", value: `${summary.estimatedDurationMs / 1000} s` },
           { title: "Event count", value: String(summary.eventCount) },
           { title: "Artifact count", value: String(summary.artifactCount) },
-          { title: "Backend state", value: "Static mock data" },
+          { title: "Required devices", value: summary.requiredDevices.join(", ") },
         ].map((card) => (
           <div
             key={card.title}
@@ -63,10 +64,10 @@ export default function DashboardPage() {
         }}
       >
         {[
-          { label: "Start Run", reason: "Requires executor backend" },
-          { label: "Pause Run", reason: "Requires active executor run" },
-          { label: "Stop Run", reason: "Requires active executor run" },
-          { label: "Emergency Stop", reason: "M0 has no hardware authority" },
+          { label: "Start Run", reason: "requires executor backend" },
+          { label: "Pause Run", reason: "no live run in GUI-M0" },
+          { label: "Stop Run", reason: "no live run in GUI-M0" },
+          { label: "Emergency Stop", reason: "no hardware authority in GUI-M0" },
         ].map((btn) => (
           <div key={btn.label} style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
             <button

@@ -35,3 +35,7 @@ node_modules/
 *.parquet
 runs/
 !/examples/runs/
+
+# Screenshot verification artifacts
+screenshots/
+screenshot_verify.py

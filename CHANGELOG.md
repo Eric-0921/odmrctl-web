@@ -4,6 +4,12 @@
 
 ### Added
 
+- **GUI-M0-04: Dashboard, Devices, and Recipe pages**
+  - Dashboard: added "Run name" and "Required devices" summary cards; fixed 4 disabled button helper texts to match spec
+  - Devices: added "Last known state: static bundled data" to all 4 device cards; adjusted disabled control labels to Connect/Probe/Configure/Output ON/MOD ON; added "Mock viewer only" helper label
+  - Recipe: added "Schema version" card, "Main sweep parameters" panel (start/stop/step/order/points), expanded metadata table with Recipe ID and Schema version
+  - Recipe: added read-only collapsible JSON preview panel (Show JSON / Hide JSON toggle)
+
 - **GUI-M0-03: AppShell, navigation, design tokens, persistent mock-only state**
   - `MockModeContext` — React Context with localStorage persistence for mock-mode state
   - Banner collapse/expand toggle with persisted preference (`odmr-gui-m0-mode`)

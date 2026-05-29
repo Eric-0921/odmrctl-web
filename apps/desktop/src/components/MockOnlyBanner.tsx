@@ -8,12 +8,8 @@ export default function MockOnlyBanner() {
   return (
     <div
       style={{
-        background: bannerCollapsed
-          ? "var(--color-primary-soft)"
-          : "var(--color-primary-soft)",
-        borderLeft: bannerCollapsed
-          ? "4px solid var(--color-primary)"
-          : "4px solid var(--color-primary)",
+        background: "var(--color-primary-soft)",
+        borderLeft: "4px solid var(--color-primary)",
         padding: bannerCollapsed
           ? "var(--space-1) var(--space-4)"
           : "var(--space-3) var(--space-4)",

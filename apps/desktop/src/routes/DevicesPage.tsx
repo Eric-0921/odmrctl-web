@@ -3,57 +3,54 @@ const devices = [
     name: "SMB100A",
     role: "RF / microwave signal generator",
     required: true,
-    state: "unavailable",
-    params: "RF freq, RF power, RF output, modulation, LF generator",
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
   },
   {
     name: "OE1022D",
     role: "DSP lock-in amplifier / acquisition source",
     required: true,
-    state: "unavailable",
-    params: "Ch-B X / Y / R / theta / ref freq",
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
   },
   {
     name: "Laser Controller",
     role: "laser controller placeholder",
     required: false,
-    state: "unavailable",
-    params: "power, emission, warmup",
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
   },
   {
     name: "Magnetic Axes",
     role: "X/Y/Z magnetic field or current controller placeholder",
     required: false,
-    state: "unavailable",
-    params: "B vector, coil matrix, ramp",
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
   },
 ];
 
 const disabledControls: Record<string, { label: string; reason: string }[]> = {
   SMB100A: [
-    { label: "Connect SMB100A", reason: "M2 bring-up only" },
-    { label: "Probe LAN", reason: "No TCP socket probing in GUI-M0" },
-    { label: "RF Output ON", reason: "Forbidden in GUI-M0" },
+    { label: "Connect", reason: "M2 bring-up only" },
+    { label: "Probe", reason: "Forbidden in GUI-M0" },
+    { label: "Configure", reason: "Mock viewer only" },
+    { label: "Output ON", reason: "Forbidden in GUI-M0" },
     { label: "MOD ON", reason: "Forbidden in GUI-M0" },
-    { label: "Configure RF", reason: "Backend device registry required" },
   ],
   OE1022D: [
-    { label: "Connect OE1022D", reason: "M2 bring-up only" },
-    { label: "Probe USB/RS232", reason: "No USB/serial probing in GUI-M0" },
-    { label: "Read RALL?", reason: "Forbidden in GUI-M0" },
-    { label: "Auto Phase", reason: "Forbidden in GUI-M0" },
-    { label: "Configure Ch-B", reason: "Backend device registry required" },
+    { label: "Connect", reason: "M2 bring-up only" },
+    { label: "Probe", reason: "Forbidden in GUI-M0" },
+    { label: "Configure", reason: "Mock viewer only" },
   ],
   "Laser Controller": [
-    { label: "Connect Laser", reason: "M2 bring-up only" },
+    { label: "Connect", reason: "M2 bring-up only" },
     { label: "Emission ON", reason: "Forbidden in GUI-M0" },
-    { label: "Safe shutdown", reason: "No hardware authority in GUI-M0" },
   ],
   "Magnetic Axes": [
-    { label: "Connect axes", reason: "M2 bring-up only" },
-    { label: "Set B vector", reason: "Future magnetic planner" },
+    { label: "Connect", reason: "M2 bring-up only" },
+    { label: "Set B vector", reason: "Mock viewer only" },
     { label: "Ramp current", reason: "Forbidden in GUI-M0" },
-    { label: "Safe zero", reason: "No hardware authority in GUI-M0" },
+    { label: "Safe zero", reason: "Forbidden in GUI-M0" },
   ],
 };
 
@@ -73,8 +70,7 @@ export default function DevicesPage() {
           color: "var(--color-text)",
         }}
       >
-        GUI-M0 contains no serial, USB, VISA, TCP socket, SCPI, or real device
-        probing code.
+        No serial / USB / VISA / TCP socket probing exists in GUI-M0.
       </div>
       <div
         style={{
@@ -100,9 +96,9 @@ export default function DevicesPage() {
             <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)", marginBottom: "var(--space-3)" }}>
               <div>Role: {dev.role}</div>
               <div>Required by recipe: {dev.required ? "yes" : "no"}</div>
-              <div>Connection: unavailable in GUI-M0</div>
-              <div>Mock state: static snapshot only</div>
-              <div>Potential future parameters: {dev.params}</div>
+              <div>Connection status: {dev.connection}</div>
+              <div>Mock status: static snapshot only</div>
+              <div>Last known state: {dev.lastKnownState}</div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
               {disabledControls[dev.name]?.map((ctrl) => (
