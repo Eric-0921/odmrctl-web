@@ -1,0 +1,22 @@
+import type { RunManifest } from "./types";
+
+export const runManifest: RunManifest = {
+  "schema_version": "0.2.0",
+  "kind": "run_manifest",
+  "run_id": "basic_odmr_mock_executor_run",
+  "created_at_unix_ms": 1780041488519,
+  "artifact_paths": {
+    "manifest": "manifest.json",
+    "station_snapshot": "metadata/station_snapshot.json",
+    "recipe_lock": "metadata/recipe.lock.json",
+    "resolved_recipe_lock": "metadata/resolved_recipe.lock.json",
+    "dry_run_plan_lock": "metadata/dry_run_plan.lock.json",
+    "safety_report_lock": "metadata/safety_report.lock.json",
+    "events": "events.jsonl",
+    "index": "index.jsonl",
+    "raw_bin": "raw/oe1022d.rawbin"
+  },
+  "recipe_hash": "bae8e4d7d72c1a45a1b86f0a26951c285e2af97db0247d2541e28fffe2979ecb",
+  "resolved_recipe_id": "resolved_basic_odmr_mock",
+  "safety_report_id": "safety_resolved_basic_odmr_mock"
+};

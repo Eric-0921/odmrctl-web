@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Default capabilities for GUI-M0 mock viewer","local":true,"windows":["main"],"permissions":["core:default","shell:allow-open"]}}

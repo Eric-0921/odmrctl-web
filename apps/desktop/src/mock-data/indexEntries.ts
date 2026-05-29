@@ -1,0 +1,2014 @@
+import type { RawIndexEntry } from "./types";
+
+export const indexEntries: RawIndexEntry[] = [
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 0,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488520,
+    "step_id": "step_000001"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 16,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488520,
+    "step_id": "step_000002"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 32,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488520,
+    "step_id": "step_000003"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 48,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488520,
+    "step_id": "step_000004"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 64,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488520,
+    "step_id": "step_000005"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 80,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488521,
+    "step_id": "step_000006"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 96,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488521,
+    "step_id": "step_000007"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 112,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000008"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 128,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000009"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 144,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000010"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 160,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000011"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 176,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000012"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 192,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488522,
+    "step_id": "step_000013"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 208,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000014"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 224,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000015"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 240,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000016"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 256,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000017"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 272,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000018"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 288,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000019"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 304,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000020"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 320,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000021"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 336,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000022"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 352,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000023"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 368,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488523,
+    "step_id": "step_000024"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 384,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000025"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 400,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000026"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 416,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000027"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 432,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000028"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 448,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000029"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 464,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000030"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 480,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000031"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 496,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000032"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 512,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000033"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 528,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000034"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 544,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000035"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 560,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000036"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 576,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000037"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 592,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488524,
+    "step_id": "step_000038"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 608,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000039"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 624,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000040"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 640,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000041"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 656,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000042"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 672,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000043"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 688,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000044"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 704,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000045"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 720,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000046"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 736,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000047"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 752,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000048"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 768,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000049"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 784,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488525,
+    "step_id": "step_000050"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 800,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000051"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 816,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000052"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 832,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000053"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 848,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000054"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 864,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000055"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 880,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000056"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 896,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000057"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 912,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000058"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 928,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000059"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 944,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000060"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 960,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000061"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 976,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488526,
+    "step_id": "step_000062"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 992,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000063"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1008,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000064"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1024,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000065"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1040,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000066"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1056,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000067"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1072,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000068"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1088,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000069"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1104,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000070"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1120,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000071"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1136,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000072"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1152,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000073"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1168,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000074"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1184,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000075"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1200,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488527,
+    "step_id": "step_000076"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1216,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488528,
+    "step_id": "step_000077"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1232,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488528,
+    "step_id": "step_000078"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1248,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488528,
+    "step_id": "step_000079"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1264,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488528,
+    "step_id": "step_000080"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1280,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488528,
+    "step_id": "step_000081"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1296,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000082"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1312,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000083"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1328,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000084"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1344,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000085"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1360,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000086"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1376,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000087"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1392,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000088"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1408,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000089"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1424,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000090"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1440,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000091"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1456,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000092"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1472,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000093"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1488,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488529,
+    "step_id": "step_000094"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1504,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000095"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1520,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000096"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1536,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000097"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1552,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000098"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1568,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000099"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1584,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488530,
+    "step_id": "step_000100"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1600,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000101"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1616,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000102"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1632,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000103"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1648,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000104"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1664,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000105"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1680,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488532,
+    "step_id": "step_000106"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1696,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000107"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1712,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000108"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1728,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000109"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1744,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000110"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1760,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000111"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1776,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000112"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1792,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000113"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1808,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000114"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1824,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000115"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1840,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000116"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1856,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488533,
+    "step_id": "step_000117"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1872,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000118"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1888,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000119"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1904,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000120"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1920,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000121"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1936,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000122"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1952,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000123"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1968,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000124"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 1984,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000125"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2000,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000126"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2016,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000127"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2032,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000128"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2048,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000129"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2064,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488534,
+    "step_id": "step_000130"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2080,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000131"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2096,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000132"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2112,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000133"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2128,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000134"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2144,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000135"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2160,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000136"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2176,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000137"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2192,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000138"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2208,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000139"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2224,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000140"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2240,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000141"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2256,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000142"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2272,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488535,
+    "step_id": "step_000143"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2288,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000144"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2304,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000145"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2320,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000146"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2336,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000147"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2352,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000148"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2368,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000149"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2384,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000150"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2400,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000151"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2416,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000152"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2432,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000153"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2448,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000154"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2464,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000155"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2480,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488536,
+    "step_id": "step_000156"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2496,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000157"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2512,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000158"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2528,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000159"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2544,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000160"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2560,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000161"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2576,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000162"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2592,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000163"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2608,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000164"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2624,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000165"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2640,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000166"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2656,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000167"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2672,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000168"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2688,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488537,
+    "step_id": "step_000169"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2704,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000170"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2720,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000171"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2736,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000172"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2752,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000173"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2768,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000174"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2784,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000175"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2800,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000176"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2816,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000177"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2832,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000178"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2848,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000179"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2864,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488538,
+    "step_id": "step_000180"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2880,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000181"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2896,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000182"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2912,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000183"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2928,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000184"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2944,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000185"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2960,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000186"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2976,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000187"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 2992,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488539,
+    "step_id": "step_000188"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3008,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000189"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3024,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000190"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3040,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000191"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3056,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000192"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3072,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000193"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3088,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000194"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3104,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488540,
+    "step_id": "step_000195"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3120,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000196"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3136,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000197"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3152,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000198"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3168,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000199"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3184,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000200"
+  },
+  {
+    "schema_version": "0.2.0",
+    "kind": "raw_index_entry",
+    "run_id": "basic_odmr_mock_executor_run",
+    "stream_id": "oe1022d",
+    "offset_bytes": 3200,
+    "length_bytes": 16,
+    "timestamp_unix_ms": 1780041488541,
+    "step_id": "step_000201"
+  }
+];
