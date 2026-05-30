@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.2.1] — M2 Lab Bringup Phase 1: Discovery, Verification, Snapshot
+
+### Added
+
+- **M2.0-A: macOS hardware discovery tools**
+  - `tools/discover/` — Rust CLI for scanning lab instruments
+    - LAN discovery: SMB100A via SCPI `*IDN?` over TCP/5025 (subnet sweep)
+    - Serial discovery: OE1022D via `*IDN?` over USB CDC (port enumeration + baud probe)
+    - Output: `station.lab.example.json` with detected device fingerprints
+  - `scripts/lab/probe-*.sh` — bash wrapper scripts for quick discovery
+
+- **M2.0-B: Human-in-the-loop command verification protocol**
+  - `tools/manual_command_verify/` — verification protocol and JSONL receipt templates
+  - Human approval gate before any write/change command reaches hardware
+  - Immutable JSONL receipts: command, checksum, approver, timestamp, outcome
+
+- **M2.1: Real-device read-only station snapshot**
+  - `tools/lab/snapshot/` — Rust read-only snapshot tool
+    - SMB100A: 21/21 read-only queries over TCP:5025 (freq, power, mod state, sweep config, etc.)
+    - OE1022D: 10/11 read-only queries over serial @ 921600 baud (freq, phase, sensitivity, time constant, filter slope, etc.)
+  - Double safety gate: hard-coded query whitelist + forbidden substring rejection (`OUTP ON`, `*RST`, `INIT`, etc.)
+  - Safety gate tests: `tools/lab/snapshot/tests/safety_gate_test.rs` — 9 rejection cases
+  - OE1022D serial transport notes documented in `tools/lab/snapshot/README.md`
+
+### Changed
+
+- `examples/station.lab.example.json` — OE1022D baud rate corrected from 115200 → 921600 (real device requirement)
+
+### Documents
+
+- PRD updates: CNI laser protocol, MAYNUO M8812 re-reverse-engineering results, measured coil constants, magnetic coil control workflow, device fingerprinting strategy
+
+---
+
 ## [0.2.0] GUI-M0 — Mock-only Tauri + React Viewer
 
 ### Added

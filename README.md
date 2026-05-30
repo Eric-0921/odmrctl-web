@@ -14,6 +14,8 @@ Layer 3: Runtime           odmr-executor  odmr-logging  odmr-replay  odmr-harnes
 Layer 2: Domain            odmr-recipe  odmr-compiler  odmr-safety  odmr-config
 Layer 1: Drivers           odmr-smb100a  odmr-oe1022d  odmr-device
 Layer 0: Types             odmr-types
+
+Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_command_verify/
 ```
 
 ## 核心理念
@@ -32,10 +34,21 @@ Layer 0: Types             odmr-types
 |------|------|------|
 | `docs/prd/` | 产品需求文档 | 13 份 |
 | `docs/adr/` | 架构决策记录 | 6 份 |
+| `tools/` | 实验室联调工具 | 见下方 |
 | `docs/architecture/` | 架构总图、分层规则 | — |
 | `docs/decisions/` | 进行中的设计决策 | — |
 | `schemas/` | Recipe JSON Schema | — |
 | `examples/` | 示例 recipe | — |
+
+## Lab Bringup 工具（M2 阶段）
+
+| 工具 | 路径 | 用途 |
+|------|------|------|
+| 硬件发现 | `tools/discover/` | macOS 自动扫描 LAN / Serial / USB 设备，生成 station fingerprint |
+| 只读快照 | `tools/lab/snapshot/` | 连接真实 SMB100A（TCP）和 OE1022D（Serial），执行安全只读查询，生成 Markdown + JSONL 快照报告 |
+| 命令验证 | `tools/manual_command_verify/` | Human-in-the-loop 验证协议：人工审批 → 执行 → 记录 JSONL 回执 |
+
+> ⚠️ **ADR-004 约束**：所有 lab 工具均为只读或 human-in-the-loop 模式；AI 禁止直接控制硬件输出。
 
 ## 开发入口
 
