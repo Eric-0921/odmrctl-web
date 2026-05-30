@@ -45,6 +45,47 @@ impl FakeSmb100a {
         s.output_state = true;
         s
     }
+
+    /// Return a map of all M2.1 read-only query responses for this fake.
+    pub fn readonly_snapshot(&self) -> std::collections::HashMap<String, String> {
+        let mut map = std::collections::HashMap::new();
+        map.insert("*IDN?".to_string(), self.idn.clone());
+        map.insert("SYST:ERR?".to_string(), "0,\"No error\"".to_string());
+        map.insert(
+            "OUTP?".to_string(),
+            if self.output_state {
+                "1".to_string()
+            } else {
+                "0".to_string()
+            },
+        );
+        map.insert(
+            "MOD:STAT?".to_string(),
+            if self.mod_state {
+                "1".to_string()
+            } else {
+                "0".to_string()
+            },
+        );
+        map.insert("FREQ:MODE?".to_string(), "CW".to_string());
+        map.insert("FREQ?".to_string(), "2882000000".to_string());
+        map.insert("POW?".to_string(), "-15".to_string());
+        map.insert("POW:ALC?".to_string(), "AUTO".to_string());
+        map.insert("FM:STAT?".to_string(), "0".to_string());
+        map.insert("FM:SOUR?".to_string(), "INT".to_string());
+        map.insert("FM:DEV?".to_string(), "4000000".to_string());
+        map.insert("LFO?".to_string(), "1".to_string());
+        map.insert("LFO:FREQ?".to_string(), "500".to_string());
+        map.insert("LFO:VOLT?".to_string(), "0.137".to_string());
+        map.insert("LFO:SHAP?".to_string(), "SQUARE".to_string());
+        map.insert("SWE:MODE?".to_string(), "AUTO".to_string());
+        map.insert("SWE:SPAC?".to_string(), "LIN".to_string());
+        map.insert("SWE:FREQ:STEP?".to_string(), "100000".to_string());
+        map.insert("SWE:FREQ:DWEL?".to_string(), "100".to_string());
+        map.insert("FREQ:STAR?".to_string(), "2820000000".to_string());
+        map.insert("FREQ:STOP?".to_string(), "2920000000".to_string());
+        map
+    }
 }
 
 impl Device for FakeSmb100a {
@@ -137,6 +178,28 @@ impl Device for FakeOe1022d {
 
     fn status(&self) -> DeviceStatus {
         self.status.clone()
+    }
+}
+
+impl FakeOe1022d {
+    /// Return a map of all M2.1 read-only query responses for this fake.
+    pub fn readonly_snapshot(&self) -> std::collections::HashMap<String, String> {
+        let mut map = std::collections::HashMap::new();
+        map.insert("*IDN?".to_string(), self.idn.clone());
+        map.insert("FMODD? 2".to_string(), "0".to_string());
+        map.insert("RSLPD? 2".to_string(), "0".to_string());
+        map.insert("FREQD? 2".to_string(), "500".to_string());
+        map.insert("PHASD? 2".to_string(), "0.00".to_string());
+        map.insert("ISRCD? 2".to_string(), "0".to_string());
+        map.insert("SENSD? 2".to_string(), "15".to_string());
+        map.insert("OFLTD? 2".to_string(), "10".to_string());
+        map.insert("OFSLD? 2".to_string(), "1".to_string());
+        map.insert("HARMD? 2".to_string(), "1".to_string());
+        map.insert(
+            "RALL?".to_string(),
+            "X=1.234E-3,Y=5.678E-4,R=1.357E-3,Theta=26.56,Freq=500.00,Noise=1.234E-5".to_string(),
+        );
+        map
     }
 }
 
@@ -291,5 +354,25 @@ mod tests {
     fn fake_mag_axis_measures_zero() {
         let mut dev = FakeMagAxis::new("mag.x", "080020960220402020", 'x');
         assert_eq!(dev.query("MEAS:CURR?").unwrap().to_string(), "0.00000");
+    }
+
+    #[test]
+    fn fake_smb100a_readonly_snapshot_has_all_queries() {
+        let dev = FakeSmb100a::new("smb100a.main");
+        let snap = dev.readonly_snapshot();
+        assert!(snap.contains_key("*IDN?"));
+        assert!(snap.contains_key("OUTP?"));
+        assert!(snap.contains_key("FREQ?"));
+        assert_eq!(snap["OUTP?"], "0");
+    }
+
+    #[test]
+    fn fake_oe1022d_readonly_snapshot_has_all_queries() {
+        let dev = FakeOe1022d::new("oe1022d.main");
+        let snap = dev.readonly_snapshot();
+        assert!(snap.contains_key("*IDN?"));
+        assert!(snap.contains_key("RALL?"));
+        assert!(snap.contains_key("FMODD? 2"));
+        assert_eq!(snap["FMODD? 2"], "0");
     }
 }
