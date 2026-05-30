@@ -396,6 +396,107 @@ mag_z
 
 ---
 
+### 5.3 磁场线圈控制流程（MAYNUO M8812）
+
+**背景**：三台 MAYNUO M8812 直流电子负载/电源分别驱动 X/Y/Z 轴线圈。线圈本身有线圈常数（coil constant），设备输出电流与磁场强度之间需要校准转换。
+
+**控制流程分为两个阶段**：
+
+#### 阶段一：零场初始化（Zero-Field Initialization）
+
+每次重新上电后必须执行，不能跳过：
+
+```text
+1. 连接三台 MAYNUO M8812（通过 Device Registry 识别 SN）
+2. 开启输出（OUTP ON）
+3. 回读每个轴的零场偏置电流（zero-field bias current readback）
+   - 命令: 读取当前输出电流（具体命令由 MAYNUO M8812 协议定义）
+   - 记录: bias_current_x, bias_current_y, bias_current_z
+4. 锁定零场（zero-field lock）
+   - 将当前偏置电流设为 "零场参考值"
+   - 后续所有磁场计算以此参考值为基准
+   - 此状态写入 station_snapshot.json: zero_field_locked=true
+```
+
+**为什么必须做零场锁定**：
+- 每次重新上电后，线圈的剩磁、环境磁场、设备内部偏移都会变化
+- 如果不锁定零场，目标磁场计算会有系统性偏移
+- 零场锁定是磁场 sweep 的前提条件
+
+#### 阶段二：目标磁场输出（Target Field Output）
+
+在零场锁定完成后，根据 recipe 或用户输入执行：
+
+```text
+1. 接收目标磁场 B_target (T) 或 B_vector = (Bx, By, Bz)
+2. 根据线圈常数计算目标电流：
+   I_target = B_target / coil_constant + bias_current
+   
+   其中 coil_constant 是每轴线圈的标定常数 (A/T 或 T/A)，
+   由用户在 station 配置中设定，随线圈物理参数固定不变。
+   
+3. 计算复现磁场值（computed field）：
+   B_computed = (I_output - bias_current) * coil_constant
+   
+4. 发送电流设定命令到 MAYNUO M8812
+5. 回读输出总电流（total current readback）
+6. 根据回读电流计算实际复现磁场：
+   B_actual = (I_readback - bias_current) * coil_constant
+7. 记录到 events.jsonl: target_field, computed_field, actual_field, readback_current
+```
+
+#### 线圈常数配置（Coil Constant Calibration）
+
+线圈常数是线圈本身的物理属性，不随设备变化。在 `station.json` 或 `device_profile.json` 中配置：
+
+```json
+{
+  "magnetic_calibration": {
+    "coil_constant_x": { "value": 0.001, "unit": "T/A" },
+    "coil_constant_y": { "value": 0.001, "unit": "T/A" },
+    "coil_constant_z": { "value": 0.001, "unit": "T/A" },
+    "max_field_t": 0.01,
+    "max_ramp_rate_a_per_s": 0.1
+  }
+}
+```
+
+**注意**：
+- coil_constant 应由实验人员用标准磁场计校准后填入
+- 不同轴的线圈常数可能不同（线圈匝数、几何形状差异）
+- coil_constant 属于 station 静态配置，不应在 recipe 中修改
+
+#### 状态机
+
+磁场控制器运行时状态：
+
+```text
+uninitialized      → 刚连接，未执行零场锁定
+zero_field_locked  → 已完成零场偏置回读和锁定
+field_set          → 已设定目标磁场，电流已输出
+field_stable       → 回读电流稳定（连续 N 次读数差异 < threshold）
+error              → 回读电流与设定值偏差过大 / 设备离线
+```
+
+状态转换：
+```text
+uninitialized → [执行零场锁定] → zero_field_locked
+zero_field_locked → [接收 B_target] → field_set
+field_set → [电流稳定] → field_stable
+field_stable → [接收新 B_target] → field_set
+any → [设备断连] → error
+```
+
+#### 安全规则
+
+1. **零场锁定前禁止 sweep**：未执行零场锁定时，executor 应拒绝开始磁场 sweep
+2. **Ramp 限制**：电流变化速率不得超过 `max_ramp_rate_a_per_s`（由 Safety PRD 定义）
+3. **最大场限制**：`|B_actual|` 不得超过 `max_field_t`（由 Safety PRD 定义）
+4. **断电保护**：safe_disconnect 时不能瞬间归零，应按 ramp_rate 逐步降到零场电流，再关闭输出
+5. **回读校验**：每次设定电流后必须回读，如果 `|I_set - I_readback| > threshold`，报错并停止实验
+
+---
+
 ## 6. Inputs
 
 ### 6.1 配置输入文件
