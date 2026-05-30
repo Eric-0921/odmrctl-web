@@ -30,7 +30,7 @@
       "transport": {
         "kind": "serial",
         "port": "/dev/cu.usbmodem3361358734371",
-        "baud_rate": 115200,
+        "baud_rate": 921600,
         "data_bits": 8,
         "stop_bits": 1,
         "parity": "none"
