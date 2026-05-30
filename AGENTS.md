@@ -1,51 +1,228 @@
 # AGENTS.md
 
-ODMR 自动化采集系统——NV 色心 ODMR 实验的 Tauri 桌面控制平台。Rust 后端负责设备编排、recipe 执行、高频采集与数据落盘；前端仅做交互展示；Python 仅离线分析与 recipe 生成。
+> 本文件面向 AI 编码智能体。阅读者被假设为对项目零先验知识。
+> 项目主要使用中文撰写文档与注释，代码风格遵循 Rust / TypeScript 社区惯例。
+
+## 项目概述
+
+**odmrctl-web** 是 ODMR（Optically Detected Magnetic Resonance）自动化采集平台，面向 NV 色心 ODMR 实验。核心能力包括：设备编排、recipe 执行、高频采集、数据落盘与离线分析。
+
+当前阶段：**GUI-M0 Mock Viewer 已完成，M2 硬件 bring-up 待进行。**
+
+- **Rust 后端**：设备编排、recipe 编译与安全检查、执行引擎、高频采集、raw-first 数据落盘。
+- **前端**：Tauri + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
+- **Python**：仅离线分析与 recipe 生成工具，**不参与实时链路**。
+
+## 技术栈
+
+| 层级 | 技术 | 说明 |
+|------|------|------|
+| 后端核心 | Rust (Edition 2021) | 12 crate 的 Cargo workspace |
+| 桌面 GUI | Tauri v2 | 跨平台 Webview 桌面壳 |
+| 前端框架 | React 18 + TypeScript 5 | Vite 5 构建，React Router v6 路由 |
+| 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist` |
+| Python 离线 | （预留） | `python/analysis/`、`python/recipe_tools/` 当前仅含 `.gitkeep` |
+| CI/CD | GitHub Actions | `.github/workflows/ci.yml` |
 
 ## 仓库导航
 
 | 路径 | 内容 | 何时查阅 |
 |------|------|----------|
-| `docs/prd/` | 12 份产品需求（总纲 + 子模块） | 理解功能边界与业务意图 |
-| `docs/adr/` | 5 份架构决策记录 | 理解技术选型的原因 |
+| `docs/prd/` | 13 份产品需求文档（`00`~`12`，总纲 + 子模块） | 理解功能边界与业务意图 |
+| `docs/adr/` | 6 份架构决策记录（`ADR-001`~`ADR-006`） | 理解技术选型的原因 |
 | `docs/architecture/ARCHITECTURE.md` | 分层模型、crate 职责、依赖方向 | 写代码前的入口 |
 | `docs/decisions/` | 进行中的设计决策 | 开发中遇到选择时写这里 |
-| `crates/` | Rust workspace 各 crate | 每个 crate 的 README 定义其边界 |
-| `apps/desktop/` | Tauri 桌面应用 | GUI 入口 |
-| `python/` | recipe 工具 + 离线分析 | 不参与实时链路 |
-| `schemas/` | recipe JSON Schema、数据格式规范 | 验证 recipe 输入 |
-| `examples/` | 示例 recipe 文件 | 参考用法 |
-| `tests/` | 集成测试（fixtures + golden） | mock-first 开发 |
-
-从 `docs/architecture/ARCHITECTURE.md` 开始，它指向各 crate 和对应 PRD。
+| `crates/` | Rust workspace 各 crate | 每个 crate 的 `README.md` 定义其边界 |
+| `apps/desktop/` | Tauri 桌面应用（GUI-M0） | GUI 入口；当前为 mock-only |
+| `python/` | recipe 工具 + 离线分析（预留） | 不参与实时链路 |
+| `schemas/` | 9 份 JSON Schema（recipe、resolved_recipe、safety 等） | 验证 recipe 输入 |
+| `examples/` | 示例 recipe 与设备指令 JSON | 参考用法 |
+| `tests/` | 集成测试 fixture + golden 数据（预留） | mock-first 开发 |
+| `reverse_application/` | 旧系统逆向工程产物（C# 反编译、日志、协议分析） | 参考遗留系统行为 |
 
 ## 架构硬约束
 
 这些是不可协商的规则，在 `docs/architecture/ARCHITECTURE.md` 中详细定义：
 
-1. **依赖方向固定**：Layer 0 (设备) → Layer 1 (驱动) → Layer 2 (domain) → Layer 3 (runtime) → Layer 4 (API) → Layer 5 (GUI)。禁止反向依赖。
-2. **单一硬件入口**：所有硬件访问必须经过 DeviceManager → ResourceLease → Driver。GUI、AI、Python 禁止直接访问硬件。
+1. **依赖方向固定**：Layer 0 (类型) → Layer 1 (驱动) → Layer 2 (领域) → Layer 3 (运行时) → Layer 4 (API) → Layer 5 (GUI)。禁止反向依赖。
+2. **单一硬件入口**：所有硬件访问必须经过 `DeviceManager` → `ResourceLease` → `Driver`。GUI、AI、Python 禁止直接访问硬件。
 3. **实时链路隔离**：采集线程只做 read/timestamp/parse/buffer/write。CSV 导出、拟合、分析不能进入实时链路。
-4. **Recipe 驱动**：实验执行必须来自 recipe.json → compiler → safety → dry-run → 人工批准 → executor。AI 不能直接发送硬件命令。
-5. **Raw-first 数据**：实时阶段只写 raw bin + index.jsonl + events.jsonl。实验后再生成 parquet/csv。
+4. **Recipe 驱动**：实验执行必须来自 `recipe.json` → compiler → safety → dry-run → 人工批准 → executor。AI 不能直接发送硬件命令。
+5. **Raw-first 数据**：实时阶段只写 raw bin + `index.jsonl` + `events.jsonl`。实验后再生成 parquet/csv。
+6. **GUI-M0 硬件隔离**：`apps/desktop/src-tauri/Cargo.toml` 明确禁止依赖任何硬件 crate（`odmr-executor`、`odmr-smb100a`、`odmr-oe1022d`、`odmr-device`、`odmr-compiler`、`odmr-safety`、`odmr-logging`）。
 
-## 机械化检查
+### 分层模型（6 层 + Python 离线层）
 
-`scripts/check-consistency.sh` 守卫结构漂移：
+```
+Layer 6: Python Offline   python/analysis/  python/recipe_tools/
+Layer 5: GUI              apps/desktop/     (Tauri/Web)
+Layer 4: Application API  Tauri commands    (apps/desktop/src-tauri/)
+Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness
+Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config
+Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device
+Layer 0: Types            odmr-types
+```
 
-- **C1**：`crates/` 下的目录与根 `Cargo.toml` workspace members 一致
-- **C2**：`docs/prd/*.md` 编号连续
-- **C3**：PRD 数量与 README 声明一致
-- **C4**：ADR 数量与 README 声明一致
-- **C5**：每个 crate 目录包含 README.md
+### Crate 职责速查
 
-执行：`bash scripts/check-consistency.sh`（仓库根目录）
-启用 pre-commit hook：`git config core.hooksPath .githooks`
+| Crate | Layer | 核心职责 | 关键依赖 |
+|-------|-------|----------|----------|
+| `odmr-types` | 0 | `DeviceId`、`RecipeStep`、`Event`、`RunId`、`Timestamp`、错误枚举 | 无（std only） |
+| `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` |
+| `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` |
+| `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` |
+| `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值 | `odmr-types` |
+| `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开 | `odmr-types` |
+| `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-safety`, `odmr-types` |
+| `odmr-safety` | 2 | `SafetyPolicy` trait、`InterlockEngine`、参数边界检查、急停逻辑、安全报告 | `odmr-types` |
+| `odmr-executor` | 3 | 执行状态机、step 调度、设备命令编排、实时采集协调 | `odmr-recipe`, `odmr-compiler`, `odmr-safety`, `odmr-logging`, `odmr-device`, `odmr-smb100a`, `odmr-oe1022d`, `odmr-types` |
+| `odmr-logging` | 3 | `RawRecorder`（raw bin）、`IndexWriter`（`index.jsonl`）、`EventWriter`（`events.jsonl`） | `odmr-types` |
+| `odmr-replay` | 3 | 从 raw bin + index 重建采集数据流 | `odmr-logging`, `odmr-types` |
+| `odmr-harness` | 3 | `FakeDevice` 实现、mock 设备注册、测试 fixture 工具 | `odmr-device`, `odmr-types` |
+
+## 构建与运行
+
+### Rust Workspace
+
+```bash
+# 格式化（必须无差异）
+cargo fmt --all -- --check
+
+# Clippy（警告视为错误）
+cargo clippy --workspace --all-targets -- -D warnings
+
+# 运行全部测试（含 crate 内单元测试与集成测试）
+cargo test --workspace
+```
+
+### GUI-M0（Mock Viewer）
+
+```bash
+cd apps/desktop
+pnpm install
+pnpm tauri dev        # 开发模式，热重载，端口 1420
+# 或
+pnpm tauri build      # 发布构建
+```
+
+> GUI-M0 当前为 **mock-only**：所有数据来自构建时 bundl 的静态 snapshot，运行时无 fs/fetch；Start Run / Pause / Stop / Emergency Stop 等按钮全部禁用；无 serial / USB / VISA / TCP / SCPI 代码。
+
+## 测试策略
+
+1. **Mock-first 开发**：新功能先在 `odmr-harness` 中用 `FakeDevice` 验证，再对接真实硬件。
+2. **单元测试**：分散在各 crate 的 `src/` 内，随 `cargo test --workspace` 运行。
+3. **集成测试**：放在各 crate 的 `tests/` 目录下，如：
+   - `crates/odmr-recipe/tests/recipe_integration_tests.rs` — 验证 `examples/` 下所有 JSON 可被解析
+   - `crates/odmr-compiler/tests/generate_examples.rs`
+   - `crates/odmr-executor/tests/run_mock_end_to_end.rs`
+   - `crates/odmr-logging/tests/generate_run_directory.rs`
+   - `crates/odmr-safety/tests/generate_safety_reports.rs`
+4. **Fixture / Golden**：`tests/fixtures/` 与 `tests/golden/` 预留，用于跨 crate 的集成测试数据。
+
+## 代码风格指南
+
+### Rust
+
+- **Edition 2021**，所有 crate 统一使用。
+- **License header**：`license = "MIT OR Apache-2.0"` 写在每个 crate 的 `Cargo.toml` 中。
+- **文档**：每个 crate 根 `lib.rs` 必须有 crate-level doc comment（`//!`），说明层级、职责、依赖、不负责什么。
+- **模块文档**：公开类型与 trait 必须带 doc comment（`///`）。
+- **格式化**：`cargo fmt --all -- --check` 零差异。
+- **静态检查**：`cargo clippy --workspace --all-targets -- -D warnings` 零警告。
+- **错误类型**：各 crate 定义自己的 `Error` 枚举（如 `RecipeError`、`CompileError`、`ExecutorError`），避免滥用 `String`。
+- **命名**：
+  - 类型/枚举：`PascalCase`
+  - 函数/变量：`snake_case`
+  - 常量：`SCREAMING_SNAKE_CASE`
+  - trait 名：名词或 `CanXxx` / `IsXxx` 形式
+
+### TypeScript / React（前端）
+
+- **严格模式**：`tsconfig.json` 中 `"strict": true`，并启用 `noUnusedLocals`、`noUnusedParameters`、`noFallthroughCasesInSwitch`。
+- **路径别名**：`@/` 映射到 `src/`，在 `vite.config.ts` 与 `tsconfig.json` 中同步配置。
+- **CSS**：使用 CSS 变量（`styles/tokens.css`）管理设计 token，`app.css` 管理组件样式。
+- **Mock 数据**：所有 mock 数据放在 `src/mock-data/` 下，并配有 `MockModeContext` 统一管理 mock 状态。
+
+## 安全与合规
+
+### 禁止项（由自动化脚本守卫）
+
+| 禁止行为 | 原因 | 守卫脚本 |
+|----------|------|----------|
+| 前端直接访问硬件（serial/USB/VISA/SCPI socket/TCP） | 架构约束：前端只能调 Tauri Command API | `check-frontend-hardware.sh` |
+| 实时 crate 中出现 CSV writer | ADR-005：实时阶段只允许 raw bin + jsonl | `check-realtime-csv.sh` |
+| AI 直接控制活硬件 | ADR-004：AI 只能操作 recipe/数据，不能绕过 safety 直接发硬件命令 | 架构审查 + PR 审核 |
+| 硬件 crate 被 GUI-M0 引入 | GUI-M0 为 mock-only，禁止引入真实驱动 | `apps/desktop/src-tauri/Cargo.toml` 显式注释禁止 |
+
+### 关键数据流
+
+```
+实时采集链路（热路径）:
+  OE1022D → odmr-oe1022d → odmr-executor → odmr-logging (raw bin + index)
+
+Recipe 执行链路:
+  recipe.json → odmr-recipe (validate) → odmr-compiler (resolve)
+  → odmr-safety (check) → odmr-executor (run) → odmr-logging (record)
+
+离线分析链路:
+  raw bin + index.jsonl → python/analysis/ → parquet → ML/plot
+```
+
+## 机械化检查（CI / Pre-commit）
+
+仓库根目录执行：
+
+```bash
+bash scripts/check-consistency.sh      # C1~C5：crate 目录、PRD/ADR 编号、README 一致性
+bash scripts/check-docs-links.sh       # docs/ 内 Markdown 内部链接有效性
+bash scripts/check-prd-adr-index.sh    # PRD/ADR 文件存在性与交叉引用
+bash scripts/check-frontend-hardware.sh # 前端禁止硬件访问模式
+bash scripts/check-realtime-csv.sh     # 实时 crate 禁止 CSV writer
+bash scripts/check-agents-md.sh        # 关键目录 AGENTS.md 存在性
+bash scripts/check-schema-examples.sh  # examples/ JSON 符合 schema 且被测试覆盖
+bash scripts/check-command-catalog.sh  # 设备指令目录编译、测试、与 JSON 源一致
+```
+
+启用 pre-commit hook（已配置）：
+
+```bash
+git config core.hooksPath .githooks
+```
+
+`.githooks/pre-commit` 会根据暂存文件类型自动触发对应子集检查：
+- `Cargo.toml` / `crates/` / `README` / `AGENTS` / `docs/architecture/` 变更 → `check-consistency.sh`
+- `examples/` / `schemas/` / `crates/odmr-recipe/` 变更 → `check-schema-examples.sh`
+- 设备 crate / 指令 JSON 变更 → `check-command-catalog.sh`
+- `docs/` 变更 → `check-docs-links.sh`
+- `apps/desktop/` 变更 → `check-frontend-hardware.sh`
+- 实时 crate 变更 → `check-realtime-csv.sh`
+
+### CI 流水线
+
+`.github/workflows/ci.yml` 包含两个 job：
+
+1. **Mechanical Checks**：运行 `check-docs-links.sh`、`check-prd-adr-index.sh`、`check-frontend-hardware.sh`、`check-realtime-csv.sh`、`check-agents-md.sh`、`check-consistency.sh`。
+2. **Rust Build & Test**：安装 stable Rust（含 `rustfmt`、`clippy`）→ `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test --workspace` → `check-schema-examples.sh` → `check-command-catalog.sh`。
 
 ## 开发流程
 
-1. 新功能先写 `docs/decisions/` 中的设计决策
-2. 对照 `docs/architecture/ARCHITECTURE.md` 确认 crate 边界
-3. mock-first：设备交互先在 `odmr-harness` 中用 fake device 验证
-4. 集成测试 fixture 放 `tests/fixtures/`，golden 数据放 `tests/golden/`
-5. recipe 示例放 `examples/`，schemas 变更同步更新 `schemas/`
+1. **新功能先写设计决策**：在 `docs/decisions/` 中记录选择依据。
+2. **对照架构文档确认边界**：`docs/architecture/ARCHITECTURE.md` 与对应 crate 的 `README.md`。
+3. **PRD-first**：每个实现任务必须引用 PRD 章节编号。
+4. **mock-first**：设备交互先在 `odmr-harness` 中用 `FakeDevice` 验证。
+5. **集成测试 fixture**：放 `tests/fixtures/`，golden 数据放 `tests/golden/`。
+6. **recipe 示例**：放 `examples/`，schema 变更同步更新 `schemas/`。
+7. **提交前**：运行 `bash scripts/check-consistency.sh` 与 `cargo test --workspace`。
+
+## 部署说明
+
+- **当前阶段**：GUI-M0 为 mock-only 桌面应用，无服务端部署需求。
+- **构建产物**：`pnpm tauri build` 输出平台原生安装包（`.dmg` / `.app` / `.exe` / `.msi` / `.deb` / `.rpm` 等），由 Tauri v2 的 `tauri.conf.json` 中 `bundle.targets = "all"` 控制。
+- **发布**：尚未配置自动 release 流水线；构建产物在本地 `apps/desktop/src-tauri/target/release/bundle/` 生成。
+
+## 扩展阅读
+
+- 各 PRD 详情：`docs/prd/0*_prd_v0.2.md`
+- 技术选型原因：`docs/adr/ADR-*.md`
+- 架构总图：`docs/architecture/ARCHITECTURE.md`
+- 新人/智能体快速入口：本文件（`AGENTS.md`）

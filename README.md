@@ -31,7 +31,7 @@ Layer 0: Types             odmr-types
 | 目录 | 内容 | 数量 |
 |------|------|------|
 | `docs/prd/` | 产品需求文档 | 13 份 |
-| `docs/adr/` | 架构决策记录 | 5 份 |
+| `docs/adr/` | 架构决策记录 | 6 份 |
 | `docs/architecture/` | 架构总图、分层规则 | — |
 | `docs/decisions/` | 进行中的设计决策 | — |
 | `schemas/` | Recipe JSON Schema | — |

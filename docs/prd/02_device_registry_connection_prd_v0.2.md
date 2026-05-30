@@ -261,11 +261,21 @@ SMB100A 射频信号源:
   SCPI:    *IDN? → Rohde&Schwarz,SMB100A,1406.6000k02/101623,3.1.19.15-3.20.390.24
   端口:     5025 (TCP)
 
-激光器控制器:
+激光器控制器 (CNI Laser PSU-SR):
   VID/PID: 0x0403 / 0x6001 (FTDI FT232)
   USB SN:  FTE86EB2
-  SCPI:    无 *IDN? 响应（非 SCPI 设备）
-  识别:    仅能通过 USB SN 绑定，GUI 需标记 manual_verified
+  波特率:   9600 8N1
+  协议:    自定义二进制帧（非 SCPI）
+  型号:    N5250-10，最大功率 306mW
+  识别:    枚举 FT232 → USB SN=FTE86EB2 直接绑定，GUI 标记 manual_verified
+
+  通信协议（已硬件验证）：
+    Laser On:  55 AA 03 01 04
+    Laser Off: 55 AA 03 00 03
+    设功率:    55 AA 05 01 [高8位] [低8位] [校验和]
+               校验和 = (05 + 01 + 高位 + 低位) 的低8位
+               例: 100mW → 0064 → 55 AA 05 01 00 64 6A
+    设备返回:  Echo 确认（返回与发送相同的帧）
 ```
 
 **扫描实现建议**：
@@ -332,7 +342,7 @@ safe state
 |---|---|---|---:|---|---|
 | `smb100a.main` | `smb100a` | RF microwave source | yes | `tcp_scpi` | 第一阶段优先使用 LAN socket SCPI；Python/RsInstrument 可作为人工验证路径 |
 | `oe1022d.main` | `oe1022d` | lock-in amplifier | yes | `serial` | Device Registry 管连接；高频采集由 OE1022D Acquisition Core 执行 |
-| `laser.main` | `laser` | laser controller | yes | `serial` | 第一阶段只定义连接与基础状态；具体协议下沉到 laser driver |
+| `laser.main` | `laser` | laser controller | yes | `serial` | CNI Laser PSU-SR (N5250-10)，最大功率 306mW；自定义二进制协议（非 SCPI）；通过 USB SN `FTE86EB2` 识别 |
 | `mag.x` | `mag_axis` | magnetic X axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402020`） |
 | `mag.y` | `mag_axis` | magnetic Y axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402022`） |
 | `mag.z` | `mag_axis` | magnetic Z axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402003`） |
@@ -350,6 +360,12 @@ oe1022d
 
 laser
   laser source or laser controller
+  实际型号：CNI Laser PSU-SR (N5250-10)，最大功率 306mW
+  连接芯片：FTDI FT232 USB-to-Serial
+  通信协议：自定义二进制帧（非 SCPI）
+  波特率：9600 8N1
+  命令：Laser On/Off、设功率（二进制帧 + 校验和）
+  重要：无 `*IDN?` 响应，需通过 USB SN 识别 + manual_verified
 
 mag_axis
   single magnetic axis current source / driver
@@ -740,14 +756,16 @@ RALL? 高频采集循环由 03_oe1022d_acquisition_prd 负责；
 Device Registry 只提供连接、身份、状态、租约。
 ```
 
-#### 6.3.3 Laser profile 示例
+#### 6.3.3 CNI Laser PSU-SR profile 示例
+
+**注意**：此激光器使用**自定义二进制协议**，不是 SCPI。`identity.query` 不适用，需通过 USB SN 识别并标记 `manual_verified`。
 
 ```json
 {
   "schema_version": "0.2",
   "device_id": "laser.main",
   "kind": "laser",
-  "display_name": "Main Laser Controller",
+  "display_name": "CNI Laser PSU-SR (N5250-10)",
   "transport": {
     "type": "serial",
     "port": "COM4",
@@ -755,8 +773,8 @@ Device Registry 只提供连接、身份、状态、租约。
     "data_bits": 8,
     "stop_bits": 1,
     "parity": "none",
-    "timeout_ms": 1000,
-    "line_ending": "\r\n"
+    "dtr": true,
+    "timeout_ms": 1000
   },
   "identity": {
     "query": null,
@@ -765,19 +783,39 @@ Device Registry 只提供连接、身份、状态、租约。
     "fallback_manual_verified": true
   },
   "capabilities": {
+    "model": "CNI N5250-10",
     "supports_enable": true,
     "supports_power_setpoint": true,
-    "power_mw": { "min": 0.0, "max": 100.0 }
+    "power_mw": { "min": 0.0, "max": 306.0 },
+    "protocol": "custom_binary_frame"
   },
   "safe_connect": {
-    "commands": []
+    "commands": [
+      { "hex": "55AA030003", "description": "Laser Off before init" }
+    ]
   },
   "safe_disconnect": {
-    "commands": ["LASER:OFF"],
+    "commands": [
+      { "hex": "55AA030003", "description": "Laser Off" }
+    ],
     "close_transport": true
   }
 }
 ```
+
+**二进制协议命令速查**（帧格式：`[头] [长度] [命令] [数据...] [校验和]`）：
+
+| 操作 | 十六进制帧 | 说明 |
+|-----|-----------|------|
+| Laser Off | `55 AA 03 00 03` | 关闭激光输出 |
+| Laser On | `55 AA 03 01 04` | 开启激光输出 |
+| 设功率 | `55 AA 05 01 HH LL CS` | HH=功率高8位, LL=低8位, CS=校验和 |
+
+**校验和计算**：`CS = (0x05 + 0x01 + HH + LL) & 0xFF`
+
+**示例**：设功率 100mW → 十进制 100 = 0x0064 → `55 AA 05 01 00 64 6A`
+
+**设备响应**：Echo 确认（返回与发送完全相同的帧）
 
 #### 6.3.4 MAYNUO M8812 (mag_axis) profile 示例
 
