@@ -1,0 +1,125 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "station",
+  "id": "station_nv_lab_01",
+  "name": "NV ODMR Lab Station 01 (macOS bring-up)",
+  "created_by": "human",
+  "created_at": "2026-05-28T00:00:00Z",
+  "description": "Real lab station configuration discovered on macOS. IP and serial paths reflect the actual hardware bring-up.",
+  "devices": [
+    {
+      "device_id": "smb100a.main",
+      "device_type": "smb100a",
+      "transport": {
+        "kind": "tcp_scpi",
+        "host": "169.254.2.20",
+        "port": 5025
+      },
+      "identity": {
+        "query": "*IDN?",
+        "expected_contains": ["ROHDE", "SCHWARZ", "SMB100A"],
+        "mac_address": "00:90:b8:1f:06:dd",
+        "mdns_name": "rssmb100a11923.local"
+      },
+      "profile_id": "smb100a_default_fm_500hz",
+      "required": true
+    },
+    {
+      "device_id": "oe1022d.main",
+      "device_type": "oe1022d",
+      "transport": {
+        "kind": "serial",
+        "port": "/dev/cu.usbmodem3361358734371",
+        "baud_rate": 115200,
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none"
+      },
+      "identity": {
+        "query": "*IDN?",
+        "expected_contains": ["OE1022D"],
+        "usb_serial_number": "336135873437"
+      },
+      "profile_id": "oe1022d_chb_default",
+      "required": true
+    },
+    {
+      "device_id": "laser.main",
+      "device_type": "laser",
+      "transport": {
+        "kind": "serial",
+        "port": "/dev/cu.usbserial-FTE86EB2",
+        "baud_rate": 9600,
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none"
+      },
+      "identity": {
+        "query": null,
+        "usb_serial_number": "FTE86EB2",
+        "manual_verified": true
+      },
+      "profile_id": "laser_cni_n5250_10",
+      "required": true
+    },
+    {
+      "device_id": "mag.x",
+      "device_type": "magnet_xyz",
+      "transport": {
+        "kind": "serial",
+        "port": "/dev/cu.PL2303G-XXXX",
+        "baud_rate": 9600,
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "dtr": true
+      },
+      "identity": {
+        "query": "*IDN?",
+        "expected_contains": ["MAYNUO", "M8812", "080020960220402020"]
+      },
+      "profile_id": "mag_x_default",
+      "required": true
+    },
+    {
+      "device_id": "mag.y",
+      "device_type": "magnet_xyz",
+      "transport": {
+        "kind": "serial",
+        "port": "/dev/cu.PL2303G-YYYY",
+        "baud_rate": 9600,
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "dtr": true
+      },
+      "identity": {
+        "query": "*IDN?",
+        "expected_contains": ["MAYNUO", "M8812", "080020960220402022"]
+      },
+      "profile_id": "mag_y_default",
+      "required": true
+    },
+    {
+      "device_id": "mag.z",
+      "device_type": "magnet_xyz",
+      "transport": {
+        "kind": "serial",
+        "port": "/dev/cu.PL2303G-ZZZZ",
+        "baud_rate": 9600,
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "dtr": true
+      },
+      "identity": {
+        "query": "*IDN?",
+        "expected_contains": ["MAYNUO", "M8812", "080020960220402003"]
+      },
+      "profile_id": "mag_z_default",
+      "required": true
+    }
+  ],
+  "safety_profile_id": "safety_nv_station_default",
+  "calibration_snapshot_id": "calibration_2026_05_28"
+}

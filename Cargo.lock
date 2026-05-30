@@ -231,6 +231,10 @@ dependencies = [
 [[package]]
 name = "odmr-harness"
 version = "0.1.0"
+dependencies = [
+ "odmr-device",
+ "odmr-types",
+]
 
 [[package]]
 name = "odmr-logging"
