@@ -30,7 +30,7 @@ struct Cli {
     oe1022d_port: String,
 
     /// OE1022D baud rate
-    #[arg(long, default_value = "115200")]
+    #[arg(long, default_value = "921600")]
     oe1022d_baud: u32,
 
     /// Output directory for markdown and jsonl files

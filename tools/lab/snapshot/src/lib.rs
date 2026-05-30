@@ -275,15 +275,21 @@ fn serial_query(
     let ts = utc_now();
     let start = Instant::now();
 
+    // Clear input buffer before each query to avoid stale data
+    let _ = port.clear(serialport::ClearBuffer::Input);
+
+    // RALL? returns a binary frame; give it more time
+    let wait_ms = if cmd.trim() == "RALL?" { 800 } else { 500 };
+
     let cmd_bytes = format!("{}\r", cmd.trim());
     port.write_all(cmd_bytes.as_bytes())
         .map_err(|e| SnapshotError::IoError(format!("write: {}", e)))?;
     port.flush()
         .map_err(|e| SnapshotError::IoError(format!("flush: {}", e)))?;
 
-    std::thread::sleep(Duration::from_millis(50));
+    std::thread::sleep(Duration::from_millis(wait_ms));
 
-    let mut buf = vec![0u8; 2048];
+    let mut buf = vec![0u8; 4096];
     let n = match port.read(&mut buf) {
         Ok(n) => n,
         Err(_) => {
@@ -301,14 +307,31 @@ fn serial_query(
     };
 
     buf.truncate(n);
-    let response = String::from_utf8_lossy(&buf).trim().to_string();
-    let has_response = !response.is_empty();
+
+    // RALL? returns binary data: record as hex dump
+    let (response_str, notes) = if cmd.trim() == "RALL?" {
+        if n == 0 {
+            (None, "RALL? returned 0 bytes".to_string())
+        } else {
+            let hex = hex_dump(&buf);
+            (Some(hex), format!("binary frame, {} bytes", n))
+        }
+    } else {
+        let text = String::from_utf8_lossy(&buf).replace('\x00', "").trim().to_string();
+        if text.is_empty() {
+            (None, String::new())
+        } else {
+            (Some(text), String::new())
+        }
+    };
+
+    let has_response = response_str.is_some();
 
     Ok(SnapshotRecord {
         device: "oe1022d.main".to_string(),
         transport: format!("serial:{}:{}", port_name, baud),
         command: cmd.to_string(),
-        response: if has_response { Some(response) } else { None },
+        response: response_str,
         timestamp: ts,
         duration_ms: start.elapsed().as_millis() as u64,
         pass_fail: if has_response {
@@ -316,7 +339,7 @@ fn serial_query(
         } else {
             "timeout".to_string()
         },
-        notes: String::new(),
+        notes,
     })
 }
 
@@ -413,6 +436,10 @@ fn utc_now() -> String {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default();
     format!("{}.{:03}Z", now.as_secs(), now.subsec_millis())
+}
+
+fn hex_dump(bytes: &[u8]) -> String {
+    bytes.iter().map(|b| format!("{:02X}", b)).collect::<Vec<_>>().join(" ")
 }
 
 fn escape_json(s: &str) -> String {
