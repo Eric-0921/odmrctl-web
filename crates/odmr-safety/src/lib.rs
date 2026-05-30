@@ -502,7 +502,7 @@ mod tests {
     #[test]
     fn magnetic_field_over_max_is_rejected() {
         let action = DeviceAction {
-            device_id: "mag_xyz_01".into(),
+            device_id: "mag_x".into(),
             action: "set_magnetic_field".into(),
             params: Some(serde_json::json!({ "b_abs_t": 0.02 })),
         };

@@ -60,6 +60,12 @@ pub enum TransportConfig {
         #[serde(skip_serializing_if = "Option::is_none")]
         baud_rate: Option<u32>,
     },
+    /// Multiple serial ports bound as a group.
+    ///
+    /// NOTE: The physical magnet XYZ axes are three independent MAYNUO M8812
+    /// devices (each with its own PL2303G USB-to-Serial). They are modelled
+    /// as three separate `serial` transports in the station config rather than
+    /// a single `serial_group`. This variant is kept for potential future use.
     #[serde(rename = "serial_group")]
     SerialGroup { ports: Vec<String> },
 }

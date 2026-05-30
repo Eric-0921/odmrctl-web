@@ -212,6 +212,76 @@ Device Registry 中要区分：
 
 ---
 
+### 4.3.1 实验室设备指纹与识别策略（已验证）
+
+**核心问题**：每次实验后都会拔出连接线、关闭电源。重新上电后：
+- **串口路径会变**（`COM3` → `COM4`，`/dev/cu.PL2303G-11220` → `11330`）
+- **IP 可能会变**（APIPA 自动分配的 `169.254.x.x` 不保证稳定）
+- **必须依赖协议层 `*IDN?` 或芯片级 USB Serial Number 等永久指纹**
+
+**识别策略分层**：
+
+| 层级 | 适用设备 | 方法 | 稳定性 |
+|-----|---------|------|--------|
+| **协议层**（首选） | MAYNUO M8812、OE1022D、SMB100A | 打开 transport → `*IDN?` → 匹配 SN | **永久不变** |
+| **网络层**（辅助） | SMB100A | MAC 地址 `00:90:b8:1f:06:dd` / mDNS `rssmb100a11923.local` | **永久不变** |
+| **USB 层**（兜底） | 激光器（FT232） | USB Serial Number `FTE86EB2` | **芯片级，换线不变** |
+
+**具体设备识别参数（已现场扫描确认）**：
+
+```text
+MAYNUO M8812 X 轴:
+  VID/PID: 0x067B / 0x23A3 (Prolific PL2303G)
+  USB SN:  BQCZe12CJ06
+  SCPI:    *IDN? → MAYNUO,M8812,080020960220402020,V2.7
+  波特率:   115200 8N1
+
+MAYNUO M8812 Y 轴:
+  VID/PID: 0x067B / 0x23A3
+  USB SN:  BXA@e12CJ06
+  SCPI:    *IDN? → MAYNUO,M8812,080020960220402022,V2.7
+  波特率:   115200 8N1（9600 也响应）
+
+MAYNUO M8812 Z 轴:
+  VID/PID: 0x067B / 0x23A3
+  USB SN:  BQDDe12CJ06
+  SCPI:    *IDN? → MAYNUO,M8812,080020960220402003,V2.7
+  波特率:   115200 8N1
+
+OE1022D 锁相放大器:
+  VID/PID: 0x0483 / 0x5740 (STMicroelectronics STM32 CDC)
+  USB SN:  336135873437
+  SCPI:    *IDN? → SSI LIA-OE1022D,SN:D6522078,Version:Ver6.3200831
+  波特率:   115200 8N1
+
+SMB100A 射频信号源:
+  连接:    以太网直连
+  MAC:     00:90:b8:1f:06:dd (R&S OUI)
+  mDNS:    rssmb100a11923.local
+  SCPI:    *IDN? → Rohde&Schwarz,SMB100A,1406.6000k02/101623,3.1.19.15-3.20.390.24
+  端口:     5025 (TCP)
+
+激光器控制器:
+  VID/PID: 0x0403 / 0x6001 (FTDI FT232)
+  USB SN:  FTE86EB2
+  SCPI:    无 *IDN? 响应（非 SCPI 设备）
+  识别:    仅能通过 USB SN 绑定，GUI 需标记 manual_verified
+```
+
+**扫描实现建议**：
+
+```text
+1. 枚举所有 USB serial 设备（按 VID/PID 分组）
+2. 对每个候选端口并行发送 *IDN?（超时 2s）
+3. 根据返回的 SN 匹配到逻辑 device_id（mag.x / mag.y / mag.z / oe1022d.main）
+4. SMB100A 单独扫描：ARP/mDNS 发现 → TCP 5025 → *IDN? 确认
+5. 激光器无 IDN：枚举 FT232 → USB SN=FTE86EB2 直接绑定
+```
+
+**注意**：USB Serial Number 是芯片级烧录的，**换 USB 线不会改变**。但 SCPI `*IDN?` 仍是首选识别方式，USB SN 仅作为无 IDN 设备（激光器）的兜底，以及扫描时的辅助加速。
+
+---
+
 ### 4.4 Mock 与真实设备同接口
 
 Device Registry 必须允许同一套 API 在以下模式运行：
@@ -263,9 +333,9 @@ safe state
 | `smb100a.main` | `smb100a` | RF microwave source | yes | `tcp_scpi` | 第一阶段优先使用 LAN socket SCPI；Python/RsInstrument 可作为人工验证路径 |
 | `oe1022d.main` | `oe1022d` | lock-in amplifier | yes | `serial` | Device Registry 管连接；高频采集由 OE1022D Acquisition Core 执行 |
 | `laser.main` | `laser` | laser controller | yes | `serial` | 第一阶段只定义连接与基础状态；具体协议下沉到 laser driver |
-| `mag.x` | `mag_axis` | magnetic X axis | yes | `serial` / `tcp` | 负责 X 轴电流源或磁场控制器连接 |
-| `mag.y` | `mag_axis` | magnetic Y axis | yes | `serial` / `tcp` | 负责 Y 轴电流源或磁场控制器连接 |
-| `mag.z` | `mag_axis` | magnetic Z axis | yes | `serial` / `tcp` | 负责 Z 轴电流源或磁场控制器连接 |
+| `mag.x` | `mag_axis` | magnetic X axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402020`） |
+| `mag.y` | `mag_axis` | magnetic Y axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402022`） |
+| `mag.z` | `mag_axis` | magnetic Z axis | yes | `serial` | 实际设备：MAYNUO M8812 直流电子负载/电源（SN `080020960220402003`） |
 
 ---
 
@@ -283,6 +353,11 @@ laser
 
 mag_axis
   single magnetic axis current source / driver
+  实际型号：MAYNUO M8812 直流电子负载/电源
+  连接芯片：Prolific PL2303G USB-to-Serial
+  通信协议：SCPI-like，`*IDN?` 返回 `MAYNUO,M8812,<SN>,V2.7`
+  波特率：115200 8N1
+  重要：USB 重新枚举后端口编号会变，必须以 SN 为唯一标识
 
 mag_controller
   optional future integrated 3-axis magnetic controller
@@ -553,14 +628,23 @@ Device Registry 只提供连接、身份、状态、租约。
 }
 ```
 
-#### 6.3.4 Mag axis profile 示例
+#### 6.3.4 MAYNUO M8812 (mag_axis) profile 示例
+
+实际硬件为三台独立的 MAYNUO M8812 直流电子负载/电源，分别控制 X/Y/Z 轴磁场电流。
+
+**关键发现**：USB 重新枚举后端口编号（`COMx` / `/dev/cu.PL2303G-*`）会变化，同一台设备重新插拔后可能映射到不同端口。**Device Registry 扫描时必须以 `*IDN?` 返回的序列号（SN）为唯一标识**，不能依赖端口路径。
+
+三台设备的已知序列号：
+- X 轴：`080020960220402020`
+- Y 轴：`080020960220402022`
+- Z 轴：`080020960220402003`
 
 ```json
 {
   "schema_version": "0.2",
   "device_id": "mag.x",
   "kind": "mag_axis",
-  "display_name": "Magnetic Axis X",
+  "display_name": "MAYNUO M8812 Magnetic X Axis",
   "transport": {
     "type": "serial",
     "port": "COM5",
@@ -569,16 +653,17 @@ Device Registry 只提供连接、身份、状态、租约。
     "stop_bits": 1,
     "parity": "none",
     "timeout_ms": 1000,
-    "line_ending": "\n"
+    "line_ending": "\r\n"
   },
   "identity": {
-    "query": "IDN?",
-    "expected_contains": ["MAG", "X"],
-    "required": false,
-    "fallback_manual_verified": true
+    "query": "*IDN?",
+    "expected_contains": ["MAYNUO", "M8812", "080020960220402020"],
+    "required": true,
+    "fallback_manual_verified": false
   },
   "capabilities": {
     "axis": "x",
+    "model": "MAYNUO M8812",
     "current_a": { "min": -5.0, "max": 5.0 },
     "ramp_rate_a_per_s": { "min": 0.0, "max": 0.2 },
     "supports_output_enable": true,
@@ -593,6 +678,8 @@ Device Registry 只提供连接、身份、状态、租约。
   }
 }
 ```
+
+`mag.y` 与 `mag.z` profile 结构相同，仅 `device_id`、`display_name`、`identity.expected_contains` 中的 SN 不同。
 
 ---
 
@@ -1371,6 +1458,7 @@ fake SMB100A SCPI server
 fake OE1022D serial device
 fake laser serial device
 fake mag axis X/Y/Z device
+fake MAYNUO M8812 device (SN pattern `0800209602204020xx`)
 fake identity mismatch device
 fake timeout device
 fake disconnecting device
@@ -1587,7 +1675,8 @@ schemas/
 1. SMB100A 是否保留 VISA 作为用户可选 transport，还是只保留开发者 fallback？
 2. OE1022D 的 IDN / handshake 是否足够稳定，是否需要 manual_verified 流程？
 3. Laser controller 的真实协议和 safe output off 命令需要根据设备型号确认。
-4. Mag X/Y/Z 是三台独立设备还是一个三轴控制器，需要现场确认。
+4. ~~Mag X/Y/Z 是三台独立设备还是一个三轴控制器，需要现场确认。~~
+   **已确认**：三台独立的 MAYNUO M8812 直流电子负载/电源，通过 Prolific PL2303G USB-to-Serial 分别连接。USB 重新枚举后端口编号会变，Device Registry 扫描时必须以 `*IDN?` 返回的 SN 为唯一标识。
 5. Magnetic safe_disconnect 是 output off、ramp to zero，还是 hold current，需要由 Safety PRD 和实验风险决定。
 6. shared_read lease 是否在 v0.2 实现，还是推迟到 v0.3。
 7. scan_candidate_ports 是否只做诊断，还是允许自动绑定设备。

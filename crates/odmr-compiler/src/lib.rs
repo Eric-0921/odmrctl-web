@@ -307,7 +307,9 @@ mod tests {
             profiles: vec![
                 "smb100a_default_fm_500hz".into(),
                 "oe1022d_chb_default".into(),
-                "mag_xyz_default".into(),
+                "mag_x_default".into(),
+                "mag_y_default".into(),
+                "mag_z_default".into(),
             ],
             blocks: vec!["block_smb_fm_500hz_4mhz".into()],
             sweeps: vec![SweepDefinition {

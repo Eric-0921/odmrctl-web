@@ -27,7 +27,7 @@ fn station_mock_loads_successfully() {
     let path = workspace_root().join("examples/station.mock.json");
     let station = load_station(&path).expect("station mock should load");
     assert_eq!(station.header.id, "station_nv_lab_01");
-    assert_eq!(station.devices.len(), 4);
+    assert_eq!(station.devices.len(), 6);
 }
 
 #[test]

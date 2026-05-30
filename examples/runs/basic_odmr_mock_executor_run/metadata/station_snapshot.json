@@ -36,17 +36,36 @@
       }
     },
     {
-      "device_id": "mag_xyz_01",
+      "device_id": "mag_x",
       "device_type": "magnet_xyz",
-      "profile_id": "mag_xyz_default",
+      "profile_id": "mag_x_default",
       "required": true,
       "transport": {
-        "kind": "serial_group",
-        "ports": [
-          "COM5",
-          "COM6",
-          "COM7"
-        ]
+        "baud_rate": 115200,
+        "kind": "serial",
+        "port": "COM5"
+      }
+    },
+    {
+      "device_id": "mag_y",
+      "device_type": "magnet_xyz",
+      "profile_id": "mag_y_default",
+      "required": true,
+      "transport": {
+        "baud_rate": 115200,
+        "kind": "serial",
+        "port": "COM6"
+      }
+    },
+    {
+      "device_id": "mag_z",
+      "device_type": "magnet_xyz",
+      "profile_id": "mag_z_default",
+      "required": true,
+      "transport": {
+        "baud_rate": 115200,
+        "kind": "serial",
+        "port": "COM7"
       }
     }
   ],

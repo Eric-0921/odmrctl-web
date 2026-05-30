@@ -72,6 +72,14 @@ pub enum DeviceKind {
     /// Laser controller.
     Laser,
     /// XYZ magnetic field controller.
+    ///
+    /// **实际硬件**: 三台独立的 MAYNUO M8812 直流电子负载/电源，
+    /// 分别控制 X/Y/Z 轴磁场电流。通过 Prolific PL2303G USB-to-Serial
+    /// 连接，波特率 115200 8N1，SCPI `*IDN?` 返回 `MAYNUO,M8812,<SN>,V2.7`。
+    ///
+    /// **重要**: USB 重新枚举后端口编号（COMx / /dev/cu.PL2303G-*）会变，
+    /// Device Registry 扫描时必须以 SN 为唯一标识，不能依赖端口路径。
+    /// 已知 SN: X=`080020960220402020`, Y=`080020960220402022`, Z=`080020960220402003`.
     MagnetXyz,
 }
 

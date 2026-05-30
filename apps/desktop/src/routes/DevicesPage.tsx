@@ -21,9 +21,23 @@ const devices = [
     lastKnownState: "static bundled data",
   },
   {
-    name: "Magnetic Axes",
-    role: "X/Y/Z magnetic field or current controller placeholder",
-    required: false,
+    name: "Mag X (MAYNUO M8812)",
+    role: "Magnetic X-axis current source (SN 080020960220402020)",
+    required: true,
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
+  },
+  {
+    name: "Mag Y (MAYNUO M8812)",
+    role: "Magnetic Y-axis current source (SN 080020960220402022)",
+    required: true,
+    connection: "unavailable in GUI-M0",
+    lastKnownState: "static bundled data",
+  },
+  {
+    name: "Mag Z (MAYNUO M8812)",
+    role: "Magnetic Z-axis current source (SN 080020960220402003)",
+    required: true,
     connection: "unavailable in GUI-M0",
     lastKnownState: "static bundled data",
   },
@@ -46,11 +60,20 @@ const disabledControls: Record<string, { label: string; reason: string }[]> = {
     { label: "Connect", reason: "M2 bring-up only" },
     { label: "Emission ON", reason: "Forbidden in GUI-M0" },
   ],
-  "Magnetic Axes": [
+  "Mag X (MAYNUO M8812)": [
     { label: "Connect", reason: "M2 bring-up only" },
-    { label: "Set B vector", reason: "Mock viewer only" },
-    { label: "Ramp current", reason: "Forbidden in GUI-M0" },
-    { label: "Safe zero", reason: "Forbidden in GUI-M0" },
+    { label: "Set current", reason: "Mock viewer only" },
+    { label: "Output ON", reason: "Forbidden in GUI-M0" },
+  ],
+  "Mag Y (MAYNUO M8812)": [
+    { label: "Connect", reason: "M2 bring-up only" },
+    { label: "Set current", reason: "Mock viewer only" },
+    { label: "Output ON", reason: "Forbidden in GUI-M0" },
+  ],
+  "Mag Z (MAYNUO M8812)": [
+    { label: "Connect", reason: "M2 bring-up only" },
+    { label: "Set current", reason: "Mock viewer only" },
+    { label: "Output ON", reason: "Forbidden in GUI-M0" },
   ],
 };
 

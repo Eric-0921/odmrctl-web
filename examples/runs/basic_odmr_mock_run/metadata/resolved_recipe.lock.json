@@ -8,7 +8,7 @@
   "name": "Basic ODMR Frequency Sweep (Mock)",
   "safety_report_id": "pending",
   "schema_version": "0.2.0",
-  "source_recipe_hash": "bae8e4d7d72c1a45a1b86f0a26951c285e2af97db0247d2541e28fffe2979ecb",
+  "source_recipe_hash": "898e3333dab623b4fee9bf1183d2c84e463b7f9858f53381a751e042b8bf5391",
   "source_recipe_id": "basic_odmr_mock",
   "station_id": "station_nv_lab_01",
   "steps": [

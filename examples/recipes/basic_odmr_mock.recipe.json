@@ -14,7 +14,9 @@
   "profiles": [
     "smb100a_default_fm_500hz",
     "oe1022d_chb_default",
-    "mag_xyz_default"
+    "mag_x_default",
+    "mag_y_default",
+    "mag_z_default"
   ],
   "blocks": [
     "block_smb_fm_500hz_4mhz"
