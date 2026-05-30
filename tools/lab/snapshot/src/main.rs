@@ -36,6 +36,14 @@ struct Cli {
     /// Output directory for markdown and jsonl files
     #[arg(long, default_value = "docs/lab-bringup")]
     out_dir: PathBuf,
+
+    /// Skip SMB100A snapshot (useful if network is down)
+    #[arg(long)]
+    skip_smb100a: bool,
+
+    /// Skip OE1022D snapshot (useful if serial port is unavailable)
+    #[arg(long)]
+    skip_oe1022d: bool,
 }
 
 fn main() {
@@ -47,30 +55,42 @@ fn main() {
     println!("Output: {}", cli.out_dir.display());
     println!();
 
-    let smb100a = Smb100aSnapshot::new(&cli.smb100a_host, cli.smb100a_port);
-    let oe1022d = Oe1022dSnapshot::new(&cli.oe1022d_port, cli.oe1022d_baud);
+    let mut smb100a_records = Vec::new();
+    let mut oe1022d_records = Vec::new();
 
-    let smb100a_records = match smb100a.run() {
-        Ok(recs) => {
-            println!("SMB100A: {} queries completed", recs.len());
-            recs
+    if !cli.skip_smb100a {
+        let smb100a = Smb100aSnapshot::new(&cli.smb100a_host, cli.smb100a_port);
+        match smb100a.run() {
+            Ok(recs) => {
+                println!("SMB100A: {} queries completed", recs.len());
+                smb100a_records = recs;
+            }
+            Err(e) => {
+                eprintln!("SMB100A snapshot failed: {}", e);
+                eprintln!("Hint: use --skip-smb100a to skip this device");
+                std::process::exit(1);
+            }
         }
-        Err(e) => {
-            eprintln!("SMB100A snapshot failed: {}", e);
-            std::process::exit(1);
-        }
-    };
+    } else {
+        println!("SMB100A: skipped by --skip-smb100a");
+    }
 
-    let oe1022d_records = match oe1022d.run() {
-        Ok(recs) => {
-            println!("OE1022D: {} queries completed", recs.len());
-            recs
+    if !cli.skip_oe1022d {
+        let oe1022d = Oe1022dSnapshot::new(&cli.oe1022d_port, cli.oe1022d_baud);
+        match oe1022d.run() {
+            Ok(recs) => {
+                println!("OE1022D: {} queries completed", recs.len());
+                oe1022d_records = recs;
+            }
+            Err(e) => {
+                eprintln!("OE1022D snapshot failed: {}", e);
+                eprintln!("Hint: use --skip-oe1022d to skip this device");
+                std::process::exit(1);
+            }
         }
-        Err(e) => {
-            eprintln!("OE1022D snapshot failed: {}", e);
-            std::process::exit(1);
-        }
-    };
+    } else {
+        println!("OE1022D: skipped by --skip-oe1022d");
+    }
 
     std::fs::create_dir_all(&cli.out_dir).expect("create output directory");
 
