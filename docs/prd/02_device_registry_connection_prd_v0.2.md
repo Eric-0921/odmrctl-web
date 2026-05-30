@@ -404,16 +404,29 @@ mag_z
 
 #### 阶段一：零场初始化（Zero-Field Initialization）
 
-每次重新上电后必须执行，不能跳过：
+每次重新上电后必须执行，不能跳过。串口参数：**9600/8/N/1，DTR=true**。
 
 ```text
 1. 连接三台 MAYNUO M8812（通过 Device Registry 识别 SN）
-2. 开启输出（OUTP ON）
-3. 回读每个轴的零场偏置电流（zero-field bias current readback）
-   - 命令: 读取当前输出电流（具体命令由 MAYNUO M8812 协议定义）
-   - 记录: bias_current_x, bias_current_y, bias_current_z
-4. 锁定零场（zero-field lock）
-   - 将当前偏置电流设为 "零场参考值"
+   串口参数: 9600 baud, 8 data bits, 1 stop bit, no parity, DTR=true
+
+2. 初始化每台电源（发送 SCPI 指令，每条后等待 ~50ms）：
+   SYST:REM       → 切换远程控制模式
+   VOLT 75        → 设定输出电压 75V
+   CURR 0.00000   → 设定输出电流 0A
+   OUTP 0         → 关闭输出
+
+3. 开启输出（OUTP 1）
+
+4. 等待电流稳定，回读每个轴的零场偏置电流：
+   命令: MEAS:CURR?\n
+   电源返回实际输出电流（单位 A，浮点字符串），软件接收后 ×1000 转为 mA：
+   bias_current_mA = readback_A × 1000.0
+
+   记录: bias_current_x, bias_current_y, bias_current_z
+
+5. 锁定零场（zero-field lock）
+   - 将当前回读的偏置电流设为 "零场参考值"
    - 后续所有磁场计算以此参考值为基准
    - 此状态写入 station_snapshot.json: zero_field_locked=true
 ```
@@ -425,24 +438,44 @@ mag_z
 
 #### 阶段二：目标磁场输出（Target Field Output）
 
-在零场锁定完成后，根据 recipe 或用户输入执行：
+在零场锁定完成后，根据 recipe 或用户输入执行。
+
+**两种工作模式**（互斥）：
+
+| 模式 | 条件 | 输出电流 | 说明 |
+|-----|------|---------|------|
+| **不锁定零场** | LockZero=OFF | `I = zeroSetCurr` | 仅输出零偏电流，复现磁场只显示不输出 |
+| **锁定零场** | LockZero=ON + Output=ON | `I = zeroSetCurr + recurSetCurr` | 零偏 + 复现电流叠加输出 |
+
+**磁场 → 电流换算**（软件内部使用 mA，发送给电源时转换为 A）：
 
 ```text
-1. 接收目标磁场 B_target (T) 或 B_vector = (Bx, By, Bz)
-2. 根据线圈常数计算目标电流：
-   I_target = B_target / coil_constant + bias_current
+1. 接收目标复现磁场 B_recur (nT) 或 B_vector = (Bx, By, Bz)
+2. 换算为复现电流：
+   recur_curr_mA = B_recur(nT) / coil_constant(nT/mA)
+
+3. 计算总输出电流：
+   total_curr_mA = zero_offset_mA + recur_curr_mA
    
-   其中 coil_constant 是每轴线圈的标定常数 (A/T 或 T/A)，
-   由用户在 station 配置中设定，随线圈物理参数固定不变。
-   
-3. 计算复现磁场值（computed field）：
-   B_computed = (I_output - bias_current) * coil_constant
-   
-4. 发送电流设定命令到 MAYNUO M8812
-5. 回读输出总电流（total current readback）
-6. 根据回读电流计算实际复现磁场：
-   B_actual = (I_readback - bias_current) * coil_constant
-7. 记录到 events.jsonl: target_field, computed_field, actual_field, readback_current
+   安全检查: total_curr_mA 必须 ≤ 5000 mA（单轴硬编码上限）
+   超限 → 报错并限制 recur_curr_mA = 5000 - zero_offset_mA
+
+4. 发送 SCPI 指令到 MAYNUO M8812：
+   CURR {total_curr_mA / 1000.0:.5f}\n
+   注意：电源只接受正电流（单位 A，保留 5 位小数），
+   磁场方向由线圈绕向固定，软件只发送绝对值。
+
+5. 回读实际输出电流：
+   命令: MEAS:CURR?\n
+   电源返回实际电流（单位 A），软件 ×1000 转为 mA：
+   readback_mA = response_A × 1000.0
+
+6. 计算实际复现磁场：
+   actual_recurr_mA = readback_mA - zero_offset_mA
+   B_actual(nT) = actual_recurr_mA × coil_constant(nT/mA)
+
+7. 记录到 events.jsonl:
+   - target_field_nT, computed_curr_mA, actual_field_nT, readback_curr_mA
 ```
 
 #### 线圈常数配置（Coil Constant Calibration）
@@ -499,10 +532,18 @@ any → [设备断连] → error
 #### 安全规则
 
 1. **零场锁定前禁止 sweep**：未执行零场锁定时，executor 应拒绝开始磁场 sweep
-2. **Ramp 限制**：电流变化速率不得超过 `max_ramp_rate_a_per_s`（由 Safety PRD 定义）
-3. **最大场限制**：`|B_actual|` 不得超过 `max_field_t`（由 Safety PRD 定义）
-4. **断电保护**：safe_disconnect 时不能瞬间归零，应按 ramp_rate 逐步降到零场电流，再关闭输出
-5. **回读校验**：每次设定电流后必须回读，如果 `|I_set - I_readback| > threshold`，报错并停止实验
+2. **电流上限**：单轴总输出电流不得超过 **5000 mA**（5A），这是 MAYNUO M8812 的硬编码安全上限
+3. **Ramp 限制**：电流变化速率不得超过 `max_ramp_rate_a_per_s`（由 Safety PRD 定义）
+4. **最大场限制**：`|B_actual|` 不得超过 `max_field_t`（由 Safety PRD 定义）
+5. **断电保护**：safe_disconnect 时不能瞬间归零。正确流程：
+   ```text
+   1. 发送 CURR 0.00000（将设定电流归零）
+   2. 发送 OUTP 0（关闭输出）
+   3. 发送 SYST:LOC（切换回本地模式）
+   4. 关闭串口
+   ```
+6. **回读校验**：每次设定电流后必须回读，如果 `|I_set - I_readback| > threshold`，报错并停止实验
+7. **正电流限制**：MAYNUO M8812 只支持正电流设定，软件内部应取绝对值后发送
 
 ---
 
@@ -758,12 +799,13 @@ Device Registry 只提供连接、身份、状态、租约。
   "transport": {
     "type": "serial",
     "port": "COM5",
-    "baud_rate": 115200,
+    "baud_rate": 9600,
     "data_bits": 8,
     "stop_bits": 1,
     "parity": "none",
+    "dtr": true,
     "timeout_ms": 1000,
-    "line_ending": "\r\n"
+    "line_ending": "\n"
   },
   "identity": {
     "query": "*IDN?",
@@ -783,7 +825,11 @@ Device Registry 只提供连接、身份、状态、租约。
     "commands": []
   },
   "safe_disconnect": {
-    "commands": ["OUTP OFF"],
+    "commands": [
+      "CURR 0.00000",
+      "OUTP 0",
+      "SYST:LOC"
+    ],
     "close_transport": true
   }
 }
@@ -1118,14 +1164,20 @@ replay
 {
   "type": "serial",
   "port": "COM3",
-  "baud_rate": 115200,
+  "baud_rate": 9600,
   "data_bits": 8,
   "stop_bits": 1,
   "parity": "none",
+  "dtr": true,
   "timeout_ms": 1000,
-  "line_ending": "\r"
+  "line_ending": "\n"
 }
 ```
+
+**注意**：
+- MAYNUO M8812 的波特率为 **9600**（不是 115200），且需要 **DTR=true**
+- OE1022D 的波特率为 **115200**
+- 不同设备的串口参数可能不同，应在 profile 中分别配置
 
 #### tcp_scpi transport fields
 
