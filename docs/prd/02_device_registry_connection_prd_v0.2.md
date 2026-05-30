@@ -452,14 +452,23 @@ mag_z
 ```json
 {
   "magnetic_calibration": {
-    "coil_constant_x": { "value": 0.001, "unit": "T/A" },
-    "coil_constant_y": { "value": 0.001, "unit": "T/A" },
-    "coil_constant_z": { "value": 0.001, "unit": "T/A" },
+    "coil_constant_x": { "value": 143.26, "unit": "nT/mA" },
+    "coil_constant_y": { "value": 141.77, "unit": "nT/mA" },
+    "coil_constant_z": { "value": 156.15, "unit": "nT/mA" },
     "max_field_t": 0.01,
     "max_ramp_rate_a_per_s": 0.1
   }
 }
 ```
+
+**单位换算**：`nT/mA = 10⁻⁹ T / 10⁻³ A = 10⁻⁶ T/A = 10⁻⁶ T·A⁻¹`
+- X 轴: 143.26 nT/mA = 1.4326 × 10⁻⁴ T/A
+- Y 轴: 141.77 nT/mA = 1.4177 × 10⁻⁴ T/A
+- Z 轴: 156.15 nT/mA = 1.5615 × 10⁻⁴ T/A
+
+**换算公式**：
+- `B(T) = I(mA) × coil_constant(nT/mA) × 10⁻⁹`
+- `I(mA) = B(T) / (coil_constant(nT/mA) × 10⁻⁹)`
 
 **注意**：
 - coil_constant 应由实验人员用标准磁场计校准后填入
