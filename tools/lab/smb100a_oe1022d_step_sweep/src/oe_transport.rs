@@ -91,6 +91,8 @@ impl OeSerialTransport {
     }
 
     /// Send RALL? and capture the full 12288-byte frame.
+    /// Per OE1022D manual §5.2.11: RALL? returns exactly 12288 bytes (8000 meas + 1216 config + 3072 pad).
+    /// Partial frames (less than 12288 bytes) are rejected as hardware communication errors.
     pub fn capture_rall_frame(
         &mut self,
         audit: &mut Vec<CommandAuditEntry>,
@@ -122,46 +124,86 @@ impl OeSerialTransport {
         self.port
             .clear(serialport::ClearBuffer::Input)
             .map_err(|e| format!("OE clear buffer: {}", e))?;
+        let send_start = Instant::now();
         let cmd_bytes = format!("{}\r", cmd);
         self.port
             .write_all(cmd_bytes.as_bytes())
             .map_err(|e| format!("OE write: {}", e))?;
         self.port.flush().map_err(|e| format!("OE flush: {}", e))?;
 
+        // Device needs time to assemble the 12288-byte RALL? response (manual §5.2.11: 50ms refresh)
         std::thread::sleep(Duration::from_millis(frame_delay_ms));
 
-        let deadline = Instant::now() + Duration::from_millis(self.timeout_ms);
-        let mut frame_buf = Vec::new();
-        let mut chunk = vec![0u8; 4096];
-        loop {
-            if Instant::now() > deadline {
-                break;
-            }
+        let read_deadline = Instant::now() + Duration::from_millis(self.timeout_ms);
+        let mut frame_buf = Vec::with_capacity(RALL_FRAME_BYTES);
+        while frame_buf.len() < RALL_FRAME_BYTES && Instant::now() < read_deadline {
+            let mut chunk = vec![0u8; 4096];
             match self.port.read(&mut chunk) {
                 Ok(0) => break,
                 Ok(n) => {
-                    frame_buf.extend_from_slice(&chunk[..n]);
-                    if frame_buf.len() >= RALL_FRAME_BYTES {
-                        break;
-                    }
+                    chunk.truncate(n);
+                    frame_buf.extend_from_slice(&chunk);
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => break,
                 Err(e) => {
-                    return Err(format!("OE read error: {}", e));
+                    return Err(format!(
+                        "OE read error after {} bytes: {}",
+                        frame_buf.len(),
+                        e
+                    ));
                 }
             }
+        }
+
+        let elapsed_ms = send_start.elapsed().as_millis() as u64;
+
+        if frame_buf.is_empty() {
+            let err = format!("OE timeout: zero bytes read after RALL? ({} ms elapsed)", elapsed_ms);
+            audit.push(CommandAuditEntry {
+                timestamp_unix_ms: ts,
+                device_id: "oe1022d".into(),
+                command: cmd.into(),
+                command_class: "oe_acquisition".into(),
+                allowed: true,
+                sent_to_transport: true,
+                manual_approval_required: None,
+                manual_approval_present: None,
+                rejection_reason: None,
+                response_preview: None,
+                transport_error: Some(err.clone()),
+                safety_relevant: None,
+            });
+            return Err(err);
         }
 
         let frame_len = frame_buf.len().min(RALL_FRAME_BYTES);
         let actual = if frame_buf.len() >= RALL_FRAME_BYTES {
             frame_buf[..RALL_FRAME_BYTES].to_vec()
         } else {
-            frame_buf.clone()
+            // Partial frame: per manual §5.2.11, RALL? always returns exactly 12288 bytes.
+            // A short read indicates a USB serial transport issue, not a device data problem.
+            let err = format!(
+                "OE partial RALL? frame: got {} bytes, expected {} ({} ms elapsed)",
+                frame_buf.len(),
+                RALL_FRAME_BYTES,
+                elapsed_ms
+            );
+            audit.push(CommandAuditEntry {
+                timestamp_unix_ms: ts,
+                device_id: "oe1022d".into(),
+                command: cmd.into(),
+                command_class: "oe_acquisition".into(),
+                allowed: true,
+                sent_to_transport: true,
+                manual_approval_required: None,
+                manual_approval_present: None,
+                rejection_reason: None,
+                response_preview: Some(format!("{} bytes (PARTIAL)", frame_buf.len())),
+                transport_error: Some(err.clone()),
+                safety_relevant: None,
+            });
+            return Err(err);
         };
-
-        let elapsed_ms = Instant::now()
-            .duration_since(deadline - Duration::from_millis(self.timeout_ms))
-            .as_millis() as u64;
 
         audit.push(CommandAuditEntry {
             timestamp_unix_ms: ts,
