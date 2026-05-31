@@ -69,3 +69,4 @@ cargo test
 - Must clear input buffer before each query
 - `RALL?` requires ~800ms wait before reading response
 - Response is binary, not ASCII
+- **Critical**: `RALL?` returns **12288 bytes**, but macOS CDC serial drivers may deliver it in multiple chunks (~1020 bytes per `read()`). The tool loops until the full 12288 bytes are accumulated or timeout.

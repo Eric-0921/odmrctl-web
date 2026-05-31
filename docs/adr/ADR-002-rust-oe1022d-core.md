@@ -137,23 +137,28 @@ Web GUI chart / status panel
 ```text
 1. Transport
    - 打开和关闭串口
-   - 设置 baud rate / timeout / terminator
+   - 设置 baud rate (921600) / timeout / terminator
    - 支持真实串口和 mock transport
    - 支持 connection status 查询
    - 支持 safe disconnect
+   - 串口读取策略: clear_input → write → sleep(800ms) → loop-read 累积 12288 bytes
+   - 禁止使用 read_exact() 直接读完整帧（残留数据风险）
 
 2. Acquisition Loop
    - 周期性发送 RALL?
-   - 读取 raw frame
+   - 读取 raw frame (12288 bytes 固定长度二进制)
+   - 发送前 clear_input_buffer() 避免残留数据污染
+   - 发送后等待 ~800ms 让设备准备帧
+   - 使用循环 read() 累积数据 (macOS 每次 ~1020 bytes)
    - 记录 command_sent_monotonic_ts
    - 记录 command_returned_monotonic_ts
    - 控制采集周期和超时
    - 避免其他状态查询打断采集循环
 
 3. Parser
-   - 识别 raw frame 边界
-   - 校验 frame 长度
-   - 解析 X / Y / R / theta / freq / noise 等字段
+   - 校验固定 frame 长度 (12288 bytes)
+   - 解析 Big-Endian f64 二进制数据
+   - 20 参数 × 50 采样点布局解析
    - 输出强类型 ParsedSample
    - 对坏 frame 生成 error event
 

@@ -182,40 +182,64 @@ impl Oe1022dRallCapture {
             port.flush()
                 .map_err(|e| CaptureError::IoError(format!("flush: {}", e)))?;
 
-            // RALL? needs more time for the binary frame
+            // RALL? returns 12288 bytes, but macOS CDC serial driver may
+            // deliver it in multiple chunks (~1020 bytes each). We must loop
+            // until we accumulate the full frame or hit timeout.
+            const EXPECTED_FRAME_LEN: usize = 12288;
             std::thread::sleep(Duration::from_millis(800));
 
-            let mut buf = vec![0u8; 16384];
-            let n = match port.read(&mut buf) {
-                Ok(n) => n,
-                Err(e) => {
-                    records.push(CaptureRecord {
-                        frame_index: i as u64,
-                        command: "RALL?".to_string(),
-                        offset_bytes: raw_payload.len() as u64,
-                        length_bytes: 0,
-                        timestamp_unix_ms: ts,
-                        duration_ms: start.elapsed().as_millis() as u64,
-                        pass_fail: "timeout".to_string(),
-                        notes: format!("serial read timeout: {}", e),
-                    });
-                    continue;
-                }
-            };
+            let mut frame_buf = Vec::with_capacity(EXPECTED_FRAME_LEN);
+            let read_deadline = Instant::now() + Duration::from_millis(self.timeout_ms);
 
-            buf.truncate(n);
+            while frame_buf.len() < EXPECTED_FRAME_LEN && Instant::now() < read_deadline {
+                let mut chunk = vec![0u8; 4096];
+                match port.read(&mut chunk) {
+                    Ok(0) => break,
+                    Ok(n) => {
+                        chunk.truncate(n);
+                        frame_buf.extend_from_slice(&chunk);
+                    }
+                    Err(e) if e.kind() == std::io::ErrorKind::TimedOut => break,
+                    Err(e) => {
+                        records.push(CaptureRecord {
+                            frame_index: i as u64,
+                            command: "RALL?".to_string(),
+                            offset_bytes: raw_payload.len() as u64,
+                            length_bytes: frame_buf.len(),
+                            timestamp_unix_ms: ts,
+                            duration_ms: start.elapsed().as_millis() as u64,
+                            pass_fail: "fail".to_string(),
+                            notes: format!("serial read error after {} bytes: {}", frame_buf.len(), e),
+                        });
+                        break;
+                    }
+                }
+            }
+
             let offset = raw_payload.len() as u64;
-            raw_payload.extend_from_slice(&buf);
+            raw_payload.extend_from_slice(&frame_buf);
+
+            let actual_len = frame_buf.len();
+            let pass_fail = if actual_len == EXPECTED_FRAME_LEN {
+                "pass"
+            } else if actual_len > 0 {
+                "partial"
+            } else {
+                "timeout"
+            };
 
             records.push(CaptureRecord {
                 frame_index: i as u64,
                 command: "RALL?".to_string(),
                 offset_bytes: offset,
-                length_bytes: n,
+                length_bytes: actual_len,
                 timestamp_unix_ms: ts,
                 duration_ms: start.elapsed().as_millis() as u64,
-                pass_fail: "pass".to_string(),
-                notes: format!("captured {} bytes", n),
+                pass_fail: pass_fail.to_string(),
+                notes: format!(
+                    "captured {} bytes (expected {}), chunks may vary by OS/driver",
+                    actual_len, EXPECTED_FRAME_LEN
+                ),
             });
 
             if delay_ms > 0 {

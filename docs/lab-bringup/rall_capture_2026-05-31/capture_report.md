@@ -7,112 +7,112 @@
 - **Frames attempted**: 100
 - **Frames captured**: 100
 - **Timeouts**: 0
-- **Total raw bytes**: 102000
+- **Total raw bytes**: 1228800
 
 ## Frame Index
 
 | # | Offset | Length | Duration (ms) | Status | Notes |
 |---|--------|--------|---------------|--------|-------|
-| 0 | 0 | 1020 | 801 | pass | captured 1020 bytes |
-| 1 | 1020 | 1020 | 805 | pass | captured 1020 bytes |
-| 2 | 2040 | 1020 | 805 | pass | captured 1020 bytes |
-| 3 | 3060 | 1020 | 804 | pass | captured 1020 bytes |
-| 4 | 4080 | 1020 | 805 | pass | captured 1020 bytes |
-| 5 | 5100 | 1020 | 805 | pass | captured 1020 bytes |
-| 6 | 6120 | 1020 | 805 | pass | captured 1020 bytes |
-| 7 | 7140 | 1020 | 805 | pass | captured 1020 bytes |
-| 8 | 8160 | 1020 | 805 | pass | captured 1020 bytes |
-| 9 | 9180 | 1020 | 805 | pass | captured 1020 bytes |
-| 10 | 10200 | 1020 | 805 | pass | captured 1020 bytes |
-| 11 | 11220 | 1020 | 805 | pass | captured 1020 bytes |
-| 12 | 12240 | 1020 | 803 | pass | captured 1020 bytes |
-| 13 | 13260 | 1020 | 805 | pass | captured 1020 bytes |
-| 14 | 14280 | 1020 | 805 | pass | captured 1020 bytes |
-| 15 | 15300 | 1020 | 805 | pass | captured 1020 bytes |
-| 16 | 16320 | 1020 | 803 | pass | captured 1020 bytes |
-| 17 | 17340 | 1020 | 805 | pass | captured 1020 bytes |
-| 18 | 18360 | 1020 | 805 | pass | captured 1020 bytes |
-| 19 | 19380 | 1020 | 805 | pass | captured 1020 bytes |
-| 20 | 20400 | 1020 | 805 | pass | captured 1020 bytes |
-| 21 | 21420 | 1020 | 805 | pass | captured 1020 bytes |
-| 22 | 22440 | 1020 | 805 | pass | captured 1020 bytes |
-| 23 | 23460 | 1020 | 805 | pass | captured 1020 bytes |
-| 24 | 24480 | 1020 | 803 | pass | captured 1020 bytes |
-| 25 | 25500 | 1020 | 805 | pass | captured 1020 bytes |
-| 26 | 26520 | 1020 | 805 | pass | captured 1020 bytes |
-| 27 | 27540 | 1020 | 805 | pass | captured 1020 bytes |
-| 28 | 28560 | 1020 | 805 | pass | captured 1020 bytes |
-| 29 | 29580 | 1020 | 805 | pass | captured 1020 bytes |
-| 30 | 30600 | 1020 | 805 | pass | captured 1020 bytes |
-| 31 | 31620 | 1020 | 803 | pass | captured 1020 bytes |
-| 32 | 32640 | 1020 | 805 | pass | captured 1020 bytes |
-| 33 | 33660 | 1020 | 805 | pass | captured 1020 bytes |
-| 34 | 34680 | 1020 | 805 | pass | captured 1020 bytes |
-| 35 | 35700 | 1020 | 805 | pass | captured 1020 bytes |
-| 36 | 36720 | 1020 | 805 | pass | captured 1020 bytes |
-| 37 | 37740 | 1020 | 805 | pass | captured 1020 bytes |
-| 38 | 38760 | 1020 | 805 | pass | captured 1020 bytes |
-| 39 | 39780 | 1020 | 803 | pass | captured 1020 bytes |
-| 40 | 40800 | 1020 | 805 | pass | captured 1020 bytes |
-| 41 | 41820 | 1020 | 805 | pass | captured 1020 bytes |
-| 42 | 42840 | 1020 | 805 | pass | captured 1020 bytes |
-| 43 | 43860 | 1020 | 805 | pass | captured 1020 bytes |
-| 44 | 44880 | 1020 | 805 | pass | captured 1020 bytes |
-| 45 | 45900 | 1020 | 810 | pass | captured 1020 bytes |
-| 46 | 46920 | 1020 | 802 | pass | captured 1020 bytes |
-| 47 | 47940 | 1020 | 802 | pass | captured 1020 bytes |
-| 48 | 48960 | 1020 | 805 | pass | captured 1020 bytes |
-| 49 | 49980 | 1020 | 805 | pass | captured 1020 bytes |
-| 50 | 51000 | 1020 | 803 | pass | captured 1020 bytes |
-| 51 | 52020 | 1020 | 805 | pass | captured 1020 bytes |
-| 52 | 53040 | 1020 | 805 | pass | captured 1020 bytes |
-| 53 | 54060 | 1020 | 805 | pass | captured 1020 bytes |
-| 54 | 55080 | 1020 | 803 | pass | captured 1020 bytes |
-| 55 | 56100 | 1020 | 805 | pass | captured 1020 bytes |
-| 56 | 57120 | 1020 | 805 | pass | captured 1020 bytes |
-| 57 | 58140 | 1020 | 805 | pass | captured 1020 bytes |
-| 58 | 59160 | 1020 | 801 | pass | captured 1020 bytes |
-| 59 | 60180 | 1020 | 805 | pass | captured 1020 bytes |
-| 60 | 61200 | 1020 | 805 | pass | captured 1020 bytes |
-| 61 | 62220 | 1020 | 805 | pass | captured 1020 bytes |
-| 62 | 63240 | 1020 | 805 | pass | captured 1020 bytes |
-| 63 | 64260 | 1020 | 805 | pass | captured 1020 bytes |
-| 64 | 65280 | 1020 | 805 | pass | captured 1020 bytes |
-| 65 | 66300 | 1020 | 805 | pass | captured 1020 bytes |
-| 66 | 67320 | 1020 | 804 | pass | captured 1020 bytes |
-| 67 | 68340 | 1020 | 805 | pass | captured 1020 bytes |
-| 68 | 69360 | 1020 | 804 | pass | captured 1020 bytes |
-| 69 | 70380 | 1020 | 800 | pass | captured 1020 bytes |
-| 70 | 71400 | 1020 | 805 | pass | captured 1020 bytes |
-| 71 | 72420 | 1020 | 805 | pass | captured 1020 bytes |
-| 72 | 73440 | 1020 | 805 | pass | captured 1020 bytes |
-| 73 | 74460 | 1020 | 805 | pass | captured 1020 bytes |
-| 74 | 75480 | 1020 | 805 | pass | captured 1020 bytes |
-| 75 | 76500 | 1020 | 805 | pass | captured 1020 bytes |
-| 76 | 77520 | 1020 | 808 | pass | captured 1020 bytes |
-| 77 | 78540 | 1020 | 802 | pass | captured 1020 bytes |
-| 78 | 79560 | 1020 | 805 | pass | captured 1020 bytes |
-| 79 | 80580 | 1020 | 805 | pass | captured 1020 bytes |
-| 80 | 81600 | 1020 | 801 | pass | captured 1020 bytes |
-| 81 | 82620 | 1020 | 805 | pass | captured 1020 bytes |
-| 82 | 83640 | 1020 | 802 | pass | captured 1020 bytes |
-| 83 | 84660 | 1020 | 805 | pass | captured 1020 bytes |
-| 84 | 85680 | 1020 | 805 | pass | captured 1020 bytes |
-| 85 | 86700 | 1020 | 805 | pass | captured 1020 bytes |
-| 86 | 87720 | 1020 | 805 | pass | captured 1020 bytes |
-| 87 | 88740 | 1020 | 805 | pass | captured 1020 bytes |
-| 88 | 89760 | 1020 | 805 | pass | captured 1020 bytes |
-| 89 | 90780 | 1020 | 805 | pass | captured 1020 bytes |
-| 90 | 91800 | 1020 | 805 | pass | captured 1020 bytes |
-| 91 | 92820 | 1020 | 805 | pass | captured 1020 bytes |
-| 92 | 93840 | 1020 | 803 | pass | captured 1020 bytes |
-| 93 | 94860 | 1020 | 805 | pass | captured 1020 bytes |
-| 94 | 95880 | 1020 | 805 | pass | captured 1020 bytes |
-| 95 | 96900 | 1020 | 803 | pass | captured 1020 bytes |
-| 96 | 97920 | 1020 | 805 | pass | captured 1020 bytes |
-| 97 | 98940 | 1020 | 805 | pass | captured 1020 bytes |
-| 98 | 99960 | 1020 | 805 | pass | captured 1020 bytes |
-| 99 | 100980 | 1020 | 804 | pass | captured 1020 bytes |
+| 0 | 0 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 1 | 12288 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 2 | 24576 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 3 | 36864 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 4 | 49152 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 5 | 61440 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 6 | 73728 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 7 | 86016 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 8 | 98304 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 9 | 110592 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 10 | 122880 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 11 | 135168 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 12 | 147456 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 13 | 159744 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 14 | 172032 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 15 | 184320 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 16 | 196608 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 17 | 208896 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 18 | 221184 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 19 | 233472 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 20 | 245760 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 21 | 258048 | 12288 | 804 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 22 | 270336 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 23 | 282624 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 24 | 294912 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 25 | 307200 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 26 | 319488 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 27 | 331776 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 28 | 344064 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 29 | 356352 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 30 | 368640 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 31 | 380928 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 32 | 393216 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 33 | 405504 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 34 | 417792 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 35 | 430080 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 36 | 442368 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 37 | 454656 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 38 | 466944 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 39 | 479232 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 40 | 491520 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 41 | 503808 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 42 | 516096 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 43 | 528384 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 44 | 540672 | 12288 | 801 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 45 | 552960 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 46 | 565248 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 47 | 577536 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 48 | 589824 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 49 | 602112 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 50 | 614400 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 51 | 626688 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 52 | 638976 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 53 | 651264 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 54 | 663552 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 55 | 675840 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 56 | 688128 | 12288 | 804 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 57 | 700416 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 58 | 712704 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 59 | 724992 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 60 | 737280 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 61 | 749568 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 62 | 761856 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 63 | 774144 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 64 | 786432 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 65 | 798720 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 66 | 811008 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 67 | 823296 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 68 | 835584 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 69 | 847872 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 70 | 860160 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 71 | 872448 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 72 | 884736 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 73 | 897024 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 74 | 909312 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 75 | 921600 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 76 | 933888 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 77 | 946176 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 78 | 958464 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 79 | 970752 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 80 | 983040 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 81 | 995328 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 82 | 1007616 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 83 | 1019904 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 84 | 1032192 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 85 | 1044480 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 86 | 1056768 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 87 | 1069056 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 88 | 1081344 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 89 | 1093632 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 90 | 1105920 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 91 | 1118208 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 92 | 1130496 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 93 | 1142784 | 12288 | 804 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 94 | 1155072 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 95 | 1167360 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 96 | 1179648 | 12288 | 803 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 97 | 1191936 | 12288 | 802 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 98 | 1204224 | 12288 | 805 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
+| 99 | 1216512 | 12288 | 804 | pass | captured 12288 bytes (expected 12288), chunks may vary by OS/driver |
 
 ## Forbidden Command Audit
 

@@ -387,11 +387,11 @@ raw output path
   "transport": {
     "type": "serial",
     "port": "COM3",
-    "baud_rate": 115200,
+    "baud_rate": 921600,
     "data_bits": 8,
     "parity": "none",
     "stop_bits": 1,
-    "read_timeout_ms": 100,
+    "read_timeout_ms": 2000,
     "write_timeout_ms": 100
   },
   "acquisition": {
@@ -593,12 +593,20 @@ pub enum AcquisitionState {
 ```text
 loop:
   t_query = now_monotonic()
-  serial.write("RALL?\n")
-  read_until(frame_terminator or timeout)
+  serial.clear_input_buffer()
+  serial.write("RALL?\r")
+  serial.flush()
+  sleep(800ms)                    # wait for device to prepare 12288-byte frame
+  read_exact(12288 bytes)         # or loop-read until 12288 bytes accumulated
   t_recv = now_monotonic()
   push raw frame
   sleep_until(next_period)
 ```
+
+> **注意**: RALL? 返回的是 **12288 bytes 固定长度二进制帧**，没有 terminator。
+> 读取前必须 `clear_input_buffer()` 避免残留数据污染帧。
+> 发送命令后需等待 ~800ms 让设备准备数据。
+> macOS 串口驱动每次返回约 1020 bytes，完整帧需 ~13 次读取。
 
 优点：
 
@@ -803,8 +811,9 @@ raw_payload:     bytes
 说明：
 
 ```text
-raw_payload 第一阶段可以是 ASCII response bytes。
-如果后续 OE1022D 使用 binary response，则 raw_payload 保持 bytes，不改上层接口。
+raw_payload 为 RALL? 返回的原始二进制 bytes（固定 12288 bytes/frame）。
+数据格式: Big-Endian IEEE 754 double (f64)，20 参数 × 50 采样点。
+rawbin 保持 bytes 存储，parser 负责解析为结构化 sample。
 ```
 
 ### 11.5 index.jsonl
@@ -821,7 +830,7 @@ raw_payload 第一阶段可以是 ASCII response bytes。
   "sequence_no": 1234,
   "command": "RALL?",
   "raw_offset": 987654,
-  "raw_len": 128,
+  "raw_len": 12288,
   "raw_crc32": "0x12345678",
   "t_mono_query_ns": 1234567800000,
   "t_mono_recv_ns": 1234567900000,
@@ -857,7 +866,58 @@ pub trait Oe1022dParser {
 8. parser 必须带 parser_version
 ```
 
-### 12.3 Numeric Parsing
+### 12.3 RALL? Binary Frame Layout (Verified 2026-05-31)
+
+`RALL?` 返回 **12288 bytes** 固定长度二进制帧，格式如下：
+
+**Measurement Data (bytes 0 ~ 7999)**
+
+每个参数占 400 bytes = 50 采样点 × 8 bytes (Big-Endian f64)。
+
+| 字节偏移 | 设备参数 | 存储列名 | 单位转换 |
+|----------|---------|----------|---------|
+| 0 ~ 399 | A-X | `lockin_A_X_mv` | V → mV (×1000) |
+| 400 ~ 799 | A-Y | `lockin_A_Y_mv` | V → mV (×1000) |
+| 800 ~ 1199 | A-Freq | `lockin_A_freq_hz` | Hz (无需转换) |
+| 1200 ~ 1599 | A-Noise | `lockin_A_noise_mv` | V → mV (×1000) |
+| 1600 ~ 1999 | A-Xh1 | `lockin_A_Xh1_mv` | V → mV (×1000) |
+| 2000 ~ 2399 | A-Yh1 | `lockin_A_Yh1_mv` | V → mV (×1000) |
+| 2400 ~ 2799 | A-Xh2 | `lockin_A_Xh2_mv` | V → mV (×1000) |
+| 2800 ~ 3199 | A-Yh2 | `lockin_A_Yh2_mv` | V → mV (×1000) |
+| 3200 ~ 3599 | B-X | `lockin_B_X_mv` | V → mV (×1000) |
+| 3600 ~ 3999 | B-Y | `lockin_B_Y_mv` | V → mV (×1000) |
+| 4000 ~ 4399 | B-Freq | `lockin_B_freq_hz` | Hz (无需转换) |
+| 4400 ~ 4799 | B-Noise | `lockin_B_noise_mv` | V → mV (×1000) |
+| 4800 ~ 5199 | B-Xh1 | `lockin_B_Xh1_mv` | V → mV (×1000) |
+| 5200 ~ 5599 | B-Yh1 | `lockin_B_Yh1_mv` | V → mV (×1000) |
+| 5600 ~ 5999 | B-Xh2 | `lockin_B_Xh2_mv` | V → mV (×1000) |
+| 6000 ~ 6399 | B-Yh2 | `lockin_B_Yh2_mv` | V → mV (×1000) |
+| 6400 ~ 6799 | AUXADC1 | `aux_adc1_v` | V (无需转换) |
+| 6800 ~ 7199 | AUXADC2 | `aux_adc2_v` | V (无需转换) |
+| 7200 ~ 7599 | AUXADC3 | `aux_adc3_v` | V (无需转换) |
+| 7600 ~ 7999 | AUXADC4 | `aux_adc4_v` | V (无需转换) |
+
+**Config Snapshot (bytes 8000 ~ 9215)**
+
+| 字节偏移 | 配置项 | 格式 |
+|----------|--------|------|
+| 8390 | A-Sensitivity | uint8 |
+| 8391 | A-Reserve | uint8 |
+| 8404 | A-Time Constant | uint8 |
+| 8405 | A-Filter dB/oct | uint8 |
+| 8406 | A-Synchronous | uint8 |
+| 8441 ~ 8448 | A-Sample Time | float64 |
+| 8449 ~ 8456 | A-Sample Length | int64 |
+| 8462 | A-Sample Mode | uint8 |
+| 8479 | A-Input Overload | uint8 |
+| 8480 | A-Gain Overload | uint8 |
+| 8481 | A-PLL Locked | uint8 |
+
+**Padding (bytes 9216 ~ 12287)**
+
+3072 bytes，理论上应为零，但实测可能有少量残留数据，parser 应忽略。
+
+### 12.4 Numeric Parsing
 
 OE1022D 显示和返回值可能包含：
 
@@ -1058,7 +1118,7 @@ refresh_rate = 10 - 30 Hz
 {
   "period_ms": 100,
   "jitter_warn_ms": 20,
-  "timeout_ms": 100,
+  "timeout_ms": 2000,
   "max_consecutive_timeout": 5
 }
 ```
@@ -1362,7 +1422,7 @@ pub trait Oe1022dRawSink {
     "read_timeout_ms": {
       "type": "number",
       "minimum": 1,
-      "default": 100
+      "default": 2000
     },
     "max_consecutive_timeout": {
       "type": "integer",
@@ -1767,19 +1827,44 @@ GUI 10-30 Hz 刷新不影响采集。
 
 ## 27. Open Questions
 
-以下问题留待 v0.3 或真实设备测试确认：
+以下问题已通过 2026-05-31 硬件实测验证（详见 `oe1022d_rust_demo/VERIFICATION_REPORT.md`）：
 
 ```text
-1. RALL? 的真实返回格式是否稳定？
-2. RALL? 是否有固定 terminator？
-3. RALL? 的最短稳定采集周期是多少？
+✅ 1. RALL? 的真实返回格式是否稳定？
+   → 稳定。固定 12288 bytes/frame，20 参数 × 50 采样点 × 8 bytes BE f64。
+
+✅ 2. RALL? 是否有固定 terminator？
+   → 没有 terminator。是固定长度二进制帧，不是 ASCII。
+
+✅ 3. RALL? 的最短稳定采集周期是多少？
+   → 设备内部以 50ms 为周期刷新数据。软件采集周期建议 ≥ 100ms。
+
+✅ 7. overload / PLL lock 是否能在 RALL? frame 中直接读到？
+   → 可以。配置快照区 (bytes 8000-9215) 包含这些状态字节。
+
+✅ 8. 是否需要单独命令读取 PLL / overload 状态？
+   → 不需要。RALL? 配置区已包含，但 SCPI 查询可作为二次验证。
+
+✅ 9. Ch-B Freq/Noise 的返回单位是否与面板一致？
+   → 原始值为 V（伏特），需在解析时按字段转换为 mV 或 Hz。
+```
+
+以下问题仍待后续验证：
+
+```text
 4. OE1022D 是否支持连续输出模式？
 5. 真实设备在 50 ms / 100 ms / 200 ms period 下 jitter 如何？
 6. status query 是否会影响 RALL? 主循环？
-7. overload / PLL lock 是否能在 RALL? frame 中直接读到？
-8. 是否需要单独命令读取 PLL / overload 状态？
-9. Ch-B Freq/Noise 的返回单位是否与面板一致？
 10. 旧 Python 采集数据字段映射是否有历史兼容问题？
+```
+
+新增实测发现：
+
+```text
+11. macOS 串口驱动每次 read() 返回约 1020 bytes，完整 12288 bytes 帧需 ~13 次读取。
+12. Rust read_exact() 有陷阱：如果缓冲区有残留数据，会先读残留而不是新帧。
+13. 正确读取流程: clear_input → write RALL? → sleep 800ms → loop-read until 12288 bytes.
+14. 配置区 cross-reference 验证通过：SENSD?/OFLTD?/OFSLD? 值与 RALL? 配置区一致。
 ```
 
 ---
