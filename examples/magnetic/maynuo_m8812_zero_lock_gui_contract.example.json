@@ -1,0 +1,192 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "maynuo_zero_lock_gui_contract",
+  "id": "maynuo_m8812_zero_lock_gui_m1",
+  "name": "Maynuo M8812 Zero-Lock GUI Contract (M1 Mock)",
+  "description": "Display-only GUI payload for the zero-lock workflow. React GUI receives these structured display payloads and does NOT issue serial/SCPI/TCP commands directly. All controls are disabled with explanatory tooltips.",
+  "gui_milestone": "M1",
+  "disabled_reason": "requires Mag-M2 identity bring-up for real hardware connection",
+  "workflow_phases": [
+    "discovery_by_idn",
+    "sn_to_axis_mapping",
+    "safe_init",
+    "output_on_zero_mode",
+    "measure_zero_current",
+    "lock_zero",
+    "plan_recur_field",
+    "apply_recur_setpoint",
+    "readback_recur_state",
+    "shutdown"
+  ],
+  "axis_cards": [
+    {
+      "axis_id": "mag_x",
+      "expected_idn": "MAYNUO,M8812,080020960220402020,V2.7",
+      "sn_tail": "2020",
+      "last_known_port_name": "COM4",
+      "identity_status": "pending",
+      "state": "Unknown",
+      "output_state": "off",
+      "zero_current_ma": null,
+      "lock_zero": false,
+      "target_field_nt": null,
+      "recur_current_ma": null,
+      "total_current_ma": null,
+      "measured_total_current_ma": null,
+      "measured_recur_current_ma": null,
+      "measured_recur_field_nt": null,
+      "current_command_preview": null,
+      "allowed_next_actions": ["discover_by_idn"],
+      "disabled_actions_with_reasons": {
+        "map_to_axis": "Must be Discovered first",
+        "safe_init": "Must be AxisMapped first",
+        "output_on_zero": "Must complete safe init first",
+        "measure_zero": "Must be OutputOnZeroMode first",
+        "lock_zero": "Must measure zero current first",
+        "plan_recur_field": "Must lock zero first",
+        "apply_setpoint": "Must plan setpoint first"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 143.26,
+        "gain_t_per_a": 1.4326e-4,
+        "verified": true
+      }
+    },
+    {
+      "axis_id": "mag_y",
+      "expected_idn": "MAYNUO,M8812,080020960220402022,V2.7",
+      "sn_tail": "2022",
+      "last_known_port_name": "COM6",
+      "identity_status": "pending",
+      "state": "Unknown",
+      "output_state": "off",
+      "zero_current_ma": null,
+      "lock_zero": false,
+      "target_field_nt": null,
+      "recur_current_ma": null,
+      "total_current_ma": null,
+      "measured_total_current_ma": null,
+      "measured_recur_current_ma": null,
+      "measured_recur_field_nt": null,
+      "current_command_preview": null,
+      "allowed_next_actions": ["discover_by_idn"],
+      "disabled_actions_with_reasons": {
+        "map_to_axis": "Must be Discovered first",
+        "safe_init": "Must be AxisMapped first",
+        "output_on_zero": "Must complete safe init first",
+        "measure_zero": "Must be OutputOnZeroMode first",
+        "lock_zero": "Must measure zero current first",
+        "plan_recur_field": "Must lock zero first",
+        "apply_setpoint": "Must plan setpoint first"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 141.77,
+        "gain_t_per_a": 1.4177e-4,
+        "verified": true
+      }
+    },
+    {
+      "axis_id": "mag_z",
+      "expected_idn": "MAYNUO,M8812,080020960220402003,V2.7",
+      "sn_tail": "2003",
+      "last_known_port_name": "COM3",
+      "identity_status": "pending",
+      "state": "Unknown",
+      "output_state": "off",
+      "zero_current_ma": null,
+      "lock_zero": false,
+      "target_field_nt": null,
+      "recur_current_ma": null,
+      "total_current_ma": null,
+      "measured_total_current_ma": null,
+      "measured_recur_current_ma": null,
+      "measured_recur_field_nt": null,
+      "current_command_preview": null,
+      "allowed_next_actions": ["discover_by_idn"],
+      "disabled_actions_with_reasons": {
+        "map_to_axis": "Must be Discovered first",
+        "safe_init": "Must be AxisMapped first",
+        "output_on_zero": "Must complete safe init first",
+        "measure_zero": "Must be OutputOnZeroMode first",
+        "lock_zero": "Must measure zero current first",
+        "plan_recur_field": "Must lock zero first",
+        "apply_setpoint": "Must plan setpoint first"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 156.15,
+        "gain_t_per_a": 1.5615e-4,
+        "verified": true
+      }
+    }
+  ],
+  "workflow_example": {
+    "description": "Full zero-lock workflow walkthrough for mag_x with mock values",
+    "steps": [
+      {"step": 1, "event": "discover_by_idn", "detail": "IDN=MAYNUO,M8812,080020960220402020,V2.7", "state_after": "Discovered"},
+      {"step": 2, "event": "map_to_axis", "detail": "axis=mag_x", "state_after": "AxisMapped"},
+      {"step": 3, "event": "safe_init", "detail": "REM, VOLT 75, CURR 0, OUTP 0", "state_after": "InitializedOutputOff"},
+      {"step": 4, "event": "output_on_zero", "detail": "OUTP 1", "state_after": "OutputOnZeroMode"},
+      {"step": 5, "event": "measure_zero", "detail": "MEAS:CURR? -> 0.15 mA", "state_after": "ZeroMeasured"},
+      {"step": 6, "event": "lock_zero", "detail": "zero=0.150 mA", "state_after": "ZeroLocked"},
+      {"step": 7, "event": "plan_recur_field", "detail": "target=1000.00 nT, recur=6.98 mA, total=7.13 mA", "state_after": "RecurSetpointPlanned"},
+      {"step": 8, "event": "apply_setpoint", "detail": "CURR 0.00713", "state_after": "RecurSetpointAppliedMock"},
+      {"step": 9, "event": "readback", "detail": "MEAS:CURR? -> 7.15 mA, recur=7.00 mA, field=1002.82 nT", "state_after": "RecurSetpointAppliedMock"},
+      {"step": 10, "event": "shutdown_normal", "detail": "CURR 0, OUTP 0, SYST:LOC", "state_after": "ShutdownNormal"}
+    ]
+  },
+  "global_state": {
+    "any_output_on": false,
+    "any_lock_zero": false,
+    "emergency_stop_available": false,
+    "emergency_stop_disabled_reason": "Visual-only in M1; no hardware authority",
+    "banner_text": "GUI-M1 MOCK ZERO-LOCK VIEWER — No hardware access. No executor. All controls disabled. React GUI receives display payloads only."
+  },
+  "backend_api_contract": {
+    "available_tauri_commands": [
+      {
+        "name": "magnetic_get_zero_lock_mock_state",
+        "input": "none",
+        "output": "This contract JSON",
+        "available": true,
+        "available_reason": "Static mock data for M1 UI development"
+      },
+      {
+        "name": "magnetic_advance_workflow_state",
+        "input": "axis_id + action",
+        "output": "Updated ZeroLockAxisGuiPayload",
+        "available": true,
+        "available_reason": "Mock state machine transition (no hardware)"
+      }
+    ],
+    "unavailable_tauri_commands": [
+      {
+        "name": "magnetic_discover_axes",
+        "input": "serial port handles",
+        "output": "Matched IDN list",
+        "available": false,
+        "available_reason": "Requires Mag-M2A identity bring-up"
+      },
+      {
+        "name": "magnetic_execute_plan",
+        "input": "MaynuoCommandPlan + serial handle",
+        "output": "ExecutionResult",
+        "available": false,
+        "available_reason": "Requires Mag-M2B/M3 backend executor"
+      }
+    ],
+    "forbidden_patterns": [
+      "React onClick -> serialport.open()",
+      "React onClick -> write(CURR ...)",
+      "React onClick -> write(OUTP 1)",
+      "React onClick -> write(MEAS:CURR?)",
+      "frontend direct SCPI",
+      "frontend direct serial/USB/TCP",
+      "executable: true on any plan"
+    ],
+    "binding_policy": {
+      "stable_identity_field": "expected_idn",
+      "port_policy": "last_known_port_name is a hint only; port paths are dynamic per session",
+      "identification_method": "enumerate all ports, send *IDN?, match SN tail to logical axis"
+    }
+  }
+}
