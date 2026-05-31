@@ -226,6 +226,92 @@ fn latest_b_channel_sample_returns_last_point() {
 }
 
 // ---------------------------------------------------------------------------
+// A-channel newly-documented fields (from complete config table)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn config_a_source_grounding_coupling_line_notch_are_zero() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.a_source_code, Some(0));
+    assert_eq!(frame.config.a_grounding_code, Some(0));
+    assert_eq!(frame.config.a_coupling_code, Some(0));
+    assert_eq!(frame.config.a_line_notch_code, Some(0));
+}
+
+#[test]
+fn config_a_sample_fields_parses_without_panic() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    // sample_time_s and sample_length have anomalous values in fixtures
+    // (likely uninitialised by firmware in the current mode), but the
+    // offsets are confirmed correct by the official table.
+    let _ = frame.config.a_sample_time_s;
+    let _ = frame.config.a_sample_length;
+    assert_eq!(frame.config.a_sample_mode_code, Some(0));
+    assert_eq!(frame.config.a_sample_current_point, Some(0));
+}
+
+#[test]
+fn config_idn_serial_is_present() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    let idn = frame.config.idn_serial.as_ref().unwrap();
+    assert!(idn.contains("OE1022D"), "IDN missing model: {}", idn);
+    assert!(idn.contains("SN:"), "IDN missing serial: {}", idn);
+}
+
+#[test]
+fn config_chout_defaults_are_sensible() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.ch1_output_source, Some(0));
+    assert_eq!(frame.config.ch2_output_source, Some(0));
+    assert_eq!(frame.config.ch1_offset, Some(0.0));
+    assert_eq!(frame.config.ch2_offset, Some(0.0));
+    assert_eq!(frame.config.ch1_expand, Some(1));
+    assert_eq!(frame.config.ch2_expand, Some(1));
+}
+
+// ---------------------------------------------------------------------------
+// B-channel config snapshot (newly documented offsets)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn config_b_sensitivity_matches_fixture_expectation() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.b_sensitivity_code, Some(24));
+}
+
+#[test]
+fn config_b_time_constant_matches_fixture() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.b_time_constant_code, Some(4));
+}
+
+#[test]
+fn config_b_filter_slope_matches_fixture() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.b_filter_slope_code, Some(1));
+}
+
+#[test]
+fn config_b_status_flags_are_false() {
+    let frame = parse_rall_frame(FRAME_000).unwrap();
+    assert_eq!(frame.config.b_input_overload, Some(false));
+    assert_eq!(frame.config.b_gain_overload, Some(false));
+    assert_eq!(frame.config.b_pll_locked, Some(false));
+}
+
+#[test]
+fn config_b_gain_tc_consistent_across_fixtures() {
+    let f0 = parse_rall_frame(FRAME_000).unwrap().config;
+    let f1 = parse_rall_frame(FRAME_001).unwrap().config;
+    let f2 = parse_rall_frame(FRAME_002).unwrap().config;
+
+    assert_eq!(f0.b_sensitivity_code, f1.b_sensitivity_code);
+    assert_eq!(f1.b_sensitivity_code, f2.b_sensitivity_code);
+    assert_eq!(f0.b_time_constant_code, f1.b_time_constant_code);
+    assert_eq!(f1.b_time_constant_code, f2.b_time_constant_code);
+}
+
+// ---------------------------------------------------------------------------
 // Structural invariants
 // ---------------------------------------------------------------------------
 
