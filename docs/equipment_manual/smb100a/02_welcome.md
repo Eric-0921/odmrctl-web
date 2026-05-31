@@ -10,7 +10,7 @@ Outstanding key features of the R&S SMB are:
 
 • SSB phase noise of  $ -108 $ dBc (typ.) at 10 GHz and 20 kHz offset
 
-Wideband noise of -138 dBc at 10 GHz and 30 MHz offset
+• Wideband noise of -138 dBc at 10 GHz and 30 MHz offset
 
 • High output power of up to +27 dBm (meas.)
 
@@ -58,13 +58,17 @@ See www.rohde-schwarz.com/application/smb100a.
 
 The following text markers are used throughout this documentation:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Convention</td><td style='text-align: center; word-wrap: break-word;'>Description</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&quot;Graphical user interface elements&quot;</td><td style='text-align: center; word-wrap: break-word;'>All names of graphical user interface elements on the screen, such as dialog boxes, menus, options, buttons, and softkeys are enclosed by quotation marks.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[Keys]</td><td style='text-align: center; word-wrap: break-word;'>Key and knob names are enclosed by square brackets.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Filenames, commands, program code</td><td style='text-align: center; word-wrap: break-word;'>Filenames, commands, coding samples and screen output are distinguished by their font.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Input</td><td style='text-align: center; word-wrap: break-word;'>Input to be entered by the user is displayed in italics.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Links</td><td style='text-align: center; word-wrap: break-word;'>Links that you can click are displayed in blue font.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&quot;References&quot;</td><td style='text-align: center; word-wrap: break-word;'>References to other parts of the documentation are enclosed by quotation marks.</td></tr></table>
+| Convention | Description |
+|------------|-------------|
+| "Graphical user interface elements" | All names of graphical user interface elements on the screen, such as dialog boxes, menus, options, buttons, and softkeys are enclosed by quotation marks. |
+| [Keys] | Key and knob names are enclosed by square brackets. |
+| Filenames, commands, program code | Filenames, commands, coding samples and screen output are distinguished by their font. |
+| Input | Input to be entered by the user is displayed in italics. |
+| Links | Links that you can click are displayed in blue font. |
+| "References" | References to other parts of the documentation are enclosed by quotation marks. |
 
 ### 2.4 Notes on screenshots
 
 When describing the functions of the product, we use sample screenshots. These screenshots are meant to illustrate as many as possible of the provided functions and possible interdependencies between parameters. The shown values may not represent realistic usage scenarios.
 
 The screenshots usually show a fully equipped product, that is: with all options installed. Thus, some functions shown in the screenshots may not be available in your particular product configuration.
-

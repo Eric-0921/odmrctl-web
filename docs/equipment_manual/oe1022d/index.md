@@ -1,6 +1,6 @@
 # MODEL OE1022D DSP Lock-In Amplifier
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//71bb110b-4683-49fc-9d75-9c71e23d5e8c/markdown_0/imgs/img_in_image_box_395_1172_501_1293.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2F2c6c1b45484182c9aae00cf2dca5e9a28f926bedf0b6740ffeba1d602b76441e" alt="Image" width="8%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//71bb110b-4683-49fc-9d75-9c71e23d5e8c/markdown_0/imgs/img_in_image_box_395_1172_501_1293.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2F2c6c1b45484182c9aae00cf2dca5e9a28f926bedf0b6740ffeba1d602b76441e)
 
 
 SINE
@@ -104,8 +104,6 @@ Revision 1.9, 2025-08-14
 4.8 [SYSTEM] 子菜单 ..... 49    
 4.8.1 <Info>二级子菜单 ..... 49    
 4.8.2 <Screen>二级子菜单 ..... 50
-
-#### OE1022D DSP Lock-In Amplifier
 
 4.8.3 <Remote>二级子菜单 ..... 52    
 4.8.4 <Reset ?>：锁相放大器复位 ..... 52    

@@ -8,31 +8,7 @@ The /var/user/ directory can be used to save user-defined data; any subdirectory
 
 The default directory is determined using the command MMEMORY:CDIR.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//414e43bf-96da-4ab8-92a9-e54cc25c8d3c/markdown_4/imgs/img_in_image_box_225_540_262_597.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A07Z%2F-1%2F%2F4e11a7f58dbb7c4b7c80e09c70d8e9652a92c7d83d480e75b0281933c9165dd5" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//414e43bf-96da-4ab8-92a9-e54cc25c8d3c/markdown_4/imgs/img_in_image_box_225_540_262_597.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A07Z%2F-1%2F%2F4e11a7f58dbb7c4b7c80e09c70d8e9652a92c7d83d480e75b0281933c9165dd5" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
-
 Use the command :SYSTEM:MMEMORY:PATH:USER? to query the path of the directory for user-defined data.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//414e43bf-96da-4ab8-92a9-e54cc25c8d3c/markdown_4/imgs/img_in_image_box_218_637_272_692.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A07Z%2F-1%2F%2F3f7a528ddfd415720c7b29156eef638d06ca77a67f960fc55fae60e234e123c0" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//414e43bf-96da-4ab8-92a9-e54cc25c8d3c/markdown_4/imgs/img_in_image_box_218_637_272_692.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A07Z%2F-1%2F%2F3f7a528ddfd415720c7b29156eef638d06ca77a67f960fc55fae60e234e123c0" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
 
 The /opt directory is a protected and therefore a not accessible system directory. The files on this directory contain data that must not be changed. Therefore, this directory should not be accessed, since reconstruction of the system partition will lead to data loss.
 
@@ -58,12 +34,16 @@ Before the instrument settings can be stored in a file, they have to be stored i
 
 The following table lists all available file extensions for user files. The currently available files on the instrument depend on the installed options.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 6-1: List of the automatically assigned file extensions in the instrument</div> </div>
+**Table 6-1: List of the automatically assigned file extensions in the instrument**
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Function</td><td style='text-align: center; word-wrap: break-word;'>List type</td><td style='text-align: center; word-wrap: break-word;'>Contents</td><td style='text-align: center; word-wrap: break-word;'>File suffix</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Instrument State</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>Instrument settings</td><td style='text-align: center; word-wrap: break-word;'>*.savrcltxt</td></tr><tr><td rowspan="2">&quot;User Correction&quot;</td><td rowspan="2">List</td><td style='text-align: center; word-wrap: break-word;'>User-defined level correction values</td><td style='text-align: center; word-wrap: break-word;'>*.uco</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Export Data</td><td style='text-align: center; word-wrap: break-word;'>*.txt or *.csv</td></tr><tr><td rowspan="2">&quot;List Mode&quot;</td><td rowspan="2">List</td><td style='text-align: center; word-wrap: break-word;'>User-defined frequency/level value pairs</td><td style='text-align: center; word-wrap: break-word;'>*.lsw</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Export Data</td><td style='text-align: center; word-wrap: break-word;'>*.txt or *.csv</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&quot;Pulse Train List&quot;</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>User-defined offline/ontime/repetition values</td><td style='text-align: center; word-wrap: break-word;'>*.pulstrn</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SMZ Settings</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>Data (firmware) of a connected SMZ frequency multiplier</td><td style='text-align: center; word-wrap: break-word;'>*.efmfirm</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>NRP Settings</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>NRP Settings</td><td style='text-align: center; word-wrap: break-word;'>*.nrp</td></tr></table>
+| Function | List type | Contents | File suffix |
+|----------|-----------|----------|-------------|
+| Instrument State | Settings | Instrument settings | *.savrcltxt |
+| "User Correction" | List | User-defined level correction values | *.uco |
+| "User Correction" | List | Export Data | *.txt or *.csv |
+| "List Mode" | List | User-defined frequency/level value pairs | *.lsw |
+| "List Mode" | List | Export Data | *.txt or *.csv |
+| "Pulse Train List" | | User-defined offline/ontime/repetition values | *.pulstrn |
 
 #### 6.10.3 Examples
 
@@ -79,7 +59,7 @@ MMEM:STOR:STAT 4,"/var/user/test.savrcltxt"
 
 3. To store the settings in a file in the default drive, set the default drive and specify only the file name.
 
-MMEM:CDIR '/var/user/' * SAV 4
+MMEM:CDIR '/var/user/' *SAV 4
 
 MMEM:STOR:STAT 4, "test.savrcltxt"
 
@@ -94,18 +74,17 @@ MMEM:LOAD:STAT 4,'/var/user/test.savrcltxt'
 ##### Working with Files and Directories
 
 Read out all files in the specified directory.
-MMEM: CAT? '/usb/user'
+MMEM:CAT? '/usb/user'
 Response: 127145265, 175325184, "test, DIR, 0", "temp, DIR, 0",
 "readme.txt, ASC, 1324", "state.savrcltxt, STAT, 5327",
 "waveform.wv, BIN, 2342"
 the directory /usb/user contains the subdirectories test and temp as well as
 the files readme.txt, state.savrcltxt and waveform.wv which have different file types.
 Tip: To query only the subdirectories of the current or specified directory, perform:
-MMEM: DCAT? '/usb/user'
+MMEM:DCAT? '/usb/user'
 Response: 'test', 'temp'
 To query only the number of subdirectories in the current or specified directory, perform:
-MMEM: DCAT: LENG? '/usb/user'
-Response: ?
+MMEM:DCAT:LENG? '/usb/user'
 
 Response: 2
 
@@ -131,44 +110,44 @@ MMEM:RDIR '/usb/test'
 
 #### 6.10.4 Remote control commands
 
-:MMEMory:CATalog? ..... 308    
-:MMEMory:CATalog:LENGTH? ..... 308    
-:MMEMory:CDIRectory ..... 309    
-:MMEMory:COPY ..... 309    
-:MMEMory:DATA ..... 310    
-:MMEMory:DCATalog? ..... 310    
-:MMEMory:DCATalog:LENGTH? ..... 311    
-:MMEMory:DELETE ..... 311    
-:MEMory:HFRee? ..... 311    
-:MMEMory:LOAD:STATE ..... 312    
-:MMEMory:MDIRectory ..... 312    
-:MMEMory:MOVE ..... 312    
-:MMEMory:MSIS ..... 313    
-:MMEMory:RDIRectory ..... 313    
+:MMEMory:CATalog? ..... 308
+:MMEMory:CATalog:LENGTH? ..... 308
+:MMEMory:CDIRectory ..... 309
+:MMEMory:COPY ..... 309
+:MMEMory:DATA ..... 310
+:MMEMory:DCATalog? ..... 310
+:MMEMory:DCATalog:LENGTH? ..... 311
+:MMEMory:DELETE ..... 311
+:MEMory:HFRee? ..... 311
+:MMEMory:LOAD:STATE ..... 312
+:MMEMory:MDIRectory ..... 312
+:MMEMory:MOVE ..... 312
+:MMEMory:MSIS ..... 313
+:MMEMory:RDIRectory ..... 313
 :MMEMory:STORE:STATE ..... 313
 
 ##### :MMEMory:CATalog? <path>
 
 Returns the content of a particular directory.
 
-Query parameters:    
-<path> string    
-String parameter to specify the directory.    
-If you leave out the path, the command returns the contents of the directory selected with :MMEMory:CDIRectory.    
-The path may be relative or absolute.    
-Return values:    
-<UsedDiskSpace> Byte size of all files in the directory.    
-<FreeDiskSpace> Remaining disk space in bytes.    
-<FileInfo> <NameFileN>,<SuffixFileN>,<SizeFileN>    
-List of files, separated by commas    
-<NameFileN>    
-Name of the file.    
-<SuffixFileN>    
-Type of the file. Possible suffixes are: ASCII, BINary, DIRectory    
-<SizeFileN>    
-Size of the file in bytes.    
-Example: See "Working with Files and Directories" on page 307.    
-Usage: Query only    
+Query parameters:
+<path> string
+String parameter to specify the directory.
+If you leave out the path, the command returns the contents of the directory selected with :MMEMory:CDIRectory.
+The path may be relative or absolute.
+Return values:
+<UsedDiskSpace> Byte size of all files in the directory.
+<FreeDiskSpace> Remaining disk space in bytes.
+<FileInfo> <NameFileN>,<SuffixFileN>,<SizeFileN>
+List of files, separated by commas
+<NameFileN>
+Name of the file.
+<SuffixFileN>
+Type of the file. Possible suffixes are: ASCII, BINary, DIRectory
+<SizeFileN>
+Size of the file in bytes.
+Example: See "Working with Files and Directories" on page 307.
+Usage: Query only
 Manual operation: See "Directory, File List and File Name" on page 129
 
 #### :MMEMory:CATalog:LENGTH? <Path>
@@ -211,8 +190,6 @@ Changes the default directory for mass memory storage. The directory is used for
 
 Example: See "Working with Files and Directories" on page 307.
 
-Exa. . . .
-
 Usage: SCPI confirmed
 
 Manual operation: See "Directory, File List and File Name" on page 129
@@ -223,19 +200,15 @@ Copies an existing file to a new file. Instead of just a file, this command can 
 
 ##### Setting parameters:
 
-<file>
+<SourceFile> string
 
-<source>string</source>
-
-<text>String containing the path and file name of the source file</text>
-
-</source>
+String containing the path and file name of the source file.
 
 <DestinationFile> string
 
 String containing the path and name of the target file. The path can be relative or absolute.
 
-If <DestinationFile> is not specified, the <SourceFile> is copied to the current directory, queried with the :MMEMory: CDIRectory command.
+If <DestinationFile> is not specified, the <SourceFile> is copied to the current directory, queried with the :MMEMory:CDIRectory command.
 
 Note: Existing files with the same name in the destination directory are overwritten without an error message.
 
@@ -247,7 +220,7 @@ SCPI confirmed
 
 Manual operation: See "Copy" on page 133
 
-:MMEMory:DATA <Filename>, <BinaryBlock>
+#### :MMEMory:DATA <Filename>, <BinaryBlock>
 
 :MMEMory:DATA? <Filename>
 
@@ -271,7 +244,7 @@ Tip: Use this command to read/transfer stored instrument settings or waveforms d
 
   <data>: binary block data for the specified length.
 
-  For files with a size with more than nine digits (gigabytes), the instrument allows the syntax # (<Length>), where <Length> is the file size in decimal format.
+  For files with a size with more than nine digits (gigabytes), the instrument allows the syntax #(<Length>), where <Length> is the file size in decimal format.
 
 ##### Parameters for setting and query:
 
@@ -279,13 +252,13 @@ Tip: Use this command to read/transfer stored instrument settings or waveforms d
 
 String parameter to specify the name of the file.
 
-Example: MMEMORY:DATA '/var/user/test.txt', #15hallo
+Example: :MMEMory:DATA '/var/user/test.txt', #15hallo
 
 Writes the block data to the file test.txt.
 
-The digit 1 indicates a length entry of one digit; the digit 5 indicate a length of the binary data (hallo) in bytes.
+The digit 1 indicates a length entry of one digit; the digit 5 indicates a length of the binary data (hallo) in bytes.
 
-MMEMORY:DATA？（/var/user/test.txt'
+:MMEMory:DATA? '/var/user/test.txt'
 
 Sends the data of the file test.txt from the instrument to the controller in the form of a binary block.
 
@@ -301,7 +274,7 @@ Returns the subdirectories of a particular directory.
 
 <path>
 
-String parameter to specify the directory. If the directory is omitted, the command queries the content of the current directory, queried with :MMEMORY:CDIRectory command.
+String parameter to specify the directory. If the directory is omitted, the command queries the content of the current directory, queried with :MMEMory:CDIRectory command.
 
 ##### Return values:
 
@@ -359,11 +332,15 @@ Returns the used and available memory in Kb.
 
 Total physical memory.
 
-<ApplicMemKb> integer Application memory.
+<ApplicMemKb> integer
 
+Application memory.
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;HeapUsedKb&gt;</td><td style='text-align: center; word-wrap: break-word;'>integer</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Used heap memory.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;HeapAvailableKb&gt;</td><td style='text-align: center; word-wrap: break-word;'>integer</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Available heap memory.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Query only</td></tr></table>
+| `<HeapUsedKb>` | integer |
+| | Used heap memory. |
+| `<HeapAvailableKb>` | integer |
+| | Available heap memory. |
+| Usage: | Query only |
 
 #### :MMEMory:LOAD:STATe <SavRclStateNumb>, <file_name>
 
@@ -373,7 +350,7 @@ After the file has been loaded, the instrument setting must be activated using a
 
 ##### Setting parameters:
 
-<SavRclStateNumb> Determines to the specific <number> to be used with the *RCL command, e.g. *RCL 4.
+<SavRclStateNumb> Determines the specific <number> to be used with the *RCL command, e.g. *RCL 4.
 
 <file_name> String parameter to specify the file name with extension *.savrcltxt.
 
@@ -389,9 +366,11 @@ Creates a subdirectory for mass memory storage in the specified directory. If no
 
 ##### Setting parameters:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">&lt;Directory&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>String parameter to specify the new directory.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Working with Files and Directories&quot; on page 307.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Create New Directory&quot; on page 133</td></tr></table>
+| `<Directory>` | string |
+| | String parameter to specify the new directory. |
+| Example: | See "Working with Files and Directories" on page 307. |
+| Usage: | Event |
+| Manual operation: | See "Create New Directory" on page 133 |
 
 ##### :MMEMory:MOVE <SourceFile>, <DestinationFile>
 
@@ -401,9 +380,11 @@ Moves an existing file to a new location or, if no path is specified, renames an
 
 <SourceFile> string String parameter to specify the name of the file to be moved.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;DestinationFile&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>String parameters to specify the name of the new file.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Working with Files and Directories&quot; on page 307.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event SCPI confirmed</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Rename&quot; on page 133</td></tr></table>
+| `<DestinationFile>` | string |
+| | String parameters to specify the name of the new file. |
+| Example: | See "Working with Files and Directories" on page 307. |
+| Usage: | Event SCPI confirmed |
+| Manual operation: | See "Rename" on page 133 |
 
 ##### :MMEMory:MSIS <Msis>
 
@@ -419,9 +400,10 @@ Removes an existing directory from the mass memory storage system. If no directo
 
 ##### Setting parameters:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">&lt;Directory&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>String parameter to specify the directory to be deleted.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Working with Files and Directories&quot; on page 307.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr></table>
+| `<Directory>` | string |
+| | String parameter to specify the directory to be deleted. |
+| Example: | See "Working with Files and Directories" on page 307. |
+| Usage: | Event |
 
 ##### :MMEMory:STORE:STATE <savrcl_state_nr>, <file_name>
 
@@ -431,7 +413,8 @@ The instrument setting must first be stored in an internal memory with the same 
 
 ##### Setting parameters:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;savrcl_state_nr&gt;</td><td style='text-align: center; word-wrap: break-word;'>Corresponds to the specific &lt;number&gt; defined with the *SAV command, e.g. *SAV 4.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;file_name&gt;</td><td style='text-align: center; word-wrap: break-word;'>String parameter to specify the file name with extension *.savrcltxt.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Storing and Loading Current Settings&quot; on page 306.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Save&quot; on page 129</td></tr></table>
-
+| `<savrcl_state_nr>` | Corresponds to the specific `<number>` defined with the *SAV command, e.g. *SAV 4. |
+| `<file_name>` | String parameter to specify the file name with extension *.savrcltxt. |
+| Example: | See "Storing and Loading Current Settings" on page 306. |
+| Usage: | Event |
+| Manual operation: | See "Save" on page 129 |

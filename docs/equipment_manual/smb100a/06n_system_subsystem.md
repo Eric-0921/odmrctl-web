@@ -2,66 +2,66 @@
 
 The SYSTEM subsystem contains a series of commands for general functions which do not directly affect signal generation.
 
-:SYSTEM:ERROR:ALL?.....438    
-:SYSTEM:ERROR:CODE:ALL?.....439    
-:SYSTEM:ERROR:CODE[:NEXT]?.....439    
-:SYSTEM:ERROR:COUNT?.....440    
-:SYSTEM:ERROR[:NEXT]?.....440    
-:SYSTEM:ERROR:HISTORY?.....440    
-:SYSTEM:ERROR:HISTORY:CLEAR.....441    
-:SYSTEM:ERROR:STATIC?.....441    
-:SYSTEM:HELP:EXPORT.....441    
-:SYSTEM:DLOCK.....442    
-:SYSTEM:KLOCK.....442    
-:SYSTEM:ULOCK.....442    
-:SYSTEM:RCL.....443    
-:SYSTEM:SAV.....443    
-:SYSTEM:SECURITY:VOLMode[:STATE].....443    
-:SYSTEM:COMMUnicate:GPIB:LTERminator.....444    
-:SYSTEM:COMMUnicate:GPIB[:SELF]:ADDRESS.....444    
-:SYSTEM:COMMUnicate:NETWORK[:COMMON]:DOMain.....444    
-:SYSTEM:COMMUnicate:NETWORK[:COMMON]:HOSTname.....445    
-:SYSTEM:COMMUnicate:NETWORK[:COMMON]:WORKgroup.....445    
-:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:DNS.....445    
-:SYSTEM:COMMUnicate:NETWORK:IPAddress:MODE.....445    
-:SYSTEM:COMMUnicate:NETWORK:IPAddress.....446    
-:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:GATEway.....446    
-:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:SUBNet:MASK.....446    
-:SYSTEM:COMMUnicate:NETWORK:MACAddress.....446    
-:SYSTEM:COMMUnicate:NETWORK:STATUS?.....447    
-:SYSTEM:COMMUnicate:NETWORK:RESTart.....447    
-:SYSTEM:NINFormation?.....447    
-:SYSTEM:COMMUnicate:GPIB:RESOURCE?.....447    
-:SYSTEM:COMMUnicate:NETWORK:RESOURCE?.....448    
-:SYSTEM:COMMUnicate:HISLip:RESOURCE?.....448    
+:SYSTEM:ERROR:ALL?.....438
+:SYSTEM:ERROR:CODE:ALL?.....439
+:SYSTEM:ERROR:CODE[:NEXT]?.....439
+:SYSTEM:ERROR:COUNT?.....440
+:SYSTEM:ERROR[:NEXT]?.....440
+:SYSTEM:ERROR:HISTORY?.....440
+:SYSTEM:ERROR:HISTORY:CLEAR.....441
+:SYSTEM:ERROR:STATIC?.....441
+:SYSTEM:HELP:EXPORT.....441
+:SYSTEM:DLOCK.....442
+:SYSTEM:KLOCK.....442
+:SYSTEM:ULOCK.....442
+:SYSTEM:RCL.....443
+:SYSTEM:SAV.....443
+:SYSTEM:SECURITY:VOLMode[:STATE].....443
+:SYSTEM:COMMUnicate:GPIB:LTERminator.....444
+:SYSTEM:COMMUnicate:GPIB[:SELF]:ADDRESS.....444
+:SYSTEM:COMMUnicate:NETWORK[:COMMON]:DOMain.....444
+:SYSTEM:COMMUnicate:NETWORK[:COMMON]:HOSTname.....445
+:SYSTEM:COMMUnicate:NETWORK[:COMMON]:WORKgroup.....445
+:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:DNS.....445
+:SYSTEM:COMMUnicate:NETWORK:IPAddress:MODE.....445
+:SYSTEM:COMMUnicate:NETWORK:IPAddress.....446
+:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:GATEway.....446
+:SYSTEM:COMMUnicate:NETWORK[:IPAddress]:SUBNet:MASK.....446
+:SYSTEM:COMMUnicate:NETWORK:MACAddress.....446
+:SYSTEM:COMMUnicate:NETWORK:STATUS?.....447
+:SYSTEM:COMMUnicate:NETWORK:RESTart.....447
+:SYSTEM:NINFormation?.....447
+:SYSTEM:COMMUnicate:GPIB:RESOURCE?.....447
+:SYSTEM:COMMUnicate:NETWORK:RESOURCE?.....448
+:SYSTEM:COMMUnicate:HISLip:RESOURCE?.....448
 :SYSTEM:COMMUnicate:USB:RESOURCE?.....448
 
-:SYSTEM:COMMunicate:SERial:RESource?.....448    
-:SYSTEM:COMMunicate:SERial:BAUD.....449    
-:SYSTEM:COMMunicate:SERial:PARity.....449    
-:SYSTEM:COMMunicate:SERial:SBITs.....449    
-:SYSTEM:COMMunicate:SOCKET:RESOURCE.....450    
-:SYSTEM:IDENTIFICATION.....450    
-:SYSTEM:IDENTIFICATION:PRESET.....450    
-:SYSTEM:IRESPonse.....450    
-:SYSTEM:ORESPonse.....451    
-:SYSTEM:NTP:HOSTName.....451    
-:SYSTEM:NTP:STATE.....451    
-:SYSTEM:LANGUAGE.....452    
-:SYSTEM:SECURITY:SUPOLICY.....452    
-:SYSTEM:PROTECT<ch>[:STATE].....452    
-:SYSTEM:REBOOT.....453    
-:SYSTEM:RESTART.....453    
-:SYSTEM:SHUTDOWN.....453    
-:SYSTEM:STARTUP:COMPLETE?.....453    
-:SYSTEM:DISPLAY:UPDATE.....454    
-:SYSTEM:DATE.....454    
-:SYSTEM:TIME.....454    
-:SYSTEM:TIME:ZONE.....455    
-:SYSTEM:TIME:ZONE:CATALOG?.....455    
-:SYSTEM:VERSION?.....455    
-:SYSTEM:OSYSTEM?.....455    
-:SYSTEM:MMEMORY:PATH:USER?.....456    
+:SYSTEM:COMMunicate:SERial:RESource?.....448
+:SYSTEM:COMMunicate:SERial:BAUD.....449
+:SYSTEM:COMMunicate:SERial:PARity.....449
+:SYSTEM:COMMunicate:SERial:SBITs.....449
+:SYSTEM:COMMunicate:SOCKET:RESOURCE.....450
+:SYSTEM:IDENTIFICATION.....450
+:SYSTEM:IDENTIFICATION:PRESET.....450
+:SYSTEM:IRESPonse.....450
+:SYSTEM:ORESPonse.....451
+:SYSTEM:NTP:HOSTName.....451
+:SYSTEM:NTP:STATE.....451
+:SYSTEM:LANGUAGE.....452
+:SYSTEM:SECURITY:SUPOLICY.....452
+:SYSTEM:PROTECT<ch>[:STATE].....452
+:SYSTEM:REBOOT.....453
+:SYSTEM:RESTART.....453
+:SYSTEM:SHUTDOWN.....453
+:SYSTEM:STARTUP:COMPLETE?.....453
+:SYSTEM:DISPLAY:UPDATE.....454
+:SYSTEM:DATE.....454
+:SYSTEM:TIME.....454
+:SYSTEM:TIME:ZONE.....455
+:SYSTEM:TIME:ZONE:CATALOG?.....455
+:SYSTEM:VERSION?.....455
+:SYSTEM:OSYStem?.....455
+:SYSTEM:MMEMory:PATH:USER?.....456
 :SYSTEM:WAIT.....456
 
 ##### :SYSTEM:ERROR:ALL?
@@ -72,7 +72,7 @@ Queries the error/event queue for all unread items and removes them from the que
 
 <All> string
 
-Error/event_number, "Error/event_description>[;Device-dependent info]"
+Error/event_number, "<Error/event_description>[;Device-dependent info]"
 
 A comma separated list of error number and a short description of the error in FIFO order.
 
@@ -188,7 +188,7 @@ Queries the error/event queue for the oldest item and removes it from the queue.
 
 <Next> string
 
-Error/event_number, "Error/event_description>[;Device-dependent info]"
+Error/event_number, "<Error/event_description>[;Device-dependent info]"
 
 Error number and a short description of the error.
 
@@ -393,23 +393,35 @@ Current security password
 
 The default password is 123456.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:SECURITY:VOLMode:STATe &quot;123456&quot;, 1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SYSTEM:REBoot</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Volatile Mode&quot; on page 119</td></tr></table>
+| Example: | SYSTEM:SECURITY:VOLMode:STATe "123456", 1 |
+| --- | --- |
+|  | SYSTEM:REBoot |
+| Manual operation: | See "Volatile Mode" on page 119 |
 
 #### :SYSTEM:COMMunicate:GPIB:LTERminator <LTerminator>
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Sets the terminator recognition for remote control via GPIB bus.</td></tr><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;LTerminator&gt;</td><td style='text-align: center; word-wrap: break-word;'>STANDARD | EOI</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>EOI</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>The terminator must be sent together with the line message EOI (End of Line). This setting is recommended for binary block transmissions where a character could coincidentally have the value LF (Line Feed) but is not intended as the terminator. This setting must be selected for block data with undefined length.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>STANDARD</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>An LF (Line Feed) is recognized as the terminator regardless of whether it is sent with or without EOI.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST: n.a. (factory preset: STANDard)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:COMMunicate:GPIB:LTERminator EOI Only a character which is sent simultaneously with the line message EOI is accepted as the terminator.</td></tr></table>
+|  | Sets the terminator recognition for remote control via GPIB bus. |
+| --- | --- |
+|  | Parameters: |
+| <LTerminator> | STANDARD \| EOI |
+|  | EOI |
+|  | The terminator must be sent together with the line message EOI (End of Line). This setting is recommended for binary block transmissions where a character could coincidentally have the value LF (Line Feed) but is not intended as the terminator. This setting must be selected for block data with undefined length. |
+|  | STANDARD |
+|  | An LF (Line Feed) is recognized as the terminator regardless of whether it is sent with or without EOI. |
+|  | *RST: n.a. (factory preset: STANDard) |
+| Example: | SYSTEM:COMMunicate:GPIB:LTERminator EOI Only a character which is sent simultaneously with the line message EOI is accepted as the terminator. |
 
 #### :SYSTEM:COMMunicate:GPIB[:SELF]:ADDRESS <Address>
 
 Sets the GPIB address.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Address&gt;</td><td style='text-align: center; word-wrap: break-word;'>integer</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Range: 0 to 30</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST: n.a. (factory preset: 28)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:COMMunicate:GPIB:SELF:ADDRESS 28 Sets GPIB address.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;GPIB channel address&quot; on page 109</td></tr></table>
+|  | Parameters: |
+| --- | --- |
+| <Address> | integer |
+|  | Range: 0 to 30 |
+|  | *RST: n.a. (factory preset: 28) |
+| Example: | SYSTEM:COMMunicate:GPIB:SELF:ADDRESS 28 Sets GPIB address. |
+| Manual operation: | See "GPIB channel address" on page 109 |
 
 #### :SYSTEM:COMMunicate:NETWORK[:COMMon]:Domain <Domain>
 
@@ -449,9 +461,9 @@ Sets the individual workgroup name of the instrument.
 
 ##### Parameters:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Workgroup&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:COMMunicate:NETWORK:COMMON:WORKgroup &#x27;TEST_09&#x27; sets the workgroup name</td></tr></table>
+| <Workgroup> | string |
+| --- | --- |
+| Example: | SYSTEM:COMMunicate:NETWORK:COMMON:WORKgroup 'TEST_09' sets the workgroup name |
 
 Manual operation: See "Workgroup" on page 106
 
@@ -459,9 +471,11 @@ Manual operation: See "Workgroup" on page 106
 
 Determines the net DNS server to resolve the name.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;DNS&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYST:COMM:NETW:IPAD:DNS 123.456.0.1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;DNS Server&quot; on page 107</td></tr></table>
+|  | Parameters: |
+| --- | --- |
+| <DNS> | string |
+| Example: | SYST:COMM:NETW:IPAD:DNS 123.456.0.1 |
+| Manual operation: | See "DNS Server" on page 107 |
 
 ##### :SYSTEM:COMMunicate:NETWORK:IPAddress:MODE <Mode>
 
@@ -469,9 +483,9 @@ Selects manual or automatic setting of the IP address.
 
 ##### Parameters:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Mode&gt;</td><td style='text-align: center; word-wrap: break-word;'>AUTO | STATic\n*RST: n.a. (factory preset: AUTO)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:COMMunicate:NETWORK:IPADdress:MODE AUTO\nThe IP address is assigned automatically (DHCP)</td></tr></table>
+| <Mode> | AUTO \| STATic *RST: n.a. (factory preset: AUTO) |
+| --- | --- |
+| Example: | SYSTEM:COMMunicate:NETWORK:IPADdress:MODE AUTO The IP address is assigned automatically (DHCP) |
 
 Manual operation: See "Address Mode" on page 106
 
@@ -515,9 +529,11 @@ Manual operation: See "Subnet Mask" on page 106
 
 Queries the MAC address of the network adapter.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;MacAddress&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYST:COMM:NETW:MAC queries the MAC address.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;MAC Address&quot; on page 107</td></tr></table>
+|  | Parameters: |
+| --- | --- |
+| <MacAddress> | string |
+| Example: | SYST:COMM:NETW:MAC queries the MAC address. |
+| Manual operation: | See "MAC Address" on page 107 |
 
 #### :SYSTEM:COMMunicate:NETWORK:STATus?
 
@@ -531,9 +547,11 @@ Manual operation: See "Network Status" on page 105
 
 ##### :SYSTEM:COMMunicate:NETWORK:REStart
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Restarts the network connection to the instrument, terminates the connection and sets it up again.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:COMMunicate:NETWORK:RESTART</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Restart Network&quot; on page 107</td></tr></table>
+|  | Restarts the network connection to the instrument, terminates the connection and sets it up again. |
+| --- | --- |
+| Example: | SYSTEM:COMMunicate:NETWORK:RESTART |
+| Usage: | Event |
+| Manual operation: | See "Restart Network" on page 107 |
 
 ##### :SYSTEM:NINFormation?
 
@@ -763,9 +781,11 @@ Manual operation: See "OPT String" on page 112
 
 Sets the address of the NTP server. You can enter the IP address, or the hostname.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;NTPName&gt;</td><td style='text-align: center; word-wrap: break-word;'>string</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SYSTEM:NTP:HOSTname &quot;pool.ntp.org&quot;</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;NTP Address&quot; on page 492</td></tr></table>
+|  | Parameters: |
+| --- | --- |
+| <NTPName> | string |
+| Example: | SYSTEM:NTP:HOSTname "pool.ntp.org" |
+| Manual operation: | See "NTP Address" on page 492 |
 
 #### :SYSTEM:NTP:STATE <UseNtpState>
 
@@ -783,7 +803,7 @@ Sets the remote control command set.
 
 The instrument can also be remote controlled via the command set of several other generators, for example HP generator. See the Application Note 1GP71 at the download area of the product site on the Internet.
 
-Note: While working in a emulation mode, the instrument's specific command set is disabled, i.e. the SCPI command SYSTEM: LANGuage will be discarded.
+Note: While working in an emulation mode, the instrument's specific command set is disabled, i.e. the SCPI command SYSTEM: LANGuage will be discarded.
 
 The return to the SCPI command set of the R&S SMB can only be performed by using the appropriate command of the selected command set. For example, the HP command EX returns to the instrument-specific GPIB command set (selection SYST:LANG 'HPxxxx').
 
@@ -837,8 +857,6 @@ See also Chapter 4.2.3.13, "Protection", on page 113.
 
     The respective functions are disabled when the protection level is activated. No password is required for activation of a level. A password must be entered to deactivate the protection level. The password for the first level is 123456.
 
-</key>
-
 Example: // to activate protection level
 
     SYSTEM:PROTECT1:STATE 1
@@ -882,8 +900,6 @@ Queries if the startup of the instrument is completed.
     0 | 1 | OFF | ON
 
     *RST: 0
-
-</Complete>
 
 Example:
 
@@ -945,9 +961,7 @@ It can be accessed with protection level 1, see :SYSTEM:PROTECT<ch>[:STATE] on p
 
         it is the 1st of May, 2011.
 
-    </Year>
 
-</Month>
 
 Manual operation: See "Date" on page 492
 
@@ -991,7 +1005,7 @@ Manual operation: See "Time Zone" on page 492
 
 ##### :SYSTEM:TIME:ZONE:CATalog?
 
-Querys the list of available time zones.
+Queries the list of available time zones.
 
 ##### Return values:
 

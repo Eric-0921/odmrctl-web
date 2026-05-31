@@ -12,7 +12,7 @@ Do not use any liquids for cleaning. Cleaning agents, solvents (thinners, aceton
 
 If the product does not start, it is possible that a blown fuse is the cause. The product is protected by 2 fuses of type IEC60127-T3.15H/250V (order no. 0099.6729.00). The fuses are next to the power supply socket at the rear panel.
 
-##### Replacing the line fuses
+#### Replacing the line fuses
 
 1. Check the available supply voltage.
 
@@ -56,9 +56,9 @@ Protect the product against dust. Ensure that the environmental conditions, e.g.
 
 Integrated procedures and additional capabilities make sure, that the R&S SMB works correct with high accuracy.
 
-• Date and Time.....491    
-• Check Front Panel.....492    
-• Internal Adjustments.....494    
+• Date and Time.....491
+• Check Front Panel.....492
+• Internal Adjustments.....494
 • Selftest.....497
 
 #### 8.4.1 Date and Time
@@ -73,23 +73,16 @@ Access:
 
 ▶ Select "Setup > Environment > Date/Time" via the [SETUP] or [MENU] key.
 
+| Date / Time | X |
+| --- | --- |
+| Date [DD.MM.YYYY] | 24.09.2018 |
+| Time [hh:mm:ss] | 15:20:49 |
+| Time Zone | UTC |
+| NTP Settings | |
+| NTP Address | |
+| Use Time From NTP Server | On |
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Date / Time</td><td style='text-align: center; word-wrap: break-word;'>X</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Date [DD.MM.YYYY]</td><td style='text-align: center; word-wrap: break-word;'>24.09.2018</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Time [hh:mm:ss]</td><td style='text-align: center; word-wrap: break-word;'>15:20:49</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Time Zone</td><td style='text-align: center; word-wrap: break-word;'>UTC</td></tr><tr><td colspan="2">NTP Settings</td></tr><tr><td colspan="2">NTP Address</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Use Time From NTP Server</td><td style='text-align: center; word-wrap: break-word;'>On</td></tr></table>
-
-The "Date / Time" dialog contains the time and data settings of the operating system.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//97045504-395b-438f-bb07-8aaba2295359/markdown_1/imgs/img_in_image_box_218_205_272_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A50Z%2F-1%2F%2F3fb4d69add3490283620ba32237ef53a80822de5fe338659115ec4bf7f5e2cab" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//97045504-395b-438f-bb07-8aaba2295359/markdown_1/imgs/img_in_image_box_218_205_272_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A50Z%2F-1%2F%2F3fb4d69add3490283620ba32237ef53a80822de5fe338659115ec4bf7f5e2cab" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
+The "Date / Time" dialog contains the time and date settings of the operating system.
 
 This function is password-protected. Unlock the protection level 1 to access it. To enable editing, unlock protection level 1, see Chapter 4.2.3.13, "Protection", on page 113.
 
@@ -99,7 +92,7 @@ Displays the date set in the operating system in the format [dd.mm.yyyy].
 
 Remote command:
 
-: SYSTEM: DATE on page 454
+:SYSTEM:DATE on page 454
 
 ##### Time
 
@@ -109,7 +102,7 @@ The time setting corresponds to the selected Time Zone.
 
 ##### Remote command:
 
-: SYSTEM: TIME on page 454
+:SYSTEM:TIME on page 454
 
 ##### Time Zone
 
@@ -121,7 +114,7 @@ Note: By typing the first letter, you can quickly navigate through the lists to 
 
 ##### Remote command:
 
-: SYSTEM: TIME: ZONE on page 455
+:SYSTEM:TIME:ZONE on page 455
 
 :SYSTEM:TIME:ZONE:CATalog? on page 455
 
@@ -141,7 +134,7 @@ You can select a high-precision time server to reduce the impact of varying netw
 
 Activates clock synchronization of the network via the NTP protocol.
 
-: SYSTEM: NTP: STATE on page 451
+:SYSTEM:NTP:STATE on page 451
 
 Remote command:
 
@@ -151,18 +144,6 @@ With the functions provided in this dialog you can verify the functionality of t
 
 In case of malfunctions, contact your Rohde & Schwarz Customer Support Center for technical support, see www.rohde-schwarz.com/support.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//97045504-395b-438f-bb07-8aaba2295359/markdown_2/imgs/img_in_image_box_218_205_272_258.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A51Z%2F-1%2F%2F89fd178fc54330096e9a14223c9c74f548b4dcb5807081768df7fc2e9a6a5484" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//97045504-395b-438f-bb07-8aaba2295359/markdown_2/imgs/img_in_image_box_218_205_272_258.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A51Z%2F-1%2F%2F89fd178fc54330096e9a14223c9c74f548b4dcb5807081768df7fc2e9a6a5484" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
-
 Accessing the online help in the check front panel dialog or exiting via ESC
 
 During the test, the actual functions of all keys are disabled, including the [help] and the [esc] keys.
@@ -171,15 +152,23 @@ During the test, the actual functions of all keys are disabled, including the [h
 
 ▶ To access this dialog, Press the "setup" key and select "Setup > Test > Check Front Panel".
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Preset</td><td style='text-align: center; word-wrap: break-word;'>Roll I.</td><td colspan="2">Roll r.</td><td rowspan="5" colspan="2"></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Help</td><td colspan="3">Roll click</td><td style='text-align: center; word-wrap: break-word;'>ESC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">Up</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Diagram</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Left</td><td colspan="2">Right</td><td style='text-align: center; word-wrap: break-word;'>Mod</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">Down</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>RF</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Local</td><td style='text-align: center; word-wrap: break-word;'>Freq</td><td colspan="2"></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Setup</td><td style='text-align: center; word-wrap: break-word;'>Level</td><td style='text-align: center; word-wrap: break-word;'>7</td><td style='text-align: center; word-wrap: break-word;'>8</td><td style='text-align: center; word-wrap: break-word;'>9</td><td style='text-align: center; word-wrap: break-word;'>Gin</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>File</td><td style='text-align: center; word-wrap: break-word;'>Toggle</td><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>5</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>Mju</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Info</td><td style='text-align: center; word-wrap: break-word;'>Back</td><td style='text-align: center; word-wrap: break-word;'>1</td><td style='text-align: center; word-wrap: break-word;'>2</td><td style='text-align: center; word-wrap: break-word;'>3</td><td style='text-align: center; word-wrap: break-word;'>k/m</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Winbar</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>.</td><td style='text-align: center; word-wrap: break-word;'>+/-</td><td style='text-align: center; word-wrap: break-word;'>$ ^{*} $1</td></tr></table>
+| Preset | Roll L. | Roll r. | Roll r. |  |  |
+| --- | --- | --- | --- | --- | --- |
+| Help | Roll click | Roll click | Roll click | ESC |  |
+|  | Up | Up |  | Diagram |  |
+|  | Left | Right | Right | Mod |  |
+|  | Down | Down |  | RF |  |
+| Local | Freq |  |  |  |  |
+| Setup | Level | 7 | 8 | 9 | GHz |
+| File | Toggle | 4 | 5 | 6 | MHz |
+| Info | Back | 1 | 2 | 3 | kHz |
+| Winbar |  | 0 | . | +/- | Hz |
 
 Reflecting the front panel, the "Check Front Panel" dialog contains all functions to test the operating elements of the instrument.
 
 ##### 8.4.2.2 Performing the Front Panel Tests
 
-To perform the front panel test, you operate the keys at the front panel, and check the response of the instrument in the "Check Front Panel" dialog. To perform this test properly, it is essential that you check each key of the front panel. The test is only completed, when you have veryfied all keys.
+To perform the front panel test, you operate the keys at the front panel, and check the response of the instrument in the "Check Front Panel" dialog. To perform this test properly, it is essential that you check each key of the front panel. The test is only completed, when you have verified all keys.
 
 During the test, the actual functions of the keys are disabled.
 
@@ -205,7 +194,6 @@ Note: Pressing the same key again has no further effect, with the exception of t
 
 Test Passed
 All front panel keys were accessed correctly.
-OK
 
 The test is completed, when each key is verified successfully, confirmed by a "Test passed" message.
 
@@ -251,9 +239,15 @@ Access:
 
 2. Select "System > Internal Adjustments".
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Internal Adjustments</td></tr><tr><td colspan="3">Adjust All</td></tr><tr><td colspan="3">Adjust Synthesis</td></tr><tr><td colspan="3">Adjust Level</td></tr><tr><td colspan="3">Ext Level Adjustment</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Adjustment Data</td><td style='text-align: center; word-wrap: break-word;'>Factory</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td colspan="3">Stereo Coder</td></tr><tr><td colspan="3">Adjust Analog Channels</td></tr></table>
+| Internal Adjustments | | |
+| --- | --- | --- |
+| Adjust All | | |
+| Adjust Synthesis | | |
+| Adjust Level | | |
+| Ext Level Adjustment | | |
+| Adjustment Data | Factory | |
+| Stereo Coder | | |
+| Adjust Analog Channels | | |
 
 In this dialog, you can perform internal calibration routines.
 
@@ -261,9 +255,11 @@ The remote commands required to define these settings are described in Chapter 6
 
 ##### Settings
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Adjust All</td><td style='text-align: center; word-wrap: break-word;'>495</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Adjust Synthesis</td><td style='text-align: center; word-wrap: break-word;'>495</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Adjust Level</td><td style='text-align: center; word-wrap: break-word;'>495</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Adjust Stereo Coder</td><td style='text-align: center; word-wrap: break-word;'>496</td></tr></table>
+| Adjust All | 495 |
+| --- | --- |
+| Adjust Synthesis | 495 |
+| Adjust Level | 495 |
+| Adjust Stereo Coder | 496 |
 
 ##### Adjust All
 
@@ -315,36 +311,20 @@ The warm-up time is up to 30 minutes.
 
 Disconnect the DUT. Replace it by a 50 Ohm terminating resistor.
 
-## 3. Press the [setup] key.
+3. Press the [setup] key.
 
-## 4. Select "System > Internal Adjustments > Adjust All".
+4. Select "System > Internal Adjustments > Adjust All".
 
 Before the internal adjustment starts, a warning message prompts you to make sure that you have terminated the RF.
 
-Notice
+**Notice:** Please make sure a 50 Ohm termination with 1 watt / 30 dBm power rating is connected to the RF output of the instrument.
 
-#### Notice
+If the termination resistor is missing, a second warning message appears.
 
-Please make sure a 50 Ohm termination with 1 watt / 30 dBm power rating is connected to the RF output of the instrument.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_0/imgs/img_in_image_box_617_1181_797_1216.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A15Z%2F-1%2F%2F94b5b030a7b5642d4b3a815c903e3376a0b1494dc95237fa6f5381035fc7e08e" alt="Image" width="15%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_0/imgs/img_in_image_box_617_1181_797_1216.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A15Z%2F-1%2F%2F94b5b030a7b5642d4b3a815c903e3376a0b1494dc95237fa6f5381035fc7e08e" alt="Image" width="15%" />
-
-OK Cancel
-
-</div>
-
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">If the termination resistor is missing, a second warning message appears.</div> </div>
-
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Notice</td><td style='text-align: center; word-wrap: break-word;'>☒</td></tr><tr><td colspan="2">No 50 Ohm termination detected!</td></tr><tr><td colspan="2">OK</td></tr></table>
+| Notice | ☒ |
+| --- | --- |
+| No 50 Ohm termination detected! | |
+| OK | |
 
 During adjustments, a progress indicator shows the status of the process. If any error occurs, the process aborts and an error message appears in the info line.
 
@@ -378,21 +358,10 @@ Access:
 
 2. Select "Start Selftest".
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Selftest</td></tr><tr><td colspan="3">Selftest</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Testcase</td><td style='text-align: center; word-wrap: break-word;'>Result</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_1/imgs/img_in_image_box_226_1277_263_1331.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2Fe5a4e67d094cb2118a0035cd0af78bc4917443be1280fa32fa9481f1f9dee381" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_1/imgs/img_in_image_box_226_1277_263_1331.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2Fe5a4e67d094cb2118a0035cd0af78bc4917443be1280fa32fa9481f1f9dee381" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
+| Selftest | | |
+| --- | --- | --- |
+| Selftest | | |
+| Testcase | Result | |
 
 The following tests are only available via remote control:
 
@@ -416,24 +385,10 @@ Remote command:
 
 Rohde & Schwarz is committed to making careful, ecologically sound use of natural resources and minimizing the environmental footprint of our products. Help us by disposing of waste in a way that causes minimum environmental impact.
 
-##### Disposing electrical and electronic equipment
+#### Disposing electrical and electronic equipment
 
 A product that is labeled as follows cannot be disposed of in normal household waste after it has come to the end of its service life. Even disposal via the municipal collection points for waste electrical and electronic equipment is not permitted.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_2/imgs/img_in_image_box_293_755_337_816.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F35db1c947f5b51267bf6a110f98cd9b72a44f2788fc8af4902654130a5634be2" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f838b0db-75c0-4d14-a7b7-f26c8c32a006/markdown_2/imgs/img_in_image_box_293_755_337_816.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F35db1c947f5b51267bf6a110f98cd9b72a44f2788fc8af4902654130a5634be2" alt="Image" width="3%" />
-
--
-
-</div>
-
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 8-1: Labeling in line with EU directive WEEE</div> </div>
-
+Figure 8-1: Labeling in line with EU directive WEEE
 
 Rohde & Schwarz has developed a disposal concept for the eco-friendly disposal or recycling of waste material. As a manufacturer, Rohde & Schwarz completely fulfills its obligation to take back and dispose of electrical and electronic waste. Contact your local service representative to dispose of the product.
-

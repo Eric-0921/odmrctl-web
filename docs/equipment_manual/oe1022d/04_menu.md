@@ -6,11 +6,9 @@ OE1022D 主菜单位于前面板控制部分的 MENU。MENU 主菜单共分为�
 
 在前面板菜单栏中选择[INPUT/FILTERS]进入。如图 13 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_1/imgs/img_in_image_box_319_547_871_954.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A19Z%2F-1%2F%2Fce5ba725bce7ec974c4afbeabe4200237e4607e9debbbef41b10878018764faf" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_1/imgs/img_in_image_box_319_547_871_954.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A19Z%2F-1%2F%2Fce5ba725bce7ec974c4afbeabe4200237e4607e9debbbef41b10878018764faf)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 13. [INPUT/FILTERS] 子菜单</div> </div>
-
+图 13. [INPUT/FILTERS] 子菜单
 
 此子菜单中包括<Source>、<Current Gain>、<Grounding>、<Coupling>和<Line Notches>五种功能设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通过键盘以及旋钮来进行配置：
 
@@ -62,23 +60,17 @@ OE1022D 主菜单位于前面板控制部分的 MENU。MENU 主菜单共分为�
 
 在前面板的菜单栏选择[REF/PHASE]子菜单进入，选择不同的参考信号模式会有不同的界面，如图 14、图 15、图 16 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_347_145_843_512.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F04db7771576ec6e173077252bb23f5b299adb7df183e45682cce4e6377174f0d" alt="Image" width="41%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_347_145_843_512.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F04db7771576ec6e173077252bb23f5b299adb7df183e45682cce4e6377174f0d)
 
+图 14. [REF/PHASE] 子菜单-<External>
 
-<div style="text-align: center;"><div style="text-align: center;">图 14. [REF/PHASE] 子菜单-<External></div> </div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_351_585_840_946.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F9bfdcf72a444eae9e388fe65b36d981d726b1c75cf53cca3b8970cba84e28c99)
 
+图 15. [REF/PHASE] 子菜单-<Internal>
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_351_585_840_946.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F9bfdcf72a444eae9e388fe65b36d981d726b1c75cf53cca3b8970cba84e28c99" alt="Image" width="41%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_347_1019_844_1386.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F231999bc53d7113c141ae482b68835c6a5c2f641c6360e06f5c88deb98cdf2fe)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 15. [REF/PHASE] 子菜单-<Internal></div> </div>
-
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_3/imgs/img_in_image_box_347_1019_844_1386.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A21Z%2F-1%2F%2F231999bc53d7113c141ae482b68835c6a5c2f641c6360e06f5c88deb98cdf2fe" alt="Image" width="41%" /></div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">图 16. [REF/PHASE] 子菜单 <Internal Sweep></div> </div>
-
+图 16. [REF/PHASE] 子菜单 <Internal Sweep>
 
 此子菜单中包括<Ref.phase>、<Ref.source>、<Ref.slope>、<Ref.frequency>、<Sweep>、<Harmonic>和<Sine Output>七种功能设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通
 
@@ -124,11 +116,9 @@ OE1022D 主菜单位于前面板控制部分的 MENU。MENU 主菜单共分为�
 
 当<Ref.source>选择<InternalSweep>时可进行此项设置。选择界面上的<Sweep>功能进入二级子菜单。在二级子菜单中可以对<SweepType>、<Sweep Set>和<Sweep Run>功能进行设定。界面图如图 17 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_0/imgs/img_in_image_box_339_323_850_704.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A22Z%2F-1%2F%2F143bd1ec6a904be891d41176e9645d5ee3e3be7c9355f70d3d95fafb7bb55ac0" alt="Image" width="42%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_0/imgs/img_in_image_box_339_323_850_704.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A22Z%2F-1%2F%2F143bd1ec6a904be891d41176e9645d5ee3e3be7c9355f70d3d95fafb7bb55ac0)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 17. <Sweep>二级子菜单</div> </div>
-
+图 17. <Sweep>二级子菜单
 
 ##### 4.2.5.1 <Sweep Type>: 扫频类型设置
 
@@ -188,11 +178,9 @@ OE1022D 主菜单位于前面板控制部分的 MENU。MENU 主菜单共分为�
 
 OE1022D 可以进行双谐波的同时测量。通过在<Harmonic>二级子菜单中分别设置两个谐波的阶数<Harmonic1>和<Harmonic2>，即可实现双谐波的同时测量。界面图如图 18 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_1/imgs/img_in_image_box_321_681_868_1088.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A23Z%2F-1%2F%2Ff707d5ae7f39b3bf8234ee5e59d6effc23322e6667e92bfa3eea07b7c9784ab2" alt="Image" width="45%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_1/imgs/img_in_image_box_321_681_868_1088.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A23Z%2F-1%2F%2Ff707d5ae7f39b3bf8234ee5e59d6effc23322e6667e92bfa3eea07b7c9784ab2)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 18. <Harmonic>二级子菜单</div> </div>
-
+图 18. <Harmonic>二级子菜单
 
 <Harmonic 1>: 谐波 1 设置，最小值 1，最大值 32767。
 
@@ -210,17 +198,13 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 当使用<External>外部参考时，<Sine Output> 提供一个与外部参考锁相的正弦信号；当使用<Internal>内部参考时，将由 OE1022D 自身的振荡器产生。同时后面板上“TTL OUT”的 BNC 接头将输出与<Sine Output>同步的 TTL 信号。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_2/imgs/img_in_image_box_316_480_872_888.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A24Z%2F-1%2F%2Ffd2bebe51837a1be3bae6c3f76827784629a4cadaa7c2f20fe1d854ab59ae6bb" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_2/imgs/img_in_image_box_316_480_872_888.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A24Z%2F-1%2F%2Ffd2bebe51837a1be3bae6c3f76827784629a4cadaa7c2f20fe1d854ab59ae6bb)
 
+图 19. <Sine Output> 二级子菜单 - <Fixed>
 
-<div style="text-align: center;"><div style="text-align: center;">图 19. <Sine Output> 二级子菜单 - <Fixed></div> </div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_2/imgs/img_in_image_box_316_977_871_1388.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A24Z%2F-1%2F%2Fe7980c420613f6aa02b28dce7a45a14de1e442243bc9c514e92ea567223d3268)
 
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_2/imgs/img_in_image_box_316_977_871_1388.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A24Z%2F-1%2F%2Fe7980c420613f6aa02b28dce7a45a14de1e442243bc9c514e92ea567223d3268" alt="Image" width="46%" /></div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">图 20. <Sine Output> 二级子菜单-<Linear&Log></div> </div>
-
+图 20. <Sine Output> 二级子菜单-<Linear&Log>
 
 ##### 4.2.7.1 <Sweep Type>: 扫幅类型设置
 
@@ -272,11 +256,9 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 在前面板的 MENU 菜单栏选择[GAIN/TC]子菜单进入，如图 21 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_4/imgs/img_in_image_box_321_265_869_672.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A26Z%2F-1%2F%2Fabc57d3a2c8c1a77abe6f9731705fb2971b6cc7772af9d790e1bcd217f5e49dd" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f18b178b-12c8-4034-9f33-70dfa75fe9a0/markdown_4/imgs/img_in_image_box_321_265_869_672.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A26Z%2F-1%2F%2Fabc57d3a2c8c1a77abe6f9731705fb2971b6cc7772af9d790e1bcd217f5e49dd)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 21. [GAIN/TC] 子菜单</div> </div>
-
+图 21. [GAIN/TC] 子菜单
 
 此子菜单中包括<Sensitivity>、<Reserve>、<Time Constant>、<Filter dB/oct>和<Synchronous>五种功能设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通过键盘以及旋钮来进行配置：
 
@@ -284,12 +266,16 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 根据输入信号的大小选择合适的满偏灵敏度，通过重复按软键或旋钮调节数值。满偏灵敏度表如表3所示：
 
-<div style="text-align: center;"><div style="text-align: center;">表 3. 满偏灵敏度表</div> </div>
+表 3. 满偏灵敏度表
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>1 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>200 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>50 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>10 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>500 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>100 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>20 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>1 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>200 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>50 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>2 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>500 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>100 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>5 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>1 mV/nA</td><td style='text-align: center; word-wrap: break-word;'>200 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>10 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>2 mV/nA</td><td style='text-align: center; word-wrap: break-word;'>500 mV/nA</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 nV/fA</td><td style='text-align: center; word-wrap: break-word;'>20 uV/pA</td><td style='text-align: center; word-wrap: break-word;'>5 mV/nA</td><td style='text-align: center; word-wrap: break-word;'>1 V/nA</td></tr></table>
+| 1 nV/fA | 200 nV/fA | 50 uV/pA | 10 mV/nA |
+|---|---|---|---|
+| 2 nV/fA | 500 nV/fA | 100 uV/pA | 20 mV/nA |
+| 5 nV/fA | 1 uV/pA | 200 uV/pA | 50 mV/nA |
+| 10 nV/fA | 2 uV/pA | 500 uV/pA | 100 mV/nA |
+| 20 nV/fA | 5 uV/pA | 1 mV/nA | 200 mV/nA |
+| 50 nV/fA | 10 uV/pA | 2 mV/nA | 500 mV/nA |
+| 100 nV/fA | 20 uV/pA | 5 mV/nA | 1 V/nA |
 
 改变<Sensitivity>会改变系统的动态范围，同时也会影响到对 CH1 & CH2 的输出。当测量信号为电流信号时，满偏灵敏度为相应的电流单位。系统默认为<100 mV/nA>。
 
@@ -309,23 +295,52 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 <Sensitivity>和<Reserve>可以组合成不同的动态储备和输入增益，关系如表 4 所示：
 
-<div style="text-align: center;"><div style="text-align: center;">表 4. 动态储备和增益关系表</div> </div>
+表 4. 动态储备和增益关系表
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">Sensitivity</td><td colspan="3">Dynamic Reserves(dB)</td><td colspan="3">Gain</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Low Noise</td><td style='text-align: center; word-wrap: break-word;'>Normal</td><td style='text-align: center; word-wrap: break-word;'>High Reserve</td><td style='text-align: center; word-wrap: break-word;'>Low Noise</td><td style='text-align: center; word-wrap: break-word;'>Normal</td><td style='text-align: center; word-wrap: break-word;'>High Reserve</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>1.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>500 mV</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>1.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>4.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 mV</td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>10</td><td style='text-align: center; word-wrap: break-word;'>20</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>4.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 mV</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>16</td><td style='text-align: center; word-wrap: break-word;'>26</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>4.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 mV</td><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>24</td><td style='text-align: center; word-wrap: break-word;'>34</td><td style='text-align: center; word-wrap: break-word;'>44</td><td style='text-align: center; word-wrap: break-word;'>4.4</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>0</td><td style='text-align: center; word-wrap: break-word;'>20</td><td style='text-align: center; word-wrap: break-word;'>40</td><td style='text-align: center; word-wrap: break-word;'>140</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5 mV</td><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>26</td><td style='text-align: center; word-wrap: break-word;'>46</td><td style='text-align: center; word-wrap: break-word;'>140</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2 mV</td><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>34</td><td style='text-align: center; word-wrap: break-word;'>54</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 mV</td><td style='text-align: center; word-wrap: break-word;'>10</td><td style='text-align: center; word-wrap: break-word;'>40</td><td style='text-align: center; word-wrap: break-word;'>60</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>500 \mu V</td><td style='text-align: center; word-wrap: break-word;'>16</td><td style='text-align: center; word-wrap: break-word;'>46</td><td style='text-align: center; word-wrap: break-word;'>66</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 \mu V</td><td style='text-align: center; word-wrap: break-word;'>24</td><td style='text-align: center; word-wrap: break-word;'>54</td><td style='text-align: center; word-wrap: break-word;'>74</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 \mu V</td><td style='text-align: center; word-wrap: break-word;'>30</td><td style='text-align: center; word-wrap: break-word;'>60</td><td style='text-align: center; word-wrap: break-word;'>80</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 \mu V</td><td style='text-align: center; word-wrap: break-word;'>36</td><td style='text-align: center; word-wrap: break-word;'>66</td><td style='text-align: center; word-wrap: break-word;'>86</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 \mu V</td><td style='text-align: center; word-wrap: break-word;'>44</td><td style='text-align: center; word-wrap: break-word;'>74</td><td style='text-align: center; word-wrap: break-word;'>94</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 \mu V</td><td style='text-align: center; word-wrap: break-word;'>50</td><td style='text-align: center; word-wrap: break-word;'>80</td><td style='text-align: center; word-wrap: break-word;'>100</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5 \mu V</td><td style='text-align: center; word-wrap: break-word;'>56</td><td style='text-align: center; word-wrap: break-word;'>86</td><td style='text-align: center; word-wrap: break-word;'>106</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2 \mu V</td><td style='text-align: center; word-wrap: break-word;'>64</td><td style='text-align: center; word-wrap: break-word;'>94</td><td style='text-align: center; word-wrap: break-word;'>114</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 \mu V</td><td style='text-align: center; word-wrap: break-word;'>70</td><td style='text-align: center; word-wrap: break-word;'>100</td><td style='text-align: center; word-wrap: break-word;'>120</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>500 nV</td><td style='text-align: center; word-wrap: break-word;'>76</td><td style='text-align: center; word-wrap: break-word;'>106</td><td style='text-align: center; word-wrap: break-word;'>126</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 nV</td><td style='text-align: center; word-wrap: break-word;'>84</td><td style='text-align: center; word-wrap: break-word;'>114</td><td style='text-align: center; word-wrap: break-word;'>134</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 nV</td><td style='text-align: center; word-wrap: break-word;'>90</td><td style='text-align: center; word-wrap: break-word;'>120</td><td style='text-align: center; word-wrap: break-word;'>140</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 nV</td><td style='text-align: center; word-wrap: break-word;'>96</td><td style='text-align: center; word-wrap: break-word;'>126</td><td style='text-align: center; word-wrap: break-word;'>146</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 nV</td><td style='text-align: center; word-wrap: break-word;'>104</td><td style='text-align: center; word-wrap: break-word;'>134</td><td style='text-align: center; word-wrap: break-word;'>154</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 nV</td><td style='text-align: center; word-wrap: break-word;'>110</td><td style='text-align: center; word-wrap: break-word;'>140</td><td style='text-align: center; word-wrap: break-word;'>160</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5 nV</td><td style='text-align: center; word-wrap: break-word;'>116</td><td style='text-align: center; word-wrap: break-word;'>146</td><td style='text-align: center; word-wrap: break-word;'>166</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2 nV</td><td style='text-align: center; word-wrap: break-word;'>124</td><td style='text-align: center; word-wrap: break-word;'>154</td><td style='text-align: center; word-wrap: break-word;'>174</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 nV</td><td style='text-align: center; word-wrap: break-word;'>130</td><td style='text-align: center; word-wrap: break-word;'>160</td><td style='text-align: center; word-wrap: break-word;'>180</td><td style='text-align: center; word-wrap: break-word;'>440</td><td style='text-align: center; word-wrap: break-word;'>14</td><td style='text-align: center; word-wrap: break-word;'>1.4</td></tr></table>
+| Sensitivity | Dynamic Reserves(dB) | Gain |  |  |  |  |
+|---|---|---|---|---|---|---|
+| Low Noise | Normal | High Reserve | Low Noise | Normal | High Reserve |  |
+| 1 V | 0 | 0 | 0 | 1.4 | 1.4 | 1.4 |
+| 500 mV | 6 | 6 | 6 | 1.4 | 1.4 | 1.4 |
+| 200 mV | 4 | 14 | 14 | 4.4 | 1.4 | 1.4 |
+| 100 mV | 0 | 10 | 20 | 14 | 4.4 | 1.4 |
+| 50 mV | 6 | 16 | 26 | 14 | 4.4 | 1.4 |
+| 20 mV | 4 | 24 | 34 | 44 | 4.4 | 1.4 |
+| 10 mV | 0 | 20 | 40 | 140 | 14 | 1.4 |
+| 5 mV | 6 | 26 | 46 | 140 | 14 | 1.4 |
+| 2 mV | 4 | 34 | 54 | 440 | 14 | 1.4 |
+| 1 mV | 10 | 40 | 60 | 440 | 14 | 1.4 |
+| 500 \mu V | 16 | 46 | 66 | 440 | 14 | 1.4 |
+| 200 \mu V | 24 | 54 | 74 | 440 | 14 | 1.4 |
+| 100 \mu V | 30 | 60 | 80 | 440 | 14 | 1.4 |
+| 50 \mu V | 36 | 66 | 86 | 440 | 14 | 1.4 |
+| 20 \mu V | 44 | 74 | 94 | 440 | 14 | 1.4 |
+| 10 \mu V | 50 | 80 | 100 | 440 | 14 | 1.4 |
+| 5 \mu V | 56 | 86 | 106 | 440 | 14 | 1.4 |
+| 2 \mu V | 64 | 94 | 114 | 440 | 14 | 1.4 |
+| 1 \mu V | 70 | 100 | 120 | 440 | 14 | 1.4 |
+| 500 nV | 76 | 106 | 126 | 440 | 14 | 1.4 |
+| 200 nV | 84 | 114 | 134 | 440 | 14 | 1.4 |
+| 100 nV | 90 | 120 | 140 | 440 | 14 | 1.4 |
+| 50 nV | 96 | 126 | 146 | 440 | 14 | 1.4 |
+| 20 nV | 104 | 134 | 154 | 440 | 14 | 1.4 |
+| 10 nV | 110 | 140 | 160 | 440 | 14 | 1.4 |
+| 5 nV | 116 | 146 | 166 | 440 | 14 | 1.4 |
+| 2 nV | 124 | 154 | 174 | 440 | 14 | 1.4 |
+| 1 nV | 130 | 160 | 180 | 440 | 14 | 1.4 |
 
 #### 4.3.3 <Time Constant>: 时间常数设置
 
-时间常数设置范围为 10 us 到 3000 s，通过重复按软件或旋钮调节数值，时间常数表如表 5 所示：
+时间常数设置范围为 10 us 到 3000 s，通过重复按软键或旋钮调节数值，时间常数表如表 5 所示：
 
-<div style="text-align: center;"><div style="text-align: center;">表 5. 时间常数表</div> </div>
+表 5. 时间常数表
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>10 us</td><td style='text-align: center; word-wrap: break-word;'>3 ms</td><td style='text-align: center; word-wrap: break-word;'>1 s</td><td style='text-align: center; word-wrap: break-word;'>300 s</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>30 us</td><td style='text-align: center; word-wrap: break-word;'>10 ms</td><td style='text-align: center; word-wrap: break-word;'>3 s</td><td style='text-align: center; word-wrap: break-word;'>1000 s</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 us</td><td style='text-align: center; word-wrap: break-word;'>30 ms</td><td style='text-align: center; word-wrap: break-word;'>10 s</td><td style='text-align: center; word-wrap: break-word;'>3000 s</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>300 us</td><td style='text-align: center; word-wrap: break-word;'>100 ms</td><td style='text-align: center; word-wrap: break-word;'>30 s</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 ms</td><td style='text-align: center; word-wrap: break-word;'>300 ms</td><td style='text-align: center; word-wrap: break-word;'>100 s</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| 10 us | 3 ms | 1 s | 300 s |
+|---|---|---|---|
+| 30 us | 10 ms | 3 s | 1000 s |
+| 100 us | 30 ms | 10 s | 3000 s |
+| 300 us | 100 ms | 30 s |  |
+| 1 ms | 300 ms | 100 s |  |
 
 时间常数越长，等效噪声带宽越小，系统测量响应的时间越长，测量的精度也越高。
 
@@ -355,11 +370,9 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 在前面板的 MENU 菜单栏选择[DISPLAY]子菜单进入，如图 22 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_2/imgs/img_in_image_box_318_265_869_673.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A32Z%2F-1%2F%2F54bb5db67bfe70450bd51d759352eff6db549ce9084e7d525e266d36d42a9f2c" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_2/imgs/img_in_image_box_318_265_869_673.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A32Z%2F-1%2F%2F54bb5db67bfe70450bd51d759352eff6db549ce9084e7d525e266d36d42a9f2c)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 22. [DISPLAY] 子菜单</div> </div>
-
+图 22. [DISPLAY] 子菜单
 
 [DISPLAY]子菜单主要包括<Display&Scale>、<Equation>和<Disp More> 3 个子菜单，可以通过子菜单旁边对应的软键进行选择、设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通过键盘以及旋钮来进行配置。
 
@@ -377,43 +390,33 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 1)<Bar>：条形图，条形图的长度可根据实际的 R 值与满刻度的比例来改变显示的长度，对于当前的 R 值百分比情况的显示会十分直观。如图 23 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_3/imgs/img_in_image_box_319_157_871_565.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A33Z%2F-1%2F%2Fbd7ba927bad1a10a2954f2c5596ea5e8e9e91844cb872a7ee71f6c1ee2afbb4a" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_3/imgs/img_in_image_box_319_157_871_565.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A33Z%2F-1%2F%2Fbd7ba927bad1a10a2954f2c5596ea5e8e9e91844cb872a7ee71f6c1ee2afbb4a)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 23. <Full>-<Polar>显示</div> </div>
-
+图 23. <Full>-<Polar>显示
 
 2)<Chart>：XY 坐标图，显示测量值得曲线图形，可通过旋钮控制<Cursor>来查看采样点的数值大小，经常与[SAMPLE]子菜单和 CONTROL 控制区域配合做测量数据的采集。如图 24 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_3/imgs/img_in_image_box_320_747_870_1158.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A33Z%2F-1%2F%2F306d046a3c7010aa190bbca7a082ae3e7cac90087cfa2c604ef9afffcb37856e" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_3/imgs/img_in_image_box_320_747_870_1158.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A33Z%2F-1%2F%2F306d046a3c7010aa190bbca7a082ae3e7cac90087cfa2c604ef9afffcb37856e)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 24. <Full>-<Chart>显示</div> </div>
-
+图 24. <Full>-<Chart>显示
 
 3)<List> ：把输入信号的基波、两个谐波值同时显示。如图 25 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_4/imgs/img_in_image_box_320_158_868_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A34Z%2F-1%2F%2Faecc1c2f2bf068e085018f12ccca335ece5d44bf886467650f8ff2e9580b630a" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_4/imgs/img_in_image_box_320_158_868_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A34Z%2F-1%2F%2Faecc1c2f2bf068e085018f12ccca335ece5d44bf886467650f8ff2e9580b630a)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 25. <Full>-<List>显示</div> </div>
-
+图 25. <Full>-<List>显示
 
 <Top>：选定上区域的显示，当切换<Type>或<Trace>时候，该区域会随之变化，如图26和图27所示。<Type>提供<Value>、<List>两种选择。当<Type>为<Value>时，<Trace>提供了基波、谐波及Equation等值的选项。当<Type>为<List>时，<Trace>只能选择<Basic>(基波)、Harm1（谐波1）、Harm2（谐波2）和ADC（AUXIN）四个显示选项。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_4/imgs/img_in_image_box_320_780_869_1188.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A34Z%2F-1%2F%2Ff229b3ae033b92d92aec58622784561cb8ec4ecd5302f85781f9d5790bab41d3" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a02c1bf1-7cbe-4e35-a439-f1facf3efd4b/markdown_4/imgs/img_in_image_box_320_780_869_1188.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A03%3A34Z%2F-1%2F%2Ff229b3ae033b92d92aec58622784561cb8ec4ecd5302f85781f9d5790bab41d3)
 
+图 26. <Top>-<Bar>显示
 
-<div style="text-align: center;"><div style="text-align: center;">图 26. <Top>-<Bar>显示</div> </div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_0/imgs/img_in_image_box_322_158_870_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2Fadcff6aa4761194e130ad96b88e7a9bcc919f46334a276da81050494d4e7ddef)
 
+图 27. <Top>-<List>显示
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_0/imgs/img_in_image_box_322_158_870_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2Fadcff6aa4761194e130ad96b88e7a9bcc919f46334a276da81050494d4e7ddef" alt="Image" width="46%" /></div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">图 27. <Top>-<List>显示</div> </div>
-
-
-<Botton>：选定下区域的显示，当切换<Type>或<Trace>时候，该区域会跟<Top>区域相同的规律随之变化。
+<Bottom>：选定下区域的显示，当切换<Type>或<Trace>时候，该区域会跟<Top>区域相同的规律随之变化。
 
 ##### 4.4.1.2 <Type/Trace>: 显示模式及类型设置
 
@@ -437,7 +440,7 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 <Rh1> : 输入信号第一路谐波R值。
 
-<0h1> : 输入信号第一路谐波0值。
+<θh1> : 输入信号第一路谐波θ值。
 
 <Xh2> : 输入信号第二路谐波X值。
 
@@ -461,15 +464,13 @@ OE1022D 可通过后面板的“Sine Out”BNC 接头输出幅值由 0.001 Vrms 
 
 OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例运算，并通过前面板CH1/CH2两个BNC进行输出。固定公式为
 
- $$  Equation=\frac{A\times B}{C} $$ 
+ $$  Equation=\frac{A\times B}{C} $$
 
 其中 A、B、C 可以根据<Equation>二级子菜单进行设置,在[DISPLAY]子菜单共有四组<Equation>可用。如图 28 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_1/imgs/img_in_image_box_320_419_869_824.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2Fbaf6842282e5fb83287c069730e8f0418c464f6c27415d6b5e569b232e48535a" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_1/imgs/img_in_image_box_320_419_869_824.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2Fbaf6842282e5fb83287c069730e8f0418c464f6c27415d6b5e569b232e48535a)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 28. <Equation> 二级子菜单</div> </div>
-
+图 28. <Equation> 二级子菜单
 
 ##### 4.4.2.1 <Equation>: 公式参数设置
 
@@ -477,7 +478,7 @@ OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例�
 
 例如，当 A 为 R=50 mV，B 为  $ \theta=130^\circ $，C 为 Freq=1 kHz，此时
 
- $$  Equation=\frac{A\times B}{C}=\frac{0.05\times130}{1000}=0.0065 $$ 
+ $$  Equation=\frac{A\times B}{C}=\frac{0.05\times130}{1000}=0.0065 $$
 
 公式结果显示可以在[DISPLAY]子菜单中的<Trace>选项选择<E1>，代表显示 Equation1 结果。其中，在<Bar>显示模式下，显示范围为 0.000001 到 9999999，不带单位及进度条显示。
 
@@ -495,11 +496,9 @@ OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例�
 
 <Disp More>二级子菜单增加<Range>与<Curve Point>设置，给用户在观看测量值时有更大的自由度。如图 29 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_2/imgs/img_in_image_box_321_220_870_626.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A41Z%2F-1%2F%2F623ac72bdcd955a41404d9d053d535c34c34d006ee5f973bfbeff4a868526277" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_2/imgs/img_in_image_box_321_220_870_626.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A41Z%2F-1%2F%2F623ac72bdcd955a41404d9d053d535c34c34d006ee5f973bfbeff4a868526277)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 29. <Disp More>二级子菜单</div> </div>
-
+图 29. <Disp More>二级子菜单
 
 ##### 4.4.3.1 <Range>: 显示范围设置
 
@@ -521,11 +520,9 @@ OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例�
 
 在前面板的 MENU 菜单栏选择[SAVE/RECALL]子菜单进入，如图 30 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_3/imgs/img_in_image_box_319_266_872_674.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Ff2489cffc34f7557220eee5beadeb70fe35a0845e38a49e78c7b863dde1140ae" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_3/imgs/img_in_image_box_319_266_872_674.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Ff2489cffc34f7557220eee5beadeb70fe35a0845e38a49e78c7b863dde1140ae)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 30. [SAVE/RECALL] 子菜单</div> </div>
-
+图 30. [SAVE/RECALL] 子菜单
 
 [SAVE&RECALL] 菜单主要用来保存（Save）和读取（Recall）已经设定的参数和状态。根据用户个人的喜好，可以在项中保存为 <S1>，<S2>，<S3> 和 <S4> 四个存档。如图 30 所示，选择<Save>，<Channel>选择<S1>，再选择<Execute>项中的<YES>，即可将当前设定的参数和状态保存在<S1>存档。需要读取该存档，只需选择<Recall>，<Channel>选择<S1>，再选择<Execute>项中的<YES>即可。
 
@@ -537,11 +534,9 @@ OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例�
 
 在前面板的 MENU 菜单栏选择[CHANNEL OUTPUT]子菜单进入，如图 31 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_4/imgs/img_in_image_box_319_268_870_674.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Fb3438450f39fe43d869b6009bb2b8c6e202e4e5d4bcf95473f9a3a7cef0ba25d" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//dbc476ae-66eb-4c15-a9df-516ad8073e63/markdown_4/imgs/img_in_image_box_319_268_870_674.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Fb3438450f39fe43d869b6009bb2b8c6e202e4e5d4bcf95473f9a3a7cef0ba25d)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 31. [CHANNEL OUTPUT] 子菜单</div> </div>
-
+图 31. [CHANNEL OUTPUT] 子菜单
 
 [CHANNEL OUTPUT]子菜单控制后面板上的两个 BNC 通道 CH1 和 CH2 输出用户需要的 R、X、Y 和  $ \theta $ 值等，以及通过 <Offset&Expand> 设置输出的偏置与放大倍数。同时在 <Speed> 选项栏设置通道输出数据速率。
 
@@ -549,11 +544,11 @@ OE1022D <Equation>功能使用户可以用仪器测量值进行基本的比例�
 
 1、当选择信号为<R>，<X>，<Y>，<Rh1>，<Xh1>，<Yh1>，<Rh2>，<Xh2>，<Yh2>，<Noise>时：
 
- $$  输出 =\left(\frac{Signal( 选择信号 )}{Sens}+Offset\right)\times Expand\times10V $$ 
+ $$  输出 =\left(\frac{Signal( 选择信号 )}{Sens}+Offset\right)\times Expand\times10V $$
 
 2、当选择信号为<θ>，<θh1>，<θh2>时：
 
- $$  输出 =\frac{Signal( 选择信号 )}{180^{\circ}}\times10V $$ 
+ $$  输出 =\frac{Signal( 选择信号 )}{180^{\circ}}\times10V $$
 
 3、当选择信号为<E1>~<E4>(Equation)时，除了上面两种情况，还有下面选项：
 
@@ -565,17 +560,17 @@ c) 频率Freq :
 
 频率每个阶梯分5 V-10 V，例如；
 
- $$ 1000Hz=5V $$ 
+ $$ 1000Hz=5V $$
 
- $$ 1200Hz=6V $$ 
+ $$ 1200Hz=6V $$
 
- $$ 1600Hz=8V $$ 
+ $$ 1600Hz=8V $$
 
- $$ 1800\mathrm{H z}=9\mathrm{V} $$ 
+ $$ 1800\mathrm{H z}=9\mathrm{V} $$
 
- $$ 1990Hz=9.95V $$ 
+ $$ 1990Hz=9.95V $$
 
- $$ 2000Hz=5V( 下一阶梯 ) $$ 
+ $$ 2000Hz=5V( 下一阶梯 ) $$
 
 阶梯定义为：
 
@@ -601,7 +596,7 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 <R>：通道输出R值对应的模拟电平。
 
-<0>：通道输出θ值对应的模拟电平。
+<θ>：通道输出θ值对应的模拟电平。
 
 <Xh1>：通道输出Xh1值对应的模拟电平。
 
@@ -609,7 +604,7 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 <Rh1>：通道输出Rh1值对应的模拟电平。
 
-<0h1>：通道输出0h1值对应的模拟电平。
+<θh1>：通道输出θh1值对应的模拟电平。
 
 <Xh2>：通道输出Xh2值对应的模拟电平。
 
@@ -617,7 +612,7 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 <Rh2>：通道输出Rh2值对应的模拟电平。
 
-<0h2>：通道输出0h2值对应的模拟电平。
+<θh2>：通道输出θh2值对应的模拟电平。
 
 <Noise>：通道输出Noise值对应的模拟电平。
 
@@ -637,11 +632,9 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 通过选择<Offset & Expand>选项进入二级子菜单，界面如图 32 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_1/imgs/img_in_image_box_323_158_868_562.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2F7e67331f3f7bad3789466c41677b84610c241a29de660df30421e0a7557ecaa5" alt="Image" width="45%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_1/imgs/img_in_image_box_323_158_868_562.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A40Z%2F-1%2F%2F7e67331f3f7bad3789466c41677b84610c241a29de660df30421e0a7557ecaa5)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 32. <Offset&Expand> 二级子菜单</div> </div>
-
+图 32. <Offset&Expand> 二级子菜单
 
 ##### 4.6.2.1 <Offset & Expand>: 设置对应参数值的偏置及放大
 
@@ -675,11 +668,9 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 [SAMPLE]子菜单用于对测量对象进行采样存储控制。包括了<Step Time>、<Length>、<Select>、<Trigger Mode>和<Sample Mode>的设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通过键盘以及旋钮来进行配置。如图 33 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_2/imgs/img_in_image_box_319_328_871_737.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A41Z%2F-1%2F%2F1c8cc71ce8743fda0990cc8a035a0eea0737e9109b6f6aa5261614d3d3a0b008" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_2/imgs/img_in_image_box_319_328_871_737.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A41Z%2F-1%2F%2F1c8cc71ce8743fda0990cc8a035a0eea0737e9109b6f6aa5261614d3d3a0b008)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 33. [SAMPLE] 子菜单</div> </div>
-
+图 33. [SAMPLE] 子菜单
 
 [SAMPLE]菜单的设置要配合 CONTROL 区域中的按键来进行采样的开始，暂停，复位等控制。具体见 CONTROL 区域按键介绍。
 
@@ -697,11 +688,9 @@ Equation 计算时，按照用户所选，以上诉公式进行换算，再根�
 
 <Select>二级子菜单界面如图 34 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_3/imgs/img_in_image_box_322_159_868_562.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Fd386b7cb96dc479ff0e43e8bea4603f03b3908429a844e74c1eac042fc338598" alt="Image" width="45%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_3/imgs/img_in_image_box_322_159_868_562.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2Fd386b7cb96dc479ff0e43e8bea4603f03b3908429a844e74c1eac042fc338598)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 34. <Select>二级子菜单</div> </div>
-
+图 34. <Select>二级子菜单
 
 ##### 4.7.3.1 <Buffer1-4>: 对四个采样缓存区的选择设置
 
@@ -737,53 +726,41 @@ OE1022D 内部开辟了 8 个存储<Buffer>（每个测量通道各 4 个），�
 
 [SYSTEM]子菜单包括OE1022D中的系统资讯与系统设置。如仪器资讯，屏幕亮度，Remote通讯设置等。如图35所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_4/imgs/img_in_image_box_317_298_872_706.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2F9509890708dd2d28315c0b7c7d008960938cc4242be237194d94e2f8192a6fab" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_4/imgs/img_in_image_box_317_298_872_706.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A42Z%2F-1%2F%2F9509890708dd2d28315c0b7c7d008960938cc4242be237194d94e2f8192a6fab)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 35. [SYSTEM] 子菜单</div> </div>
-
+图 35. [SYSTEM] 子菜单
 
 #### 4.8.1 <Info>二级子菜单
 
 选择<Info>二级子菜单进入，界面显示研发单位等信息，如图 36 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_4/imgs/img_in_image_box_319_902_871_1311.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A43Z%2F-1%2F%2Fb1d5fbc83f6202a7e835088459fedc292586a8169a250d77a12c2da6ae1646d5" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//3b0d5128-3332-4681-a5a4-ffdf80aa4a00/markdown_4/imgs/img_in_image_box_319_902_871_1311.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A43Z%2F-1%2F%2Fb1d5fbc83f6202a7e835088459fedc292586a8169a250d77a12c2da6ae1646d5)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 36. <INFO>-研发单位</div> </div>
-
+图 36. <INFO>-研发单位
 
 按对应的操作按钮，界面显示 OE1022D 版本，如图 37 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_0/imgs/img_in_image_box_318_186_871_596.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A28Z%2F-1%2F%2F32656ca453a57d228787361606f0046d5919514d890c270fcc15e755b98d6951" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_0/imgs/img_in_image_box_318_186_871_596.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A28Z%2F-1%2F%2F32656ca453a57d228787361606f0046d5919514d890c270fcc15e755b98d6951)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 37. <INFO>-版本</div> </div>
-
+图 37. <INFO>-版本
 
 再次按下按钮，界面显示联系方式，如图 38 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_0/imgs/img_in_image_box_317_762_873_1175.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A28Z%2F-1%2F%2F13c2f03326ab980fe0a3ea2cdec6f67ac27df9ae28639471d9c1bfa65ac76e40" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_0/imgs/img_in_image_box_317_762_873_1175.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A28Z%2F-1%2F%2F13c2f03326ab980fe0a3ea2cdec6f67ac27df9ae28639471d9c1bfa65ac76e40)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 38. <INFO>- 联系方式</div> </div>
-
+图 38. <INFO>- 联系方式
 
 #### 4.8.2 <Screen>二级子菜单
 
 选择<Screen>子菜单进入，如图 39、图 40 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_1/imgs/img_in_image_box_320_157_870_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A29Z%2F-1%2F%2F2473038b68f90569fa4d7f7db1c68272e16b8ff01caa6e8aa473b1b8f5dd682f" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_1/imgs/img_in_image_box_320_157_870_564.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A29Z%2F-1%2F%2F2473038b68f90569fa4d7f7db1c68272e16b8ff01caa6e8aa473b1b8f5dd682f)
 
+图 39. <Screen>子菜单-<Style1>
 
-<div style="text-align: center;"><div style="text-align: center;">图 39. <Screen>子菜单-<Style1></div> </div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_1/imgs/img_in_image_box_319_655_871_1064.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A29Z%2F-1%2F%2F1e1a83e99d429c616f9d350716f8c0327e96eab18348683bbf7007a6a5a8d7f1)
 
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_1/imgs/img_in_image_box_319_655_871_1064.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A29Z%2F-1%2F%2F1e1a83e99d429c616f9d350716f8c0327e96eab18348683bbf7007a6a5a8d7f1" alt="Image" width="46%" /></div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">图 40. <Screen>子菜单-<Style2></div> </div>
-
+图 40. <Screen>子菜单-<Style2>
 
 此子菜单中包括<Window Color>和<Backlight>两种功能设置：
 
@@ -801,11 +778,9 @@ OE1022D 内部开辟了 8 个存储<Buffer>（每个测量通道各 4 个），�
 
 选择<Remote>二级子菜单进入，如图 41 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_2/imgs/img_in_image_box_318_262_869_671.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A30Z%2F-1%2F%2F8df726cad42b1fc0be4ea02278e39eb66224cc779a31581ed9ff2858108ae21a" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_2/imgs/img_in_image_box_318_262_869_671.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A30Z%2F-1%2F%2F8df726cad42b1fc0be4ea02278e39eb66224cc779a31581ed9ff2858108ae21a)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 41. <Remote>子菜单</div> </div>
-
+图 41. <Remote>子菜单
 
 此子菜单中包括<Remote>、<Baud Rate>和<Parity>三种功能设置：
 
@@ -837,11 +812,9 @@ OE1022D 内部开辟了 8 个存储<Buffer>（每个测量通道各 4 个），�
 
 [AUTO SET]子菜单包括 OE1022D 中的 4 种自动设置，每个菜单可以通过[CH A/B SWITCH]切换通道，通过键盘以及旋钮来进行配置。如图 42 所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_3/imgs/img_in_image_box_319_297_870_705.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A31Z%2F-1%2F%2F498b5823b9c9e1777a8df18d809681a070b76b710d3a8f830f25ae99ad6a61fc" alt="Image" width="46%" /></div>
+![Image](https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//63c9978e-93a5-48ab-a1d0-56daa2adf149/markdown_3/imgs/img_in_image_box_319_297_870_705.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A31Z%2F-1%2F%2F498b5823b9c9e1777a8df18d809681a070b76b710d3a8f830f25ae99ad6a61fc)
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 42. AUTO SET 子菜单</div> </div>
-
+图 42. AUTO SET 子菜单
 
 #### 4.9.1 <Auto Reserve>: 自动设置动态储备功能
 

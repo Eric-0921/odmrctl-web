@@ -8,19 +8,15 @@
 
 相敏检测器（PSD）可以取代高 Q 值的带通滤波器，其基本模块包含一个将输入信号与参考信号相乘的乘法模块和一个对相乘结果进行低通滤波的滤波器模块。有时 PSD 也特指乘法模块，不包含滤波器模块。如图 1 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_0/imgs/img_in_image_box_381_852_829_967.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A46Z%2F-1%2F%2F75d46c95e73aeff443d2afa93d7a26a165611ff5e8b5ffad173f860312ecdcf1" alt="Image" width="37%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_0/imgs/img_in_image_box_381_852_829_967.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A46Z%2F-1%2F%2F75d46c95e73aeff443d2afa93d7a26a165611ff5e8b5ffad173f860312ecdcf1" alt="Image" width="37%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 1. 相敏检测示意图</div> </div>
-
+图 1. 相敏检测示意图
 
  $ S_{I}(t) $ 是掺杂了噪声的时域输入信号， $ S_{R}(t) $ 为与输入待测信号有固定频率关系的参考信号。PSD 结合待测信号通道和参考信号通道，即可以形成一路完整的锁相放大器功能架构，称为单相型锁相放大器。其结构原理图如图 2 所示。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_0/imgs/img_in_image_box_303_1187_886_1323.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A46Z%2F-1%2F%2F3063f40b6f6918814a96cf4c1b4e3932a53fa5219cad635e6803713917a73e0a" alt="Image" width="48%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_0/imgs/img_in_image_box_303_1187_886_1323.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A46Z%2F-1%2F%2F3063f40b6f6918814a96cf4c1b4e3932a53fa5219cad635e6803713917a73e0a" alt="Image" width="48%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 2. 单相型锁相放大器结构图</div> </div>
-
+图 2. 单相型锁相放大器结构图
 
 信号通道进入 PSD 模块的信号可定义为：
 
@@ -44,11 +40,9 @@
 
 虽然通过调整待测信号与参考信号的相位差( $ \varphi - \delta $)就能确定待测信号的幅值，但是这个调整的精度是很难保证的。双相锁相放大器的产生很好的解决了这个问题。如图3所示是双相锁相放大器的原理架构图。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_1/imgs/img_in_image_box_196_834_968_1048.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A47Z%2F-1%2F%2Ff156d6c495ed5e65958b6df823c1282fcc99fb288a9730ab763d35c4c46da1c3" alt="Image" width="64%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_1/imgs/img_in_image_box_196_834_968_1048.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A47Z%2F-1%2F%2Ff156d6c495ed5e65958b6df823c1282fcc99fb288a9730ab763d35c4c46da1c3" alt="Image" width="64%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 3. 双相锁相放大器结构图</div> </div>
-
+图 3. 双相锁相放大器结构图
 
 令相位差 $ \theta = \varphi - \delta $，其中参考通道产生两个相差 $ 90^{\circ} $的正弦信号：
 
@@ -64,19 +58,17 @@
 
  $$ \theta=tan^{-1}\left(Y/X\right) $$ 
 
-### 2.20E1022D 功能原理图
+### 2.2 OE1022D 功能原理图
 
 数字锁相放大器 OE1022D 单路信号处理的原理框图如下所示：
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_2/imgs/img_in_image_box_199_382_988_805.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A48Z%2F-1%2F%2Ff944e6fe021f7fd541c8fa3e95336c5ae3a7e3cac0ca181cf9e65c3280481db6" alt="Image" width="66%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_2/imgs/img_in_image_box_199_382_988_805.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A48Z%2F-1%2F%2Ff944e6fe021f7fd541c8fa3e95336c5ae3a7e3cac0ca181cf9e65c3280481db6" alt="Image" width="66%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 4. OE1022D 单路信号原理框图</div> </div>
-
+图 4. OE1022D 单路信号原理框图
 
 总体来看，其功能模块大致分为信号调理通道、参考信号处理通道、算法实现模块、系统主控等部分。
 
-### 2.30E1022D参考通道
+### 2.3 OE1022D 参考通道
 
 参考通道的功能是为相敏检测器提供与被检测信号相干的控制信号，OE1022D 的参考信号可根据实际情况来选择正弦波或者方波信号，其输入阻抗为 1 M $ \Omega $。
 
@@ -92,11 +84,9 @@ OE1022D 也能够使用外部参考信号模式，正弦波信号和 TTL 逻辑�
 
 OE1022D 的相敏检波器（PSD）由一个数字乘法器来实现。输入信号放大滤波后由 24 bit A/D 转换器变为数字信号输入到相敏检测器。又因为内部信号发生器产生的参考信号也是位宽为 24 bit 的数字量，所以本产品的相敏检波模块的精度为 48 bit。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_3/imgs/img_in_image_box_450_593_761_718.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A49Z%2F-1%2F%2F4d8a9a88e371749e471f66695960ab36f27aa0713752fd7bde2d55d13b1a4b14" alt="Image" width="26%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d89f051e-56f6-4b47-8340-4b1925db7e1b/markdown_3/imgs/img_in_image_box_450_593_761_718.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A49Z%2F-1%2F%2F4d8a9a88e371749e471f66695960ab36f27aa0713752fd7bde2d55d13b1a4b14" alt="Image" width="26%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 5. 相干检测核心部分</div> </div>
-
+图 5. 相干检测核心部分
 
 锁相放大器的相敏检波模块主要实现输入信号与参考信号的相干调制,传统的锁相放大器通过一个模拟乘法器来实现以上功能。但这种以模拟技术实现相干调制的方法存在诸多缺陷,它不仅会极大地限制相敏检波器的精度还会引入很多背景噪声,这些对于微弱信号的测量都是极为不利的。
 
@@ -126,18 +116,18 @@ OE1022D 的相敏检波器（PSD）由一个数字乘法器来实现。输入信
 
 各阶 RC 低通滤波器的等效噪声带宽和响应等待时间如表 1 所示：
 
-<div style="text-align: center;"><div style="text-align: center;">表 1. 各阶 RC 低通滤波器的 ENBW 和响应等待时间</div> </div>
+表 1. 各阶 RC 低通滤波器的 ENBW 和响应等待时间
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>滤波器阶数</td><td style='text-align: center; word-wrap: break-word;'>陡降</td><td style='text-align: center; word-wrap: break-word;'>等效噪声带宽</td><td style='text-align: center; word-wrap: break-word;'>输出到达99%稳定度所需时间</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1</td><td style='text-align: center; word-wrap: break-word;'>6 dB/oct</td><td style='text-align: center; word-wrap: break-word;'>$ \frac{1}{4 \times TC} $</td><td style='text-align: center; word-wrap: break-word;'>4.6 \times TC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2</td><td style='text-align: center; word-wrap: break-word;'>12 dB/oct</td><td style='text-align: center; word-wrap: break-word;'>$ \frac{1}{8 \times TC} $</td><td style='text-align: center; word-wrap: break-word;'>6.6 \times TC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>3</td><td style='text-align: center; word-wrap: break-word;'>18 dB/oct</td><td style='text-align: center; word-wrap: break-word;'>$ \frac{3}{32 \times TC} $</td><td style='text-align: center; word-wrap: break-word;'>8.4 \times TC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>24 dB/oct</td><td style='text-align: center; word-wrap: break-word;'>$ \frac{5}{64 \times TC} $</td><td style='text-align: center; word-wrap: break-word;'>10 \times TC</td></tr></table>
+| 滤波器阶数 | 陡降 | 等效噪声带宽 | 输出到达99%稳定度所需时间 |
+|---|---|---|---|
+| 1 | 6 dB/oct | $ \frac{1}{4 \times TC} $ | 4.6 \times TC |
+| 2 | 12 dB/oct | $ \frac{1}{8 \times TC} $ | 6.6 \times TC |
+| 3 | 18 dB/oct | $ \frac{3}{32 \times TC} $ | 8.4 \times TC |
+| 4 | 24 dB/oct | $ \frac{5}{64 \times TC} $ | 10 \times TC |
 
 #### 数字滤波器与模拟滤波器对比
 
-为了尽量提升 OE1022D 的性能，我们采用数字滤波器来实现对相干调制结果的低通滤
-
-波处理。与大多数模拟系统与数字系统的对比一样，数字系统拥有很多模拟系统所不具备的优势。首先模拟器件固有的温度漂移和非线性将极大的限制滤波器的滚降程度。其次，要通过模拟器件搭建一个时间常数大、高品质的低通滤波器需要占据相当大的电路板面积，这不仅会使得仪器的成本上升，而且大量的模拟器件也会为今后的调试带来很大的难度。
+为了尽量提升 OE1022D 的性能，我们采用数字滤波器来实现对相干调制结果的低通滤波处理。与大多数模拟系统与数字系统的对比一样，数字系统拥有很多模拟系统所不具备的优势。首先模拟器件固有的温度漂移和非线性将极大的限制滤波器的滚降程度。其次，要通过模拟器件搭建一个时间常数大、高品质的低通滤波器需要占据相当大的电路板面积，这不仅会使得仪器的成本上升，而且大量的模拟器件也会为今后的调试带来很大的难度。
 
 本产品采用数字技术实现的低通滤波器是一个 48 bit 位宽，直流增益为 0 dB，等效 Q 值最高达 145 dB 以上的窄带滤波器。
 
@@ -169,11 +159,9 @@ OE1022D 在后面板有 CH1 和 CH2 两个输出通道。
 
 CH1 和 CH2 的输出范围为 -10 V 到 +10 V。根据当前对信号的测量结果与当前设置测量范围的比例，正比到输出。除此之外，OE1022D 还能通过前面板的显示屏显示 CH1 和 CH2 的数据源，其中包括被测信号的 X 值、Y 值、R 值、 $ \theta $ 值等数据。本产品除了可以以常规的数值方式显示数据外还能以条形图的方式显示数据。为了便于观测数据的变化，我们还提供了以数据和时间为 XY 轴的实时曲线图的形式进行显示的模式。
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5d53096b-d4ee-48a4-8994-6ec5171d8955/markdown_1/imgs/img_in_image_box_386_658_847_1001.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A36Z%2F-1%2F%2F1fc4d072f78d42f13d9fd134fae00a41d879f73131a81348c5a8dea0797365ff" alt="Image" width="38%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5d53096b-d4ee-48a4-8994-6ec5171d8955/markdown_1/imgs/img_in_image_box_386_658_847_1001.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A36Z%2F-1%2F%2F1fc4d072f78d42f13d9fd134fae00a41d879f73131a81348c5a8dea0797365ff" alt="Image" width="38%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 6. OE1022D channel 输出显示界面</div> </div>
-
+图 6. OE1022D channel 输出显示界面
 
 所有的显示方式可以简单地通过人工操作来进行显示比例的调整，同时仪器所具备的自动调整功能也可以快速优化仪器的显示方式。
 
@@ -191,13 +179,11 @@ A、B 两个通道的 X、Y 和 R 的输出值也能增大。这一功能是通�
 
  $$  Output=\left(\frac{0.1mV}{1mV}+0.2\right)\times2\times10(V)=6(V) $$ 
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5d53096b-d4ee-48a4-8994-6ec5171d8955/markdown_2/imgs/img_in_image_box_391_429_842_760.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A37Z%2F-1%2F%2F3b9f874847a7880a7d1e771e9edf05ff1dfe37ba9f2b62c7134b87b4fbea018f" alt="Image" width="37%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5d53096b-d4ee-48a4-8994-6ec5171d8955/markdown_2/imgs/img_in_image_box_391_429_842_760.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A37Z%2F-1%2F%2F3b9f874847a7880a7d1e771e9edf05ff1dfe37ba9f2b62c7134b87b4fbea018f" alt="Image" width="37%" />
 
+图 7. 输出偏移与增益设置
 
-<div style="text-align: center;"><div style="text-align: center;">图 7. 输出偏移与增益设置</div> </div>
-
-
-### 2.7 0E1022D 动态储备
+### 2.7 OE1022D 动态储备
 
 动态储备的定义是最大可容纳的噪声信号和满量程信号的比值。动态储备表示锁相放大器对噪声容忍程度的大小，通常以 dB 表示。
 
@@ -231,9 +217,7 @@ OE1022D 信号放大器的输入噪声约为 5nVrms/ $ \sqrt{Hz} $。如果放�
 
 假定信号是由一个低阻抗信号源发出的。其中电阻约翰逊噪声为  $ 0.13 \times \sqrt{R} $，以  $ 100 \Omega $ 电阻为例，常温下其约翰逊噪声为  $ 1.3 \, nV_{rms}/\sqrt{Hz} $。而一个阻抗为  $ 2 \, k\Omega $ 的信号源的约翰逊噪声  $ 5.8 \, nV_{rms}/\sqrt{Hz} $ 都大于  $ OE_{1022} $ 的自身输入噪声。系统总噪声大小由各个噪声源的平方之和后开根号计算出来。例如，一个  $ 2 \, k\Omega $ 阻抗的信号源接入到  $ OE_{1022}D $，它自身的约翰逊噪声和  $ OE_{1022}D $ 的输入噪声叠加起来，总噪声大小为  $ \sqrt{5^2 + 5.8^2} = 7.7 \, nV_{rms}/\sqrt{Hz} $。
 
-在增益较低时，经过放大后的噪声信号仍然低于模数转化器的自身噪声，此时系统的输出噪声主要是模数转换器噪声，但这种情况下的滤波器之后的直流增益很低，输出的噪声相
-
-对于有用信号可忽略不计。
+在增益较低时，经过放大后的噪声信号仍然低于模数转化器的自身噪声，此时系统的输出噪声主要是模数转换器噪声，但这种情况下的滤波器之后的直流增益很低，输出的噪声相对于有用信号可忽略不计。
 
 ##### 陷波滤波器
 
@@ -259,9 +243,7 @@ OE1022D 的输入阻抗是 10MΩ。如果需要更高的输入阻抗，可以使
 
 ##### 单端连接模式（A）
 
-单端连接模式中，使用 A/I 输入端。锁相放大器检测 A/I 输入接口的中心导体和外壳导
-
-体之间的电压差。
+单端连接模式中，使用 A/I 输入端。锁相放大器检测 A/I 输入接口的中心导体和外壳导体之间的电压差。
 
 一般认为，地电平是 0 V 的常量，然而不同仪器的地电平会有些许的差异。当信号源的地电平与检测仪器的地电平直接相连时，它们的电平差值会导致一个大电流，即接地回路，这时候处于较高地电平的仪器的电流都通过较低地电平的仪器回流到大地，这样会导致两个严重问题：一是较高地电平的仪器的噪声直接输入到低地电平的仪器里，二是低地电平的仪器有可能因为电流过大而损坏。要解决这个问题，通过在两个不同电平的地之间连接一个电阻就能消除接地回路问题，在 OE1022D 里，有浮地（Float）和接地（Ground）两种电阻模式选择，浮地采用 10 kΩ电阻，而接地采用 10 Ω电阻。
 
@@ -279,12 +261,12 @@ OE1022D 的输入阻抗是 10MΩ。如果需要更高的输入阻抗，可以使
 
 不同的电流增益的带宽是不一样的，如表 2 所示：
 
-<div style="text-align: center;"><div style="text-align: center;">表 2. 电流增益和带宽关系</div> </div>
+表 2. 电流增益和带宽关系
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>增益</td><td style='text-align: center; word-wrap: break-word;'>带宽</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1M</td><td style='text-align: center; word-wrap: break-word;'>70kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100M</td><td style='text-align: center; word-wrap: break-word;'>1kHz</td></tr></table>
+| 增益 | 带宽 |
+|---|---|
+| 1M | 70kHz |
+| 100M | 1kHz |
 
 ##### 交流耦合和直流耦合模式
 
@@ -334,7 +316,7 @@ OE1022D 对输入的信号有交流耦合和直流耦合两种模式。交流耦
 
 前面给出的散射噪声公式是假设电流中的载流子互不影响而得出的。当电荷通过一个势垒时，这种假设确实是存在的，例如面接触型二极管中的电流是以电荷的扩散形式传播的。但是对于最常见的金属导体来说就不是这样，其载流子之间有着很密切的联系。
 
-## 1/f 噪声（Flicker Noise）
+##### 1/f 噪声（Flicker Noise）
 
 1925 年，Johnson 在电子管电流中首次发现 1/f 噪声，其突出特点在于该噪声的功率谱函数正比于 1/f。频率越低，噪声越严重，因为又称为低频噪声。其微观机理在于当两种导体接触不理想时，其接触电阻将发生随机涨落，从而引起噪声。
 
@@ -352,9 +334,7 @@ OE1022D 对输入的信号有交流耦合和直流耦合两种模式。交流耦
 
 ##### 电容耦合
 
-由于布线之间总是有互容，互容如同寄生在布线之间的一样，所以叫寄生电容，又称为杂散电容。极板与周围体（各种元件甚至人体）也产生电容联系。而在锁相放大器附近的交
-
-流电压信号可以用过这些寄生电容耦合到设备上。虽然寄生电容可能很小，但耦合来的电压信号仍然有可能比待测微弱信号要大。
+由于布线之间总是有互容，互容如同寄生在布线之间的一样，所以叫寄生电容，又称为杂散电容。极板与周围体（各种元件甚至人体）也产生电容联系。而在锁相放大器附近的交流电压信号可以用过这些寄生电容耦合到设备上。虽然寄生电容可能很小，但耦合来的电压信号仍然有可能比待测微弱信号要大。
 
 寄生电容的影响可由以下公式计算出来：
 
@@ -398,9 +378,7 @@ OE1022D 对输入的信号有交流耦合和直流耦合两种模式。交流耦
 
 ##### 颤动噪声效应
 
-大部分噪声源都是以电气的形式影响电路,然而机械振动的噪声也可通过颤噪效应转化成为电气形式。因微振动而使传输电缆或者待测信号产生的机械振动,会产生频率变化的电
-
-形式噪声。
+大部分噪声源都是以电气的形式影响电路,然而机械振动的噪声也可通过颤噪效应转化成为电气形式。因微振动而使传输电缆或者待测信号产生的机械振动,会产生频率变化的电形式噪声。
 
 消除颤噪效应的方法：
 
@@ -459,4 +437,3 @@ OE1022D 新增频率、幅值扫描功能。信号发生器可以在输出幅值
 OE1022D 突破性的开发了多谐波同时测量功能，每个通道最多可以同时进行 2 个通道谐波分量的测量，因此最多可同时测量 5 路谐波分量的测量（包含基波）。原来数台锁相放大器完成的谐波检测工作，现在 OE1022D 一台即可完成。
 
 对多谐波的测量设置在[REF/PHASE]子菜单中<Harmonic>中进行，详细见[REF/PHASE]子菜单。
-

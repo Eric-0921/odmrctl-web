@@ -1,28 +1,6 @@
-# R&S $ ^{\textregistered} $SMB100A RF and Microwave Signal Generator Operating Manual
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_115_845_871_1114.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F50da38fb4acf1e76e09a45320aa794fbacb84189565ccb122f562f99cb99764f" alt="Image" width="63%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_115_845_871_1114.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F50da38fb4acf1e76e09a45320aa794fbacb84189565ccb122f562f99cb99764f" alt="Image" width="63%" />
+# R&S® SMB100A RF and Microwave Signal Generator Operating Manual
 
 ROHDE&SCHWARZ SMB 100A - SIGNAL GENERATOR 100kHz, 12.75GHz
-
-</div>
-
-
-</div>
-
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_137_1228_357_1275.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Fc4305c419058544f30d60b59a1cf98b86c1968abfdc46db49bf1b7559a00117e" alt="Image" width="18%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_137_1228_357_1275.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Fc4305c419058544f30d60b59a1cf98b86c1968abfdc46db49bf1b7559a00117e" alt="Image" width="18%" />
-
-
-
-</div>
-
-
-</div>
-
 
 1407080632
 
@@ -32,41 +10,31 @@ ROHDE & SCHWARZ
 
 Make ideas real
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_941_1469_1076_1605.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F751d322c078890269299a67aeaccc6e9ab812f1a1dbeba7ead0a874c1ac00ee1" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//96aace07-9876-48fc-888d-4129cfbb4ecd/markdown_0/imgs/img_in_image_box_941_1469_1076_1605.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F751d322c078890269299a67aeaccc6e9ab812f1a1dbeba7ead0a874c1ac00ee1" alt="Image" width="11%" />
-
 RS
 
-</div>
+This document describes the R&S® SMB100A, stock no. 1406.6000K02/K03 and its options.
 
+R&S® SMB-B1/-B1H
 
-</div>
+R&S® SMB-B5
 
+R&S® SMB-B25/-B26
 
-This document describes the R&S $ ^{\circledR} $SMB100A, stock no. 1406.6000K02/K03 and its options.
+R&S® SMB-B30/-B31/-B32
 
-R&S®SMB-B1/-B1H
+R&S® SMB-B101/-B102/-B103/-B106
 
-R&S $ ^{\textregistered} $SMB-B5
+R&S® SMB-B112/-B112L/-B120/-B120L
 
-R&S $ ^{\textregistered} $SMB-B25/-B26
+R&S® SMB-B131
 
-R&S $ ^{\textregistered} $SMB-B30/-B31/-B32
+R&S® SMB-B140/-B140L/-B140N
 
-R&S $ ^{\textregistered} $SMB-B101/-B102/-B103/-B106
+R&S® SMB-K21/-K22
 
-R&S $ ^{\textregistered} $SMB-B112/-B112L/-B120/-B120L
+R&S® SMB-K23/-K27
 
-R&S®SMB-B131
-
-R&S $ ^{\textregistered} $SMB-B140/-B140L/-B140N
-
-R&S®SMB-K21/-K22
-
-R&S $ ^{\text{®}} $SMB-K23/-K27
-
-This manual describes firmware version FW 5.00.116.xx and later of the R&S $ ^{\textregistered} $SMB100A.
+This manual describes firmware version FW 5.00.116.xx and later of the R&S® SMB100A.
 
 ## Contents
 

@@ -72,25 +72,12 @@ Use a dry, lint-free cloth to clean the product. When cleaning, keep in mind tha
 
 Safety labels on the product warn against potential hazards.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//24e04f3d-b53b-4cba-b0b0-374b2bf8d7b0/markdown_4/imgs/img_in_image_box_299_673_374_738.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fc2cd15d54c8303d95e545d071e8a234b7f8d9e6c72c1690e4d58f70c36d60f2d" alt="Image"" />
-
-△!
-
-</td><td style='text-align: center; word-wrap: break-word;'>Potential hazardRead the product documentation to avoid personal injury or product damage.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//24e04f3d-b53b-4cba-b0b0-374b2bf8d7b0/markdown_4/imgs/img_in_image_box_302_758_374_820.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fe5a5713560953c50c2d9516235afad4965c94365e1b30eaeeb1f234486caedb4" alt="Image"" />
-
-ぐ
-
-</td><td style='text-align: center; word-wrap: break-word;'>Electrical hazardIndicates live parts. Risk of electric shock, fire, personal injury or even death.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//24e04f3d-b53b-4cba-b0b0-374b2bf8d7b0/markdown_4/imgs/img_in_image_box_301_841_371_898.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2Fd4b8fede9fac4043d720a19799bb82d879ca59fff869707286eb890c0a2922b9" alt="Image"" />
-
-△
-
-</td><td style='text-align: center; word-wrap: break-word;'>Hot surfaceDo not touch. Risk of skin burns. Risk of fire.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//24e04f3d-b53b-4cba-b0b0-374b2bf8d7b0/markdown_4/imgs/img_in_image_box_307_919_365_978.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F6c62e7df79cb88272603813c47fc64644dcca0d80086d715f54133c3d310091e" alt="Image"" />
-
-ㅏㅏ
-
-</td><td style='text-align: center; word-wrap: break-word;'>Protective conductor terminalConnect this terminal to a grounded external conductor or to protective ground. This connection protects you against electric shock if an electric problem occurs.</td></tr></table>
+| Label | Description |
+|-------|-------------|
+| Potential hazard | Read the product documentation to avoid personal injury or product damage. |
+| Electrical hazard | Indicates live parts. Risk of electric shock, fire, personal injury or even death. |
+| Hot surface | Do not touch. Risk of skin burns. Risk of fire. |
+| Protective conductor terminal | Connect this terminal to a grounded external conductor or to protective ground. This connection protects you against electric shock if an electric problem occurs. |
 
 ### 1.2 Labels on R&S SMB
 
@@ -104,13 +91,9 @@ Labels on the casing inform about:
 
 Table 1-1: Labels regarding R&S SMB and environment safety
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//24e04f3d-b53b-4cba-b0b0-374b2bf8d7b0/markdown_4/imgs/img_in_image_box_296_1286_344_1359.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2Fdfed42a242dbf6c5e16954305a65596bc56d70f00945fc7dd040f2e2533e45f8" alt="Image"" />
-
--
-
-</td><td style='text-align: center; word-wrap: break-word;'>Labeling in line with EN 50419 for disposal of electrical and electronic equipment after the product has come to the end of its service life. For more information, see Chapter 8, &quot;Maintenance, Storage and Disposal&quot;, on page 490.</td></tr></table>
+| Description |
+|-------------|
+| Labeling in line with EN 50419 for disposal of electrical and electronic equipment after the product has come to the end of its service life. For more information, see Chapter 8, "Maintenance, Storage and Disposal", on page 490. |
 
 ### 1.3 Warning Messages in the Documentation
 
@@ -130,17 +113,4 @@ Potential risks of damage. Could result in damage to the supported product or to
 
 ### 1.4 Korea certification class B
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//75ab9a78-303d-4c2c-9d04-46c337c1d1b6/markdown_0/imgs/img_in_image_box_442_775_517_883.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F2027dfa2530236c47303fe3b4dd32517d6fb78d786bc312bb7df551322a1a59d" alt="Image" width="6%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//75ab9a78-303d-4c2c-9d04-46c337c1d1b6/markdown_0/imgs/img_in_image_box_442_775_517_883.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F2027dfa2530236c47303fe3b4dd32517d6fb78d786bc312bb7df551322a1a59d" alt="Image" width="6%" />
-
-K
-
-</div>
-
-
-</div>
-
-
 이 기기는 가정용(B급) 전자파 적합기기로서 주로 가정에서 사용하는 것을 목적으로 하며, 모든 지역에서 사용할 수 있습니다.
-

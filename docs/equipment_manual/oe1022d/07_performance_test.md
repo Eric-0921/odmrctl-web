@@ -32,13 +32,16 @@
 
 ## 1. 函数信号发生器
 
+| Freq Range | 1 Hz to 1 MHz |
+| --- | --- |
+| Freq Accuracy | Better than 5 ppm |
+| Amplitude Accuracy | 0.2 dB from 1 Hz to 102 kHz |
+| Spurious | ≤-55 dBc |
+| TTL SYNC | Available |
+| Output Setup | 50 \Omega or High Z |
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq Range</td><td style='text-align: center; word-wrap: break-word;'>1 Hz to 1 MHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Freq Accuracy</td><td style='text-align: center; word-wrap: break-word;'>Better than 5 ppm</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Amplitude Accuracy</td><td style='text-align: center; word-wrap: break-word;'>0.2 dB from 1 Hz to 102 kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Spurious</td><td style='text-align: center; word-wrap: break-word;'>≤-55 dBc</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>TTL SYNC</td><td style='text-align: center; word-wrap: break-word;'>Available</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Output Setup</td><td style='text-align: center; word-wrap: break-word;'>50 \Omega or High Z</td></tr></table>
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>推荐</td><td style='text-align: center; word-wrap: break-word;'>AGILENT 33250A</td></tr></table>
+| 推荐 | AGILENT 33250A |
+| --- | --- |
 
 ## 2. 数字万用表
 
@@ -46,9 +49,8 @@ Voltage Range  $ \geq $20 V, 4 1/2 digits
 
 Accuracy  $ \leq $0.005%
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>推荐</td><td style='text-align: center; word-wrap: break-word;'>KEITHLEY 2100</td></tr></table>
+| 推荐 | KEITHLEY 2100 |
+| --- | --- |
 
 ## 3. 直流稳压源
 
@@ -56,9 +58,8 @@ Voltage Range  $ \geq $10 V
 
 Accuracy <10 mVpp
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>推荐</td><td style='text-align: center; word-wrap: break-word;'>RIGOL DP831A</td></tr></table>
+| 推荐 | RIGOL DP831A |
+| --- | --- |
 
 4. 短路连接器
 
@@ -80,7 +81,7 @@ BNC 电阻 50  $ \Omega $
 
 在本测试中不需要外部设备。
 
-##### 歩驟
+##### 步骤
 
 1）打开背部电源开关，启动锁相放大器；
 
@@ -174,7 +175,7 @@ BNC 电阻 50  $ \Omega $
 
 调整：none
 
-##### 歩驟
+##### 步骤
 
 1）先关闭再打开背部电源开关，重新启动锁相放大器；
 
@@ -184,9 +185,13 @@ Filter dB/oct：修改为 24 dB/oct。
 
 3）幅值精度的测试需要保持函数信号发生器的频率为 1 kHz，按以下顺序修改其幅值和锁相放大器的<Sensitivity>:
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Amplitude</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>1.0000 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>200.00 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 mV</td><td style='text-align: center; word-wrap: break-word;'>100.00 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 mV</td><td style='text-align: center; word-wrap: break-word;'>20.000 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>10.000 mVrms</td></tr></table>
+| Sensitivity | Amplitude |
+| --- | --- |
+| 1 V | 1.0000 Vrms |
+| 200 mV | 200.00 mVrms |
+| 100 mV | 100.00 mVrms |
+| 20 mV | 20.000 mVrms |
+| 10 mV | 10.000 mVrms |
 
 a）设置函数信号发生器的幅值；
 
@@ -244,7 +249,7 @@ e）重复 4c 到 4d 直到完成频率响应测试。
 
 调整：none
 
-#### 歩驟
+#### 步骤
 
 1）先关闭再打开背部电源开关，重新启动锁相放大器；
 
@@ -282,7 +287,7 @@ c）重复 3a 到 3b 直到完成所有数据测量。
 
 使用一条信号线（带 BNC 公接头）连接函数信号发生器的参考信号接口和锁相放大器的 REF IN 接口。
 
-#### 歩驟
+#### 步骤
 
 1）先关闭再打开背部电源开关，重新启动锁相放大器；
 
@@ -300,7 +305,7 @@ c）重复 3a 到 3b 直到完成所有数据测量。
 
 使用一条 1 米长的信号线（带 BNC 公接头）连接 SINE OUT 接口和 IN+接口。
 
-#### 歩驟
+#### 步骤
 
 1）先关闭再打开背部电源开关，重新启动锁相放大器；
 
@@ -311,9 +316,12 @@ c）重复 3a 到 3b 直到完成所有数据测量。
 
 3）幅值精度的测试需要保持内部参考信号的频率为 1 kHz，按以下顺序修改 <Sensitivity> 和 Sine 幅值：
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Sine Out Fixed Voltage</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>0.8 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>0.160 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 mV</td><td style='text-align: center; word-wrap: break-word;'>0.040 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>0.008 Vrms</td></tr></table>
+| Sensitivity | Sine Out Fixed Voltage |
+| --- | --- |
+| 1 V | 0.8 Vrms |
+| 200 mV | 0.160 Vrms |
+| 50 mV | 0.040 Vrms |
+| 10 mV | 0.008 Vrms |
 
 a）设置<Sine Output>的幅值；
 
@@ -325,9 +333,12 @@ d）重复 3a 到 3c 直到完成幅值精度测试。
 
 4）频率响应的测试在大于  $ 1 \, kHz $ 的频率下进行，按以下顺序修改<Ref.Frequency>的值：
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Test Frequencies</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>24 kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>48 kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>72 kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>96 kHz</td></tr></table>
+| Test Frequencies |
+| --- |
+| 24 kHz |
+| 48 kHz |
+| 72 kHz |
+| 96 kHz |
 
 a）设置锁相放大器的<Sensitivity>为 1 V;
 
@@ -391,7 +402,7 @@ Voltage (V)
 
 d) 等待 10 秒后，记录屏幕上方<A1>读数，然后测试下一组数据；
 
-e) 重复 4c 到 4d，知道完成 A1 的测试，然后依次连接直流稳压源输出接口到 A2、A3、A4，完成 A2、A3、A4 的测试。
+e) 重复 4c 到 4d，直到完成 A1 的测试，然后依次连接直流稳压源输出接口到 A2、A3、A4，完成 A2、A3、A4 的测试。
 
 5) 到此完成直流输出和输入的测试，在本章最后的测试记录表中填入数据。
 
@@ -427,25 +438,132 @@ e) 重复 4c 到 4d，知道完成 A1 的测试，然后依次连接直流稳压
 
 ### 7.10 0E1022D 性能测试记录表
 
+| OE1022D 性能测试记录表 | OE1022D 性能测试记录表 | OE1022D 性能测试记录表 | OE1022D 性能测试记录表 | OE1022D 性能测试记录表 |
+| --- | --- | --- | --- | --- |
+| 序列号: | 测试人员: | 测试人员: | 测试人员: | 测试人员: |
+| 固件版本: | 日期: | 日期: | 日期: | 日期: |
+| 仪器用途: |  |  |  |  |
+|  |  |  |  |  |
+| 1.启动测试 | 1.启动测试 | 1.启动测试 | 1.启动测试 | 1.启动测试 |
+|  | Pass | Pass | Fail | Fail |
+|  | ____ | ____ | ____ | ____ |
+| 2.直流偏置 | 2.直流偏置 | 2.直流偏置 | 2.直流偏置 | 2.直流偏置 |
+|  | Input Coupling | Input Coupling | Reading | Upper Limit |
+| 测量通道A | AC | AC | ____ | 0.500 mV |
+| 测量通道A | DC | DC | ____ | 0.500 mV |
+| 测量通道B | AC | AC | ____ | 0.500 mV |
+| 测量通道B | DC | DC | ____ | 0.500 mV |
+| 3.共模抑制 | 3.共模抑制 | 3.共模抑制 | 3.共模抑制 | 3.共模抑制 |
+|  | Frequency | Frequency | Reading | Upper Limit |
+| 测量通道A | 100 Hz | 100 Hz | ____ | 30 \mu V |
+| 测量通道B | 100 Hz | 100 Hz | ____ | 30 \mu V |
+| 4.幅值精度和平坦度 | 4.幅值精度和平坦度 | 4.幅值精度和平坦度 | 4.幅值精度和平坦度 | 4.幅值精度和平坦度 |
+|  | 测量通道A | 测量通道A | 测量通道A | 测量通道A |
+| Sensitivity | Amplitude | Amplitude | Lower Limit | Reading |
+| 1 V | 1.0000 Vrms | 1.0000 Vrms | 0.9800 V | ____ |
+| 200 mV | 200.00 mVrms | 200.00 mVrms | 198.00 mV | ____ |
+| 100 mV | 100.00 mVrms | 100.00 mVrms | 98.00 mV | ____ |
+| 20 mV | 20.000 mVrms | 20.000 mVrms | 19.60 mV | ____ |
+| 10 mV | 10.000 mVrms | 10.000 mVrms | 9.800 mV | ____ |
+| Sensitivity | Frequency | Frequency | Lower Limit | Reading |
+| 200 mV | 24 kHz | 24 kHz | 196 mV | ____ |
+| 200 mV | 48 kHz | 48 kHz | 196 mV | ____ |
+| 200 mV | 72 kHz | 72 kHz | 196 mV | ____ |
+| 200 mV | 96 kHz | 96 kHz | 196 mV | ____ |
+|  |  | 测量通道 B | 测量通道 B | 测量通道 B |
+| Sensitivity | Amplitude | Lower Limit | Reading | Upper Limit |
+| 1 V | 1.0000 Vrms | 0.9800 V |  | 1.0200 V |
+| 200 mV | 200.00 mVrms | 198.00 mV |  | 202.00 mV |
+| 100 mV | 100.00 mVrms | 98.00 mV |  | 102.00 mV |
+| 20 mV | 20.000 mVrms | 19.60 mV |  | 20.400 mV |
+| 10 mV | 10.000 mVrms | 9.800 mV |  | 10.200 mV |
+| Sensitivity | Frequency | Lower Limit | Reading | Upper Limit |
+| 200 mV | 24 kHz | 196 mV |  | 204 mV |
+| 200 mV | 48 kHz | 196 mV |  | 204 mV |
+| 200 mV | 72 kHz | 196 mV |  | 204 mV |
+| 200 mV | 96 kHz | 196 mV |  | 204 mV |
+| 5.幅值线性度 | 5.幅值线性度 | 5.幅值线性度 | 5.幅值线性度 | 5.幅值线性度 |
+|  |  | 测量通道 A | 测量通道 A | 测量通道 A |
+| Sensitivity | Amplitude | Lower Limit | Reading | Upper Limit |
+| 1 V | 1.0000 Vrms | 0.9900 V |  | 1.0100 V |
+| 100.00 mVrms | 0.0990 V |  |  | 0.1010 V |
+| 10.000 mVrms | 0.0099 V |  |  | 0.0101 V |
+|  |  | 测量通道 B | 测量通道 B | 测量通道 B |
+| Sensitivity | Amplitude | Lower Limit | Reading | Upper Limit |
+| 1 V | 1.0000 Vrms | 0.9900 V |  | 1.0100 V |
+| 100.00 mVrms | 0.0990 V |  |  | 0.1010 V |
+| 10.000 mVrms | 0.0099 V |  |  | 0.0101 V |
 
+OE1022D 性能测试记录表
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="5">OE1022D 性能测试记录表</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>序列号:</td><td colspan="4">测试人员:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>固件版本:</td><td colspan="4">日期:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>仪器用途:</td><td colspan="4"></td></tr><tr><td colspan="5"></td></tr><tr><td colspan="5">1.启动测试</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">Pass</td><td colspan="2">Fail</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">____</td><td colspan="2">____</td></tr><tr><td colspan="5">2.直流偏置</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">Input Coupling</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道A</td><td colspan="2">AC</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>0.500 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道A</td><td colspan="2">DC</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>0.500 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道B</td><td colspan="2">AC</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>0.500 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道B</td><td colspan="2">DC</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>0.500 mV</td></tr><tr><td colspan="5">3.共模抑制</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">Frequency</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道A</td><td colspan="2">100 Hz</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>30 \mu V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>测量通道B</td><td colspan="2">100 Hz</td><td style='text-align: center; word-wrap: break-word;'>____</td><td style='text-align: center; word-wrap: break-word;'>30 \mu V</td></tr><tr><td colspan="5">4.幅值精度和平坦度</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="4">测量通道A</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td colspan="2">Amplitude</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td colspan="2">1.0000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.9800 V</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td colspan="2">200.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>198.00 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 mV</td><td colspan="2">100.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>98.00 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 mV</td><td colspan="2">20.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>19.60 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td colspan="2">10.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>9.800 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td colspan="2">Frequency</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td colspan="2">24 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td colspan="2">48 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td colspan="2">72 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td colspan="2">96 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'>____</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td colspan="3">测量通道 B</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Amplitude</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>1.0000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.9800 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>1.0200 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>200.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>198.00 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>202.00 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100 mV</td><td style='text-align: center; word-wrap: break-word;'>100.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>98.00 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>102.00 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20 mV</td><td style='text-align: center; word-wrap: break-word;'>20.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>19.60 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>20.400 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>10.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>9.800 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.200 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>24 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>204 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>48 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>204 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>72 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>204 mV</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>96 kHz</td><td style='text-align: center; word-wrap: break-word;'>196 mV</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>204 mV</td></tr><tr><td colspan="5">5.幅值线性度</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td colspan="3">测量通道 A</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Amplitude</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>1.0000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.9900 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>1.0100 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>0.0990 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.1010 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>0.0099 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.0101 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td colspan="3">测量通道 B</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>Amplitude</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>1.0000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.9900 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>1.0100 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>100.00 mVrms</td><td style='text-align: center; word-wrap: break-word;'>0.0990 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.1010 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10.000 mVrms</td><td style='text-align: center; word-wrap: break-word;'>0.0099 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.0101 V</td></tr></table>
-
-
-
-
-
-<div style="text-align: center;"><div style="text-align: center;">OE1022D 性能测试记录表</div> </div>
-
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="5">6.频率精度</td></tr><tr><td rowspan="3">测量通道A测量通道B</td><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 kHz</td><td style='text-align: center; word-wrap: break-word;'>9.990 kHz</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>10.010 kHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 kHz</td><td style='text-align: center; word-wrap: break-word;'>9.990 kHz</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>10.010 kHz</td></tr><tr><td colspan="5">7.Sine Out幅值精度和平坦度</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>SineOut Ampl.</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>0.800Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.776 Vrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.824 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>0.160 Vrms</td><td style='text-align: center; word-wrap: break-word;'>155.2 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>164.8 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 mV</td><td style='text-align: center; word-wrap: break-word;'>0.040 Vrms</td><td style='text-align: center; word-wrap: break-word;'>38.80 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>41.20 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>0.008 Vrms</td><td style='text-align: center; word-wrap: break-word;'>7.760 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>8.240 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SineOut Ampl.</td><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td rowspan="4">1.000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>24 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>48 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>72 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>96 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td colspan="5"></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td style='text-align: center; word-wrap: break-word;'>SineOut Ampl.</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1 V</td><td style='text-align: center; word-wrap: break-word;'>0.800Vrms</td><td style='text-align: center; word-wrap: break-word;'>0.776 Vrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.824 Vrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>200 mV</td><td style='text-align: center; word-wrap: break-word;'>0.160 Vrms</td><td style='text-align: center; word-wrap: break-word;'>155.2 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>164.8 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50 mV</td><td style='text-align: center; word-wrap: break-word;'>0.040 Vrms</td><td style='text-align: center; word-wrap: break-word;'>38.80 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>41.20 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10 mV</td><td style='text-align: center; word-wrap: break-word;'>0.008 Vrms</td><td style='text-align: center; word-wrap: break-word;'>7.760 mVrms</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>8.240 mVrms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SineOut Ampl.</td><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td rowspan="4">1.000 Vrms</td><td style='text-align: center; word-wrap: break-word;'>24 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>48 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>72 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>96 kHz</td><td style='text-align: center; word-wrap: break-word;'>0.9700 V</td><td style='text-align: center; word-wrap: break-word;'>——</td><td style='text-align: center; word-wrap: break-word;'>0.1030 V</td></tr><tr><td colspan="5">8.直流输出</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Output</td><td style='text-align: center; word-wrap: break-word;'>Offset</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td rowspan="5">CH1</td><td style='text-align: center; word-wrap: break-word;'>100.00</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50.00</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>0.00</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-50.00</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-100.00</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Output</td><td style='text-align: center; word-wrap: break-word;'>Offset</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td rowspan="5">CH2</td><td style='text-align: center; word-wrap: break-word;'>100.00</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>50.00</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>0.00</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-50.00</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-100.00</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td colspan="5">8.直流输入（续前表）</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Intput</td><td style='text-align: center; word-wrap: break-word;'>Voltage</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUX IN 1</td><td style='text-align: center; word-wrap: break-word;'>10.000</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.000</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.000</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-5.000</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-0.000</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUX IN 2</td><td style='text-align: center; word-wrap: break-word;'>10.000</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.000</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.000</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-5.000</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-0.000</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Intput</td><td style='text-align: center; word-wrap: break-word;'>Voltage</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUX IN 3</td><td style='text-align: center; word-wrap: break-word;'>10.000</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.000</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.000</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-5.000</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-0.000</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Intput</td><td style='text-align: center; word-wrap: break-word;'>Voltage</td><td style='text-align: center; word-wrap: break-word;'>Lower Limit</td><td style='text-align: center; word-wrap: break-word;'>Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUX IN 4</td><td style='text-align: center; word-wrap: break-word;'>10.000</td><td style='text-align: center; word-wrap: break-word;'>9.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>10.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.000</td><td style='text-align: center; word-wrap: break-word;'>4.960 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>5.040 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.000</td><td style='text-align: center; word-wrap: break-word;'>-0.020 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>0.020 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-5.000</td><td style='text-align: center; word-wrap: break-word;'>-5.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-4.960 V</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-0.000</td><td style='text-align: center; word-wrap: break-word;'>-10.040 V</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>-9.960 V</td></tr><tr><td colspan="5">9.输入噪声</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td colspan="3">测量通道A</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td colspan="2">Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>997 Hz</td><td style='text-align: center; word-wrap: break-word;'>100 nV</td><td colspan="2"></td><td style='text-align: center; word-wrap: break-word;'>15 nV/VHz</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td colspan="3">测量通道B</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Sensitivity</td><td colspan="2">Reading</td><td style='text-align: center; word-wrap: break-word;'>Upper Limit</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>997 Hz</td><td style='text-align: center; word-wrap: break-word;'>100 nV</td><td colspan="2"></td><td style='text-align: center; word-wrap: break-word;'>15 nV/VHz</td></tr></table>
-
-
-
-
-
-
-
-
+| 6.频率精度 | 6.频率精度 | 6.频率精度 | 6.频率精度 | 6.频率精度 |
+| --- | --- | --- | --- | --- |
+| 测量通道A测量通道B | Frequency | Lower Limit | Reading | Upper Limit |
+| 测量通道A测量通道B | 10 kHz | 9.990 kHz | —— | 10.010 kHz |
+| 测量通道A测量通道B | 10 kHz | 9.990 kHz | —— | 10.010 kHz |
+| 7.Sine Out幅值精度和平坦度 | 7.Sine Out幅值精度和平坦度 | 7.Sine Out幅值精度和平坦度 | 7.Sine Out幅值精度和平坦度 | 7.Sine Out幅值精度和平坦度 |
+| Sensitivity | SineOut Ampl. | Lower Limit | Reading | Upper Limit |
+| 1 V | 0.800Vrms | 0.776 Vrms | —— | 0.824 Vrms |
+| 200 mV | 0.160 Vrms | 155.2 mVrms | —— | 164.8 mVrms |
+| 50 mV | 0.040 Vrms | 38.80 mVrms | —— | 41.20 mVrms |
+| 10 mV | 0.008 Vrms | 7.760 mVrms | —— | 8.240 mVrms |
+| SineOut Ampl. | Frequency | Lower Limit | Reading | Upper Limit |
+| 1.000 Vrms | 24 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 48 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 72 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 96 kHz | 0.9700 V | —— | 0.1030 V |
+|  |  |  |  |  |
+| Sensitivity | SineOut Ampl. | Lower Limit | Reading | Upper Limit |
+| 1 V | 0.800Vrms | 0.776 Vrms | —— | 0.824 Vrms |
+| 200 mV | 0.160 Vrms | 155.2 mVrms | —— | 164.8 mVrms |
+| 50 mV | 0.040 Vrms | 38.80 mVrms | —— | 41.20 mVrms |
+| 10 mV | 0.008 Vrms | 7.760 mVrms | —— | 8.240 mVrms |
+| SineOut Ampl. | Frequency | Lower Limit | Reading | Upper Limit |
+| 1.000 Vrms | 24 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 48 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 72 kHz | 0.9700 V | —— | 0.1030 V |
+| 1.000 Vrms | 96 kHz | 0.9700 V | —— | 0.1030 V |
+| 8.直流输出 | 8.直流输出 | 8.直流输出 | 8.直流输出 | 8.直流输出 |
+| Output | Offset | Lower Limit | Reading | Upper Limit |
+| CH1 | 100.00 | 9.960 V |  | 10.040 V |
+| CH1 | 50.00 | 4.960 V |  | 5.040 V |
+| CH1 | 0.00 | -0.020 V |  | 0.020 V |
+| CH1 | -50.00 | -5.040 V |  | -4.960 V |
+| CH1 | -100.00 | -10.040 V |  | -9.960 V |
+| Output | Offset | Lower Limit | Reading | Upper Limit |
+| CH2 | 100.00 | 9.960 V |  | 10.040 V |
+| CH2 | 50.00 | 4.960 V |  | 5.040 V |
+| CH2 | 0.00 | -0.020 V |  | 0.020 V |
+| CH2 | -50.00 | -5.040 V |  | -4.960 V |
+| CH2 | -100.00 | -10.040 V |  | -9.960 V |
+| 8.直流输入（续前表） | 8.直流输入（续前表） | 8.直流输入（续前表） | 8.直流输入（续前表） | 8.直流输入（续前表） |
+| Intput | Voltage | Lower Limit | Reading | Upper Limit |
+| AUX IN 1 | 10.000 | 9.960 V |  | 10.040 V |
+|  | 5.000 | 4.960 V |  | 5.040 V |
+|  | 0.000 | -0.020 V |  | 0.020 V |
+|  | -5.000 | -5.040 V |  | -4.960 V |
+|  | -0.000 | -10.040 V |  | -9.960 V |
+| AUX IN 2 | 10.000 | 9.960 V |  | 10.040 V |
+|  | 5.000 | 4.960 V |  | 5.040 V |
+|  | 0.000 | -0.020 V |  | 0.020 V |
+|  | -5.000 | -5.040 V |  | -4.960 V |
+|  | -0.000 | -10.040 V |  | -9.960 V |
+| Intput | Voltage | Lower Limit | Reading | Upper Limit |
+| AUX IN 3 | 10.000 | 9.960 V |  | 10.040 V |
+|  | 5.000 | 4.960 V |  | 5.040 V |
+|  | 0.000 | -0.020 V |  | 0.020 V |
+|  | -5.000 | -5.040 V |  | -4.960 V |
+|  | -0.000 | -10.040 V |  | -9.960 V |
+| Intput | Voltage | Lower Limit | Reading | Upper Limit |
+| AUX IN 4 | 10.000 | 9.960 V |  | 10.040 V |
+|  | 5.000 | 4.960 V |  | 5.040 V |
+|  | 0.000 | -0.020 V |  | 0.020 V |
+|  | -5.000 | -5.040 V |  | -4.960 V |
+|  | -0.000 | -10.040 V |  | -9.960 V |
+| 9.输入噪声 | 9.输入噪声 | 9.输入噪声 | 9.输入噪声 | 9.输入噪声 |
+|  |  | 测量通道A | 测量通道A | 测量通道A |
+| Frequency | Sensitivity | Reading | Reading | Upper Limit |
+| 997 Hz | 100 nV |  |  | 15 nV/VHz |
+|  |  | 测量通道B | 测量通道B | 测量通道B |
+| Frequency | Sensitivity | Reading | Reading | Upper Limit |
+| 997 Hz | 100 nV |  |  | 15 nV/VHz |

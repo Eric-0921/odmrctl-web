@@ -2,11 +2,9 @@
 
 ### 3.1 前面板
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_1/imgs/img_in_image_box_215_393_967_613.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A53Z%2F-1%2F%2F0a5b9e6ffc40ad68fca2bcf3a8331eed92c142a67e803103a619551ceac38773" alt="Image" width="63%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_1/imgs/img_in_image_box_215_393_967_613.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A53Z%2F-1%2F%2F0a5b9e6ffc40ad68fca2bcf3a8331eed92c142a67e803103a619551ceac38773" alt="Image" width="63%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 8. OE1022D 前面板</div> </div>
-
+图 8. OE1022D 前面板
 
 #### 3.1.1 显示屏
 
@@ -40,11 +38,9 @@ OE1022D 使用 5.6 英寸 TFT 显示屏作为用户的数据显示与交互控�
 
 ### 3.2 后面板
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_2/imgs/img_in_image_box_188_657_1017_906.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A54Z%2F-1%2F%2F66614b202f749c5f232838c83cb67a33dd65698c2e4031e3c01d3af44f38123c" alt="Image" width="69%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_2/imgs/img_in_image_box_188_657_1017_906.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A54Z%2F-1%2F%2F66614b202f749c5f232838c83cb67a33dd65698c2e4031e3c01d3af44f38123c" alt="Image" width="69%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 9. 后面板</div> </div>
-
+图 9. 后面板
 
 OE1022D 后面板如图 9 所示，包括散热风扇、电源接口、电源开关、USB 接口、RS232 接口以及扩展功能接口。其中，扩展功能接口包括 SINE OUT、TTL OUT、AUX IN、TRIG IN、CH1&CH2 OUTPUT 和 MONITOR。
 
@@ -58,9 +54,7 @@ USB 接口允许 OE1022D 锁相放大器与 PC 机进行通信。可以通过 PC
 
 #### 3.2.3 RS232 接口
 
-RS232 公接口允许 OE1022D 与其他上位机之间进行通讯，最高波特率为 921600bps。接
-
-☐定义为 DB9 公接口标准定义。
+RS232 公接口允许 OE1022D 与其他上位机之间进行通讯，最高波特率为 921600bps。接口定义为 DB9 公接口标准定义。
 
 #### 3.2.4 SINE OUT
 
@@ -96,29 +90,23 @@ OE1022D 主界面中可以分为三个部分。
 
 #### 3.3.1 数据栏
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_4/imgs/img_in_image_box_369_342_820_677.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A56Z%2F-1%2F%2F0613427dd8dcd80408277b0afbaf8e5f016f3163c3732b0cdb46a12e07a4262d" alt="Image" width="37%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_4/imgs/img_in_image_box_369_342_820_677.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A56Z%2F-1%2F%2F0613427dd8dcd80408277b0afbaf8e5f016f3163c3732b0cdb46a12e07a4262d" alt="Image" width="37%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 10. 主界面-数据栏</div> </div>
-
+图 10. 主界面-数据栏
 
 如图 10 所示，可在[DISPLAY]子菜单中选择显示<X>、<Y>、<R>、< $ \theta $>等值，显示方式可选择数字图、条形图、XY 坐标图。设置方式详见[DISPLAY]子菜单。
 
 #### 3.3.2 监测栏
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_4/imgs/img_in_image_box_375_896_825_1230.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A56Z%2F-1%2F%2F4defc2c3a3f72c9aad82bad8f964bf7ba49c015122d1eaaf08c30bcf75e691b3" alt="Image" width="37%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8fc1066a-f44c-4f4c-8dce-837813f334e6/markdown_4/imgs/img_in_image_box_375_896_825_1230.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A56Z%2F-1%2F%2F4defc2c3a3f72c9aad82bad8f964bf7ba49c015122d1eaaf08c30bcf75e691b3" alt="Image" width="37%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 11. 主界面-监测栏</div> </div>
-
+图 11. 主界面-监测栏
 
 监测栏一共显示伍项内容，包括：
 
 <Sens>：当前选择灵敏度大小，可以检测当前输入信号是否过大。当输入信号超出灵敏度的时候，显示OVLD提示。此时应该调整灵敏度到适合的量程，如果输入信号过大，需尽快断开信号输入，防止过压损坏仪器。
 
-<Overload>：溢出提示。能够提示前级输入和放大是否溢出。若未发生溢出，则显示：Overload: NONE NONE；若前级输入溢出，则显示 Overload: INPUT NONE；若放大溢出，则显示 Overload: NONE GAIN；若同时溢出，则显示 Overload: INPUT GAIN。此时需尽快把输入信
-
-号减少以防止对机器造成过压损坏仪器。
+<Overload>：溢出提示。能够提示前级输入和放大是否溢出。若未发生溢出，则显示：Overload: NONE NONE；若前级输入溢出，则显示 Overload: INPUT NONE；若放大溢出，则显示 Overload: NONE GAIN；若同时溢出，则显示 Overload: INPUT GAIN。此时需尽快把输入信号减少以防止对机器造成过压损坏仪器。
 
 <Freq>：参考信号频率。显示输入参考信号的频率或内部参考的频率。
 
@@ -128,11 +116,9 @@ OE1022D 主界面中可以分为三个部分。
 
 #### 3.3.3 功能栏
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_0/imgs/img_in_image_box_369_421_820_754.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A18Z%2F-1%2F%2F2dcae2c25e35ee2badb616ceeeabfdbca03d7e725f4454d010aac5d3f970222e" alt="Image" width="37%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d640ef89-ff10-4b31-b21f-1b1453f12ca3/markdown_0/imgs/img_in_image_box_369_421_820_754.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A02%3A18Z%2F-1%2F%2F2dcae2c25e35ee2badb616ceeeabfdbca03d7e725f4454d010aac5d3f970222e" alt="Image" width="37%" />
 
-
-<div style="text-align: center;"><div style="text-align: center;">图 12. 主界面-功能栏</div> </div>
-
+图 12. 主界面-功能栏
 
 如图 12 所示，功能设置框内有多种功能选择，与前面板的 5 个软键一一对应，在不同的子菜单中有不同作用，是控制系统的主要方式。
 

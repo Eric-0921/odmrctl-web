@@ -56,8 +56,9 @@ Range: -40 to 40
 Increment: 0.01
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>AM:DEPT:LIN 15PCT sets the AM modulation depth to 15 percent.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Options:</td><td style='text-align: center; word-wrap: break-word;'>(exponential): R&amp;S SMB-B112/-B112L/-B120/-B120L/-B140/-B140L</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;AM Depth&quot; on page 205</td></tr></table>
+| Example: | AM:DEPT:LIN 15PCT sets the AM modulation depth to 15 percent. |
+| Options: | (exponential): R&S SMB-B112/-B112L/-B120/-B120L/-B140/-B140L |
+| Manual operation: | See "AM Depth" on page 205 |
 
 #### [:SOURCE<hw>]:AM:DEPTH:LINear <DepthLin>
 
@@ -78,8 +79,17 @@ Manual operation: See "AM Depth" on page 205
 #### [:SOURCE<hw>]:AM:EXTERNAL:COUPLING <Coupling>
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Selects the coupling mode for the external amplitude modulation signal.</td></tr><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Coupling&gt;</td><td style='text-align: center; word-wrap: break-word;'>AC | DC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>AC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Uses only the AC signal component of the modulation signal.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>DC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Uses the modulation signal as it is, with AC and DC.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST: AC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>AM:EXT:COUP AC</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>selects the coupling mode AC for external amplitude modulation.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Mod Ext Coupling&quot; on page 206</td></tr></table>
+| Selects the coupling mode for the external amplitude modulation signal. |  |
+| Parameters: |  |
+| <Coupling> | AC \| DC |
+|  | AC |
+|  | Uses only the AC signal component of the modulation signal. |
+|  | DC |
+|  | Uses the modulation signal as it is, with AC and DC. |
+|  | *RST: AC |
+| Example: | AM:EXT:COUP AC |
+|  | selects the coupling mode AC for external amplitude modulation. |
+| Manual operation: | See "Mod Ext Coupling" on page 206 |
 
 #### [:SOURCE<hw>]:AM:SENSitivity?
 
@@ -115,7 +125,7 @@ Manual operation: See "AM Sensitivity" on page 206
 
 Selects the modulation signal source for amplitude modulation.
 
-With linear AM (see）：SOURCE<hw>]:AM:TYPE on page 334), you can use both, the internal and an external modulation signal at a time, for example to perform two-tone AM.
+With linear AM (see[:SOURCE<hw>]:AM:TYPE on page 334), you can use both, the internal and an external modulation signal at a time, for example to perform two-tone AM.
 
 ##### Parameters:
 
@@ -188,18 +198,6 @@ The output level is corrected in the CORRection subsystem. Correction is perform
 Each list is stored as a file. The name of the user correction file can be freely selected. The file extension *.uco is assigned automatically and cannot be changed.
 
 The files can be stored in a freely selectable directory and opened from there. The default directory is set using command :MMEMory:CDIRectory on page 309. In the case of files which are stored in the default directory, only the file name has to be specified in commands. Otherwise, the complete absolute path has to be specified with every command. The extension can be omitted in any case.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//42ea75bb-4915-4c43-bb1d-6d891c524ee5/markdown_3/imgs/img_in_image_box_218_1200_272_1253.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A02Z%2F-1%2F%2F7f15993e735aaf8189cc084df2f75804ee44c53275daffc074f6d7a257a7b97f" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//42ea75bb-4915-4c43-bb1d-6d891c524ee5/markdown_3/imgs/img_in_image_box_218_1200_272_1253.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A02Z%2F-1%2F%2F7f15993e735aaf8189cc084df2f75804ee44c53275daffc074f6d7a257a7b97f" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
 
 In the following command examples, the files are stored in the default directory.
 
@@ -278,7 +276,7 @@ Queries the number of frequency values in the selected table.
 The numerical suffix at SOURce must not be used for this command.
 
 Return values:
-<Points>
+
     integer
     Range: 0 to 10000
     *RST: 0
@@ -294,7 +292,7 @@ Example:
 Usage:
 Query only
 
-##### [:SOURCE<hw>]:CORRection:CSET:DATA:POWER <Power>
+##### [:SOURCE<hw>]:CORRection:CSET:DATA:POWER 
 
 Transfers the level data to the table selected with [:SOURce<hw>]:CORRection:CSET[:SELECT].
 
@@ -302,7 +300,7 @@ Transfers the level data to the table selected with [:SOURce<hw>]:CORRection:CSE
 
 ##### Parameters:
 
-<Power>
+
     Power#1[, Power#2, ...]
     Example:
         CORR:CSET '/var/user/ucor1'
@@ -319,7 +317,7 @@ Queries the number of level values in the selected table.
 The numerical suffix at SOURCE must not be used for this command.
 
 Return values:
-<Points>
+
     integer
     Range: 0 to 10000
     *RST: 0
@@ -342,8 +340,9 @@ The command fills the selected user correction list with the level values measur
 To select the used power sensor set the suffix in key word SENSE.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>CORR:CSET:DATA:SENS:POW:SONCfills the user correction list with level values acquired by the power sensor connector to the [SENSOR] connector.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Fill User Correction Data with Sensor&quot; on page 166</td></tr></table>
+| Example: | CORR:CSET:DATA:SENS:POW:SONCfills the user correction list with level values acquired by the power sensor connector to the [SENSOR] connector. |
+| Usage: | Event |
+| Manual operation: | See "Fill User Correction Data with Sensor" on page 166 |
 
 ##### [:SOURCE]:CORRection:CSET:DELete <Filename>
 
@@ -355,413 +354,13 @@ The lists are stored with the fixed file extensions *.uco in a directory of the 
 
 <Filename>
 
-<table name>
-
-Example:
-
-MMEM:CDIR '/var/user/ucor'
-
-selects the directory for the user correction files.
-
-CORR:CSET:DEL 'UCOR1'
-
-deletes the table ucor1.
-
-Usage: Setting only
-
-Manual operation: See "User Cor. Data - User Correction" on page 161
-
-#### [:SOURCE<hw>]:CORRRection:DEXChange:AFILe:CATalog?
-
-Requests a list of available ASCII files for export/import of user correction data. The individual files are separated by commas.
-
-The ASCII files are stored with the fixed file extensions *.txt or *.csv in a directory of the user's choice. The directory applicable to the commands is defined with the command MMEMORY:CDIR.
-
-Return values:
-<Catalog> string
-Example: MMEM:CDIR '/var/user/import'
-  selects the directory for the ASCII files with frequency and level value pairs.
-  CORR:DEXC:AFIL:EXT TXT
-  selects that ASCII files with extension *.txt are listed.
-  CORR:DEXC:AFIL:CAT?
-  queries the available files with extension *.txt.
-  Response: 'ucor1,ucor2'
-  the ASCII files ucor1.txt and ucor2.txt are available.
-Usage: Query only
-
-#### [:SOURce<hw>]:CORRrection:DEXChange:AFILe:EXTension <Extension>
-
-Selects the file extension of the ASCII file to be imported or exported. Selection TXT (text file) or CSV (Excel file) is available.
-
-Parameters:
-<Extension> TXT | CSV
-*RST: TXT
-
-Example:
-MMEM:CDIR '/var/user/import'
-selects the directory for the ASCII files with frequency and level value pairs.
-CORR:DEXC:AFIL:EXT TXT
-selects that ASCII files with extension *.txt are listed.
-CORR:DEXC:AFIL:CAT?
-queries the available files with extension *.txt.
-Response: 'list1,list2'
-the ASCII files ucor1.txt and ucor2.txt are available.
-
-Manual operation: See "Extension - User Correction" on page 163
-
-#### [:SOURce<hw>]:CORRrection:DEXChange:AFILe:SELECT <Filename>
-
-Selects the ASCII file to be imported or exported.
-
-The ASCII files are stored with the fixed file extensions *.txt or *.csv in a directory of the user's choice. The directory applicable to the commands is defined with the command MMEMory:CDIR. A path can also be specified in command SOUR:CORR:DEXC:AFIL:SEL, in which case the files are stored or loaded in the specified directory.
-
-##### Parameters:
-
-<Filename>
-
-    <ascii file name>
-
-    Example:
-
-        CORR:DEXC:MODE IMP
-
-        selects that ASCII files with frequency and level value pairs are
-
-        imported and transferred into user correction lists.
-
-        CORR:DEXC:AFIL:SEL '/var/user/import_ucor.csv'
-
-        selects that ASCII file ucor.csv is imported.
-
-        CORR:DEXC:SEL '/var/user/import_ucor_imp'
-
-        selects that the ASCII file ucor.csv is imported into user cor-
-
-        rection list ucor_imp.
-
-Manual operation: See "Select ASCII Source / Destination - User Correction" on page 163
-
-[:SOURCE<hw>]:CORRection:DEXChange:AFILe:SEParator:COLumn <Column>
-
-Selects the separator between the frequency and level column of the ASCII table.
-
-##### Parameters:
-
-<Column> TABulator | SEMicolon | COMMa | SPACe
-
-*RST: COMMa
-
-Example: CORR:DEXC:MODE EXP
-
-selects that the user correction list is exported into an ASCII file.
-
-CORR:DEXC:AFIL:SEL '/var/user/import_ucor.csv'
-
-selects ASCII file ucor.csv as destination for the user correction list data.
-
-CORR:DEXC:AFIL:SEP:COL TAB
-
-the pairs of frequency and level values are separated by a tabulator.
-
-CORR:DEXC:AFIL:SEP:DEC DOT
-
-selects the decimal separator dot.
-
-CORR:DEXC:SEL '/var/user/import_ucor_imp'
-
-selects that the user correction list ucor_imp is imported into ASCII file ucor.csv.
-
-Manual operation: See "Column Separator- User Correction" on page 163
-
-[:SOURce<hw>]:CORRrection:DEXChange:AFILe:SEParator:DECimal <Decimal>
-
-Selects the decimal separator used in the ASCII data between '.' (decimal point) and ',' (comma) with floating-point numerals.
-
-##### Parameters:
-
-<Decimal>
-    DOT | COMMa
-    *RST: DOT
-
-Example:
-    CORR:DEXC:MODE EXP
-    selects that the user correction list is exported into an ASCII file.
-    CORR:DEXC:AFIL:SEL '/var/user/import_ucor.csv'
-    selects ASCII file ucor.csv as destination for the user correction list data.
-    CORR:DEXC:AFIL:SEP:COL TAB
-    the pairs of frequency and level values are separated by a tabulator.
-    CORR:DEXC:AFIL:SEP:DEC DOT
-    selects the decimal separator dot.
-    CORR:DEXC:SEL '/var/user/import_ucor_imp'
-    selects that the user correction list ucor_imp is imported into ASCII file ucor.csv.
-
-Manual operation: See "Decimal Point - User Correction" on page 163
-
-##### [:SOURCE<hw>]:CORRection:DEXChange:EXECute
-
-Starts the export or import of the selected file. When import is selected, the ASCII file is imported as user correction list. When export is selected, the user correction list is exported into the selected ASCII file.
-
-Example: CORR:DEXC:MODE IMP
-
-selects that ASCII files with frequency and level value pairs are
-
-imported and transferred into user correction lists.
-
-CORR:DEXC:AFIL:SEL '/var/user/import_ucor.csv'
-
-selects that ASCII file ucor.csv is imported.
-
-CORR:DEXC:SEL '/var/user/import_ucor_imp'
-
-selects that the ASCII file ucor.csv is imported into user cor-
-
-rection list ucor_imp.
-
-CORR:DEXC:EXEC
-
-starts the import of the ASCII file data into the user correction
-
-file.
-
-Usage: Event
-
-Manual operation: See "Import / Export - User Correction" on page 164
-
-##### [:SOURce<hw>]:CORRrection:DEXChange:MODE <Mode>
-
-Selects if user correction lists should be imported or exported. Depending on the selection her, the file select command define either the source or the destination for user correction lists and ASCII files.
-
-##### Parameters:
-
-<Mode>
-
-IMPort | EXPort
-
-*RST: IMPort
-
-Example: CORR:DEXC:MODE IMP
-
-selects that ASCII files with frequency and level value pairs are
-
-imported and transferred into user correction lists.
-
-CORR:DEXC:AFIL:SEL '/var/user/ucor.csv'
-
-selects that ASCII file ucor.csv is imported.
-
-CORR:DEXC:SEL '/var/user/ucor_imp'
-
-selects that the ASCII file ucor.csv is imported into user cor-
-
-rection list ucor_imp.
-
-Manual operation: See "Mode - User Correction" on page 163
-
-##### [:SOURce<hw>]:CORRrection:DEXChange:SELECT <Filename>
-
-Selects the user correction list to be imported or exported.
-
-The user correction files are stored with the fixed file extensions *.uco in a directory of the user's choice. The directory applicable to the commands is defined with the command MMEMORY:CDIR. A path can also be specified in command SOUR:CORR:DEXC:SEL, in which case the files are stored or loaded in the specified directory.
-
-##### Parameters:
-
-<Filename> string
-
-Example: CORR:DEXC:MODE IMP
-
-    selects that ASCII files with frequency and level value pairs are
-
-    imported and transferred into user correction lists.
-
-    CORR:DEXC:AFIL:SEL '/var/user/import_ucor.csv'
-
-    selects that ASCII file ucor.csv is imported.
-
-    CORR:DEXC:SEL '/var/user/import_ucor_imp'
-
-    selects that the ASCII file ucor.csv is imported into user cor-
-
-    rection list ucor_imp.
-
-Manual operation: See "Destination / Source - User Correction" on page 164
-
-##### [:SOURce<hw>]:CORRrection:CSET[:SELECT] <Filename>
-
-Selects or creates a file for the user correction data.
-
-If the file does not exist, the instrument automatically creates a new file with the name you assigned. Note the predefined file extensions under "Extensions for User Files" on page 89.
-
-To determine the file location (directory/path) you can either enter it with the command directly, or use the command MMEMORY:CDIR.
-
-To activate level correction use the command [ : SOURce<hw>]:CORRection[ : STATE].
-
-##### Parameters:
-
-<Filename>
-
-<table name>
-
-Example: CORR:CSET '/var/user/ucor1'
-selects the table ucor1.
-CORR ON
-activates level correction. Correction is performed using the
-table ucor1.
-
-Manual operation: See "User Cor. Data - User Correction" on page 161
-
-##### [:SOURce<hw>]:CORRrection[:STATE] <State>
-
-Activates/deactivates level correction. Level correction is performed using the table which has been selected with the command [:SOURce<hw>]:CORRection:CSET[:SELect].
-
-Parameters:
-<State> 0 | 1 | OFF | ON
-*RST: 0
-
-Example: SOUR:CORR:CSET '/var/user/ucor1'
-selects the table ucor1.
-SOUR:CORR ON
-activates user correction.
-
-Manual operation: See "State - User Correction" on page 160
-
-##### [:SOURCE<hw>]:CORRection:VALUE?
-
-Queries the current value for user correction.
-
-Return values:
-<Value> float
-Range: -100 to 100
-Increment: 0.01
-*RST: 0
-Example: CORR:VAL?
-queries the value currently used for level correction.
-Response: -3
-the correction value is -3 dB.
-Usage: Query only
-Manual operation: See "User Correction Value - User Correction" on page 160
-
-##### [:SOURCE<hw>]:CORRection:ZEROing:STATE <State>
-
-Activates the zeroing procedure before filling the user correction data acquired by a sensor.
-
-##### Parameters:
-
-<State> 0 | 1 | OFF | ON
-*RST: 1
-
-Manual operation: See "Fill User Correction Data with Sensor" on page 166
-
-#### 6.13.3 SOURCE:FM Subsystem
-
-The FM subsystem contains the commands for checking the frequency modulation.
-
-Characteristics which are valid for all modulations and the LF Output are configured in the SOURce:LFOutput subsystem (e.g. frequency). The external signal is input at the [MOD EXT] connector.
-
-For information about the required options, see Chapter 4.4.3, "Frequency Modulation (FM)", on page 207.
-
-[:SOURCE<hw>]:FM[:DEViation].....343    
-[:SOURCE<hw>]:FM:EXTERNAL:COUPLING.....343    
-[:SOURCE<hw>]:FM:EXTERNAL:DEVIATION.....344    
-[:SOURCE<hw>]:FM:INTERNAL:DEVIATION.....344    
-[:SOURCE<hw>]:FM:MODE.....344    
-[:SOURCE<hw>]:FM:SENSITIVITY?.....345    
-[:SOURCE<hw>]:FM:SOURCE.....345    
-[:SOURCE<hw>]:FM:STATE.....346
-
-#### [:SOURCE<hw>]:FM[:DEViation] <Deviation>
-
-Sets the deviation of the frequency modulation signals in Hz. The maximum deviation depends on the set RF frequency and the selected modulation mode (see data sheet).
-
-##### Parameters:
-
-<Deviation> float
-
-Range: 0 to dynamic
-
-Increment: 0.01
-
-*RST: 1000
-
-Example: FM 2E3 sets a 2 kHz deviation to the modulation signal.
-
-Manual operation: See "FM Deviation" on page 209
-
-#### [:SOURCE<hw>]:FM:EXTERNAL:COUPLING <Coupling>
-
-Selects the coupling mode for the external frequency modulation signal.
-
-Parameters:
-
-<Coupling> AC | DC
-
-AC
-
-Uses only the AC signal component of the modulation signal.
-
-DC
-
-Uses the modulation signal as it is, with AC and DC.
-
-*RST: AC
-
-Example: FM:EXT:COUP AC
-
-selects the coupling mode AC for the external frequency modulation signal.
-
-Manual operation: See "Mod Ext Coupling" on page 210
-
-##### [:SOURCE<hw>]:FM:EXTERNAL:DEViation <Deviation>
-
-Sets the deviation of the external frequency modulation signal in Hz. The maximum deviation depends on the set RF frequency and the selected modulation mode (see data sheet).
-
-The sum of the deviations of all active frequency modulation signals may not exceed the total value set with command [ : SOURce<hw>]:FM[:DEViation].
-
-##### Parameters:
-
-<Deviation> float
-Range: see data sheet
-Increment: 0.01
-*RST: 1000
-Example: FM:EXT:DEV 3kHz sets 3 kHz deviation to the frequency modulation signal.
-Manual operation: See "FM Deviation" on page 209
-
-#### [:SOURCE<hw>]:FM:INTernal:DEViation <Deviation>
-
-Sets the deviation of the internal frequency modulation signal in Hz.
-
-The sum of the deviations of all active frequency modulation signals may not exceed the total value set with command [ : SOURce<hw>]:FM[:DEViation].
-
-##### Parameters:
-
-<Deviation> float
-
-Range: 0 to dynamic
-
-Increment: 0.01
-
-*RST: 1E3
-
-Example: FM: INT1: DEV 2E3 sets 2 kHz deviation for the frequency modulation signal.
-
-Manual operation: See "FM Deviation" on page 209
-
-##### [:SOURCE<hw>]:FM:MODE <Mode>
-
-Selects the mode for the frequency modulation.
-
-##### Parameters:
-
-<Mode>
-
-    <Normal | LNOise | HDEViation
-
-    <Normal
-
-        Provides full setting range of modulation bandwidth and FM deviation.
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">LNOise</td></tr><tr><td colspan="2">Provides phase noise and spurious characteristics close to CW. The range for modulation bandwidth and FM deviation is reduced (see data sheet).</td></tr><tr><td colspan="2">HDEViation</td></tr><tr><td colspan="2">Provides full setting range for FM deviation. The range of modulation bandwidth is reduced (see data sheet).</td></tr><tr><td colspan="2">*RST: NORM</td></tr><tr><td colspan="2">Example: FM:MODE NORM</td></tr><tr><td colspan="2">Manual operation: See &quot;FM Mode&quot; on page 209</td></tr></table>
+| LNOise |  |
+| Provides phase noise and spurious characteristics close to CW. The range for modulation bandwidth and FM deviation is reduced (see data sheet). |  |
+| HDEViation |  |
+| Provides full setting range for FM deviation. The range of modulation bandwidth is reduced (see data sheet). |  |
+| *RST: NORM |  |
+| Example: FM:MODE NORM |  |
+| Manual operation: See "FM Mode" on page 209 |  |
 
 ##### [:SOURCE<hw>]:FM:SENSitivity?
 
@@ -831,9 +430,9 @@ This subsystem contains the commands used to define the frequency settings for t
 
 [:SOURCE<hw>]:FREQUENCY:CENTer.....346
 
-[:SOURCE<hw>]:FREQUENCY:CW|FIXed].....347
+[:SOURCE<hw>]:FREQUENCY[:CW|FIXed].....347
 
-[:SOURCE<hw>]:FREQUENCY:CW|FIXed]:RCL.....348
+[:SOURCE<hw>]:FREQUENCY[:CW|FIXed]:RCL.....348
 
 [:SOURCE<hw>]:FREQUENCY:MANual.....348
 
@@ -853,11 +452,11 @@ This subsystem contains the commands used to define the frequency settings for t
 
 [:SOURCE<hw>]:FREQUENCY:STEP:MODE.....353
 
-##### [:SOURCE<hw>]:FREQUENCY:CENTER <Center>
+##### [:SOURCE<hw>]:FREQUENCY:CENTER 
 
 Sets the center frequency of the RF sweep range.
 
-The range is defined by this center frequency and the specified）：
+The range is defined by this center frequency and the specified[:
 
 FREQUency:SPAN, according to the formula:
 
@@ -878,7 +477,7 @@ A defined offset and the multiplier factor affect the sweep frequency range and 
 300 kHz * f_{MULTIPlier} + f_{OFFSET} ... f_{max} * f_{MULTIPlier} + f_{OFFSET}
 
 Parameters:
-<Center>
+
     float
     Range: full frequency range
     Increment: see the data sheet: RF characteristics > Resolution of setting
@@ -900,7 +499,7 @@ In CW mode, see FREQ:MODE CW|FIXED, the instrument operates at a fixed frequency
 
 In sweep mode FREQ:MODE SWE, the value applies to the sweep frequency and the instrument processes the frequency settings in defined sweep steps.
 
-You can enter either a numerical frequency value, of decrease or increase the current frequency step by step with FREQ UP and FREQ DOWN. The frequency is then increased or decreased by the value）：[：SOURce<hw>]:FREQUency:STEP[：INCREment] in FREQ:STEP:MODE USER.
+You can enter either a numerical frequency value, of decrease or increase the current frequency step by step with FREQ UP and FREQ DOWN. The frequency is then increased or decreased by the value[:[：SOURce<hw>]:FREQUency:STEP[：INCREment] in FREQ:STEP:MODE USER.
 
 ##### Note:
 
@@ -1052,7 +651,7 @@ Increment: 0.01
 Example: FREQ:OFFS 500kHz sets the frequency offset to 500 kHz.
 Manual operation: See "Offset" on page 140
 
-##### [:SOURCE<hw>]:FREQUENCY:SPAN <Span>
+##### [:SOURCE<hw>]:FREQUENCY:SPAN 
 
 Determines the extent of the frequency sweep range. This setting in combination with the center frequency setting ([ : SOURce<hw>]: FREQuency: CENTER) defines the sweep range.
 
@@ -1065,7 +664,7 @@ This parameter is related to the start and stop frequencies. If you change the f
 ##### Parameters:
 
 Parameters:
-<Span>
+
     float
     Range: full frequency range
     Increment: see the data sheet: RF characteristics > Resolution of setting
@@ -1087,7 +686,7 @@ This parameter relates to the center frequency and span. If you change the frequ
 
  $ f_{\text{START}} > f_{\text{STOP}} $ is permitted.
 
- $$ \mathsf{f}_{\mathsf{S T A R t}}=(\mathsf{f}_{\mathsf{C E N T e r}}-\mathsf{f}_{\mathsf{S P A N}}/2). $$ 
+ $f_{START} = (f_{CENTER} - f_{SPAN}/2).$ 
 
 Note: A defined offset and the multiplier factor affect the sweep range and therefore all correlated parameters. The set frequencies are only absolute values, if the offset = 0 and the multiplication factor = 1. The multiplier multiplies the frequencies accordingly, and the offset  $ \neq $ 0 shifts the frequencies corresponding to the set value.
 
@@ -1138,7 +737,7 @@ sets the start frequency for the frequency sweep to 1 MHz.
 
 Manual operation: See "Stop Freq - Frequency Sweep" on page 184
 
-##### [:SOURCE<hw>]:FREQUENCY:STEP[:INCRement] <Increment>
+##### [:SOURCE<hw>]:FREQUENCY:STEP[:INCRement] 
 
 Sets the step width for FREQ: STEP:MODE USER.
 
@@ -1148,7 +747,7 @@ Note: This value also applies to the step width of the rotary knob of the instru
 
 ##### Parameters:
 
-<Increment> float
+ float
 
 Range: full frequency range
 
@@ -1192,13 +791,13 @@ The SOURce: INPut subsystem contains the commands for configuring the inputs for
 
 [:SOURce]:INPUT:TRIGger:SLOPe.....354
 
-##### [:SOURCE<hw>]:INPUT:MODExt:IMPedance <Impedance>
+##### [:SOURCE<hw>]:INPUT:MODExt:IMPedance 
 
 Sets the impedance for an externally applied modulation signal.
 
 ##### Parameters:
 
-<Impedance> HIGH | G600
+ HIGH | G600
 
 HIGH
 
@@ -1285,8 +884,25 @@ LFOutput: FREQuency:MODE SWEep
 LFOutput: SWEep: EXECute
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE]:LFOutput&lt;ch&gt;:FREQUency</td><td style='text-align: center; word-wrap: break-word;'>355</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:FREQUency:MANual</td><td style='text-align: center; word-wrap: break-word;'>356</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:FREQUency:MODE</td><td style='text-align: center; word-wrap: break-word;'>356</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:FREQUency:STARt</td><td style='text-align: center; word-wrap: break-word;'>357</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:FREQUency:STOP</td><td style='text-align: center; word-wrap: break-word;'>357</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE]:LFOutput[:STATE]</td><td style='text-align: center; word-wrap: break-word;'>357</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:DWELI</td><td style='text-align: center; word-wrap: break-word;'>358</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:EXECute</td><td style='text-align: center; word-wrap: break-word;'>358</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:MODE</td><td style='text-align: center; word-wrap: break-word;'>358</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:POINts</td><td style='text-align: center; word-wrap: break-word;'>359</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:RETRace</td><td style='text-align: center; word-wrap: break-word;'>360</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:RUNNING?</td><td style='text-align: center; word-wrap: break-word;'>360</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:SHAPe</td><td style='text-align: center; word-wrap: break-word;'>361</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:SPACing</td><td style='text-align: center; word-wrap: break-word;'>361</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:STEP[:LINear]</td><td style='text-align: center; word-wrap: break-word;'>361</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE&lt;hw&gt;:LFOutput:SWEep[:FREQUency]:STEP:LOGarithmic</td><td style='text-align: center; word-wrap: break-word;'>362</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE]:LFOutput:SHAPe</td><td style='text-align: center; word-wrap: break-word;'>363</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE]:LFOutput:SIMPedance</td><td style='text-align: center; word-wrap: break-word;'>363</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>[:SOURCE]:LFOutput:VOLTAGE</td><td style='text-align: center; word-wrap: break-word;'>364</td></tr></table>
+| [:SOURCE]:LFOutput<ch>:FREQUency | 355 |
+| [:SOURCE<hw>]:LFOutput:FREQUency:MANual | 356 |
+| [:SOURCE<hw>]:LFOutput:FREQUency:MODE | 356 |
+| [:SOURCE<hw>]:LFOutput:FREQUency:STARt | 357 |
+| [:SOURCE<hw>]:LFOutput:FREQUency:STOP | 357 |
+| [:SOURCE]:LFOutput[:STATE] | 357 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:DWELI | 358 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:EXECute | 358 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:MODE | 358 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:POINts | 359 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:RETRace | 360 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:RUNNING? | 360 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:SHAPe | 361 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:SPACing | 361 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:STEP[:LINear] | 361 |
+| [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:STEP:LOGarithmic | 362 |
+| [:SOURCE]:LFOutput:SHAPe | 363 |
+| [:SOURCE]:LFOutput:SIMPedance | 363 |
+| [:SOURCE]:LFOutput:VOLTAGE | 364 |
 
 #### [:SOURCE]:LFOutput<ch>:FREQUency <Frequency>
 
@@ -1457,7 +1073,7 @@ Example: LFO: SWE: MODE AUTO
 selects Auto mode.
 Manual operation: See "Mode" on page 226
 
-#### [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:POINTs <Points>
+#### [:SOURCE<hw>]:LFOutput:SWEep[:FREQUency]:POINTs 
 
 Determines the number of steps for the LF frequency sweep within the sweep range.
 
@@ -1670,8 +1286,12 @@ For information on the required hardware revision, refer to the release notes.
 ##### Parameters:
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Shape&gt;</td><td colspan="2">SINE | SQUARE | TRIANGLE | SAWTOOTH | ISAWTOOTH</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST:</td><td style='text-align: center; word-wrap: break-word;'>SINE</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td colspan="2">LFO: SHAP SQU</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td colspan="2">selects a rectangular shape for the signal of the LF generator.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td colspan="2">See &quot;LF Gen Shape&quot; on page 206</td></tr></table>
+| Parameters: |  |  |
+| <Shape> | SINE \| SQUARE \| TRIANGLE \| SAWTOOTH \| ISAWTOOTH |  |
+|  | *RST: | SINE |
+| Example: | LFO: SHAP SQU |  |
+|  | selects a rectangular shape for the signal of the LF generator. |  |
+| Manual operation: | See "LF Gen Shape" on page 206 |  |
 
 ##### [:SOURCE]:LFOutput:SIMPedance <Slmpedance>
 
@@ -1682,8 +1302,11 @@ Note: The installed hardware determines the available settings. Use the Hardware
 For information on the required hardware revision, refer to the release notes.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Slmpedance&gt;</td><td colspan="2">LOW | G600</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST:</td><td style='text-align: center; word-wrap: break-word;'>LOW</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td colspan="2">SOUR:LFO:SIMP G600&#x27;sets the output impedance of the LF generator to 600 Ohms</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td colspan="2">See &quot;LF Source Impedance&quot; on page 225</td></tr></table>
+| Parameters: |  |  |
+| <Slmpedance> | LOW \| G600 |  |
+|  | *RST: | LOW |
+| Example: | SOUR:LFO:SIMP G600'sets the output impedance of the LF generator to 600 Ohms |  |
+| Manual operation: | See "LF Source Impedance" on page 225 |  |
 
 #### [:SOURCE]:LFOutput:VOLTAGE <Voltage>
 
@@ -1763,18 +1386,6 @@ SOUR1:LIST:TRIG:EXEC
 
 SOUR1:FREQ:MODE CW
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f80c38f4-b8ac-447a-9940-89ecf223fb78/markdown_4/imgs/img_in_image_box_217_517_273_572.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Fff66420a21fa6ac796469601ffcd5f6c77f69377d06b933111b820929016d26c" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//f80c38f4-b8ac-447a-9940-89ecf223fb78/markdown_4/imgs/img_in_image_box_217_517_273_572.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Fff66420a21fa6ac796469601ffcd5f6c77f69377d06b933111b820929016d26c" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
-
 SCPI refers to the individual lists as segments.
 
 [ :SOURce<hw>]:LIST:CATalog?.....365
@@ -1789,9 +1400,9 @@ SCPI refers to the individual lists as segments.
 
 [ :SOURce<hw>]:LIST:DEXChange:AFILe:SELECT.....368
 
-[ :SOURce<hw>]:LIST:DEXChange:AFILe:好人:COLumn.....368
+[ :SOURce<hw>]:LIST:DEXChange:AFILe:SEParator:COLumn.....368
 
-[ :SOURce<hw>]:LIST:DEXChange:AFILe:好人:DECimal.....369
+[ :SOURce<hw>]:LIST:DEXChange:AFILe:SEParator:DECimal.....369
 
 [ :SOURce<hw>]:LIST:DEXChange:EXECute.....369
 
@@ -2007,8 +1618,8 @@ Selects the separator between the frequency and level column of the ASCII table.
 ##### Parameters:
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Column&gt;</td><td colspan="3">TABulator | SEMicolon | COMMa | SPACe</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>$ ^{*} $RST:</td><td style='text-align: center; word-wrap: break-word;'>COMMa</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| <Column> | TABulator \| SEMicolon \| COMMa \| SPACe |  |  |
+|  | $ ^{*} $RST: | COMMa |  |
 
 Example: LIST:DEXC:MODE EXP
 
@@ -2207,7 +1818,7 @@ Manual operation: See "Edit List Mode Data... - List Mode" on page 197
 The command queries the length (in points) of the FREQuency component of the selected list.
 
 Return values:
-<Points> integer
+ integer
 Range: 0 to INT_MAX
 *RST: 0
 
@@ -2223,7 +1834,7 @@ Response: 327
 
 Usage: Query only
 
-#### [:SOURCE<hw>]:LIST:INDEX <Index>
+#### [:SOURCE<hw>]:LIST:INDEX 
 
 Sets the list index in step mode (LIST:MODE STEP).
 
@@ -2332,7 +1943,7 @@ selects step-by-step processing of the list.
 
 Manual operation: See "Mode - List Mode" on page 194
 
-#### [:SOURCE<hw>]:LIST:POWER <Power>
+#### [:SOURCE<hw>]:LIST:POWER 
 
 Fills the Level part of the selected list with data.
 
@@ -2340,9 +1951,8 @@ Fills the Level part of the selected list with data.
 
 ##### Parameters:
 
-<Power>
 
-    <Power#1>{, <Power#2>, ...} | block data
+    {, , ...} | block data
 
     The data can be given either as a list of numbers (list can be of any length and list entries must be separated by commas) or as binary block data. When block data is transferred, 8 bytes are always interpreted as a floating-point number with double accuracy (see :FORMAT[:DATA] on page 298).
 
@@ -2366,7 +1976,7 @@ Queries the length (in points) of the LEVel part of the selected list.
 
 Return values:
 
-<Points> integer
+ integer
 
 Range: 0 to INT_MAX
 
@@ -2419,8 +2029,9 @@ Manual operation: See "List Mode Data... - List Mode" on page 196
 Starts the processing of a list in list mode. It corresponds to the manual-control command "Execute Single."
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>SOUR: LIST: TRIG: EXEC\ntriggers the processing of the selected list.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Execute Single - List Mode&quot; on page 195</td></tr></table>
+| Example: | SOUR: LIST: TRIG: EXEC\ntriggers the processing of the selected list. |
+| Usage: | Event |
+| Manual operation: | See "Execute Single - List Mode" on page 195 |
 
 ##### [:SOURCE<hw>]:LIST:TRIGger:SOURCE <Source>
 
@@ -2429,8 +2040,10 @@ Selects the trigger source processing lists.
 The names of the parameters correspond to those under sweep mode. SCPI uses other names for the parameters; these names are also accepted by the instrument. The SCPI names should be used if compatibility is an important consideration. An overview of the various names is given in the following table:
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S name</td><td style='text-align: center; word-wrap: break-word;'>SCPI name</td><td style='text-align: center; word-wrap: break-word;'>Command under manual control</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUTO</td><td style='text-align: center; word-wrap: break-word;'>IMMediate</td><td style='text-align: center; word-wrap: break-word;'>MODE AUTO</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SINGLE</td><td style='text-align: center; word-wrap: break-word;'>BUS</td><td style='text-align: center; word-wrap: break-word;'>MODE SINGLE or STEP</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>EXTERNAL</td><td style='text-align: center; word-wrap: break-word;'>EXTERNAL</td><td style='text-align: center; word-wrap: break-word;'>MODE EXT TRIG SINGLE or EXT TRIG STEP</td></tr></table>
+| R&S name | SCPI name | Command under manual control |
+| AUTO | IMMediate | MODE AUTO |
+| SINGLE | BUS | MODE SINGLE or STEP |
+| EXTERNAL | EXTERNAL | MODE EXT TRIG SINGLE or EXT TRIG STEP |
 
 ##### Parameters:
 
@@ -2440,7 +2053,7 @@ The names of the parameters correspond to those under sweep mode. SCPI uses othe
 
 The trigger is free-running, i.e. the trigger condition is fulfilled continuously. The selected list in List mode is restarted as soon as it is finished.
 
-##### SINGIEBUS
+##### SINGle|BUS
 
 The list is triggered by the GPIB commands [ : SOURce<hw> ] :
 
@@ -2526,13 +2139,13 @@ This subsystem contains the commands for adjusting the phase of the RF output si
 
 [:SOURce<hw>]:PHASE:REFERENCE.....378
 
-[:SOURCE<hw>]:PHASE <Phase>
+[:SOURCE<hw>]:PHASE 
 
 Sets the phase variation relative to the current phase. The variation is specified in RADians.
 
 ##### Parameters:
 
-<Phase> float
+ float
 
 Range: -720 to 720
 
@@ -2946,7 +2559,7 @@ If specified, a level offset [ : SOURce<hw>]:POWER[:LEVel][ : IMMediate]:OFFSet 
 
 Minimum level + OFFSET ... Maximum level + OFFSET
 
-In addition to numerical values, you can increase or decrease the values step by step with the UP and DOWN according to the step width defined with）：
+In addition to numerical values, you can increase or decrease the values step by step with the UP and DOWN according to the step width defined with[:
 
 POWER: STEP[:INCREment].
 
@@ -3068,7 +2681,6 @@ Ignores level range warnings.
 
     *RST: n.a. (factory preset: 0)
 
-</State>
 
 Example: POW:WIGN ON suppresses the level range warnings.
 
@@ -3079,8 +2691,15 @@ Manual operation: See "Ignore Level Range Warnings" on page 150
 Sets the RF level mode.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;LevMode&gt;</td><td style='text-align: center; word-wrap: break-word;'>NORMAL | LOWNoise | LOWDistortion</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>NORMAL</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>The RF signal is output in the standard values of the instrument.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>LOWNoise</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>A very low noise sinewave signal is output.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>LOWDistortion</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>A very pure sinewave signal is output.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST: Normal</td></tr></table>
+| Parameters: |  |
+| <LevMode> | NORMAL \| LOWNoise \| LOWDistortion |
+|  | NORMAL |
+|  | The RF signal is output in the standard values of the instrument. |
+|  | LOWNoise |
+|  | A very low noise sinewave signal is output. |
+|  | LOWDistortion |
+|  | A very pure sinewave signal is output. |
+|  | *RST: Normal |
 
 Example: POW:LMODE LOWD
 
@@ -3136,7 +2755,7 @@ selects the SWEep mode using the
 POW:STAR; POW:STOP; POW:MAN settings.
 Manual operation: See "State - Level Sweep" on page 187
 
-##### [:SOURCE<hw>]:POWER:POWER <Power>
+##### [:SOURCE<hw>]:POWER:POWER 
 
 Sets the RF level of the RF output connector.
 
@@ -3146,7 +2765,6 @@ Note: The SCPI command [ : SOURce<hw> ] : POWER[ : LEVel ] [ : IMMediate ] [ : A
 
 ##### Parameters:
 
-<Power>
 
 Minimum level ... Maximum level
 
@@ -3166,7 +2784,7 @@ sets the RF level at output to 15 dBm.
 
 Manual operation: See "Amplitude" on page 149
 
-#### [:SOURCE<hw>]:POWER:SPC:CRANge <PowCntrlCRange>
+#### [:SOURCE<hw>]:POWER:SPC:CRANge 
 
 Defines the capture range of the power control system.
 
@@ -3178,7 +2796,7 @@ the power control locks and tries to achieve the target level. Readings outside 
 
 ##### Parameters:
 
-<PowCntrlCRange> float
+ float
 
 Range: 0 to 50
 
@@ -3192,13 +2810,13 @@ Example: POW:SPC:CRAN 15 sets the capture range to +/- 15 dB.
 
 Manual operation: See "Catch Range +/-" on page 159
 
-#### [:SOURCE<hw>]:POWER:SPC:DELAY <PowCntrlDelay>
+#### [:SOURCE<hw>]:POWER:SPC:DELAY 
 
 Defines a waiting period between the level adjustment of the generator and the next measurement of the power sensor.
 
 ##### Parameters:
 
-<PowCntrlDelay> integer
+ integer
 
 Range: 0 to 1000
 
@@ -3210,13 +2828,13 @@ the sensor starts the next reading 2 ms after the level adjustment.
 
 Manual operation: See "Delay Time" on page 159
 
-#### [:SOURCE<hw>]:POWER:SPC:PEAK <PowCntrlPeak>
+#### [:SOURCE<hw>]:POWER:SPC:PEAK 
 
 Activates power control by means of the peak power values, provided the power sensor supports this function.
 
 ##### Parameters:
 
-<PowCntrlPeak> 0 | 1 | OFF | ON
+ 0 | 1 | OFF | ON
 
 *RST: 0
 
@@ -3226,13 +2844,13 @@ uses the measured peak power for power control.
 
 Manual operation: See "Use Peak Power" on page 159
 
-#### [:SOURCE<hw>]:POWER:SPC:SELECT <PowCntrlSelect>
+#### [:SOURCE<hw>]:POWER:SPC:SELECT 
 
 Defines the currently selected sensor to be used for power control.
 
 Parameters:
 
-<PowCntrlSelect> SENS1 | SENS2 | SENS3 | SENS4
+ SENS1 | SENS2 | SENS3 | SENS4
 
 *RST: SENS1
 
@@ -3242,13 +2860,13 @@ selects the sensor connected to a second USB interface for power control.
 
 Manual operation: See "Sensor" on page 157
 
-#### [:SOURCE<hw>]:POWER:SPC:STATE <PowCntrlState>
+#### [:SOURCE<hw>]:POWER:SPC:STATE 
 
 Activates power control using the selected sensor. The control loop periodically adjusts the generator output. After switching off, the running loop is completed.
 
 ##### Parameters:
 
-<PowCntrlState> 0 | 1 | OFF | ON
+ 0 | 1 | OFF | ON
 
 *RST: 0
 
@@ -3258,13 +2876,13 @@ activates power control.
 
 Manual operation: See "State" on page 157
 
-##### [:SOURCE<hw>]:POWER:SPC:TARGET <PowCntrlTarget>
+##### [:SOURCE<hw>]:POWER:SPC:TARGET 
 
 Sets the nominal level expected at the input of the sensor. To define the unit of the power value, use command :SENSE<ch>:UNIT[:POWER] on page 330.
 
 ##### Parameters:
 
-<PowCntrlTarget> float
+ float
 
 Range: -50 to 30
 
@@ -3296,7 +2914,7 @@ Example: POW: STAR -20 dBm
 sets the start level for the level sweep to -15 dBm for RF output A.
 Manual operation: See "Start Level - Level Sweep" on page 190
 
-##### [:SOURCE<hw>]:POWER:STEP[:INCRement] <Increment>
+##### [:SOURCE<hw>]:POWER:STEP[:INCRement] 
 
 Sets the step width for POW: STEP:MODE USER.
 
@@ -3306,7 +2924,7 @@ Note: This value also applies to the step width of the rotary knob of the instru
 
 ##### Parameters:
 
-<Increment> float
+ float
 Range: full specified level range
 Increment: see the data sheet: Level sweep > Step size setting resolution
 *RST: 1
@@ -3492,8 +3110,8 @@ OUTPUT1:STATE 1
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:CATalog? 405    
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:EXTension 406    
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:SELECT 406    
-[:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:好人:COLumn 407    
-[:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:好人:DECimal 407    
+[:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:SEParator:COLumn 407    
+[:SOURCe<hw>]:PULM:TRAIN:DEXChange:AFILe:SEParator:DECimal 407    
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:EXECute 408    
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:MODE 408    
 [:SOURCe<hw>]:PULM:TRAIN:DEXChange:SELECT 409    
@@ -3624,13 +3242,13 @@ uses the signal for synchronizing the pulse modulation.
 
 Manual operation: See "Use SIGNAL VALID as Pulse Sync" on page 235
 
-#### [:SOURCE<hw>]:PULM:PERiod <Period>
+#### [:SOURCE<hw>]:PULM:PERiod 
 
 Sets the period of the generated pulse. The period determines the repetition frequency of the internal signal.
 
 ##### Parameters:
 
-<Period> float
+ float
 
 Range: 5 us | 20 ns to 100 s
 
@@ -3646,13 +3264,12 @@ Options: R&S SMB-K23 (Pulse Generator)
 
 Manual operation: See "Pulse Period - Pulse Generator" on page 233
 
-##### [:SOURCE<hw>]:PULM:POLarity <Polarity>
+##### [:SOURCE<hw>]:PULM:POLarity 
 
 Sets the polarity between modulating and modulated signal. This command is effective only for an external modulation signal.
 
 ##### Parameters:
 
-<Polarity>
 
     NORMAL | INVerted
 
@@ -3824,7 +3441,6 @@ Queries the length (in points) of the off-time component of the selected list.
 
 ##### Return values:
 
-<Points>
 
     integer
 
@@ -3832,7 +3448,6 @@ Queries the length (in points) of the off-time component of the selected list.
 
     *RST: 0
 
-</Points>
 
 Example: MMEM:CDIR '/var/user/Lists'
 
@@ -3870,7 +3485,6 @@ Fills the On-time part of the selected file with data.
 
     The maximum length is 2047 values.
 
-</OnTime>
 
 Example: MMEM:CDIR '/var/user/Lists'
 
@@ -3894,7 +3508,7 @@ Queries the length (in points) of the ontime component of the selected list.
 
 ##### Return values:
 
-<Points> integer
+ integer
 
 Range: 0 to 2047
 
@@ -3964,7 +3578,7 @@ Queries the length (in points) of the repetition component of the selected list.
 
 Return values:
 
-<Points> integer
+ integer
 
 Range: 0 to INT_MAX
 
@@ -4014,7 +3628,7 @@ Options: R&S SMB-K27 (Pulse Train)
 
 Manual operation: See "Pulse Train Data - Pulse Generator" on page 236
 
-#### [:SOURCE<hw>]:PULM:TRIGger:EXTERNAL:GATE:POLarity <Polarity>
+#### [:SOURCE<hw>]:PULM:TRIGger:EXTERNAL:GATE:POLarity 
 
 Selects the polarity of the Gate signal.
 
@@ -4022,21 +3636,22 @@ The signal is supplied via the [PULSE EXT] connector.
 
 Parameters:
 
-<Polarity> NORMAL | INVerted
+ NORMAL | INVerted
 
 *RST: NORMAL
 
 
+| Example: | PULM:TRIG:EXT:GATE:POL NORMThe pulse signal is generated while the gate signal is high. |
+| Options: | R&S SMB-K23 (Pulse Generator) |
+| Manual operation: | See "Gate Input Polarity - Pulse Generator" on page 234 |
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>PULM:TRIG:EXT:GATE:POL NORMThe pulse signal is generated while the gate signal is high.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Options:</td><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-K23 (Pulse Generator)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Gate Input Polarity - Pulse Generator&quot; on page 234</td></tr></table>
-
-#### [:SOURce<hw>]:PULM:TRIGger:EXTERNAL:IMPedance <Impedance>
+#### [:SOURce<hw>]:PULM:TRIGger:EXTERNAL:IMPedance 
 
 Selects the impedance for external pulse trigger.
 
 Parameters:
 
-<Impedance> G50 | G10K
+ G50 | G10K
 
 *RST: G50
 
@@ -4414,18 +4029,6 @@ Manual operation: See "Pulse Width - Pulse Generator" on page 233
 
 This subsystem contains the commands for setting the external and internal reference frequency.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fd1345a4-b14c-45d3-aa24-be41475238bb/markdown_4/imgs/img_in_image_box_218_205_272_258.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A10Z%2F-1%2F%2Fe2cf62f19c981127b643302d25fac343dcc2acb547178fd9802558f02c206f75" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fd1345a4-b14c-45d3-aa24-be41475238bb/markdown_4/imgs/img_in_image_box_218_205_272_258.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A10Z%2F-1%2F%2Fe2cf62f19c981127b643302d25fac343dcc2acb547178fd9802558f02c206f75" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
-
 The settings of the reference oscillator are not affected by an instrument reset (*RST on page 286). They are only reset to factory state by the factory-preset (: SYSTEM: FPReset on page 289).
 
 [:SOURce]:ROSCillator:EXTernal:FREQUency.....410
@@ -4746,20 +4349,36 @@ Selects the generated identifiers of the AUDIO signal.
 ##### Parameters:
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="14">&lt;Mode&gt;</td><td style='text-align: center; word-wrap: break-word;'>LEFT | RIGHT | RELeft | RELeft | RNELeft</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>LEFT</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A mono signal containing the left channel is generated/fed in.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>RIGHT</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A mono signal containing the right channel is generated/fed in.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>RELeft</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A stereo signal with right and left channel is generated/fed in.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>The channels have the same frequency and phase.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>REMLeft</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>The signal on the left external audio input is used for both channels, left and right. The right channel is inverted.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>RNELeft</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>(External source only)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A stereo signal containing different, independent right and left channels is feed in. It is possible, for example, to feed a fixed audio frequency to the first channel while a frequency sweep is being performed in the second channel.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>*RST: RIGHT</td></tr><tr><td rowspan="4">Example:</td><td style='text-align: center; word-wrap: break-word;'>STER: SOUR LFG</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>The internal LF generator is used as modulation source for the audio signal.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>STER: AUD: MODE RIGH</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A mono signal containing the left channel is generated.</td></tr></table>
+| <Mode> | LEFT \| RIGHT \| RELeft \| RELeft \| RNELeft |
+|  | LEFT |
+|  | A mono signal containing the left channel is generated/fed in. |
+|  | RIGHT |
+|  | A mono signal containing the right channel is generated/fed in. |
+|  | RELeft |
+|  | A stereo signal with right and left channel is generated/fed in. |
+|  | The channels have the same frequency and phase. |
+|  | REMLeft |
+|  | The signal on the left external audio input is used for both channels, left and right. The right channel is inverted. |
+|  | RNELeft |
+|  | (External source only) |
+|  | A stereo signal containing different, independent right and left channels is feed in. It is possible, for example, to feed a fixed audio frequency to the first channel while a frequency sweep is being performed in the second channel. |
+|  | *RST: RIGHT |
+| Example: | STER: SOUR LFG |
+|  | The internal LF generator is used as modulation source for the audio signal. |
+|  | STER: AUD: MODE RIGH |
+|  | A mono signal containing the left channel is generated. |
 
 Options: R&S SMB-B5
 
 Manual operation: See "Mode - Stereo Modulation" on page 219
 
-#### [:SOURCE]:STEReo:AUDIO:PREemphasis <PreEmphasis>
+#### [:SOURCE]:STEReo:AUDIO:PREemphasis 
 
 Sets the preemphasis used for signal generation.
 
 Parameters:
 
-<PreEmphasis> float
+ float
 
 Range: 50 us to 75 us
 
@@ -4830,13 +4449,13 @@ Options: R&S SMB-B5
 
 Manual operation: See "RDS Program Service Name - Stereo Modulation" on page 222
 
-#### [:SOURCE]:STEReo:EXTERNAL:IMPedance <Impedance>
+#### [:SOURCE]:STEReo:EXTERNAL:IMPedance 
 
 Selects the input impedance for the external analog audio signal inputs L and R.
 
 ##### Parameters:
 
-<Impedance> 600 | 600Ohm | 100000 | 100kOhm | 100000Ohm
+ 600 | 600Ohm | 100000 | 100kOhm | 100000Ohm
 
 *RST: 100000
 
@@ -4868,12 +4487,12 @@ Options: R&S SMB-B5
 
 Manual operation: See "Max Modulation Freq- Stereo Modulation" on page 220
 
-#### [:SOURCE]:STEReo:PILot:PHASE <Phase>
+#### [:SOURCE]:STEReo:PILot:PHASE 
 
 Sets the phase of the pilot tone in degrees, in relation to the 38 kHz carrier signal of the receiver. For a correct demodulation, the pilot tone must be in phase with the 38 kHz carrier.
 
 Parameters:
-<Phase> float
+ float
 Range: -5 to 5
 Increment: 0.1
 *RST: 0
@@ -5082,18 +4701,6 @@ Manual operation: See "FM Deviation - Stereo Modulation" on page 218
 
 #### 6.13.16 SOURce:SWEep Subsystem
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fc677d48-524b-4e75-8bea-6b2a13fe6ed8/markdown_0/imgs/img_in_image_box_218_1113_272_1166.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A10Z%2F-1%2F%2Fdb923a4934af266ec8c6cd8f2ca09a1f6c00a51dcca17b5a9447b69600974b04" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fc677d48-524b-4e75-8bea-6b2a13fe6ed8/markdown_0/imgs/img_in_image_box_218_1113_272_1166.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A10Z%2F-1%2F%2Fdb923a4934af266ec8c6cd8f2ca09a1f6c00a51dcca17b5a9447b69600974b04" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
-
 The SOURCE: subsystem contains the commands for configuring RF sweep signals.
 
 - The keyword [ :FREQUENCY] can be omitted, then the commands are SCPI-compliant.
@@ -5137,18 +4744,6 @@ SOUR: FREQ: MODE SWE
 6. Trigger the sweep.
 
 SOURCE: SWE: FREQ: EXEC
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fc677d48-524b-4e75-8bea-6b2a13fe6ed8/markdown_1/imgs/img_in_image_box_224_652_263_709.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F69255bfbe2b4448d38e16b18121de1472d50c106816928f57b5523c05cd5c02e" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//fc677d48-524b-4e75-8bea-6b2a13fe6ed8/markdown_1/imgs/img_in_image_box_224_652_263_709.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F69255bfbe2b4448d38e16b18121de1472d50c106816928f57b5523c05cd5c02e" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 It is recommended that you switch off the "Start/Stop Display Update" for optimum sweep performance, especially with short dwell times (SYST:DISP:UPD OFF).
 
@@ -5325,7 +4920,7 @@ the voltage at the sweep start frequency is 0 V and at the stop frequency 3 V.
 
 Manual operation: See "Output Voltage Stop - RF Frequency Sweep" on page 187
 
-#### [:SOURCE<hw>]:SWEep[:FREQUency]:POINTs <Points>
+#### [:SOURCE<hw>]:SWEep[:FREQUency]:POINTs 
 
 Determines the number of steps for the RF frequency sweep within the sweep range.
 
@@ -5343,7 +4938,6 @@ If you change the number of sweep points, the step size changes accordingly. The
 
 ##### Parameters:
 
-<Points>
 
 integer
 Range: 2..max
@@ -5567,7 +5161,7 @@ selects Mode Auto for a level sweep at RF output.
 
 Manual operation: See "Mode - Level Sweep" on page 188
 
-##### [:SOURCE<hw>]:SWEep:POWER:POINTs <Points>
+##### [:SOURCE<hw>]:SWEep:POWER:POINTs 
 
 Determines the number of steps for the RF level sweep within the sweep range.
 
@@ -5581,7 +5175,6 @@ If you change the number of sweep points, the step size changes accordingly. The
 
 ##### Parameters:
 
-<Points>
 
 integer
 
@@ -5713,4 +5306,3 @@ resets all active sweeps to the starting point.
 Usage: Event
 
 Manual operation: See "Reset Sweep - Frequency Sweep" on page 183
-

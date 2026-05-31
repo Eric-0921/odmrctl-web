@@ -8,8 +8,8 @@ The self tests return a "0" if the test is performed successfully, otherwise a v
 
 The respective hardware assembly responds directly to the :TEST:DIRECT command; any safety mechanisms are bypassed. The command is intended for servicing purposes and should be used only by the Rohde & Schwarz service personnel.
 
-:TEST<hw>:ALL:START.....457    
-:TEST<hw>:ALL:RESULT?.....457    
+:TEST<hw>:ALL:START.....457
+:TEST<hw>:ALL:RESULT?.....457
 :TEST<hw>:DIRect.....457
 
 #### :TEST<hw>:ALL:START
@@ -56,12 +56,14 @@ TRIGger<hw>
 
 • TRIGger0 activates the LF output.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 6-2: Cross-reference between the manual and remote control</div> </div>
+Table 6-2: Cross-reference between the manual and remote control
 
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S name</td><td style='text-align: center; word-wrap: break-word;'>SCPI name</td><td style='text-align: center; word-wrap: break-word;'>Command under manual control</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUTO</td><td style='text-align: center; word-wrap: break-word;'>IMMediate</td><td style='text-align: center; word-wrap: break-word;'>&quot;Auto&quot; mode</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SINGLE</td><td style='text-align: center; word-wrap: break-word;'>BUS</td><td style='text-align: center; word-wrap: break-word;'>&quot;Single&quot; mode.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>EXTERNAL</td><td style='text-align: center; word-wrap: break-word;'>EXTERNAL</td><td style='text-align: center; word-wrap: break-word;'>&quot;Ext Single&quot; and &quot;Ext Step&quot; mode. Use command LFO: SWEep:MODE to select between the two sweep modes.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>EAUTO</td><td style='text-align: center; word-wrap: break-word;'>-</td><td style='text-align: center; word-wrap: break-word;'>&quot;Ext Start/Stop&quot; mode.</td></tr></table>
+| R&S name | SCPI name | Command under manual control |
+| --- | --- | --- |
+| AUTO | IMMediate | "Auto" mode |
+| SINGLE | BUS | "Single" mode. |
+| EXTERNAL | EXTERNAL | "Ext Single" and "Ext Step" mode. Use command LFO: SWEep:MODE to select between the two sweep modes. |
+| EAUTO | - | "Ext Start/Stop" mode. |
 
 :TRIGger<hw>:FSweep:SOURce.....458
 
@@ -171,7 +173,7 @@ An overview of the various names is given in the Table 6-2.
 
 The trigger is free-running, i.e. the trigger condition is fulfilled continuously. As soon as one sweep is finished, the next sweep is started.
 
-##### SINGIE|BUS
+##### SINGLE|BUS
 
 One complete sweep cycle is triggered by the GPIB commands [ : SOURce<hw> ] : LFOutput : SWEep [ : FREQuency ] : EXECute or *TRG.
 
@@ -217,7 +219,7 @@ AUTO|IMMediate
 
 The trigger is free-running, i.e. the trigger condition is fulfilled continuously. As soon as one sweep is finished, the next sweep is started.
 
-SINGIE|BUS
+SINGLE|BUS
 
 One complete sweep cycle is triggered by the GPIB commands [:SOURce<hw>]:SWEep:POWER:EXECute, :TRIGger<hw>:PSweep[:IMMediate] or *TRG. The mode has to be set to AUTO(:SOURce:SWEep:LEVEL:MODE AUTO).
 
@@ -281,7 +283,7 @@ AUTO|IMMediate
 
 The trigger is free-running, i.e. the trigger condition is fulfilled continuously. As soon as one sweep is finished, the next sweep is started.
 
-##### SINGIEBUS
+##### SINGLE|BUS
 
 One complete sweep cycle is triggered by the GPIB commands : SOURce:SWEep:POWER|FREQUency:EXEC, TRIGger:PSWeeP|FSWeeP:IMMediate or *TRG.
 
@@ -331,7 +333,7 @@ The command immediately starts the activated sweep.
 
 The command performs a single sweep and therefore applies to sweep mode AUTO with sweep source SINGle. Use the commands
 
-TRIG:FSW|LFFS|PSW|[:SWE]:SOUR SING, and SOUR:SWE:FREQ|POW:MODE, or SOUR:LFO:SWE:[FREQ:]MODE to set the respective sinlge sweep. You can alterna-tively use an IMMediate command instead of the respective SWEep:[FREQ:]|POW:EXECute command.
+TRIG:FSW|LFFS|PSW|[:SWE]:SOUR SING, and SOUR:SWE:FREQ|POW:MODE, or SOUR:LFO:SWE:[FREQ:]MODE to set the respective single sweep. You can alternatively use an IMMediate command instead of the respective SWEep:[FREQ:]|POW:EXECute command.
 
 Example: TRIG
 
@@ -548,7 +550,7 @@ Defines and sends, or queries, binary test patterns. The BIN command causes the 
 
 ##### Parameters:
 
-## 0
+0
 
 binary mode OFF
 
@@ -606,7 +608,9 @@ Note: The CT data is transmitted in group 4A. Setting the real-time clock (CT co
 
 <Hour><Min><Sec> Range: 00:00:00 to 23:59:59
 
-<Day><Month><YearRange: 01.01.00 to 31.12.85
+<Day><Month><Year>
+
+Range: 01.01.00 to 31.12.85
 
 Example: STEREo:DIRECT "CT=20:30:59,01.08.03"
 
@@ -830,13 +834,7 @@ Set.
 
 <PS>
 
-    set. Blank spaces, if
-
-    any,
-
-    the value will not be accept-
-
-    ted.
+Note: An eight-digit value must always be set. Blank spaces, if any, must also be entered, otherwise the value will not be accepted.
 
 Example: STEREo:DIRECT "EON-PS=1000, Test 123"
 
@@ -934,7 +932,7 @@ Reads the TP flag of the EON with PI=1000.
 
 Response: "1"
 
-STEReo:DIRECT "GS=<Group#1>,<Group#2>,...<Grpup#36>"
+STEReo:DIRECT "GS=<Group#1>,<Group#2>,...<Group#36>"
 
 STEReo:DIRECT? "GS"
 
@@ -1202,9 +1200,13 @@ Off
 
 Direct Commands for the Stereo/RDS Coder Option R&S SMB-B5
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>2</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>75 us</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>STEReo:DIRECT &quot;PRE=1&quot;</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>The preemphasis is set to 50 us.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>STEReo:DIRECT? &quot;PRE&quot;</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Response: &quot;1&quot;</td></tr></table>
+|  | 2 |
+| --- | --- |
+|  | 75 us |
+| Example: | STEReo:DIRECT "PRE=1" |
+|  | The preemphasis is set to 50 us. |
+| Example: | STEReo:DIRECT? "PRE" |
+|  | Response: "1" |
 
 ##### STEReo:DIRECT "PRESET"
 
@@ -1226,7 +1228,7 @@ Setting parameters:
 
 Note: An eight-digit value must always be set. Blank spaces, if any, must also be entered, otherwise the value will not be accepted.
 
-Special characters in the program service name are entered with a leading back slash (\) followed by the decimal code of the spezial character according to table E1 of CENELEC.
+Special characters in the program service name are entered with a leading back slash (\) followed by the decimal code of the special character according to table E1 of CENELEC.
 
 Example: STER:DIR "RT=02,0,test text with \217"
 
@@ -1250,19 +1252,17 @@ The information concerning the character set is transmitted in segment 0 of the 
 
 Setting parameters:
 
-<Table>
-
 0 | 1 | 2 | 3
 
-</Table>
-
-## 0
+0
 
 no information concerning the character set table in the PS
 
 1
 
-## 2
+2
+
+3
 
 Example: STEREo:DIRect "PS-TABLE=2"
 
@@ -1304,11 +1304,11 @@ Note: An eight-digit value must always be set. Blank spaces, if any, must also b
 
 Example:
 
-STEREO: DIRECT "PTYN=Football"
+STEREO:DIRECT "PTYN=Football"
 
 Sets the program type name to be transmitted to "Football".
 
-STEREO: DIRECT "GS=0A, 10A"
+STEREO:DIRECT "GS=0A, 10A"
 
 Group 10A is activated in addition to group 0A. The program
 
@@ -1363,21 +1363,20 @@ Range: 0000 to 1000 (ASCII coded decimal numbers), corresponding to 0 Hz to 10.0
 
 ##### Direct Commands for the Stereo/RDS Coder Option R&S SMB-B5
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>STEReo:DIRECT &quot;RDS-DEV=0201&quot; The RDS frequency deviation is set to 2.01 kHz.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>STEReo:DIRECT? &quot;RDS-DEV&quot; Response: &quot;0201&quot;</td></tr></table>
+| Example: | STEReo:DIRECT "RDS-DEV=0201" The RDS frequency deviation is set to 2.01 kHz. |
+| --- | --- |
+| Example: | STEReo:DIRECT? "RDS-DEV" Response: "0201" |
 
 ##### STEReo:DIRECT "RDS-PRESET"
 
 All RDS specific parameters are deleted or set to a default values.
 
+| Example: | STEREO:DIRECT "RDS-PRESET" |
+| --- | --- |
+| Sets all RDS parameter to their preset values |  |
+| Usage: | Event |
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">Example:</td><td style='text-align: center; word-wrap: break-word;'>STEREO:DIRECT &quot;RDS-PRESET&quot;</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sets all RDS parameter to their preset values</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Event</td></tr></table>
-
-STEReo:DIRECT "RT=<RetranNumber>,<A/
-
-BFlag>,<RadioTextMsg#1>,<RadioTextMsg#2>"
+STEReo:DIRECT "RT=<RetranNumber>,<A/BFlag>,<RadioTextMsg#1>,<RadioTextMsg#2>"
 
 STEReo:DIRECT? "RT"
 
@@ -1395,7 +1394,7 @@ If the A/B flag is set, the A/B bit in group 2A is toggled to signal that a new 
 
 Two texts of 64 characters each can be transmitted in a radio text message
 
-Note: For group B, the length of a radio text is li ited to 32 characters. Special characters in the radio text are entered with a leading back slash (\) followed by the decimal code of the spezial character according to tabe E1 of CENELEC.
+Note: For group B, the length of a radio text is limited to 32 characters. Special characters in the radio text are entered with a leading back slash (\) followed by the decimal code of the special character according to table E1 of CENELEC.
 
 Example: STER:DIR "RT=02,0,test text with \217"
 
@@ -1425,7 +1424,7 @@ Max. 20 program service names of eight characters each can be entered.
 
 Note: The program service names have to be entered as 8-digit texts. Blank spaces, if any, must also be entered, otherwise the value will not be accepted.
 
-STEReo: DIRECT "SPS=0" stops the transmission of the scrolling PS beendet and starts the transmission of the standard PS.
+STEReo:DIRECT "SPS=0" stops the transmission of the scrolling PS and starts the transmission of the standard PS.
 
 Setting parameters:
 <Time> Time interval in seconds
@@ -1480,13 +1479,13 @@ Response: "ENC"
 
 Usage: Query only
 
-##### STEReo:DIRECT "STORE=<DataSet]}\>
+##### STEReo:DIRECT "STORE=<DataSet>"
 
 Stores data in the flash memory. All RDS-specific settings are stored in data set <DataSet#> of the flash memory.
 
 ##### Setting parameters:
 
-<DataSet>>
+<DataSet>
 
 Range: 1 to 5
 
@@ -1594,18 +1593,6 @@ The frequencies of an AF list are entered one after the other; the frequency cur
 
 The frequencies of an AF list are entered in pairs, each pair containing the frequency currently transmitted and an alternative frequency. The frequency pairs should normally be entered in ascending order. Descending order should be chosen only if the alternative frequencies belong to different regions or are used to broadcast different programs at different times.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1846afe2-a9d7-4091-88f6-48044cdd02e5/markdown_0/imgs/img_in_image_box_224_439_263_496.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A13Z%2F-1%2F%2Fbd7be71ee51652f0ead592024ba5b7411b6f217a9799bdac99d947dc78e82601" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1846afe2-a9d7-4091-88f6-48044cdd02e5/markdown_0/imgs/img_in_image_box_224_439_263_496.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A13Z%2F-1%2F%2Fbd7be71ee51652f0ead592024ba5b7411b6f217a9799bdac99d947dc78e82601" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
-
 Do not combine methods A and B!
 
 ##### Method A:
@@ -1630,7 +1617,7 @@ STEReo:DIRECT "AF=+,88.6,88.7,88.8"
 
     STEREO:DIRECT "AF=N,87.6,90.2,87.6,90.2".
 
-## 2. Set the group sequence, e.g.
+2. Set the group sequence, e.g.
 
 STEREO:DIRECT "GS=0A,14A".
 
@@ -1638,7 +1625,7 @@ The group sequence must contain group 0A
 
 The alternative frequencies are now transmitted in group 0A.
 
-## 3. Add another alternative frequency list with
+3. Add another alternative frequency list with
 
 STEReo:DIRECT "AF=+,88.6,91.2,88.6,91.2"
 
@@ -1656,21 +1643,21 @@ STEREO:DIRECT? "EON-PI"
 
 The list shows the EON PI codes already used and those remaining for new data sets.
 
-## 2. Create an EON data set with
+2. Create an EON data set with
 
 STEREO:DIRECT "EON-PI=1234"
 
-## 3. Set the program service (PS) name for the EON data set with
+3. Set the program service (PS) name for the EON data set with
 
 STEREO:DIRECT "EON-PS=1234, TEST EON"
 
-## 4. Set the group sequence, e.g.:
+4. Set the group sequence, e.g.:
 
 STEREO:DIRECT "GS=0A,14A"
 
 Group 14A with variants 0 to 3 is now transmitted.
 
-## 5. Create a new AF list for the EON:
+5. Create a new AF list for the EON:
 
 a) Using method A
 
@@ -1682,7 +1669,7 @@ c) Read the first AF list of the EON with
 
 STEReo:DIRECT? "EON-AFA,1234,1"
 
-## 6. Create a new AF list for the EON, using method B:
+6. Create a new AF list for the EON, using method B:
 
 STEReo:DIRECT "EON-AFB=1234, N, 87.6, 87.7, 87.8"
 
@@ -1700,13 +1687,13 @@ A maximum of five AF lists can be generated. For type A lists, max. 25 frequenci
 
 In the user-definable groups 1A, 3A, 5A, 6A, 7A, 8A, 9A, 10A, 11A, 12A and 13A, any desired data can be transmitted. Five bits of this data are transmitted in block B and 16 bits each in blocks C and D of the specified group.
 
-## 1. Define the data to be transmitted in group 1A:
+1. Define the data to be transmitted in group 1A:
 
 STEReo:DIRECT "1A=05,0000000000,1FFFFFFF"
 
 Group 1A is now transmitted first with "0000000000" and then with "1FFFFFFF. Each of the two data sequences is retransmitted five times, which is indicated by the information "05".
 
-## 2. Set the group sequence, e.g.:
+2. Set the group sequence, e.g.:
 
 STEREO:DIRECT "GS=0A,1A"
 

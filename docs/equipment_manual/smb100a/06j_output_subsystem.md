@@ -22,7 +22,7 @@ Queries the minimum level which can be set when the attenuator is fixed, see :
 
 OUTPUT<hw>:AMODE.
 
-##### Return values:
+Return values:
 
 <Lower> float
 
@@ -62,9 +62,47 @@ Usage: Query only
 
 Manual operation: See "Fixed Range (PEP) In" on page 151
 
+##### :OUTPUT<hw>:ALC:SEARCH:MODE <Mode>
 
+Activates/deactivates the RF output during the power search.
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Query only</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Fixed Range (PEP) In&quot; on page 151</td></tr><tr><td colspan="2">:OUTPUT&lt;hw&gt;:ALC:SEARCH:MODE &lt;Mode&gt;</td></tr><tr><td colspan="2">Activates/deactivates the RF output during the power search.</td></tr><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Mode&gt;</td><td style='text-align: center; word-wrap: break-word;'>NORMAL | MINimum</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST:    NORMAL</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>POW:ALC:SEAR:MODE NORM during the power search, the RF output is active.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;RF During Power Search - ALC&quot; on page 155</td></tr><tr><td colspan="2">:OUTPUT&lt;hw&gt;:AMODE &lt;AMode&gt;</td></tr><tr><td colspan="2">Selects the mode of the attenuator at the RF output (Attenuator MODE).</td></tr><tr><td colspan="2">Parameters:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;AMode&gt;</td><td style='text-align: center; word-wrap: break-word;'>AUTO | FIXed AUTO The attenuator is switched automatically. The level settings are made in the full range.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>FIXed The level settings are made without switching the attenuator. When this operating mode is switched on, the attenuator is fixed in its current position and the resulting variation range is defined.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST:    AUTO</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Example:</td><td style='text-align: center; word-wrap: break-word;'>POW:ALC ON activates automatic level control for RF output. OUTP:AMOD FIX sets the fixed mode with uninterrupted level for RF output.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Attenuator Mode&quot; on page 151</td></tr></table>
+Parameters:
+
+<Mode> NORMAL | MINimum
+
+*RST: NORMAL
+
+Example: POW:ALC:SEAR:MODE NORM during the power search, the RF output is active.
+
+Manual operation: See "RF During Power Search - ALC" on page 155
+
+##### :OUTPUT<hw>:AMODE <AMode>
+
+Selects the mode of the attenuator at the RF output (Attenuator MODE).
+
+Parameters:
+
+<AMode> AUTO | FIXed
+
+AUTO
+
+The attenuator is switched automatically. The level settings are made in the full range.
+
+FIXed
+
+The level settings are made without switching the attenuator. When this operating mode is switched on, the attenuator is fixed in its current position and the resulting variation range is defined.
+
+*RST: AUTO
+
+Example: POW:ALC ON
+
+activates automatic level control for RF output.
+
+OUTP:AMOD FIX
+
+sets the fixed mode with uninterrupted level for RF output.
+
+Manual operation: See "Attenuator Mode" on page 151
 
 ##### :OUTPUT<hw>:FILTer:AUTO <Auto>
 
@@ -82,7 +120,7 @@ Activates the auto mode.
 
 Manual operation: See "Mode" on page 150
 
-:OUTPUT<hw>:FILTER[:LPASs]:STATE <State>
+##### :OUTPUT<hw>:FILTer[:LPASs]:STATE <State>
 
 Switches the filter state in manual mode and disables the automatic mode, if activated.
 
@@ -108,7 +146,7 @@ Manual operation: See "State" on page 151
 
 Queries the impedance of the RF outputs. It enables you to convert the output level units between V and W. The impedances cannot be changed.
 
-##### Return values:
+Return values:
 
 <Impedance> G1K | G50 | G10K
 
@@ -116,7 +154,7 @@ Queries the impedance of the RF outputs. It enables you to convert the output le
 
 Default unit: Ohm
 
-Example: OUTP: IMP
+Example: OUTP:IMP
 
 queries the impedance of RF output.
 
@@ -128,9 +166,9 @@ Usage: Query only
 
 ##### :OUTPUT<hw>:PROTection:CLEAR
 
-Resets the protective circuit after it has been tripped. The state of the output is again determined by OUTPUT: STATE.
+Resets the protective circuit after it has been tripped. The state of the output is again determined by OUTPUT:STATE.
 
-Example: OUTP: PROT: CLE
+Example: OUTP:PROT:CLE
 
 resets the protective circuit for RF output.
 
@@ -138,7 +176,7 @@ Usage: Event
 
 Manual operation: See "Overload" on page 167
 
-#### :OUTPUT<hw>:PROTection:TRIPped?
+##### :OUTPUT<hw>:PROTection:TRIPped?
 
 Queries the state of the protective circuit.
 
@@ -162,13 +200,11 @@ Response: 1
 
 The protective circuit has tripped.
 
-Usage:
-
-Query only
+Usage: Query only
 
 Manual operation: See "Overload" on page 167
 
-#### :OUTPUT<hw>[:STATe] <State>
+##### :OUTPUT<hw>[:STATe] <State>
 
 Activates and deactivates the RF output signal (RF ON / RF OFF).
 
@@ -184,7 +220,7 @@ deactivates the RF output.
 
 Manual operation: See "RF On" on page 137
 
-#### :OUTPUT<hw>[:STATe]:PON <Pon>
+##### :OUTPUT<hw>[:STATe]:PON <Pon>
 
 Selects the state of the RF output when the instrument is switched on.
 
@@ -206,9 +242,8 @@ sets the output status as it was when the instrument was switched off.
 
 Example:
 
-OUTP: PON OFF
+OUTP:PON OFF
 
 RF output A is deactivated when the instrument is switched on.
 
 Manual operation: See "Power-On State - RF Signal" on page 153
-

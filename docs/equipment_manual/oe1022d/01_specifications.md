@@ -6,13 +6,13 @@
 
 ● 满量程灵敏度 1 nV 至 1 V，以 1-2-5 的顺序标定
 
-● 电流输入  $ 10^{6} $ 或  $ 10^{8} $ V/A
+● 电流输入 10^6 或 10^8 V/A
 
 - 输入阻抗
 
-电压 10 M $ \Omega $/25 pF，交流或直流耦合
+电压 10 MΩ/25 pF，交流或直流耦合
 
-电流 1 k $ \Omega $ 到虚拟地
+电流 1 kΩ 到虚拟地
 
 比 >100 dB 至 10 kHz，以 6 dB/oct 减小
 
@@ -26,7 +26,7 @@
 
 工频滤波器 50/60 Hz 和 100/120 Hz（出厂内部设定）
 
-● 输入屏蔽接地 BNC (A/I, B) 屏蔽层可直接接地或者通过  $ 10k\Omega $ 电阻接至浮地
+● 输入屏蔽接地 BNC (A/I, B) 屏蔽层可直接接地或者通过 10kΩ 电阻接至浮地
 
 ### 1.2 双通道参考输入
 
@@ -36,9 +36,9 @@
 
 参考输入 方波或正弦波
 
-输入阻抗 1 M $ \Omega $
+输入阻抗 1 MΩ
 
-方波参考电平  $ V_{IH}>3V,\ V_{IL}<0.5V $
+方波参考电平 V_IH>3V, V_IL<0.5V
 
 正弦参考信号 >1 Hz
 
@@ -48,9 +48,9 @@
 
 分辨率 0.01°
 
-绝对相位误差  $ <1^{\circ} $
+绝对相位误差 <1°
 
-相对相位误差 &lt;0.01°
+相对相位误差 <0.01°
 
 谐波检测 2F, 3F, ...nF 至 102 kHz (n<32,767)
 
@@ -58,7 +58,7 @@
 
 内部参考 即时采集
 
-外部参考  $ (2 $ 个周期 $ +5\ ms) $ 或者  $ 40\ ms $
+外部参考 (2 个周期 +5 ms) 或者 40 ms
 
 ### 1.3 解调器
 
@@ -104,11 +104,11 @@
 
 误差 典型 0.5% (f<10 kHz)，最大 1%
 
-温度稳定性 100 ppm/ $ ^{\circ} $C
+温度稳定性 100 ppm/°C
 
-● 输出 正弦信号，输出阻抗为  $ 50 \Omega $
+● 输出 正弦信号，输出阻抗为 50 Ω
 
-可选直流输出模式，范围 $ -10V $ 至 $ +10V $
+可选直流输出模式，范围 -10V 至 +10V
 
 ● TTL 同步输出 5V TTL/CMOS 电平，输出阻抗 200 Ω
 
@@ -150,9 +150,9 @@
 
 功能 4 通道输入
 
-幅值  $ \pm 10 $ V, 1 mV 精度
+幅值 ±10 V, 1 mV 精度
 
-阻抗 1 M $ \Omega $
+阻抗 1 MΩ
 
 采样率 32 kSa/s
 
@@ -164,7 +164,7 @@
 
   功能 信号放大器的模拟输出
 
-  驱动电流  $ \pm 40mA $ max
+  驱动电流 ±40mA max
 
 ### 1.7 接口
 
@@ -202,9 +202,6 @@
 
 ##### ● 产品尺寸图
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//87335744-4517-47db-b7d5-834473fe17cc/markdown_4/imgs/img_in_image_box_175_178_1012_391.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2F68510af2a11dffed28ab849b4a3078b21941054f1391a04f0bd105fb89fa1934" alt="Image" width="70%" /></div>
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//87335744-4517-47db-b7d5-834473fe17cc/markdown_4/imgs/img_in_image_box_175_178_1012_391.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2F68510af2a11dffed28ab849b4a3078b21941054f1391a04f0bd105fb89fa1934" alt="Image" width="70%" />
 
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//87335744-4517-47db-b7d5-834473fe17cc/markdown_4/imgs/img_in_image_box_174_438_1011_1308.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2Fe1913989cd65517f4526165b8679152171734f4d7498b5213a22f0e34a04f535" alt="Image" width="70%" /></div>
-
-
+<img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//87335744-4517-47db-b7d5-834473fe17cc/markdown_4/imgs/img_in_image_box_174_438_1011_1308.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A01%3A39Z%2F-1%2F%2Fe1913989cd65517f4526165b8679152171734f4d7498b5213a22f0e34a04f535" alt="Image" width="70%" />

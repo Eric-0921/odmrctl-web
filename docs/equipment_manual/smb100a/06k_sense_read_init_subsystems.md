@@ -8,7 +8,7 @@ The suffixes <ch>
 
 Furthermore the following suffixes denote:
 
-• Sensor assignment READ<ch> and INIate<hw>; range: [1] to 4
+• Sensor assignment READ<ch> and INITiate<hw>; range: [1] to 4
 
 • Sensor mapping list: ELEMENT<ch>; range [1] to 25
 
@@ -106,7 +106,7 @@ Setting parameters:
 
 Example: :SLIST:SCAN:LSENsor 'NRQ6',101624 //sensor name, serial number
 
-:SLIST:SCAN:LSENsor 'NRQ6',11.123.1.123, 101624 //IP address, serial numh
+:SLIST:SCAN:LSENsor 'NRQ6',11.123.1.123, 101624 //IP address, serial number
 
 Usage: Setting only
 
@@ -175,7 +175,7 @@ Usage: Setting only
 
 Manual operation: See "Sensor Mapping List" on page 168
 
-#### :SLSt[:LIST]?
+#### :SLISt[:LIST]?
 
 Returns a list of all detected sensors in a comma-separated string.
 
@@ -205,7 +205,7 @@ Parameters:
 
 *RST: 1
 
-Example: SENS: POW: APER: DEF: STAT 0
+Example: SENS:POW:APER:DEF:STAT 0
 
   deactivates the default aperture time of the sensor.
 
@@ -237,7 +237,6 @@ The remote measurement is triggered by the READ query (command :READ<ch>[: POWER
 
 ##### Parameters:
 
-Parameters:
 
 <Continuous> 0 | 1 | OFF | ON
 
@@ -293,7 +292,7 @@ Usage: Query only
 
 Manual operation: See "Level (Peak)" on page 173
 
-##### :SENSE<ch>[:POWER]:CORRRection:SPDevice:SELECT <Select>
+##### :SENSE<ch>[:POWER]:CORRection:SPDevice:SELECT <Select>
 
 Several S-parameter tables can be stored in a sensor. The command selects a loaded data set for S-parameter correction for the corresponding sensor.
 
@@ -301,9 +300,11 @@ Several S-parameter tables can be stored in a sensor. The command selects a load
 
 
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Select&gt;</td><td style='text-align: center; word-wrap: break-word;'>float</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>*RST:</td><td style='text-align: center; word-wrap: break-word;'>0</td></tr></table>
+| <Select> | float |  |
+|---|---|---|
+|  | *RST: | 0 |
 
-##### :SENSE<ch>[:POWER]:CORRRection:SPDevice:STATE <State>
+##### :SENSE<ch>[:POWER]:CORRection:SPDevice:STATE <State>
 
 The command activates the use of the s-parameters correction data of the selected power sensor.
 
@@ -311,10 +312,9 @@ Note: For power sensor with attenuator this command is automatically set to ON.
 
 ##### Parameters:
 
-Parameters.
 <State> 0 | 1 | OFF | ON
 *RST: OFF
-Example: SENS: POW: CORR: SPD: STAT ON
+Example: SENS:POW:CORR:SPD:STAT ON
 activates the use of the s-parameters correction data of power sensor 1.
 Manual operation: See "Use SParameter - Power Sensors" on page 159
 
@@ -342,7 +342,7 @@ Example: SENS1:POW:DISP:PERM:STAT ON the permanent viewer is switched on.
 
 Manual operation: See "Permanent Display State" on page 174
 
-#### :SENSe<ch>[:POWER]:DISPLAY:PERManent:PRlority <Priority>
+#### :SENSe<ch>[:POWER]:DISPLAY:PERManent:PRIority <Priority>
 
 The command selects which power measurement result (average or peak power) is indicated when permanent display is active.
 
@@ -523,17 +523,17 @@ The command sets the RF frequency of the source if the user source is selected (
 
 *RST: 1 GHz
 
-Example: SENS: SOUR USER
+Example: SENS:SOUR USER
 
 selects user-defined source.
 
-SENS: FREQ 2.44 GHz
+SENS:FREQ 2.44 GHz
 
 enters the RF frequency of the source which is 2.44 GHz.
 
 Manual operation: See "Frequency" on page 175
 
-##### :SENSE<ch>[:POWER]:OFFSET<Offset>
+##### :SENSE<ch>[:POWER]:OFFSET <Offset>
 
 The command enters a level offset which is added to the measured level value after activation with command SENSE[:POWER]:OFFSET:STATE ON. This allows e.g. an attenuator in the signal path to be considered.
 
@@ -573,7 +573,7 @@ a level offset of 0.4 dB is added to the measured value.
 
 Manual operation: See "Level Offset" on page 175
 
-#### SENSe<ch>[:POWER]:SNUMBER?
+#### :SENSe<ch>[:POWER]:SNUMBER?
 
 The command queries the serial number of the sensor.
 
@@ -599,13 +599,13 @@ Parameters:
 
 *RST: A
 
-Example: SENS: SOUR A
+Example: SENS:SOUR A
 
 selects the RF signal as measurement source. The RF frequency is used as the measurement frequency of the sensor and the corresponding correction factor is used. The level setting of the instrument serves as reference level of the measurement.
 
 Manual operation: See "Source" on page 175
 
-#### SENSe<ch>[:POWER]:STATUS[:DEVICE]?
+#### :SENSe<ch>[:POWER]:STATUS[:DEVICE]?
 
 The command queries if a sensor is connected to the signal generator.
 
@@ -627,7 +627,7 @@ Usage: Query only
 
 Manual operation: See "Sensor" on page 172
 
-#### SENSe<ch>[:POWER]:SVERsion?
+#### :SENSe<ch>[:POWER]:SVERsion?
 
 The command queries the software version of the connected R&S NRP power sensor.
 
@@ -635,7 +635,7 @@ The command queries the software version of the connected R&S NRP power sensor.
 
 <Sversion> string
 
-Example: SENS: POW: SVER?
+Example: SENS:POW:SVER?
 
 queries the software version of the R&S NRP power sensor.
 
@@ -643,7 +643,7 @@ Usage: Query only
 
 Manual operation: See "Current Sensors" on page 102
 
-##### SENSe<ch>[:POWER]:TYPE?
+##### :SENSe<ch>[:POWER]:TYPE?
 
 The command queries the type of sensor. The type is automatically detected.
 

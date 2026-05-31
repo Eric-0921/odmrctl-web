@@ -74,21 +74,10 @@ Stack as follows:
 
 – 25 kg when stacking smaller products on top (middle figure).
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2556c1ed-ca6f-4e48-8629-1bf4e01d7732/markdown_1/imgs/img_in_image_box_328_202_1000_473.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2F03c4f7948962c871e76ba15d7d19952e62f101f6576bc4784a960897ffc8de08" alt="Image" width="56%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2556c1ed-ca6f-4e48-8629-1bf4e01d7732/markdown_1/imgs/img_in_image_box_328_202_1000_473.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2F03c4f7948962c871e76ba15d7d19952e62f101f6576bc4784a960897ffc8de08" alt="Image" width="56%" />
-
-×
-
-</div>
-
-
-</div>
-
 
 Right = Stacked incorrectly, too many products
 
-## 4. NOTICE! Overheating can damage the product.
+4. NOTICE! Overheating can damage the product.
 
 Prevent overheating as follows:
 
@@ -179,17 +168,6 @@ b) Use a conductive floor mat and heel strap combination.
 #### 3.1.6 Connecting to Power
 
 For safety information, see "Connecting to power" on page 14.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2556c1ed-ca6f-4e48-8629-1bf4e01d7732/markdown_3/imgs/img_in_image_box_218_307_272_361.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fd13a1f657a34b2ad4f311c33df175c6306d9717e8c410d6b757ccc888a5dff3f" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2556c1ed-ca6f-4e48-8629-1bf4e01d7732/markdown_3/imgs/img_in_image_box_218_307_272_361.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fd13a1f657a34b2ad4f311c33df175c6306d9717e8c410d6b757ccc888a5dff3f" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 If there were any problems during power on, check the condition of the mains fuses as described under Chapter 8.2, "Changing Fuses", on page 490.
@@ -346,12 +324,14 @@ For connection, the R&S SMB provides BNC connectors.
 
 The following table provides an overview of power states, LEDs and power switch positions.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 3-1: Overview of power states</div> </div>
+Table 3-1: Overview of power states
 
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>State</td><td style='text-align: center; word-wrap: break-word;'>LED</td><td style='text-align: center; word-wrap: break-word;'>Position of power switch</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Off</td><td style='text-align: center; word-wrap: break-word;'>● gray</td><td style='text-align: center; word-wrap: break-word;'>[0]</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Standby</td><td style='text-align: center; word-wrap: break-word;'>● yellow</td><td style='text-align: center; word-wrap: break-word;'>[I]</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Ready</td><td style='text-align: center; word-wrap: break-word;'>● green</td><td style='text-align: center; word-wrap: break-word;'>[I]</td></tr></table>
+| State | LED | Position of power switch |
+| --- | --- | --- |
+| Off | ● gray | [0] |
+| Standby | ● yellow | [I] |
+| Ready | ● green | [I] |
 
 ##### To switch on the R&S SMB
 
@@ -365,7 +345,7 @@ The LED of the [ON/STANDBY] key is yellow.
 
 2. Wait until the oven-controlled oscillator (OCXO) warms up. For the warm-up time, see data sheet.
 
-## 3. Press the [ON/STANDBY] key at the front panel.
+3. Press the [ON/STANDBY] key at the front panel.
 
 The LED changes to green. The R&S SMB boots.
 
@@ -471,34 +451,12 @@ Password and settings protected by passwords ("Setup" menu)
 
 • Display and keyboard settings ("Setup" menu)
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2e27e09b-6c76-47ad-a9f9-95b83d3756e0/markdown_4/imgs/img_in_image_box_226_287_262_343.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F93bac9efb517351acbe54068f641eabaa165631c629605322a07669b8a269bbe" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2e27e09b-6c76-47ad-a9f9-95b83d3756e0/markdown_4/imgs/img_in_image_box_226_287_262_343.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F93bac9efb517351acbe54068f641eabaa165631c629605322a07669b8a269bbe" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 User-defined instrument states can be stored and called up in the "File" dialog.
 
 #### 3.1.14 Working with Linux Operating System
 
 The instrument uses an embedded Linux operating system, optimally adapted to the instrument.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2e27e09b-6c76-47ad-a9f9-95b83d3756e0/markdown_4/imgs/img_in_image_box_218_537_272_590.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F260cdea9d9f25f1936b6ca99792b04fb6f108b2281860bd67fe621dd52d0ccae" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2e27e09b-6c76-47ad-a9f9-95b83d3756e0/markdown_4/imgs/img_in_image_box_218_537_272_590.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F260cdea9d9f25f1936b6ca99792b04fb6f108b2281860bd67fe621dd52d0ccae" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 ##### Accessing the operating system
@@ -557,17 +515,6 @@ The IP address consists of four number blocks separated by dots. Every block con
 
 4. Select the "Subnet Mask" and enter the subnet mask, for example 255.255.255.0. The subnet mask consists of four number blocks separated by dots. Every block contains 3 numbers in maximum.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_0/imgs/img_in_image_box_225_898_263_955.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2Fbb5d1c7d50e03b92bb2313b32417f2362999c8fbd4ed61e0a64a2099a62b2df7" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_0/imgs/img_in_image_box_225_898_263_955.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2Fbb5d1c7d50e03b92bb2313b32417f2362999c8fbd4ed61e0a64a2099a62b2df7" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 ##### Use computer names to identify the instrument
 
@@ -591,20 +538,12 @@ Each instrument is delivered with an assigned computer name, but this name can b
 
 The default instrument name is a non-case-sensitive string that follows the syntax
 
-rs<instrument><serial number>.
+rs<serial number>.
 
 The serial number can be found on the rear panel of the instrument. It is the third part of the device ID printed on the bar code sticker:
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_1/imgs/img_in_image_box_294_490_1060_630.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2Fd1070fbfa332f7d3861799f5cbede89f7d88e1b732dae5d0567f268bba51f89d" alt="Image" width="64%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_1/imgs/img_in_image_box_294_490_1060_630.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2Fd1070fbfa332f7d3861799f5cbede89f7d88e1b732dae5d0567f268bba51f89d" alt="Image" width="64%" />
 
 ID: 1419.0035K02 - 102030 - Zd Serial Number
-
-</div>
-
-
-</div>
 
 
 ##### Querying and changing a computer name
@@ -621,17 +560,6 @@ The parameter "Hostname" in the "Network Settings" dialog is now enabled for con
 
 The R&S SMB can be remote accessed from a remote computer (external controller) via a network link. This allows convenient operation of the instrument from the desktop although the instrument is integrated in a rack somewhere else.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_1/imgs/img_in_image_box_225_1146_262_1202.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A22Z%2F-1%2F%2F78b3c2b50136534269767a200cd77fb29be140fb13f48986f7d9e9c0a3aad853" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_1/imgs/img_in_image_box_225_1146_262_1202.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A22Z%2F-1%2F%2F78b3c2b50136534269767a200cd77fb29be140fb13f48986f7d9e9c0a3aad853" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 For an overview of the instrument's operating concept and the different ways to control and operate the instrument, see Chapter 3.4, "System Overview", on page 62.
 
@@ -641,29 +569,21 @@ For example, the free-of-charge program Ultr@VNC for PCs with Linux/Unix or Wind
 
 See the following table for an overview of the different ways to establish a remote access connection to the signal generator.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 3-2: Remote access via an external computer</div> </div>
+Table 3-2: Remote access via an external computer
 
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td rowspan="2">Remote access via</td><td rowspan="2">LAN connection</td><td colspan="2">Installation of the additional application</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>on the instrument</td><td style='text-align: center; word-wrap: break-word;'>on the remote computer</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Any web browserfor example Windows Internet Explorer or Mozilla Firefox, see Chapter 3.1.16.1, &quot;Using a Web Browser for Remote Access&quot;, on page 33</td><td style='text-align: center; word-wrap: break-word;'>required</td><td style='text-align: center; word-wrap: break-word;'>no</td><td style='text-align: center; word-wrap: break-word;'>Java Runtime must be installed and activated in the browser settings.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Web browser with HTML5for example LXI Browser, see &quot;Web Control&quot; on page 45</td><td style='text-align: center; word-wrap: break-word;'>required</td><td style='text-align: center; word-wrap: break-word;'>no</td><td style='text-align: center; word-wrap: break-word;'>Web sockets must be supported.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>VNC Clientfor example Ultr@VNC or other dedicated client softwarefor PCs with Linux/Unix or Windows operating systemsee Chapter 3.1.16.2, &quot;Remote Access via a VNC Client Software&quot;, on page 34</td><td style='text-align: center; word-wrap: break-word;'>required</td><td style='text-align: center; word-wrap: break-word;'>required</td><td style='text-align: center; word-wrap: break-word;'>VNC Viewer required</td></tr></table>
+| Remote access via | LAN connection | Installation of the additional application |  |
+| --- | --- | --- | --- |
+|  |  | on the instrument | on the remote computer |
+| Any web browserfor example Windows Internet Explorer or Mozilla Firefox, see Chapter 3.1.16.1, "Using a Web Browser for Remote Access", on page 33 | required | no | Java Runtime must be installed and activated in the browser settings. |
+| Web browser with HTML5for example LXI Browser, see "Web Control" on page 45 | required | no | Web sockets must be supported. |
+| VNC Clientfor example Ultr@VNC or other dedicated client softwarefor PCs with Linux/Unix or Windows operating systemsee Chapter 3.1.16.2, "Remote Access via a VNC Client Software", on page 34 | required | required | VNC Viewer required |
 
 When the connection is set up with a VNC client software (Ultr@VNC), direct control on the instrument is possible while remote access is established.
 
 For return to direct operation on the instrument, the connection must be cut. After cutting the connection, it is still enabled and can be established again any time. The connection is disabled only after deactivation of the program.
 
 This section gives an information on how to use the Web browser for remote access, how to install the applications for remote access and how to establish the connection between the instrument and an external computer with Windows operating system. Remote access via an external computer with Linux/Unix operating system is performed accordingly.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_2/imgs/img_in_image_box_226_1043_263_1098.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A23Z%2F-1%2F%2Fda9263831b6e4d8a732eec203d3264b0526d74fa9c4b0d6f72497ed562f075c9" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_2/imgs/img_in_image_box_226_1043_263_1098.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A23Z%2F-1%2F%2Fda9263831b6e4d8a732eec203d3264b0526d74fa9c4b0d6f72497ed562f075c9" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
 
 
 ##### Default password
@@ -680,17 +600,6 @@ It is highly recommended to change the default user and security passwords in th
 
 The instrument can be remote-accessed via any web browser, as for example the Windows Internet Explorer or Mozilla Firefox.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_225_204_263_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A23Z%2F-1%2F%2F6fa46cfdef5c8a6ebe51bc28cca4b8240b1346c591c035c9f2ad64258841d98a" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_225_204_263_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A23Z%2F-1%2F%2F6fa46cfdef5c8a6ebe51bc28cca4b8240b1346c591c035c9f2ad64258841d98a" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 Alternatively, you can also make use of the LXI browser, as described in "Web Control" on page 45.
 
@@ -704,9 +613,6 @@ To remote access the instrument via a web browser:
 
 The "VNC Authentication" screen appears.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_319_540_966_884.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A24Z%2F-1%2F%2Fcbabfd4c26454b169c9546489ae0a99107e1e8b92df817c883896e377a7d2492" alt="Image" width="54%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_319_540_966_884.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A24Z%2F-1%2F%2Fcbabfd4c26454b169c9546489ae0a99107e1e8b92df817c883896e377a7d2492" alt="Image" width="54%" />
 
 TightVNC applet - Windows Internet Explorer
 http://10.111.11.1/
@@ -715,11 +621,6 @@ TightVNC applet
 Disconnect Options Clipboard Send Ctrl-Alt-Del Refresh
 VNC Authentication
 OK
-
-</div>
-
-
-</div>
 
 
 VNC Authentication
@@ -737,17 +638,6 @@ The following description explains how to establish the remote access, represent
 A VNC client software is an application which can be used to access and control the instrument from a remote computer via LAN.
 
 The GUI appearance of Ultr@VNC may vary if you use a later release. Also, similar programs may deviate in some details, but the basic procedure is the same.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_218_1366_272_1420.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A24Z%2F-1%2F%2F442220027d3b8603ad3bdb98d394c750dca557bc4ada23530e26dffe8d41514c" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_3/imgs/img_in_image_box_218_1366_272_1420.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A24Z%2F-1%2F%2F442220027d3b8603ad3bdb98d394c750dca557bc4ada23530e26dffe8d41514c" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 #### NOTICE
@@ -776,17 +666,6 @@ a) the remote computer with Linux/Unix operating system, see "Setting up the VNC
 
 b) the remote computer with Windows operating system, see "Setting up the VNC connection on the Windows remote computer" on page 38.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_4/imgs/img_in_image_box_226_874_263_930.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A25Z%2F-1%2F%2F4e46168becd49a7574c0e9913eb3b5b4d1a65bf9739a0df82bfe7b306ef26d8f" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//638a1ada-67c8-46b8-8c6f-c6c13b267aaa/markdown_4/imgs/img_in_image_box_226_874_263_930.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A25Z%2F-1%2F%2F4e46168becd49a7574c0e9913eb3b5b4d1a65bf9739a0df82bfe7b306ef26d8f" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 ##### Enabled Direct Control
 
@@ -802,11 +681,8 @@ The direct control of the instrument is not disabled and the instrument can be c
 
 The setup wizard leads through the installation. This description focus only on the relevant settings.
 
-### a) Select installation of all components.
+a) Select installation of all components.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_362_238_860_609.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F49b3fe3dd55d06a27888e52923695fa2e5833f97e4b7f8fd44869dd6fb0d53ff" alt="Image" width="41%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_362_238_860_609.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F49b3fe3dd55d06a27888e52923695fa2e5833f97e4b7f8fd44869dd6fb0d53ff" alt="Image" width="41%" />
 
 Setup - Ultr@VNC Release 1.0.0 RC 18
 
@@ -828,14 +704,8 @@ Current selection requires at least 2.7 MB of disk space.
 
 < Back Next > Cancel
 
-</div>
 
-
-</div>
-
-
-### b) In the "Additional Task Panel", enable all entries.
-
+b) In the "Additional Task Panel", enable all entries.
 
 
 ☑ Create a System Viewer with Ultr@VNC Viewer
@@ -844,59 +714,29 @@ Current selection requires at least 2.7 MB of disk space.
 
 ##### WinVNC
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_345_1113_374_1144.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2Ff864f18583ca9d922da07bcd05fcda1f0fb9643cc910db9d0245e84050b55ea4" alt="Image" width="2%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_345_1113_374_1144.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2Ff864f18583ca9d922da07bcd05fcda1f0fb9643cc910db9d0245e84050b55ea4" alt="Image" width="2%" />
-
-i
-
-</div>
-
-
-</div>
-
 
 The WinVNC service was successfully registered  
 
 The service may be started from the Control Panel, and will automatically be run the next time this machine is reset
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_469_1163_548_1189.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F0b5f3dab6f0b63c592210973eaab82ea5d6b1371bf6fac6f20946acc981b79b5" alt="Image" width="6%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_469_1163_548_1189.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F0b5f3dab6f0b63c592210973eaab82ea5d6b1371bf6fac6f20946acc981b79b5" alt="Image" width="6%" />
 
 OK
-
-</div>
-
-
-</div>
 
 
 At the same time a warning is displayed stating that a password must be set.
 
 ##### WinVNC Error
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_329_1254_823_1364.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F53f0c8038a37e40364669ebcf121873799db97ab930486e91314da430638eca5" alt="Image" width="41%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_0/imgs/img_in_image_box_329_1254_823_1364.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F53f0c8038a37e40364669ebcf121873799db97ab930486e91314da430638eca5" alt="Image" width="41%" />
 
 WinVNC Error
 WARNING: This machine has no default password set. WinVNC will present the Default Properties dialog now to allow one to be entered.
 OK
 
-</div>
 
-
-</div>
-
-
-## 4. Select "OK".
+4. Select "OK".
 
 The "Default Local System Properties" panel opens.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_1/imgs/img_in_image_box_328_203_936_670.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F98168077ec5b191d0dd91ca1d666993a3a237a4e6ed3a1be6634e8dff13b2611" alt="Image" width="51%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_1/imgs/img_in_image_box_328_203_936_670.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F98168077ec5b191d0dd91ca1d666993a3a237a4e6ed3a1be6634e8dff13b2611" alt="Image" width="51%" />
 
 WinVNC: Default Local System Properties
 Incoming Connections
@@ -940,13 +780,8 @@ Apply
 Timeout: 10
 Cancel
 
-</div>
 
-
-</div>
-
-
-## 5. Enter a password with a length of at least five digits.
+5. Enter a password with a length of at least five digits.
 
 This password is used on the remote computer to access the instrument. Other settings may be changed according to the user-specific security requirements.
 
@@ -970,7 +805,7 @@ The VNC program is available per default for Linux/Unix operating systems.
 
 1. Start a Web browser on the remote computer and enter the IP address of the instrument.
 
-## 2. Enter the following address:
+2. Enter the following address:
 
 vnc://<IP-address of the instrument>, e.g. vnc://192.168.1.1.
 
@@ -987,41 +822,33 @@ In contrast to remote access via Remote Desktop, the direct control of the instr
 1. Start VNC Viewer program component on the PC, select "VNC Server" and enter IP address of the instrument.
 
 
+| Connection | ✗ |
+| --- | --- |
+| VNC Server: 192.168.1.1 (host:display or host::port) |  |
+| Quick Options |  |
+| AUTO | (Auto select best settings) |
+| CULTRA | (>2Mbit/s) - Experimental |
+| CLAN | (>1Mbit/s) - Max Colors |
+| CMEDIUM | (>128Kbit/s) - Max Colors |
+| CMODEM | (19 - 128Kbit/s) - 256 Colors |
+| CSLOW | (<19Kbit/s) - 256 Colors, Fuzzy |
+| View Only | Auto Scaling |
+| Use DSMPlugin | No Plugin detected... |
+| Proxy/Repeater |  |
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Connection</td><td style='text-align: center; word-wrap: break-word;'>✗</td></tr><tr><td colspan="2">VNC Server: 192.168.1.1 (host:display or host::port)</td></tr><tr><td colspan="2">Quick Options</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AUTO</td><td style='text-align: center; word-wrap: break-word;'>(Auto select best settings)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CULTRA</td><td style='text-align: center; word-wrap: break-word;'>(&gt;2Mbit/s) - Experimental</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CLAN</td><td style='text-align: center; word-wrap: break-word;'>(&gt;1Mbit/s) - Max Colors</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CMEDIUM</td><td style='text-align: center; word-wrap: break-word;'>(&gt;128Kbit/s) - Max Colors</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CMODEM</td><td style='text-align: center; word-wrap: break-word;'>(19 - 128Kbit/s) - 256 Colors</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CSLOW</td><td style='text-align: center; word-wrap: break-word;'>(&lt;19Kbit/s) - 256 Colors, Fuzzy</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>View Only</td><td style='text-align: center; word-wrap: break-word;'>Auto Scaling</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Use DSMPlugin</td><td style='text-align: center; word-wrap: break-word;'>No Plugin detected...</td></tr><tr><td colspan="2">Proxy/Repeater</td></tr></table>
-
-## 2. To initialize the connection, select "Connect".
+2. To initialize the connection, select "Connect".
 
 A message requesting the password appears.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_2/imgs/img_in_image_box_328_993_683_1096.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2Fa8ef62c6639b4f54c830c31d7d37107f11844f41e78549f740923a2d65264c4c" alt="Image" width="29%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_2/imgs/img_in_image_box_328_993_683_1096.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2Fa8ef62c6639b4f54c830c31d7d37107f11844f41e78549f740923a2d65264c4c" alt="Image" width="29%" />
 
 YNC Authentication
 Password: ___
 Log On ___ Cancel ___
 
-</div>
-
-
-</div>
-
 
 3. Enter the password as defined in the "Default Local System Properties" panel of the Ultr@VNC program and select "Log On".
 
 The connection is established, the instrument is remote accessed and the current signal generator screen with the block diagram is displayed. The individual functions are operated using the mouse and keyboard.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_2/imgs/img_in_image_box_225_1297_262_1353.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2Fade766aeb554042b62897db10713e5d7a6964fba57aa3ea86594334077279779" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_2/imgs/img_in_image_box_225_1297_262_1353.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2Fade766aeb554042b62897db10713e5d7a6964fba57aa3ea86594334077279779" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
 
 
 The direct control of the instrument is not disabled and the instrument can be controlled from the front panel and via the remote computer alternately.
@@ -1076,17 +903,6 @@ The R&S SMB provides an integrated "LXI Status" dialog for LXI status indication
 
 For further information, see Chapter 4.2.3.12, "LXI Status", on page 112.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_4/imgs/img_in_image_box_218_441_272_494.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F9754d7ab5e6c945169d281576f5ed4ca2dd5ac742ef1741bbaded92dab5428fe" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//a1a0d060-866e-4f70-884c-75798ea16883/markdown_4/imgs/img_in_image_box_218_441_272_494.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F9754d7ab5e6c945169d281576f5ed4ca2dd5ac742ef1741bbaded92dab5428fe" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
 
 ##### Firmware update
 
@@ -1097,14 +913,22 @@ After a firmware update, shut down and restart the instrument in order to enable
 According to the LXI standard, an LCI must set the following parameters to a default state.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Parameter</td><td style='text-align: center; word-wrap: break-word;'>Value</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>TCP/IP Mode</td><td style='text-align: center; word-wrap: break-word;'>DHCP + Auto IP Address</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Dynamic DNS</td><td style='text-align: center; word-wrap: break-word;'>Enabled</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ICMP Ping</td><td style='text-align: center; word-wrap: break-word;'>Enabled</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Password for LAN configuration</td><td style='text-align: center; word-wrap: break-word;'>LxiWebIfc</td></tr></table>
+| Parameter | Value |
+| --- | --- |
+| TCP/IP Mode | DHCP + Auto IP Address |
+| Dynamic DNS | Enabled |
+| ICMP Ping | Enabled |
+| Password for LAN configuration | LxiWebIfc |
 
 The LCI for the R&S SMB also resets the following parameters:
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Parameter</td><td style='text-align: center; word-wrap: break-word;'>Value</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Hostname</td><td style='text-align: center; word-wrap: break-word;'>&lt;Instrument-specific host name&gt;</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Description</td><td style='text-align: center; word-wrap: break-word;'>Vector Signal Generator</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Negotiation</td><td style='text-align: center; word-wrap: break-word;'>Auto Detect</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>VXI-11 Discovery</td><td style='text-align: center; word-wrap: break-word;'>Enabled</td></tr></table>
+| Parameter | Value |
+| --- | --- |
+| Hostname | <Instrument-specific host name> |
+| Description | Vector Signal Generator |
+| Negotiation | Auto Detect |
+| VXI-11 Discovery | Enabled |
 
 The LAN settings are configured using the instrument's "LXI Browser Interface".
 
@@ -1118,21 +942,9 @@ Note: Do not add the missing zeros in the IP address, while opening the instrume
 
 The instrument home page (welcome page) opens.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_0/imgs/img_in_image_box_127_199_1064_286.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A48Z%2F-1%2F%2F4dec6d7a58b9d719f23e1f980fb80581d242981e9cd98f6758d3ee23ebdd1655" alt="Image" width="78%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_0/imgs/img_in_image_box_127_199_1064_286.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A48Z%2F-1%2F%2F4dec6d7a58b9d719f23e1f980fb80581d242981e9cd98f6758d3ee23ebdd1655" alt="Image" width="78%" />
 
 ROHDE&SCHWARZ LXI
 
-</div>
-
-
-</div>
-
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_0/imgs/img_in_image_box_131_311_1053_767.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A48Z%2F-1%2F%2F717c621491186a53164de6b0432073b7c6a9e2d67f04689e677dbc24feaae2d7" alt="Image" width="77%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_0/imgs/img_in_image_box_131_311_1053_767.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A48Z%2F-1%2F%2F717c621491186a53164de6b0432073b7c6a9e2d67f04689e677dbc24feaae2d7" alt="Image" width="77%" />
 
 Home
 Lan Configuration
@@ -1173,11 +985,6 @@ TCPIP::10.113.1.150::hislip0::INSTR
 ACTIVE (press to toggle)
 © 2015 ROHDE&SCHWARZ. All rights reserved.
 
-</div>
-
-
-</div>
-
 
 © 2015 ROHDE&SCHWARZ. All rights reserved.
 
@@ -1215,16 +1022,8 @@ www.rohde-schwarz.com opens the Rohde & Schwarz home page.
 
 ACTIVE (press to toggle)
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_1/imgs/img_in_image_box_775_291_796_313.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A49Z%2F-1%2F%2F1209fefc38f14199c582b91e36354007d295318f202c3a9a4b4a6c167e5416a9" alt="Image" width="1%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_1/imgs/img_in_image_box_775_291_796_313.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A49Z%2F-1%2F%2F1209fefc38f14199c582b91e36354007d295318f202c3a9a4b4a6c167e5416a9" alt="Image" width="1%" />
 
 ●
-
-</div>
-
-
-</div>
 
 
 A green flashing status LED indicates the active connection. If the LAN connection fails, the LED turns red.
@@ -1236,17 +1035,6 @@ For further information, see section "LXI Status" in the Operating Manual.
 ##### 3.1.17.2 LAN Configuration
 
 The "LAN Configuration" web page provides access to the parameters required for identifying the R&S SMB in the network, and allows modification.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_1/imgs/img_in_image_box_218_657_272_710.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A49Z%2F-1%2F%2Fbf3c42c763be1f8f53ab2b6933ca5431e8f8a769a06145e2117456cb45656f45" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_1/imgs/img_in_image_box_218_657_272_710.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A49Z%2F-1%2F%2Fbf3c42c763be1f8f53ab2b6933ca5431e8f8a769a06145e2117456cb45656f45" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 ##### Password protection
@@ -1269,9 +1057,6 @@ Web Control.....45
 
 The "IP Configuration" page displays all mandatory LAN parameters.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_2/imgs/img_in_image_box_128_208_1060_775.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F928315c1bab007b093fe0d32a752569d64e5a5739203a27e6da29a66a541458f" alt="Image" width="78%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_2/imgs/img_in_image_box_128_208_1060_775.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F928315c1bab007b093fe0d32a752569d64e5a5739203a27e6da29a66a541458f" alt="Image" width="78%" />
 
 ROHDE&SCHWARZ
 
@@ -1334,11 +1119,6 @@ No error
 Submit
 (Password required!)
 
-</div>
-
-
-</div>
-
 
 The "IP Address Mode" selects a configuration mode for the IP address of the R&S SMB. With static configuration, the entered IP address, subnet mask, and default gateway are used. With dynamic configuration, DHCP or dynamic link local addressing (automatic IP) are used to obtain the instrument IP address.
 
@@ -1348,9 +1128,6 @@ See Chapter 3.1.15.1, "Assigning the IP Address", on page 30.
 
 The "Advanced Config" page provides LAN settings that are not declared mandatory by the LXI standard.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_3/imgs/img_in_image_box_127_193_1063_750.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F93abee1bbfa56b790dddd8e04ee97fff7b579e12aa3b6118c361890f6f02d168" alt="Image" width="78%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_3/imgs/img_in_image_box_127_193_1063_750.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A50Z%2F-1%2F%2F93abee1bbfa56b790dddd8e04ee97fff7b579e12aa3b6118c361890f6f02d168" alt="Image" width="78%" />
 
 ROHDE&SCHWARZ
 
@@ -1379,11 +1156,6 @@ www.rohde-schwarz.com
 Status
 No error
 © 2015 ROHDE&SCHWARZ. All rights reserved.
-
-</div>
-
-
-</div>
 
 
 The following advanced parameters are available:
@@ -1414,9 +1186,6 @@ To initiate a ping from the instrument to the device:
 
 4. Select "Submit".
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_4/imgs/img_in_image_box_123_389_1064_939.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F7b2bc2b5c4ae46e4ab7d32736fc3045c80633ec7a6def03cc0c15dfbb1efb6f0" alt="Image" width="79%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//180f6823-f597-485a-a021-fcba6f53e58d/markdown_4/imgs/img_in_image_box_123_389_1064_939.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F7b2bc2b5c4ae46e4ab7d32736fc3045c80633ec7a6def03cc0c15dfbb1efb6f0" alt="Image" width="79%" />
 
 ROHDE&SCHWARZ
 
@@ -1452,11 +1221,6 @@ Status
 No error
 © 2015 ROHDE&SCHWARZ. All rights reserved.
 
-</div>
-
-
-</div>
-
 
 ##### Web Control
 
@@ -1482,9 +1246,6 @@ Remote access to the instrument requires the password. The default password is i
 
 After the connection is established, the current screen of the R&S SMB is displayed in the browser window.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_0/imgs/img_in_image_box_327_445_862_818.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2F240ff9dd1e8404a17d23989446ad161339f5b05045090798e156881996e3106a" alt="Image" width="44%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_0/imgs/img_in_image_box_327_445_862_818.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A18Z%2F-1%2F%2F240ff9dd1e8404a17d23989446ad161339f5b05045090798e156881996e3106a" alt="Image" width="44%" />
 
 File Edit View Favorites Tools Help
 Page Safety Tools
@@ -1497,11 +1258,6 @@ Mod Gen Modulation RF
 config... config... config... RF
 On On On On
 LF AM Sweep
-
-</div>
-
-
-</div>
 
 
 6. Use the mouse cursor and keyboard to access the functionality of the instrument as you would directly perform the settings on the instruments front panel.
@@ -1522,16 +1278,8 @@ To trace and display messages:
 
 3. If you now control the R&S SMB with SCPI commands, using an appropriate tool, the SCPI remote trace records the information sent and received.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_1/imgs/img_in_image_box_125_270_1062_349.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F7b7dfd3096cfbf128d01cad274a30cc034577fb7b9a71cd2652c2c4ff4bb42c0" alt="Image" width="78%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_1/imgs/img_in_image_box_125_270_1062_349.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2F7b7dfd3096cfbf128d01cad274a30cc034577fb7b9a71cd2652c2c4ff4bb42c0" alt="Image" width="78%" />
 
 ROHDE&SCHWARZ LXI
-
-</div>
-
-
-</div>
 
 
 Web Control
@@ -1542,9 +1290,6 @@ SCPI Remote Trace
 
 ##### Help
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_1/imgs/img_in_image_box_140_420_1058_838.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Feaa5f821bb89e7c3ca5e8445cb05182f84a3f052f76ac500f92170b7acccd44c" alt="Image" width="77%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_1/imgs/img_in_image_box_140_420_1058_838.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A19Z%2F-1%2F%2Feaa5f821bb89e7c3ca5e8445cb05182f84a3f052f76ac500f92170b7acccd44c" alt="Image" width="77%" />
 
 Status
 live mode: on off logging: on off filter log file: refresh download clear details
@@ -1552,7 +1297,7 @@ Utilities
 rec MT | message
 Instrument Control
 0 > 1 "idn?
-0 < 1 Rohde&Schwarz, <inatrument,12345,67890>
+0 < 1 Rohde&Schwarz, 
 Web Control
 0 > 1 "opt?
 0 < 1 0
@@ -1568,11 +1313,6 @@ www.rohde-schwarz.com
 Status
 20 live records received
 © 2015 ROHDE&SCHWARZ All rights reserved.
-
-</div>
-
-
-</div>
 
 
 The function records all sent commands, received responses and messages, and stores them in an internal database. If "live mode" is disabled, you can display the recent traces upon request, using the "refresh" button. You can also store the log in a file.
@@ -1631,36 +1371,20 @@ The following columns are available if no column filter is applied:
 
 The front panel of the R&S SMB consists of the VGA display, some utility keys (left side) and the hardkey area with connectors and control interfaces (right side). The subsequent sections provide brief explanations on the controls and connectors, the hard-key area and the front panel.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_2/imgs/img_in_image_box_124_1106_1067_1404.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2F444029c4c559619db0428e625ebd3e5ebdaf8463f35cae7d4f55fa4379bf7e5b" alt="Image" width="79%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_2/imgs/img_in_image_box_124_1106_1067_1404.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2F444029c4c559619db0428e625ebd3e5ebdaf8463f35cae7d4f55fa4379bf7e5b" alt="Image" width="79%" />
 
 M/p
 
-</div>
 
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 3-1: Front panel view</div> </div>
+Figure 3-1: Front panel view
 
 
 ##### 3.2.1.1 Utility Keys
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_3/imgs/img_in_image_box_136_251_272_459.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2Fa7c2789ac8de7cbf4ccfb7359171e90fc0349f93e95046103947ace913b3ad3b" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_3/imgs/img_in_image_box_136_251_272_459.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A20Z%2F-1%2F%2Fa7c2789ac8de7cbf4ccfb7359171e90fc0349f93e95046103947ace913b3ad3b" alt="Image" width="11%" />
 
 PRESET LOCAL
 HELP SETUP
 FILE INFO
 WINBAR
-
-</div>
-
-
-</div>
 
 
 The keys to the left of the display cause the R&S SMB to return to a definite instrument state and provide information on the instrument and assistance.
@@ -1699,17 +1423,9 @@ Displays context-sensitive help text.
 
 ##### 3.2.1.2 Standby LEDs and Standby Key
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_3/imgs/img_in_image_box_172_1179_271_1277.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2F301c354e724db270f5db45f744e26aadb4e0987d456e598c666fc183e312f28f" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_3/imgs/img_in_image_box_172_1179_271_1277.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2F301c354e724db270f5db45f744e26aadb4e0987d456e598c666fc183e312f28f" alt="Image" width="8%" />
 
 ON STANDBY
 ①
-
-</div>
-
-
-</div>
 
 
 The standby LEDs and the [ON/STANDBY] key are located in the bottom left corner of the front panel.
@@ -1752,19 +1468,11 @@ The keys to the right of the display set parameters, select views and control th
 
 ##### Keys for Setting Parameters
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_4/imgs/img_in_image_box_204_896_271_1148.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2F2844bac8e515cf615b2064b5b17315866e3c7e273d61b3f661a88eeecefe33a1" alt="Image" width="5%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//0e6bd003-fb5b-4361-b436-2626258e7e9d/markdown_4/imgs/img_in_image_box_204_896_271_1148.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A21Z%2F-1%2F%2F2844bac8e515cf615b2064b5b17315866e3c7e273d61b3f661a88eeecefe33a1" alt="Image" width="5%" />
 
 FREQ
 LEVEL
 ON/OFF TOGGLE
 BACK-SPACE
-
-</div>
-
-
-</div>
 
 
 These keys provide direct access to the settings in the header of the instrument for fast setting the RF signal.
@@ -1791,9 +1499,6 @@ Deletes the character to the left of the cursor.
 
 ##### Display Keys
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_0/imgs/img_in_image_box_204_315_272_584.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F1764eed76ad2f6b406b3f972ac6e715df2e6b8e2d901930b7019b2770fdf7c6f" alt="Image" width="5%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_0/imgs/img_in_image_box_204_315_272_584.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F1764eed76ad2f6b406b3f972ac6e715df2e6b8e2d901930b7019b2770fdf7c6f" alt="Image" width="5%" />
 
 ESC CLOSE
 DIAGR
@@ -1801,11 +1506,6 @@ MOD
 ONIOFF
 RF
 ONIOFF
-
-</div>
-
-
-</div>
 
 
 The keys assigned right to rotary knob arrange different windows on the display, and turn the RF signal and the modulation on and off.
@@ -1850,9 +1550,6 @@ The keys in the data entry keypad are used to enter alphanumeric data and units.
 
 Data entry keys are only enabled while the cursor is placed on a data input field in a dialog. Their function depends on the data type of the input field.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_1/imgs/img_in_image_box_294_202_531_424.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F25ad3834a2d858e450ff96cbfd53ff25b693b8c29711592e3d53bcbe206f315e" alt="Image" width="19%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_1/imgs/img_in_image_box_294_202_531_424.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F25ad3834a2d858e450ff96cbfd53ff25b693b8c29711592e3d53bcbe206f315e" alt="Image" width="19%" />
 
 7 8 9 G/n
 abc def dBμV
@@ -1863,15 +1560,16 @@ pqrs tuv wxyz mV
 0 1 x1
 bI dB(m)
 
-</div>
 
-
-</div>
-
-
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Keys</td><td style='text-align: center; word-wrap: break-word;'>Description</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>0...9/abc</td><td style='text-align: center; word-wrap: break-word;'>Enters the corresponding numbers (in numeric input fields) or characters (character input fields).</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>.</td><td style='text-align: center; word-wrap: break-word;'>Inserts a decimal point (numeric input fields) or dot (character input fields) at the cursor position. Multiple decimal points are not allowed.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Unit keys</td><td style='text-align: center; word-wrap: break-word;'>Selects a unit and thus determine the absolute value, or changes the unit, i.e. trigger a recalculation without changing the absolute value. The function depends on the time at which the [Unit] key is used during parameter entry (see &quot;Working with Units&quot; on page 81). For unit-free values, the [x1] key is equivalent to [ENTER]. It confirms the previous entry and deactivates the input field.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>_</td><td style='text-align: center; word-wrap: break-word;'>Adds a blank in a character input field.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>*...#</td><td style='text-align: center; word-wrap: break-word;'>Enters special characters. Toggles through the available characters if the key is pressed several times in a row.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A &lt;-&gt; a</td><td style='text-align: center; word-wrap: break-word;'>Toggles between uppercase and lowercase characters.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>A, B, C, D, E, F</td><td style='text-align: center; word-wrap: break-word;'>Enters hexadecimal values. The letters assigned to the keys are automatically active when an entry field with a hexadecimal value is active.</td></tr></table>
+| Keys | Description |
+| --- | --- |
+| 0...9/abc | Enters the corresponding numbers (in numeric input fields) or characters (character input fields). |
+| . | Inserts a decimal point (numeric input fields) or dot (character input fields) at the cursor position. Multiple decimal points are not allowed. |
+| Unit keys | Selects a unit and thus determine the absolute value, or changes the unit, i.e. trigger a recalculation without changing the absolute value. The function depends on the time at which the [Unit] key is used during parameter entry (see "Working with Units" on page 81). For unit-free values, the [x1] key is equivalent to [ENTER]. It confirms the previous entry and deactivates the input field. |
+| _ | Adds a blank in a character input field. |
+| *...# | Enters special characters. Toggles through the available characters if the key is pressed several times in a row. |
+| A <-> a | Toggles between uppercase and lowercase characters. |
+| A, B, C, D, E, F | Enters hexadecimal values. The letters assigned to the keys are automatically active when an entry field with a hexadecimal value is active. |
 
 ##### [ENTER]
 
@@ -1893,17 +1591,6 @@ Pressing the rotary knob has the same effect.
 
 The rotary knob and the arrow keys are alternative control elements for data variation and navigation in the graphical user interface.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_133_203_268_337.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fa40f4e64ab1b12468453058f3191367fbaaf1cea796560dc5b8b49b7aa811f1b" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_133_203_268_337.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fa40f4e64ab1b12468453058f3191367fbaaf1cea796560dc5b8b49b7aa811f1b" alt="Image" width="11%" />
-
-©
-
-</div>
-
-
-</div>
-
 
 ##### [Rotary Knob]
 
@@ -1922,17 +1609,6 @@ The rotary knob has several functions:
 Note: Turning or pressing the rotary knob is equivalent to pressing the [Up] and [Down] keys or the [ENTER] key in the keypad.
 
 ##### [Navigation Keys]
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_295_544_460_615.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fade30b0084edb4d7b34102ab6d74dec2e5bba65aaaa6689d85a1e2bf04c5d672" alt="Image" width="13%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_295_544_460_615.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fade30b0084edb4d7b34102ab6d74dec2e5bba65aaaa6689d85a1e2bf04c5d672" alt="Image" width="13%" />
-
-♦
-
-</div>
-
-
-</div>
 
 
 The navigation keys consist of 4 arrow keys which are used for navigation, alternatively to the rotary knob.
@@ -1955,32 +1631,16 @@ The RF and LF output connectors and a connector for external modulation signals 
 
 ##### MOD EXT
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_293_1123_416_1195.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F08dde02321fedfb207564f2659af006944ef8aa6499500a5c87a8584dd8240ca" alt="Image" width="10%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_293_1123_416_1195.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F08dde02321fedfb207564f2659af006944ef8aa6499500a5c87a8584dd8240ca" alt="Image" width="10%" />
 
 → MOD EXT
-
-</div>
-
-
-</div>
 
 
 Input for external modulation signals.
 
 [LF]
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_294_1298_382_1365.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F70241e1509e4f0ea6445a5ad0605b32fedce4474ee143b52e16a5501c4f22443" alt="Image" width="7%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_2/imgs/img_in_image_box_294_1298_382_1365.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F70241e1509e4f0ea6445a5ad0605b32fedce4474ee143b52e16a5501c4f22443" alt="Image" width="7%" />
 
 LF
-
-</div>
-
-
-</div>
 
 
 Output for internal LF modulation generator signal.
@@ -1998,16 +1658,14 @@ The instrument is equipped with a reverse power protection that prevents the RF 
 Depending on the equipped frequency option, the RF output connectors vary.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">RF Option</td><td colspan="2">Microwave Option</td></tr><tr><td colspan="2"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_3/imgs/img_in_image_box_311_456_487_574.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A57Z%2F-1%2F%2Fdafec296626466013a2bdf44ab207a07d8eec135b882264b204482b74ac6a826" alt="Image"" />
-
-RF 50 Ω
-
-</td><td colspan="2"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_3/imgs/img_in_image_box_694_467_817_566.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A57Z%2F-1%2F%2F197553a0019ac99b1d57fb5bc9ad2ad3bf681f9ce78696e12ccc36ab26c5db97" alt="Image"" />
-
-RF 50.52
-
-</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Frequency options</td><td style='text-align: center; word-wrap: break-word;'>Connector type</td><td style='text-align: center; word-wrap: break-word;'>Frequency options</td><td style='text-align: center; word-wrap: break-word;'>Connector type</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B101</td><td rowspan="4">N female</td><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B112/-112L</td><td rowspan="2">test port adapter, PC 3.5 mm female</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B102</td><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B120/-B120L</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B103</td><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B131</td><td style='text-align: center; word-wrap: break-word;'>test port adapter, PC 2.92 mm female</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>R&amp;S SMB-B106</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| RF Option |  | Microwave Option |  |
+| --- | --- | --- | --- |
+| RF 50 Ω |  | RF 50.52 |  |
+| Frequency options | Connector type | Frequency options | Connector type |
+| R&S SMB-B101 | N female | R&S SMB-B112/-112L | test port adapter, PC 3.5 mm female |
+| R&S SMB-B102 |  | R&S SMB-B120/-B120L |  |
+| R&S SMB-B103 |  | R&S SMB-B131 | test port adapter, PC 2.92 mm female |
+| R&S SMB-B106 |  |  |  |
 
 NOTICE! Risk of RF connector and cable damage. If you tighten the connectors too strongly, you can damage the cables and connectors. If you do not tighten the connectors enough, the measurement results can be inaccurate.
 
@@ -2021,9 +1679,6 @@ Rohde & Schwarz offers appropriate torque wrenches for various connectors. For o
 
 This section gives an overview of connectors on the rear panel of the instrument. Each connector is briefly described and a reference is given to the chapters containing detailed information. For technical data of the connectors refer to the data sheet.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_123_205_1066_497.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2Fba3857f6bfb47ed8df77926fd756b92d396f201251deb6c2e8c391fba1c73f08" alt="Image" width="79%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_123_205_1066_497.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2Fba3857f6bfb47ed8df77926fd756b92d396f201251deb6c2e8c391fba1c73f08" alt="Image" width="79%" />
 
 IEEE 488
 
@@ -2047,27 +1702,11 @@ SIGNAL
 VALID
 S/P DIF
 
-</div>
 
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 3-2: Rear panel view</div> </div>
+Figure 3-2: Rear panel view
 
 
 ##### 3.2.2.1 Description of the Connectors
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_141_669_273_737.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2Fa2ebf70a603e1cbda39cbb35b6ae10b4a5b2a162726d36759e005a80d88236db" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_141_669_273_737.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2Fa2ebf70a603e1cbda39cbb35b6ae10b4a5b2a162726d36759e005a80d88236db" alt="Image" width="11%" />
-
-院城北
-
-</div>
-
-
-</div>
 
 
 ##### [Fuses]
@@ -2075,17 +1714,6 @@ S/P DIF
 The R&S SMB is fully fused by two fuses IEC60127-T3.15H/250 V.
 
 The fuses are accommodated in the fuse holders next to the power connector. Use only fuses of the mentioned type.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_172_805_272_969.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F2435d72c4a1f01fd3707b6e95784870bbb6ac9c117220a23ca858265bbd4842c" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_172_805_272_969.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F2435d72c4a1f01fd3707b6e95784870bbb6ac9c117220a23ca858265bbd4842c" alt="Image" width="8%" />
-
--
-
-</div>
-
-
-</div>
 
 
 ##### [AC supply and power switch]
@@ -2098,23 +1726,14 @@ The power switch can be set to two positions:
 
 The instrument is disconnected from the mains.
 
-##### 。朂
+##### [I]
 
 The instrument is power-supplied. It is either ready for operation (STANDBY) or in operating mode, depending on the position of the [ON/STANDBY] switch on the instrument front.
 
 See also data sheet and Chapter 3.1.6, "Connecting to Power", on page 24.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_171_1152_273_1246.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F44df181c094c5c96bfba3c8f494c4ebad51de06bfd41ce1aa206be531c9f094d" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_171_1152_273_1246.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F44df181c094c5c96bfba3c8f494c4ebad51de06bfd41ce1aa206be531c9f094d" alt="Image" width="8%" />
 
 USB IN
--
-
-</div>
-
-
-</div>
 
 
 ##### [USB IN]
@@ -2123,17 +1742,9 @@ USB (universal serial bus) interface of type B (device USB).
 
 This interface can be used for remote control of the instrument.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_171_1264_272_1363.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F596f22bd99a81628520e052caa33496f770db42c3750f9b51cd30247981d0d6d" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//5008cba0-b9ce-40ea-a053-1a2032053d4c/markdown_4/imgs/img_in_image_box_171_1264_272_1363.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A58Z%2F-1%2F%2F596f22bd99a81628520e052caa33496f770db42c3750f9b51cd30247981d0d6d" alt="Image" width="8%" />
 
 USB
 ☐
-
-</div>
-
-
-</div>
 
 
 ##### [USB Connectors type A]
@@ -2148,16 +1759,8 @@ USB (universal serial bus) interfaces of type A (host USB).
 
 See Chapter 3.1.9, "Connecting USB Devices", on page 25.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_198_273_291.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F06b622ec9019ed063d33bada94225d5ca5167da62b116be8b87d760179a1bc26" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_198_273_291.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F06b622ec9019ed063d33bada94225d5ca5167da62b116be8b87d760179a1bc26" alt="Image" width="8%" />
 
 LAN
-
-</div>
-
-
-</div>
 
 
 ##### [LAN Connector]
@@ -2178,16 +1781,8 @@ Chapter 3.1.7, "Connecting to LAN", on page 24
 
 Chapter 5.1.3, "LAN Interface", on page 242
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_93_460_274_559.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F62f253f3fdf7dc0f0ea186d963cdee6c20354fd80d639eedac0edd83fb498346" alt="Image" width="15%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_93_460_274_559.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2F62f253f3fdf7dc0f0ea186d963cdee6c20354fd80d639eedac0edd83fb498346" alt="Image" width="15%" />
 
 IEEE 488 IEC625
-
-</div>
-
-
-</div>
 
 
 ##### [IEC 625/IEEE 488]
@@ -2198,18 +1793,10 @@ See also Chapter A.1, "GPIB Bus Interface", on page 508 and Chapter 5.1.6, "GPIB
 
 Note: In order to avoid electromagnetic interference (EMI) caused by open lines, always terminate any connected IEC-bus cable with an instrument or a controller.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_143_656_272_740.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fdfb6552c5a5bfee19a53a6ad8fa54a58dbd64396e179127eabf0db0e8e180c26" alt="Image" width="10%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_143_656_272_740.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fdfb6552c5a5bfee19a53a6ad8fa54a58dbd64396e179127eabf0db0e8e180c26" alt="Image" width="10%" />
 
 STEREO
 R
 L
-
-</div>
-
-
-</div>
 
 
 ##### [Stereo R/L]
@@ -2218,16 +1805,8 @@ Inputs for analog stereo modulation signals. External modulation sources or the 
 
 See also Chapter 4.4.6, "Stereo Modulation", on page 217.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_175_818_272_924.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fb2b97804ce51b1ccd3586ea640bbc87837aa584d5306e5e6b796127098c2fdcc" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_175_818_272_924.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fb2b97804ce51b1ccd3586ea640bbc87837aa584d5306e5e6b796127098c2fdcc" alt="Image" width="8%" />
 
 S/P DIF
-
-</div>
-
-
-</div>
 
 
 ##### [S/P DIF]
@@ -2236,32 +1815,16 @@ Input for digital stereo signals (stereo modulation is available with option R&S
 
 See also Chapter 4.4.6, "Stereo Modulation", on page 217.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_172_955_272_1080.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fa79bd4b19766d33c2c4745faeb7f57e81aa87757129fe4861d03f74a230db9bf" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_172_955_272_1080.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A11Z%2F-1%2F%2Fa79bd4b19766d33c2c4745faeb7f57e81aa87757129fe4861d03f74a230db9bf" alt="Image" width="8%" />
 
 SIGNAL VALID
-
-</div>
-
-
-</div>
 
 
 ##### [SIGNAL VALID]
 
 Output of valid signal. This signal marks the valid signal times (valid level and frequency indication). The signal is generated automatically.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_1090_273_1193.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F45d05100d58325e90b6a997085dbb129b9be2dbf4e69651891443f9db9f03da4" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_1090_273_1193.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F45d05100d58325e90b6a997085dbb129b9be2dbf4e69651891443f9db9f03da4" alt="Image" width="8%" />
 
 INSTR TRIG
-
-</div>
-
-
-</div>
 
 
 ##### [INSTR TRIG]
@@ -2270,17 +1833,9 @@ Input for external trigger for sweeps and list mode.
 
 See also Chapter 4.3.7.4, "List Mode", on page 192 and Chapter 4.3.7.1, "Overview", on page 178.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_1225_272_1352.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2Fc14d1d6c37ac296e7bbae6ac00ffcd04a7bf1abda66259ef963439ce1a8227a2" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_0/imgs/img_in_image_box_171_1225_272_1352.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2Fc14d1d6c37ac296e7bbae6ac00ffcd04a7bf1abda66259ef963439ce1a8227a2" alt="Image" width="8%" />
 
 PULSE
 VIDEO
-
-</div>
-
-
-</div>
 
 
 ##### [PULSE VIDEO]
@@ -2289,17 +1844,9 @@ Output of internal pulse generator signal or external pulse signal fed in via th
 
 See also Chapter 4.4.5, "Pulse Modulation (PM)", on page 214.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_172_201_271_326.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F75c6904b6d1aa19d18617e8f895fb82c1d5d9428b4a96b8bf5ce299792ea6ebe" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_172_201_271_326.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F75c6904b6d1aa19d18617e8f895fb82c1d5d9428b4a96b8bf5ce299792ea6ebe" alt="Image" width="8%" />
 
 PULSE
 EXT
-
-</div>
-
-
-</div>
 
 
 ##### [PULSE EXT]
@@ -2308,16 +1855,8 @@ Input of external pulse signal or input of external trigger/gate signal for inte
 
 See also Chapter 4.4.5, "Pulse Modulation (PM)", on page 214.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_172_338_272_428.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F68d28aa57e28668d8f1802b492968b5e4a30d7926510b80196db8db51fed5d4c" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_172_338_272_428.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F68d28aa57e28668d8f1802b492968b5e4a30d7926510b80196db8db51fed5d4c" alt="Image" width="8%" />
 
 REF OUT
-
-</div>
-
-
-</div>
 
 
 ##### [REF OUT]
@@ -2326,16 +1865,8 @@ Output of internal reference signal.
 
 See also Chapter 4.3.4, "Reference Oscillator", on page 142.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_171_448_272_538.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F6ad4d28d66a6405c966c1a73bd621700025c020f86ec1dd7e31a9073e5257b4f" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_171_448_272_538.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F6ad4d28d66a6405c966c1a73bd621700025c020f86ec1dd7e31a9073e5257b4f" alt="Image" width="8%" />
 
 REF IN
-
-</div>
-
-
-</div>
 
 
 ##### [REF IN]
@@ -2350,17 +1881,9 @@ See also Chapter 4.3.4, "Reference Oscillator", on page 142.
 
 • high performance oven-controlled reference oscillator (option R&S SMB-B1H)
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_294_669_508_816.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F14aa198d0fb384d7140f13fa88e716262f7e2b1a7148b528c3cd51b356e6bb61" alt="Image" width="17%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_1/imgs/img_in_image_box_294_669_508_816.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A12Z%2F-1%2F%2F14aa198d0fb384d7140f13fa88e716262f7e2b1a7148b528c3cd51b356e6bb61" alt="Image" width="17%" />
 
 SMB-B1
 OCXO
-
-</div>
-
-
-</div>
 
 
 The OCXO generates a very precise 10 MHz reference signal. It needs some minutes of warm-up time to reach its nominal frequency.
@@ -2380,41 +1903,32 @@ To generate a simple AM-modulated signal, proceed as follows:
 Press the [PRESET] key to set a defined instrument state.
 
 
+| Freq | RF OFF | MOD OFF | Level |
+| --- | --- | --- | --- |
+| 1.000 000 000 0 | GHz | -30.00 | dBm |
+| ALC-S&H |  |  | Info |
+| Mod Gen Modulation RF config... config... □ On □ On □ On |  |  |  |
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq</td><td style='text-align: center; word-wrap: break-word;'>RF OFF</td><td style='text-align: center; word-wrap: break-word;'>MOD OFF</td><td style='text-align: center; word-wrap: break-word;'>Level</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1.000 000 000 0</td><td style='text-align: center; word-wrap: break-word;'>GHz</td><td style='text-align: center; word-wrap: break-word;'>-30.00</td><td style='text-align: center; word-wrap: break-word;'>dBm</td></tr><tr><td colspan="3">ALC-S&amp;H</td><td style='text-align: center; word-wrap: break-word;'>Info</td></tr><tr><td colspan="4"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_2/imgs/img_in_image_box_332_307_620_382.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A13Z%2F-1%2F%2F8033fe7d1d69d0e8bca6decdabd3355f4373c4bb9d7cdef33ae823267cf07cdc" alt="Image"" />
-
-Mod Gen Modulation RF
-config... config...
-□ On □ On □ On
-
-</td></tr></table>
-
-## 2. Select and activate AM modulation
+2. Select and activate AM modulation
 
 a) Turn the rotary knob and select the "Modulation" block.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Modulation</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>config...</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>☐ On</td></tr></table>
+| Modulation |
+| --- |
+| config... |
+| ☐ On |
 
 b) Press the rotary knob to open the dialog where the modulation can be selected.
 
 Note: Different modulation modes are available depending on the options installed.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_2/imgs/img_in_image_box_361_704_478_766.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A13Z%2F-1%2F%2Fc35c3554a0bd4a7b6c6ca5037a3cf10e5074538456ae512fac933edb084f0f83" alt="Image" width="9%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_2/imgs/img_in_image_box_361_704_478_766.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A13Z%2F-1%2F%2Fc35c3554a0bd4a7b6c6ca5037a3cf10e5074538456ae512fac933edb084f0f83" alt="Image" width="9%" />
 
 Modulation
 Amplitude Modulation...
 Frequency Modulation...
 Phase Modulation...
 Pulse Modulation...
-
-</div>
-
-
-</div>
 
 
 The "Amplitude Mod..." menu is the first menu and is highlighted per default.
@@ -2426,20 +1940,34 @@ c) Turn the rotary knob and highlight "Amplitude Mod...".
 Press the rotary knob to open the "Amplitude Modulation" dialog.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Amplitude Modulation</td><td style='text-align: center; word-wrap: break-word;'>☐×</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>State</td><td style='text-align: center; word-wrap: break-word;'>Off</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Source</td><td style='text-align: center; word-wrap: break-word;'>Int</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Depth</td><td style='text-align: center; word-wrap: break-word;'>30.0 %</td></tr><tr><td colspan="2">AM Source = INTernal</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>LFGen Freq</td><td style='text-align: center; word-wrap: break-word;'>1.000 00 kHz</td></tr></table>
+| Amplitude Modulation | ☐× |
+| --- | --- |
+| State | Off |
+| AM Source | Int |
+| AM Depth | 30.0 % |
+| AM Source = INTernal |  |
+| LFGen Freq | 1.000 00 kHz |
 
 d) Turn the rotary knob to select parameter "AM Depth", press the rotary knob to allow editing and enter the preferred AM depth with the aid of the numeric keypad and the unit keys.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>State</td><td style='text-align: center; word-wrap: break-word;'>Off</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Source</td><td style='text-align: center; word-wrap: break-word;'>Int</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Depth</td><td style='text-align: center; word-wrap: break-word;'>20 %</td></tr><tr><td colspan="2">AM Source = INTernal</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>LFGen Freq</td><td style='text-align: center; word-wrap: break-word;'>1.000 00 kHz</td></tr></table>
+| State | Off |
+| --- | --- |
+| AM Source | Int |
+| AM Depth | 20 % |
+| AM Source = INTernal |  |
+| LFGen Freq | 1.000 00 kHz |
 
 e) Finally, select "State" and press the rotary knob to switch on the AM modulation.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Amplitude Modulation</td><td style='text-align: center; word-wrap: break-word;'>☐☒</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>State</td><td style='text-align: center; word-wrap: break-word;'>On</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Source</td><td style='text-align: center; word-wrap: break-word;'>Int</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>AM Depth</td><td style='text-align: center; word-wrap: break-word;'>20.0 %</td></tr><tr><td colspan="2">AM Source = INTernal</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>LFGen Freq</td><td style='text-align: center; word-wrap: break-word;'>1.000 00 kHz</td></tr></table>
+| Amplitude Modulation | ☐☒ |
+| --- | --- |
+| State | On |
+| AM Source | Int |
+| AM Depth | 20.0 % |
+| AM Source = INTernal |  |
+| LFGen Freq | 1.000 00 kHz |
 
 To indicate the active state, the "Modulation" block is displayed in blue. The "RF" is not yet active, which means that no RF signal is output.
 
@@ -2450,24 +1978,17 @@ f) Press the [DIAGRAM] key to display the complete block diagram.
 a) Press the [FREQ] key to activate the editing mode for frequency entry. The "Frequency" entry field in the header section of the display is highlighted.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq</td><td style='text-align: center; word-wrap: break-word;'>RF OFF</td><td style='text-align: center; word-wrap: break-word;'>MOD ON</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1.000 000 000 00</td><td style='text-align: center; word-wrap: break-word;'>GHz</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| Freq | RF OFF | MOD ON |
+| --- | --- | --- |
+| 1.000 000 000 00 | GHz |  |
 
 Enter the frequency using the numeric keypad and terminate the entry by pressing a unit key.
 
 b) Press the [LEVEL] key and enter the level settings in the same way.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_3/imgs/img_in_image_box_361_791_498_845.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A14Z%2F-1%2F%2F92a615ac0004e7f428a5c9a87fed89ced5c3dfbaaf24f147be745cc07753c3e5" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_3/imgs/img_in_image_box_361_791_498_845.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A14Z%2F-1%2F%2F92a615ac0004e7f428a5c9a87fed89ced5c3dfbaaf24f147be745cc07753c3e5" alt="Image" width="11%" />
 
 Level
 -30.00 dBm
-
-</div>
-
-
-</div>
 
 
 c) Press the [DIAGRAM] key to display the complete block diagram.
@@ -2478,9 +1999,6 @@ Press the [RF ON/OFF] key to activate the "RF" block.
 
 The AM modulation signal is now present at the RF output.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_3/imgs/img_in_image_box_328_979_686_1245.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A14Z%2F-1%2F%2Fb488fb8bc92b2922cdc9b6582fcb73be135ebaafe57476b3050e1a6264df1799" alt="Image" width="30%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//6c6987de-72a2-4b45-9916-fa5a26ec3e92/markdown_3/imgs/img_in_image_box_328_979_686_1245.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A14Z%2F-1%2F%2Fb488fb8bc92b2922cdc9b6582fcb73be135ebaafe57476b3050e1a6264df1799" alt="Image" width="30%" />
 
 Freq Level
 363.000 000 00 MHz -11.00 dBm
@@ -2489,11 +2007,6 @@ Mod Gen Modulation RF
 config... config... config... RF
 On On On
 Swp AM
-
-</div>
-
-
-</div>
 
 
 ##### Generation of an RF Frequency Sweep Signal
@@ -2505,20 +2018,26 @@ In the example, an RF frequency sweep is configured. Proceed as follow:
 Press the [PRESET] key to set a defined instrument state.
 
 
+| Freq | RF OFF | MOD OFF | Level |
+| --- | --- | --- | --- |
+| 1.000 000 000 0 | GHz | -30.00 dBm |  |
+| ALC-S&H |  |  | Info |
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq</td><td style='text-align: center; word-wrap: break-word;'>RF OFF</td><td style='text-align: center; word-wrap: break-word;'>MOD OFF</td><td style='text-align: center; word-wrap: break-word;'>Level</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1.000 000 000 0</td><td style='text-align: center; word-wrap: break-word;'>GHz</td><td style='text-align: center; word-wrap: break-word;'>-30.00 dBm</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td colspan="3">ALC-S&amp;H</td><td style='text-align: center; word-wrap: break-word;'>Info</td></tr></table>
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Mod Gen</td><td style='text-align: center; word-wrap: break-word;'>Modulation</td><td style='text-align: center; word-wrap: break-word;'>RF</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>config...</td><td style='text-align: center; word-wrap: break-word;'>config...</td><td style='text-align: center; word-wrap: break-word;'>config...</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>∫ On</td><td style='text-align: center; word-wrap: break-word;'>∫ On</td><td style='text-align: center; word-wrap: break-word;'>∫ On</td></tr></table>
+| Mod Gen | Modulation | RF |
+| --- | --- | --- |
+| config... | config... | config... |
+| ∫ On | ∫ On | ∫ On |
 
 2. Configure and activate RF frequency sweep.
 
 a) Turn the rotary knob and select the "RF" block.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>RF</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>config...</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>☐ On</td></tr></table>
+| RF |
+| --- |
+| config... |
+| ☐ On |
 
 b) Press the rotary knob to open the dialog where the RF frequency sweep can be selected.
 
@@ -2530,16 +2049,22 @@ List Mode...
 c) Turn the rotary knob and highlight "RF Frequency Sweep…". Press the rotary knob to open the "RF Frequency Sweep" dialog.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="5">RF Frequency Sweep</td></tr><tr><td colspan="2">State</td><td colspan="3">Off</td></tr><tr><td colspan="2">Mode</td><td colspan="3">Auto</td></tr><tr><td colspan="2">Start Freq</td><td style='text-align: center; word-wrap: break-word;'>100.000 000 000</td><td colspan="2">MHz</td></tr><tr><td colspan="2">Stop Freq</td><td style='text-align: center; word-wrap: break-word;'>500.000 000 000</td><td colspan="2">MHz</td></tr><tr><td colspan="2">Center Freq</td><td style='text-align: center; word-wrap: break-word;'>300.000 000 000</td><td colspan="2">MHz</td></tr><tr><td colspan="2">Span</td><td style='text-align: center; word-wrap: break-word;'>400.000 000 000</td><td colspan="2">MHz</td></tr></table>
+| RF Frequency Sweep |  |  |  |  |
+| --- | --- | --- | --- | --- |
+| State |  | Off |  |  |
+| Mode |  | Auto |  |  |
+| Start Freq |  | 100.000 000 000 | MHz |  |
+| Stop Freq |  | 500.000 000 000 | MHz |  |
+| Center Freq |  | 300.000 000 000 | MHz |  |
+| Span |  | 400.000 000 000 | MHz |  |
 
 All sweep parameters are default except for the sweep mode. The default settings are not changed.
 
 d) Turn the rotary knob to select parameter "Mode", press the rotary knob to open the selection list and select "Single".
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">RF Frequency Sweep</td></tr></table>
+| RF Frequency Sweep |  |
+| --- | --- |
 
 e) Press the rotary knob to apply the selection.
 
@@ -2548,30 +2073,38 @@ For triggering, the "Execute Single Sweep" and "Reset Sweep" buttons are display
 f) Finally, select "State" and press the rotary knob to switch on the RF frequency sweep.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">RF Frequency Sweep</td></tr></table>
+| RF Frequency Sweep |  |
+| --- | --- |
 
 g) Press the [DIAGRAM] key to display the complete block diagram. The "RF" is not yet active, which means that no RF signal is output.
 
-## 3. Activate RF signal.
+3. Activate RF signal.
 
 a) Turn the rotary knob to select the "RF" block.
 
 b) Press the [RF ON/OFF] key to activate the "RF" signal output.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>RF</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>config...</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>On</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Sweep</td></tr></table>
+| RF |
+| --- |
+| config... |
+| On |
+| Sweep |
 
 To indicate the active state, the RF block is displayed in blue. An RF signal with the default frequency and level settings is output, i.e. 1 GHz and -30 dBm. The sweep is not yet active, it must be triggered in the sweep dialog.
 
-## 4. Trigger RF frequency sweep
+4. Trigger RF frequency sweep
 
 a) Press the [Winbar] key to switch to the "RF Frequency Sweep" dialog. Turn the rotary knob to select the "Execute Single Sweep" button.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="4">RF Frequency Sweep</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>State</td><td colspan="3">On</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Mode</td><td colspan="3">Single</td></tr><tr><td colspan="4">Execute Single Sweep</td></tr><tr><td colspan="4">Reset Sweep</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Start Freq</td><td style='text-align: center; word-wrap: break-word;'>100.000 000 000</td><td colspan="2">MHz</td></tr></table>
+| RF Frequency Sweep |  |  |  |
+| --- | --- | --- | --- |
+| State | On |  |  |
+| Mode | Single |  |  |
+| Execute Single Sweep |  |  |  |
+| Reset Sweep |  |  |  |
+| Start Freq | 100.000 000 000 | MHz |  |
 
 Press the rotary knob to trigger (start) the frequency sweep.
 
@@ -2597,9 +2130,6 @@ Each block represents a functional unit of the instrument. Thus you always know 
 
 The block diagram in the figure below shows a fully equipped instrument.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_1/imgs/img_in_image_box_294_1032_653_1300.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A15Z%2F-1%2F%2F290af5e3ce7443ba8bbc2f47daa69d478d057605c57eea61bf4990046b51d56b" alt="Image" width="30%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_1/imgs/img_in_image_box_294_1032_653_1300.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A15Z%2F-1%2F%2F290af5e3ce7443ba8bbc2f47daa69d478d057605c57eea61bf4990046b51d56b" alt="Image" width="30%" />
 
 Freq Level
 363.000 000 00 MHz -11.00 dBm
@@ -2609,13 +2139,8 @@ config... config... config... RF
 On On On On
 Swp AM
 
-</div>
 
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 3-3: Block diagram of a fully equipped R&S SMB</div> </div>
+Figure 3-3: Block diagram of a fully equipped R&S SMB
 
 
 With the rotary knob, you can navigate in the block diagram and the dialogs, and operate the instrument with one hand. The cursor is moved line by line through the block diagram or dialog. Turning the button clockwise advances the cursor. The selected
@@ -2639,17 +2164,6 @@ The main field of application of the R&S SMB is the generation of sine wave sign
 #### 3.4.4 Description of Individual Diagram Blocks
 
 The signal path of the instrument is configured by installing a frequency option that comprises all required modules.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_3/imgs/img_in_image_box_218_205_273_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F8cebab96a9cb3d7abf2b108f2035c8510ddd1c302d46d0e1a5e518f053a663a9" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_3/imgs/img_in_image_box_218_205_273_259.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F8cebab96a9cb3d7abf2b108f2035c8510ddd1c302d46d0e1a5e518f053a663a9" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 One of the following options must be installed.
@@ -2696,16 +2210,8 @@ See data sheet for detailed information.
 
 Up-to-date information is available at R&S SMB homepage on the internet http://www.rohde-schwarz.com/product/smb100a.html.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_3/imgs/img_in_image_box_184_1035_272_1118.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F05b7cc8974981ad39b650b9b0ce34461c363667f6916574d34ebe33f5c06ad62" alt="Image" width="7%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_3/imgs/img_in_image_box_184_1035_272_1118.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A16Z%2F-1%2F%2F05b7cc8974981ad39b650b9b0ce34461c363667f6916574d34ebe33f5c06ad62" alt="Image" width="7%" />
 
 Mod Gen config... On
-
-</div>
-
-
-</div>
 
 
 ##### Mod Gen block
@@ -2722,16 +2228,8 @@ The R&S SMB offers three different sweep types (frequency sweep, level sweep and
 
 The status display in the block shows whether LF generator and/or a sweep are active. The selected internal LF generator and/or noise source are switched on or off with the [TOGGLE ON/OFF] key.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_4/imgs/img_in_image_box_188_302_273_386.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F5ee22da447234b45c5dd4e3e2bcfae27b3349b8b61fca38670e01522675ee99a" alt="Image" width="7%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_4/imgs/img_in_image_box_188_302_273_386.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2F5ee22da447234b45c5dd4e3e2bcfae27b3349b8b61fca38670e01522675ee99a" alt="Image" width="7%" />
 
 Modulation config... On
-
-</div>
-
-
-</div>
 
 
 ##### Modulation block
@@ -2758,18 +2256,10 @@ Note: For modulation modes that can be simultaneously used, refer to the R&S SMB
 
 The status display in the block shows the active modulation(s). Use the [TOGGLE ON/OFF] key to switch the active modulation of the block on or off.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_4/imgs/img_in_image_box_185_875_272_959.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2Ff1b13fed4d7b864296dd5e372419000f4b9eff7e90999b20065dde7bfeaf27ce" alt="Image" width="7%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//d01c6709-8b8c-4527-8e7d-354df1b6de4a/markdown_4/imgs/img_in_image_box_185_875_272_959.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A17Z%2F-1%2F%2Ff1b13fed4d7b864296dd5e372419000f4b9eff7e90999b20065dde7bfeaf27ce" alt="Image" width="7%" />
 
 RF
 config...
 □ On
-
-</div>
-
-
-</div>
 
 
 ##### RF block
@@ -2822,18 +2312,43 @@ The following table lists all available key combinations used on the PC keyboard
 
 In addition, a front panel key emulation and an on-screen keyboard can be used for manual operation by mouse only.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 3-3: Overview of the keyboard key combinations and their function</div> </div>
+Table 3-3: Overview of the keyboard key combinations and their function
 
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Key of PC keyboard</td><td style='text-align: center; word-wrap: break-word;'>Short description</td><td style='text-align: center; word-wrap: break-word;'>Function</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>./*...#</td><td style='text-align: center; word-wrap: break-word;'>Special characters</td><td style='text-align: center; word-wrap: break-word;'>Enters a special character, e.g. period/decimal point.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+/-</td><td style='text-align: center; word-wrap: break-word;'>Sign</td><td style='text-align: center; word-wrap: break-word;'>Enters the sign.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>- / (shift+) a—z</td><td style='text-align: center; word-wrap: break-word;'>A&lt;-&gt;a</td><td style='text-align: center; word-wrap: break-word;'>Switches between upper-case and lower-case letters.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ALT + F9</td><td style='text-align: center; word-wrap: break-word;'>Units G/n / dBuV / dBu</td><td style='text-align: center; word-wrap: break-word;'>Selects the unit Giga/Nano, dBuV for the RF level and dBu for the LF level.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ALT + F10</td><td style='text-align: center; word-wrap: break-word;'>Units M/u / uV</td><td style='text-align: center; word-wrap: break-word;'>Selects the units Mega/Micro and uV for RF levels.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ALT + F11</td><td style='text-align: center; word-wrap: break-word;'>Units k/m / uV</td><td style='text-align: center; word-wrap: break-word;'>Selects the units Kilo/Milli and uV for RF levels.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ALT + F12</td><td style='text-align: center; word-wrap: break-word;'>Enter function Unit dBm</td><td style='text-align: center; word-wrap: break-word;'>Confirms entries in the base unit and values without a unit. Selects dBm for the RF level and dB for level offset and level step width.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Arrow keys</td><td style='text-align: center; word-wrap: break-word;'>Cursor</td><td style='text-align: center; word-wrap: break-word;'>Moves the cursor.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Backspace</td><td style='text-align: center; word-wrap: break-word;'>Clears entry</td><td style='text-align: center; word-wrap: break-word;'>Clears the last entry (number, sign or decimal point)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + A</td><td style='text-align: center; word-wrap: break-word;'>Rearrange</td><td style='text-align: center; word-wrap: break-word;'>Arranges open dialogs automatically</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + C</td><td style='text-align: center; word-wrap: break-word;'>Recalculate</td><td style='text-align: center; word-wrap: break-word;'>Starts recalculation of the signal.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + D</td><td style='text-align: center; word-wrap: break-word;'>Block diagram</td><td style='text-align: center; word-wrap: break-word;'>Sets the cursor on the block diagram and hides all menus.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + E</td><td style='text-align: center; word-wrap: break-word;'>Setup menu</td><td style='text-align: center; word-wrap: break-word;'>Opens the setup menu for general instrument settings.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + F1 - F8</td><td style='text-align: center; word-wrap: break-word;'>Softkey 1 - 8</td><td style='text-align: center; word-wrap: break-word;'>Triggers the function assigned to the soft-key.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + F</td><td style='text-align: center; word-wrap: break-word;'>Frequency</td><td style='text-align: center; word-wrap: break-word;'>Activates the frequency entry.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + G</td><td style='text-align: center; word-wrap: break-word;'>Closes menus</td><td style='text-align: center; word-wrap: break-word;'>Closes an active menu.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + H</td><td style='text-align: center; word-wrap: break-word;'>Hide</td><td style='text-align: center; word-wrap: break-word;'>Minimizes the active menu. Pressing the respective button in the Winbar opens the menu again.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + I</td><td style='text-align: center; word-wrap: break-word;'>Info</td><td style='text-align: center; word-wrap: break-word;'>Opens/closes the info window</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + L</td><td style='text-align: center; word-wrap: break-word;'>Level</td><td style='text-align: center; word-wrap: break-word;'>Activates the level entry.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + M</td><td style='text-align: center; word-wrap: break-word;'>Menu</td><td style='text-align: center; word-wrap: break-word;'>Calls the menu selection list.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + O</td><td style='text-align: center; word-wrap: break-word;'>Modulation on/off</td><td style='text-align: center; word-wrap: break-word;'>Switches modulation on/off. "MOD OFF" is indicated in the status line.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + P</td><td style='text-align: center; word-wrap: break-word;'>Preset</td><td style='text-align: center; word-wrap: break-word;'>Restores a defined basic instrument setup.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + Q</td><td style='text-align: center; word-wrap: break-word;'>Local</td><td style='text-align: center; word-wrap: break-word;'>Switches the instrument from remote control to manual control.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + R</td><td style='text-align: center; word-wrap: break-word;'>RF on/off</td><td style='text-align: center; word-wrap: break-word;'>Switches the RF output signal on/off. "RF OFF" is indicated in the status line. Both RF output signals are always deactivated in the case of two-path instruments.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + S</td><td style='text-align: center; word-wrap: break-word;'>Storage under Windows</td><td style='text-align: center; word-wrap: break-word;'>Activates the menu for storing instrument settings.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + T</td><td style='text-align: center; word-wrap: break-word;'>Toggle on/off</td><td style='text-align: center; word-wrap: break-word;'>Switches a block or parameter on/off. Toggles between the different possibilities of setting a selection parameter.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + Y</td><td style='text-align: center; word-wrap: break-word;'>Hardcopy</td><td style='text-align: center; word-wrap: break-word;'>Opens the menu for configuring and starting a hardcopy.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>CTRL + W</td><td style='text-align: center; word-wrap: break-word;'>Winbar</td><td style='text-align: center; word-wrap: break-word;'>Displays the Winbar in the foreground/background.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Enter</td><td style='text-align: center; word-wrap: break-word;'>Enter</td><td style='text-align: center; word-wrap: break-word;'>Terminates an entry.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ESC</td><td style='text-align: center; word-wrap: break-word;'>ESC</td><td style='text-align: center; word-wrap: break-word;'>Selects the next higher menu/selection level. When the editing mode is exited with ESC, the previous value is restored.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>F1</td><td style='text-align: center; word-wrap: break-word;'>Help</td><td style='text-align: center; word-wrap: break-word;'>Opens/closes context-sensitive help.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Ins</td><td style='text-align: center; word-wrap: break-word;'>Insert</td><td style='text-align: center; word-wrap: break-word;'>Activates the insert mode.</td></tr></table>
-
-
-
-
-
-
+| Key of PC keyboard | Short description | Function |
+| --- | --- | --- |
+| ./*...# | Special characters | Enters a special character, e.g. period/decimal point. |
+| +/- | Sign | Enters the sign. |
+| - / (shift+) a—z | A<->a | Switches between upper-case and lower-case letters. |
+| ALT + F9 | Units G/n / dBuV / dBu | Selects the unit Giga/Nano, dBuV for the RF level and dBu for the LF level. |
+| ALT + F10 | Units M/u / uV | Selects the units Mega/Micro and uV for RF levels. |
+| ALT + F11 | Units k/m / uV | Selects the units Kilo/Milli and uV for RF levels. |
+| ALT + F12 | Enter function Unit dBm | Confirms entries in the base unit and values without a unit. Selects dBm for the RF level and dB for level offset and level step width. |
+| Arrow keys | Cursor | Moves the cursor. |
+| Backspace | Clears entry | Clears the last entry (number, sign or decimal point) |
+| CTRL + A | Rearrange | Arranges open dialogs automatically |
+| CTRL + C | Recalculate | Starts recalculation of the signal. |
+| CTRL + D | Block diagram | Sets the cursor on the block diagram and hides all menus. |
+| CTRL + E | Setup menu | Opens the setup menu for general instrument settings. |
+| CTRL + F1 - F8 | Softkey 1 - 8 | Triggers the function assigned to the soft-key. |
+| CTRL + F | Frequency | Activates the frequency entry. |
+| CTRL + G | Closes menus | Closes an active menu. |
+| CTRL + H | Hide | Minimizes the active menu. Pressing the respective button in the Winbar opens the menu again. |
+| CTRL + I | Info | Opens/closes the info window |
+| CTRL + L | Level | Activates the level entry. |
+| CTRL + M | Menu | Calls the menu selection list. |
+| CTRL + O | Modulation on/off | Switches modulation on/off. "MOD OFF" is indicated in the status line. |
+| CTRL + P | Preset | Restores a defined basic instrument setup. |
+| CTRL + Q | Local | Switches the instrument from remote control to manual control. |
+| CTRL + R | RF on/off | Switches the RF output signal on/off. "RF OFF" is indicated in the status line. Both RF output signals are always deactivated in the case of two-path instruments. |
+| CTRL + S | Storage under Windows | Activates the menu for storing instrument settings. |
+| CTRL + T | Toggle on/off | Switches a block or parameter on/off. Toggles between the different possibilities of setting a selection parameter. |
+| CTRL + Y | Hardcopy | Opens the menu for configuring and starting a hardcopy. |
+| CTRL + W | Winbar | Displays the Winbar in the foreground/background. |
+| Enter | Enter | Terminates an entry. |
+| ESC | ESC | Selects the next higher menu/selection level. When the editing mode is exited with ESC, the previous value is restored. |
+| F1 | Help | Opens/closes context-sensitive help. |
+| Ins | Insert | Activates the insert mode. |
 
 
 ##### Front Panel Key Emulation
@@ -2841,8 +2356,17 @@ In addition, a front panel key emulation and an on-screen keyboard can be used f
 The R&S SMB provides a front panel key emulation to enable execution of the front panel key functions by mouse e.g. for remote access. The emulation is called on the external monitor by a right mouse click. The front panel key functions are executed by a mouse click on the associated button.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq</td><td style='text-align: center; word-wrap: break-word;'>Diagram</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Level</td><td style='text-align: center; word-wrap: break-word;'>Menu</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>File</td><td style='text-align: center; word-wrap: break-word;'>Rearr.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>RF On/Off</td><td style='text-align: center; word-wrap: break-word;'>WinBar</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Mod On/Off</td><td style='text-align: center; word-wrap: break-word;'>Help</td></tr><tr><td colspan="2">Preset</td></tr><tr><td colspan="2">Local</td></tr><tr><td colspan="2">Setup</td></tr><tr><td colspan="2">Hardcopy</td></tr><tr><td colspan="2">Info</td></tr></table>
+| Freq | Diagram |
+| --- | --- |
+| Level | Menu |
+| File | Rearr. |
+| RF On/Off | WinBar |
+| Mod On/Off | Help |
+| Preset |  |
+| Local |  |
+| Setup |  |
+| Hardcopy |  |
+| Info |  |
 
 ##### On-screen Keyboard
 
@@ -2851,8 +2375,14 @@ In addition, the Windows XP operating system provides a keyboard emulation that 
 To access the on-Screen Keyboard, select "Start > Programs > Accessories > Accessibility > On-Screen Keyboard".
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>File</td><td style='text-align: center; word-wrap: break-word;'>Keyboard</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>Help</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>esc</td><td style='text-align: center; word-wrap: break-word;'>F1</td><td style='text-align: center; word-wrap: break-word;'>F2</td><td style='text-align: center; word-wrap: break-word;'>F3</td><td style='text-align: center; word-wrap: break-word;'>F4</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1</td><td style='text-align: center; word-wrap: break-word;'>2</td><td style='text-align: center; word-wrap: break-word;'>3</td><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>5</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>tab</td><td style='text-align: center; word-wrap: break-word;'>q</td><td style='text-align: center; word-wrap: break-word;'>w</td><td style='text-align: center; word-wrap: break-word;'>e</td><td style='text-align: center; word-wrap: break-word;'>r</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>lock</td><td style='text-align: center; word-wrap: break-word;'>a</td><td style='text-align: center; word-wrap: break-word;'>s</td><td style='text-align: center; word-wrap: break-word;'>d</td><td style='text-align: center; word-wrap: break-word;'>f</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>shift</td><td style='text-align: center; word-wrap: break-word;'>y</td><td style='text-align: center; word-wrap: break-word;'>x</td><td style='text-align: center; word-wrap: break-word;'>c</td><td style='text-align: center; word-wrap: break-word;'>y</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>ctrl</td><td style='text-align: center; word-wrap: break-word;'>alt</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| File | Keyboard | Settings | Help |  |
+| --- | --- | --- | --- | --- |
+| esc | F1 | F2 | F3 | F4 |
+| 1 | 2 | 3 | 4 | 5 |
+| tab | q | w | e | r |
+| lock | a | s | d | f |
+| shift | y | x | c | y |
+| ctrl | alt |  |  |  |
 
 ##### 3.5.1.2 Key Elements
 
@@ -2866,17 +2396,9 @@ A graphics display shows the current configuration and the signal flow in the fo
 
 The main characteristics of the RF signal, frequency and level, are permanently displayed in the header section of the screen and can be directly set in the display fields after the [FREQ] (CTRL+F) or [LEVEL] (CTRL+L) key is pressed. Status messages for the output signal are displayed in addition to frequency and level.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_293_740_657_795.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F1dc31810e0c0f6457ccceedccdef7804a80901a2acaf08dac9185e5ed483b602" alt="Image" width="30%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_293_740_657_795.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F1dc31810e0c0f6457ccceedccdef7804a80901a2acaf08dac9185e5ed483b602" alt="Image" width="30%" />
 
 Freq RF ON MOD ON Level
 1.000 000 000 000 GHz -30.00 dBm
-
-</div>
-
-
-</div>
 
 
 ##### Operation via Graphical User Interface
@@ -2889,26 +2411,15 @@ Menus are assigned to the specific function blocks in the block diagram. The fun
 
 The "Modulation" block contains all menus required for modulation signal configuration.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_364_1109_466_1203.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F0475f7da242adedf7d9dd276308820ea8ab507d0a5323c846412106d92ceb60f" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_364_1109_466_1203.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F0475f7da242adedf7d9dd276308820ea8ab507d0a5323c846412106d92ceb60f" alt="Image" width="8%" />
 
 Modulation
 config...
 On
 PuM
 
-</div>
-
-
-</div>
-
 
 In this block all modulations can be selected.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_363_1259_479_1319.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2Feed105625c47a2ef53d5ee4a35c2014542d9ac12674bd1275ee3bfb150d24bbf" alt="Image" width="9%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_3/imgs/img_in_image_box_363_1259_479_1319.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2Feed105625c47a2ef53d5ee4a35c2014542d9ac12674bd1275ee3bfb150d24bbf" alt="Image" width="9%" />
 
 Modulation
 Amplitude Modulation
@@ -2916,31 +2427,17 @@ Frequency Modulation...
 Phase Modulation...
 Pulse Modulation...
 
-</div>
-
-
-</div>
-
 
 ##### Signal flow
 
 The signal flow between the function blocks and the employed inputs and outputs are also shown.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_330_202_623_320.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fb9e33e283e7e19d23e757d33619672460b42ed196cc910a04d0137ea16ececc5" alt="Image" width="24%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_330_202_623_320.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fb9e33e283e7e19d23e757d33619672460b42ed196cc910a04d0137ea16ececc5" alt="Image" width="24%" />
 
 LF MOD
-→
 Mod Gen Modulation RF
 config... config... config... RF
 On On On On
 LF AM Sweep
-
-</div>
-
-
-</div>
 
 
 ##### • Menu tree
@@ -2959,34 +2456,12 @@ To offer the user a familiar environment, operation is very similar to operation
 
 A blue frame indicates that the selected item is active. In the highlighted element, entries can be made.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_165_810_270_942.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2F32bbf1e26abe1172b146e78f812577562dff1c3540b15b989cde265b114c1252" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_165_810_270_942.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2F32bbf1e26abe1172b146e78f812577562dff1c3540b15b989cde265b114c1252" alt="Image" width="8%" />
-
-©
-
-</div>
-
-
-</div>
-
 
 ##### Rotary knob
 
 Operation is possible via front-panel keys, an external keyboard and the mouse. However, most of the settings can be easily made with the rotary knob:
 
 - Turning the rotary knob shifts the entry focus to the target element.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_164_956_269_1063.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fb7c29ca4e65018b487a8b739adb8673990a35d7bf3ea377a49c25f23127d405f" alt="Image" width="8%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//8c67db69-67cf-4663-ad91-0015d6df8d23/markdown_4/imgs/img_in_image_box_164_956_269_1063.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fb7c29ca4e65018b487a8b739adb8673990a35d7bf3ea377a49c25f23127d405f" alt="Image" width="8%" />
-
-🔥
-
-</div>
-
-
-</div>
 
 
 - Pressing the rotary knob activates the selected entry field.
@@ -3016,8 +2491,11 @@ Numerous help functions support the user in signal configuration.
 The valid setting range is displayed for each numeric parameter. This requires a short wait after activation of the entry field. The range is then displayed automatically after a few seconds.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Phase Settings</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Delta Phase</td><td style='text-align: center; word-wrap: break-word;'>0.0</td><td style='text-align: center; word-wrap: break-word;'>deg</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Reset Delta Phase</td><td style='text-align: center; word-wrap: break-word;'>Min = -720.0 degMax = 720.0 deg</td><td style='text-align: center; word-wrap: break-word;'>0.0</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>insert mode</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| Phase Settings |  |  |
+| --- | --- | --- |
+| Delta Phase | 0.0 | deg |
+| Reset Delta Phase | Min = -720.0 degMax = 720.0 deg | 0.0 |
+|  | insert mode |  |
 
 If the entered value is outside the permissible range, the next permissible value is automatically set and a message is output.
 
@@ -3033,18 +2511,10 @@ Each help page is part of a comprehensive online help function which can be call
 
 A great variety of different messages such as status messages, error messages, warnings or information are displayed in the header field of the screen. With the aid of the [INFO] (CTRL+I) key, help pages can be called for most of the messages. They provide background information on the message and indicate operating steps that may be required. All messages are explained in the online help which can be called with the [HELP] (F1) key.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_0/imgs/img_in_image_box_294_1096_660_1173.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F928323e5203e80a1c9004ee93437a967fc2ae92f4bd51101ab81a5b6f0ad75c7" alt="Image" width="30%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_0/imgs/img_in_image_box_294_1096_660_1173.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A51Z%2F-1%2F%2F928323e5203e80a1c9004ee93437a967fc2ae92f4bd51101ab81a5b6f0ad75c7" alt="Image" width="30%" />
 
 Freq RF ON MOD OFF Level
 1.000 000 000 000 GHz -30.00 dBm
 ALC-Auto Info
-
-</div>
-
-
-</div>
 
 
 ##### 3.5.1.3 Display
@@ -3059,9 +2529,6 @@ Winbar with labeled softkeys for menu display.
 
 The block diagram in the figure below shows a fully equipped instrument.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_1/imgs/img_in_image_box_294_276_615_518.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A52Z%2F-1%2F%2Fa838684136fad10a1dfc2685d85d5d7689bc71cde61ba4e6ae7ae85a62c11adb" alt="Image" width="26%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_1/imgs/img_in_image_box_294_276_615_518.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A52Z%2F-1%2F%2Fa838684136fad10a1dfc2685d85d5d7689bc71cde61ba4e6ae7ae85a62c11adb" alt="Image" width="26%" />
 
 Freq Level
 1.000 000 000 0 GHz -30.00 dBm
@@ -3071,13 +2538,8 @@ config... config... config... RF
 On On On On
 A/F/PuM
 
-</div>
 
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 3-4: Block diagram of a fully equipped R&S SMB</div> </div>
+Figure 3-4: Block diagram of a fully equipped R&S SMB
 
 
 ##### Settings Displayed in the Header Section
@@ -3089,17 +2551,6 @@ Frequency/level settings and a few status messages (see "Status Information and 
 - In the list mode, neither the current frequency nor level is displayed, the indication is dimmed.
 
 • If user correction is active, the status message "UCorr" is displayed in the info line.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_1/imgs/img_in_image_box_217_892_272_945.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A52Z%2F-1%2F%2F98d00128dbe39baae2bbe476ec50c237615456db54880b16c8a0b0acf2992ec3" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_1/imgs/img_in_image_box_217_892_272_945.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A52Z%2F-1%2F%2F98d00128dbe39baae2bbe476ec50c237615456db54880b16c8a0b0acf2992ec3" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
 
 
 The values displayed in the "Freq" and "Level" fields include a set offset or multiplier factor.
@@ -3150,9 +2601,6 @@ A few operating states and the current message are displayed in the info line.
 
 The [Info] window with a list of current permanent messages and a detailed description of each message can be opened with the [INFO] (CTRL+I) key.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_3/imgs/img_in_image_box_293_202_986_441.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fd117a60bf7a75a1c2f18f6fd4746a4b278b17116dc3f540aca3eaaa8c9006bf5" alt="Image" width="58%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_3/imgs/img_in_image_box_293_202_986_441.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A54Z%2F-1%2F%2Fd117a60bf7a75a1c2f18f6fd4746a4b278b17116dc3f540aca3eaaa8c9006bf5" alt="Image" width="58%" />
 
 A: UCorr, ALC-Auto | B: ALC-Auto
 
@@ -3170,11 +2618,6 @@ List of current messages with short message text.
 Detailed description for highlighted message
 
 Show Static
-
-</div>
-
-
-</div>
 
 
 The upper section of the info window contains a list of all current permanent messages in the order of their occurrence, i.e. the most recent message is displayed first. In the lower section of the window, additional information on the highlighted message is displayed. A history of all messages that have occurred since instrument switch-on can be called with the "History" key. The most recent message is displayed first.
@@ -3215,9 +2658,6 @@ Each time a SYST:ERR? or STAT:QUE? query is sent, the oldest entry in the error 
 
 The block diagram shows provided options, signal configuration and the currently selected signal flow of the generator with inputs and outputs used. Signal generation can be completely operated from the block diagram. The highlighted function block can be directly switched on and off with the [TOGGLE ON/OFF] (CTRL+T) key. Pressing the Enter opens the associated setting menu.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_294_202_590_319.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2Fd33ca9ea07750bf6052219e22052d794706d91c0b8b7c63bc26959e02e7ca177" alt="Image" width="24%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_294_202_590_319.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2Fd33ca9ea07750bf6052219e22052d794706d91c0b8b7c63bc26959e02e7ca177" alt="Image" width="24%" />
 
 LF MOD
 
@@ -3226,13 +2666,8 @@ config... config... config... RF
 On On On
 LF AM Sweep
 
-</div>
 
-
-</div>
-
-
-<div style="text-align: center;"><div style="text-align: center;">Figure 3-5: Block diagram of the R&S SMB</div> </div>
+Figure 3-5: Block diagram of the R&S SMB
 
 
 ##### Function Blocks in the Block Diagram
@@ -3243,9 +2678,6 @@ Pressing the rotary knob (front panel) or the "Config..." button (mouse) opens t
 
 ##### Example: Modulation block
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_300_702_625_837.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F6d460a064382c1b4b684e78d70c4a704350d364839566af7f1f1f3cb7315f08e" alt="Image" width="27%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_300_702_625_837.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F6d460a064382c1b4b684e78d70c4a704350d364839566af7f1f1f3cb7315f08e" alt="Image" width="27%" />
 
 Modulation
 
@@ -3254,11 +2686,6 @@ config...
 On
 
 PuM
-
-</div>
-
-
-</div>
 
 
 In this block, the modulation signals are set. The status information of the "Modulation" block indicates the selected modulation.
@@ -3271,20 +2698,12 @@ Symbols and labels refer to the corresponding inputs and outputs on the front an
 
 ##### Example:
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_300_1188_437_1368.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F82cab779a11b993182d8e6358a1aca97c0272eaa8d22d29822c4b03ed9d1f785" alt="Image" width="11%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//1608b024-f49f-469a-bc73-76844d89f920/markdown_4/imgs/img_in_image_box_300_1188_437_1368.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A55Z%2F-1%2F%2F82cab779a11b993182d8e6358a1aca97c0272eaa8d22d29822c4b03ed9d1f785" alt="Image" width="11%" />
 
 PULSE
 Modulation
 config...
 On
 PuM FM
-
-</div>
-
-
-</div>
 
 
 The symbols indicate the input for the external pulse signal on the instrument rear panel.
@@ -3306,8 +2725,11 @@ Several fields of associated but separately set parameters are organized in menu
 Example: Pulse Generator
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="3">Pulse Generator</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Pulse Mode</td><td style='text-align: center; word-wrap: break-word;'>Single</td><td style='text-align: center; word-wrap: break-word;'>▼</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Pulse Period</td><td style='text-align: center; word-wrap: break-word;'>1.000 0 ms</td><td style='text-align: center; word-wrap: break-word;'>▼</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Pulse Width</td><td style='text-align: center; word-wrap: break-word;'>500.0  $ \mu $s</td><td style='text-align: center; word-wrap: break-word;'>▼</td></tr></table>
+| Pulse Generator |  |  |
+| --- | --- | --- |
+| Pulse Mode | Single | ▼ |
+| Pulse Period | 1.000 0 ms | ▼ |
+| Pulse Width | 500.0 $ \mu $s | ▼ |
 
 Each of the setting fields is assigned a parameter name. The kind of setting varies depending on the parameter to be set. Some settings can only be made in a specific configuration. If setting is not permitted with the specific configuration selected, the respective item is disabled and displayed in gray and the entry or selection field cannot be accessed.
 
@@ -3347,17 +2769,6 @@ Tip: If the cursor is at the highest menu level, you can also use the [ESC] key 
 
 ▶ Press the [FREQ] (CTRL+F) and [LEVEL] (CTRL+L) keys to activate the "Frequency" or "Level" entry fields in the header area.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_225_836_262_892.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A46Z%2F-1%2F%2F87a975e83d9d92d87698527e75fdad59d224ebc72319f6d2946be12cd574e5fe" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_225_836_262_892.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A46Z%2F-1%2F%2F87a975e83d9d92d87698527e75fdad59d224ebc72319f6d2946be12cd574e5fe" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 ##### Keyboard Shortcuts
 
@@ -3367,30 +2778,8 @@ Keyboard shortcuts (e.g. "Ctrl + D" for the displaying the block diagram in the 
 
 The R&S SMB offers several and sometimes alternative possibilities for setting parameters. Operation is possible from the front panel, with the aid of a mouse and/or from a PC keyboard.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_218_1155_272_1210.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A47Z%2F-1%2F%2F665ad90c48a3d2189163bd80df7e8ac093635faefce529c64d5d8090f62e2777" alt="Image" width="4%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_218_1155_272_1210.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A47Z%2F-1%2F%2F665ad90c48a3d2189163bd80df7e8ac093635faefce529c64d5d8090f62e2777" alt="Image" width="4%" />
-
-i
-
-</div>
-
-
-</div>
-
 
 The examples whitin this description focus on the operation from the front panel.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_226_1248_262_1303.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A47Z%2F-1%2F%2Fc8a4afe5fcd4bb4ff7d1d0a7ff78c6f8ffa45f37ec651cd1a087f6cedbdb9196" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9e2f1f84-a108-4a2e-abca-94aa055b0cf2/markdown_1/imgs/img_in_image_box_226_1248_262_1303.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A47Z%2F-1%2F%2Fc8a4afe5fcd4bb4ff7d1d0a7ff78c6f8ffa45f37ec651cd1a087f6cedbdb9196" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
 
 
 For more information, refer to:
@@ -3472,8 +2861,8 @@ Control elements are always selected in the same way no matter whether a functio
 ▶ To activate an element, put the cursor on it.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Source</td><td style='text-align: center; word-wrap: break-word;'>Internal</td></tr></table>
+| Source | Internal |
+| --- | --- |
 
 An active element is highlighted by a blue frame.
 
@@ -3520,8 +2909,8 @@ The cursor is displayed in green.
 3. Click on a numeric key to insert a new value.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Dwell Time</td><td style='text-align: center; word-wrap: break-word;'>10.000 ms</td><td style='text-align: center; word-wrap: break-word;'>Dwell Time</td><td style='text-align: center; word-wrap: break-word;'>6 ms</td></tr></table>
+| Dwell Time | 10.000 ms | Dwell Time | 6 ms |
+| --- | --- | --- | --- |
 
 ##### Editing a value in the overwrite mode
 
@@ -3532,8 +2921,8 @@ The cursor is displayed in green.
 3. Click on a numeric key to overwrite the highlighted value.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Dwell Time</td><td style='text-align: center; word-wrap: break-word;'>10.000 ms</td><td style='text-align: center; word-wrap: break-word;'>Dwell Time</td><td style='text-align: center; word-wrap: break-word;'>10.000 ms</td></tr></table>
+| Dwell Time | 10.000 ms | Dwell Time | 10.000 ms |
+| --- | --- | --- | --- |
 
 ##### Varying a value
 
@@ -3587,16 +2976,8 @@ To assign a unit to a value, use one of the following alternatives:
 
 1. Press a [UNIT] key on the front panel.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_0/imgs/img_in_image_box_328_790_1052_831.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A26Z%2F-1%2F%2F8d344dc96a6ae21b2b78d9c85651d6b6b2a4d433b6003c538a1adcc0b32a2983" alt="Image" width="60%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_0/imgs/img_in_image_box_328_790_1052_831.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A26Z%2F-1%2F%2F8d344dc96a6ae21b2b78d9c85651d6b6b2a4d433b6003c538a1adcc0b32a2983" alt="Image" width="60%" />
 
 Frequency 10 GHz + M/μ = Frequency 10.000 000 000 MHz
-
-</div>
-
-
-</div>
 
 
 2. Select a "Unit" in the selection field next to the parameter value. Press the [ENTER] key.
@@ -3613,16 +2994,8 @@ To subsequently change a unit, i.e. after the entry has been terminated and when
 
 The value remains unchanged but the display is automatically adapted to the new unit, i.e. the value is recalculated to suit the new unit.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_0/imgs/img_in_image_box_328_1228_1052_1270.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A26Z%2F-1%2F%2Fc206930c7999f602594edeed7f656a21e1a0728edfc7941fd68ee3ddc6cf81db" alt="Image" width="60%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_0/imgs/img_in_image_box_328_1228_1052_1270.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A26Z%2F-1%2F%2Fc206930c7999f602594edeed7f656a21e1a0728edfc7941fd68ee3ddc6cf81db" alt="Image" width="60%" />
 
 Frequency 10 000.000 000 kHz + M/μ = Frequency 10.000 000 000 MHz
-
-</div>
-
-
-</div>
 
 
 The new unit is indicated in the value field of the menu.
@@ -3632,8 +3005,9 @@ Selecting a Value from a List
 Selection lists provide a list of predefined values for the selected parameter.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Source</td><td style='text-align: center; word-wrap: break-word;'>Internal</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Output</td><td style='text-align: center; word-wrap: break-word;'>Internal External</td></tr></table>
+| Source | Internal |
+| --- | --- |
+| Output | Internal External |
 
 To select a item from a list, proceed as follows:
 
@@ -3685,13 +3059,10 @@ In the case of front-panel control or operation from the keyboard, previous valu
 
 All settings that are not confirmed with the "Accept" button but require this additional confirmation can be restored.
 
-## 1. Press the [ESC] key.
+1. Press the [ESC] key.
 
 A confirmation query is displayed.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_2/imgs/img_in_image_box_327_531_820_656.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A28Z%2F-1%2F%2F80456a9e7f124c6fe8a39f2fe1ed1ec5f59bbc588381b674db4954810e0f3195" alt="Image" width="41%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//9dff26eb-4307-43d5-8127-54c761fb8bae/markdown_2/imgs/img_in_image_box_327_531_820_656.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T20%3A00%3A28Z%2F-1%2F%2F80456a9e7f124c6fe8a39f2fe1ed1ec5f59bbc588381b674db4954810e0f3195" alt="Image" width="41%" />
 
 Manning
 You changed some parameter(s) which require a new calculation of the signal.
@@ -3699,13 +3070,8 @@ Do you really want to abort your changes without ACCEPT?
 OK
 Cancel
 
-</div>
 
-
-</div>
-
-
-## 2. Confirm with "OK" to abort the changes.
+2. Confirm with "OK" to abort the changes.
 
 Select "Cancel" to return to the dialog. The previous selected settings are displayed.
 
@@ -3738,8 +3104,18 @@ The "User Correction" and "List Mode" dialogs provide a list editor for defining
 The selected list is displayed and the cursor marks the first row of the "Frequency/Hz" column.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Frequency/Hz</td><td style='text-align: center; word-wrap: break-word;'>Power/dBm</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1</td><td style='text-align: center; word-wrap: break-word;'>100 000.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2</td><td style='text-align: center; word-wrap: break-word;'>100 010.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>3</td><td style='text-align: center; word-wrap: break-word;'>100 020.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>4</td><td style='text-align: center; word-wrap: break-word;'>100 030.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5</td><td style='text-align: center; word-wrap: break-word;'>100 040.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>6</td><td style='text-align: center; word-wrap: break-word;'>100 050.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>7</td><td style='text-align: center; word-wrap: break-word;'>100 060.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>8</td><td style='text-align: center; word-wrap: break-word;'>100 070.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>9</td><td style='text-align: center; word-wrap: break-word;'>100 080.000</td><td style='text-align: center; word-wrap: break-word;'>-140.00</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Goto</td><td style='text-align: center; word-wrap: break-word;'>Edit</td><td style='text-align: center; word-wrap: break-word;'>Save</td></tr></table>
+|  | Frequency/Hz | Power/dBm |
+| --- | --- | --- |
+| 1 | 100 000.000 | -140.00 |
+| 2 | 100 010.000 | -140.00 |
+| 3 | 100 020.000 | -140.00 |
+| 4 | 100 030.000 | -140.00 |
+| 5 | 100 040.000 | -140.00 |
+| 6 | 100 050.000 | -140.00 |
+| 7 | 100 060.000 | -140.00 |
+| 8 | 100 070.000 | -140.00 |
+| 9 | 100 080.000 | -140.00 |
+| Goto | Edit | Save |
 
 If no list has been selected, a blank list of only one row is displayed.
 
@@ -3865,17 +3241,6 @@ Instrument settings can be saved and loaded. In case of saving, the current sett
 
 Lists, e.g. user correction lists, can be loaded. They can be generated either externally or internally. For internal generation, a new list must be created in the "File Select" dialog which will then be edited in the list editor of the individual menu.
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//999ff1d0-69ab-4dda-924d-2ec3edb5897b/markdown_1/imgs/img_in_image_box_225_510_263_566.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F397122017545c8e48ca4b4944a2be872318f3757845a3ecaea0d4df5f27604d9" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//999ff1d0-69ab-4dda-924d-2ec3edb5897b/markdown_1/imgs/img_in_image_box_225_510_263_566.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2F397122017545c8e48ca4b4944a2be872318f3757845a3ecaea0d4df5f27604d9" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 ##### For more information, refer to:
 
@@ -3888,29 +3253,22 @@ Chapter 3.5.1.9, "Legend of Front-Panel Controls", on page 90 for an overview of
 1. To access an editable user data file, select the "Save/Recall" or "File Manager" function in the individual dialog.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Recall Settings</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Save Settings</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>File Manager...</td></tr></table>
+| Recall Settings |
+| --- |
+| Save Settings |
+| File Manager... |
 
 2. To access a loadable data file, select the "Select/New" or "File Manager" function in the individual dialog.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Select User Correction Data</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>New User Correction Data</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>File Manager...</td></tr></table>
+| Select User Correction Data |
+| --- |
+| New User Correction Data |
+| File Manager... |
 
 3. To access the "File Manager" function, press the [SETUP] (CTRL+E) key and select "Save/Recall > File Manager".
 
 A "File Select" window for loading, saving or creating a file or the "File Manager" dialog for managing all files is displayed.
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//999ff1d0-69ab-4dda-924d-2ec3edb5897b/markdown_1/imgs/img_in_image_box_225_1216_263_1272.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fce8b7a864359e42ca13b7becabb1ea927e99815cb121b69eb8d9860f8ef301b5" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//999ff1d0-69ab-4dda-924d-2ec3edb5897b/markdown_1/imgs/img_in_image_box_225_1216_263_1272.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A56Z%2F-1%2F%2Fce8b7a864359e42ca13b7becabb1ea927e99815cb121b69eb8d9860f8ef301b5" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
 
 
 ##### Saving and loading of all instrument settings
@@ -3926,12 +3284,31 @@ For more information, see Chapter 4.2.8, "Storing and Loading Instrument Data - 
 The "Save/Recall" dialaog displays the available drives and directories. In the upper part, "Recent Data Sets", the files last used are listed.
 
 
+| Save/Recall | ✗ |  |
+| --- | --- | --- |
+| Operation Mode | Save | Recent Files |
+| /var/user/SavRcl |  |  |
+| ☑ Lists☑ Pulse Trains☑ SavRcl☑ UCS2010☑ /var/volatile☑ |  |  |
+| File Name: |  |  |
+| presetsettings |  |  |
+| Save | Save | File |
+|  | Imm 1 | Imm 2 |
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Save/Recall</td><td style='text-align: center; word-wrap: break-word;'>✗</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Operation Mode</td><td style='text-align: center; word-wrap: break-word;'>Save</td><td style='text-align: center; word-wrap: break-word;'>Recent Files</td></tr><tr><td colspan="3">/var/user/SavRcl</td></tr><tr><td colspan="3">☑ Lists☑ Pulse Trains☑ SavRcl☑ UCS2010☑ /var/volatile☑</td></tr><tr><td colspan="3">File Name:</td></tr><tr><td colspan="3">presetsettings</td></tr><tr><td rowspan="2">Save</td><td style='text-align: center; word-wrap: break-word;'>Save</td><td style='text-align: center; word-wrap: break-word;'>File</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Imm 1</td><td style='text-align: center; word-wrap: break-word;'>Imm 2</td></tr></table>
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="4">Save/Recall</td></tr><tr><td colspan="2">Operation Mode</td><td style='text-align: center; word-wrap: break-word;'>Recall</td><td style='text-align: center; word-wrap: break-word;'>Recent files</td></tr><tr><td colspan="4">/var/user/Lists/SavRcl</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>DME</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-</td><td style='text-align: center; word-wrap: break-word;'>LevelCalData</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>LfGenCalData</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>Rf</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>-</td><td style='text-align: center; word-wrap: break-word;'>SavRcl</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>presetsettings</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>SvnCalibData</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td colspan="2">Exclude Frequency</td><td colspan="2">Exclude Level</td></tr><tr><td rowspan="2">Recall</td><td style='text-align: center; word-wrap: break-word;'>Recall</td><td style='text-align: center; word-wrap: break-word;'>Recall</td><td style='text-align: center; word-wrap: break-word;'>File</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Imm 1</td><td style='text-align: center; word-wrap: break-word;'>Imm 2</td><td style='text-align: center; word-wrap: break-word;'>Mgr...</td></tr></table>
+| Save/Recall |  |  |  |
+| --- | --- | --- | --- |
+| Operation Mode |  | Recall | Recent files |
+| /var/user/Lists/SavRcl |  |  |  |
+| + | DME |  |  |
+| - | LevelCalData |  |  |
+| + | LfGenCalData |  |  |
+| + | Rf |  |  |
+| - | SavRcl |  |  |
+| + | presetsettings |  |  |
+| + | SvnCalibData |  |  |
+| Exclude Frequency |  | Exclude Level |  |
+| Recall | Recall | Recall | File |
+|  | Imm 1 | Imm 2 | Mgr... |
 
 The available drives and directories and the files of the selected directory are displayed. The currently selected path is displayed above the window. Only the relevant files without file extensions are displayed. If the area is opened several times, the path last selected is displayed. When a file is saved or created, its name is user-selectable; the extension is assigned automatically and cannot be entered. The file is saved to the selected path.
 
@@ -3953,7 +3330,7 @@ In the "Save Settings" dialog, enter file name in the "File Name:" field.
 
 Select the directory to which the file is to be saved and then select the "Save" button.
 
-## 5. Create a new file.
+5. Create a new file.
 
 To create a new file, use the "Save Settings" functionality, i.e. specify file name and directory and save the file.
 
@@ -3964,8 +3341,18 @@ The created file is empty; it must be filled with the necessary values in the in
 The "File Manager" allows general file management such as copying, shifting, renaming and deleting files as well as generating new directories.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>File Type</td><td style='text-align: center; word-wrap: break-word;'>Instrument State (.savrclxt)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>/var/user/Lists/SavRd</td><td style='text-align: center; word-wrap: break-word;'>All Files (*.)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>Instrument State (.savrclxt)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>DME\nARP Waveform (.w)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>LevelCalD\nNRP Setting (.nrp)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>LfGenCal\nList Mode List (.lsw)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>Rf\nAll Files (*)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>SavRcl\npresetsettings.savrclxt</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>+</td><td style='text-align: center; word-wrap: break-word;'>SynCalibData</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Cut</td><td style='text-align: center; word-wrap: break-word;'>Copy\nPaste</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Rename</td><td style='text-align: center; word-wrap: break-word;'>Delete\nCreate New Dir</td></tr></table>
+| File Type | Instrument State (.savrclxt) |
+| --- | --- |
+| /var/user/Lists/SavRd | All Files (*.) |
+| + | Instrument State (.savrclxt) |
+| + | DME\nARP Waveform (.w) |
+| + | LevelCalD\nNRP Setting (.nrp) |
+| + | LfGenCal\nList Mode List (.lsw) |
+| + | Rf\nAll Files (*) |
+| + | SavRcl\npresetsettings.savrclxt |
+| + | SynCalibData |
+| Cut | Copy\nPaste |
+| Rename | Delete\nCreate New Dir |
 
 Use the "File Type" to select a file type from the list. This can be used to process either all files (all files (*) selection) or a specific selection of files. See "Extensions for User Files" on page 89 for an overview of the supported file extensions. The available drives and directories and the files of the selected directory are displayed. The currently selected path is displayed above the windows. If the area is opened several times, the path last selected is displayed. Unlike the "File Select" window, the "File Manager" displays the full file names including extensions.
 
@@ -3985,7 +3372,7 @@ Perform the similar steps and cut/copy/rename/delete the file.
 
 Tip: The operation corresponds to the Windows concept.
 
-## 4. Creating a new directory
+4. Creating a new directory
 
 Mark drive or directory level where the new directory is to be created, select the "Create New Directory" button and enter the name of the new directory in the entry window that opens. Confirm with [ENTER].
 
@@ -3993,15 +3380,19 @@ Mark drive or directory level where the new directory is to be created, select t
 
 The following table lists all available file extensions for user files. The currently available files on the instrument depend on the installed options.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 3-4: List of the automatically assigned file extensions in the instrument</div> </div>
+Table 3-4: List of the automatically assigned file extensions in the instrument
 
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Function</td><td style='text-align: center; word-wrap: break-word;'>List type</td><td style='text-align: center; word-wrap: break-word;'>Contents</td><td style='text-align: center; word-wrap: break-word;'>File suffix</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Instrument State</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>Instrument settings</td><td style='text-align: center; word-wrap: break-word;'>*.savrcltxt</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>"User Correction"</td><td style='text-align: center; word-wrap: break-word;'>List</td><td style='text-align: center; word-wrap: break-word;'>User-defined level correction values</td><td style='text-align: center; word-wrap: break-word;'>*.uco</td></tr><tr><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>Export Data</td><td style='text-align: center; word-wrap: break-word;'>*.txt or *.csv</td></tr><tr><td rowspan="2">"List Mode"</td><td rowspan="2">List</td><td style='text-align: center; word-wrap: break-word;'>User-defined frequency/level value pairs</td><td style='text-align: center; word-wrap: break-word;'>*.lsw</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Export Data</td><td style='text-align: center; word-wrap: break-word;'>*.txt or *.csv</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>"Pulse Train List"</td><td style='text-align: center; word-wrap: break-word;'></td><td style='text-align: center; word-wrap: break-word;'>User-defined offtime/ontime/repetition values</td><td style='text-align: center; word-wrap: break-word;'>*.pulstrn</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>SMZ Settings</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>Data (firmware) of a connected SMZ frequency multiplier</td><td style='text-align: center; word-wrap: break-word;'>*.efmfirm</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>NRP Settings</td><td style='text-align: center; word-wrap: break-word;'>Settings</td><td style='text-align: center; word-wrap: break-word;'>NRP Settings</td><td style='text-align: center; word-wrap: break-word;'>*.nrp</td></tr></table>
-
-
-
+| Function | List type | Contents | File suffix |
+| --- | --- | --- | --- |
+| Instrument State | Settings | Instrument settings | *.savrcltxt |
+| "User Correction" | List | User-defined level correction values | *.uco |
+|  |  | Export Data | *.txt or *.csv |
+| "List Mode" | List | User-defined frequency/level value pairs | *.lsw |
+|  |  | Export Data | *.txt or *.csv |
+| "Pulse Train List" |  | User-defined offtime/ontime/repetition values | *.pulstrn |
+| SMZ Settings | Settings | Data (firmware) of a connected SMZ frequency multiplier | *.efmfirm |
+| NRP Settings | Settings | NRP Settings | *.nrp |
 
 
 ##### 3.5.1.9 Legend of Front-Panel Controls
@@ -4010,14 +3401,40 @@ The following table lists all key functions available on the front panel. Key co
 
 In addition, a front panel key emulation and an on-screen keyboard can be used for manual operation by mouse only.
 
-<div style="text-align: center;"><div style="text-align: center;">Table 3-5: Cross-reference between the front panel keys and keyboard shortcuts</div> </div>
+Table 3-5: Cross-reference between the front panel keys and keyboard shortcuts
 
 
-
-
-<table border="1" style="margin: auto; word-wrap: break-word;"><tr><td style="text-align: center; word-wrap: break-word;">Front-panel key</td><td style="text-align: center; word-wrap: break-word;">Key of PC keyboard</td><td style="text-align: center; word-wrap: break-word;">Function</td></tr><tr><td style="text-align: center; word-wrap: break-word;">Turning the rotary knob</td><td style="text-align: center; word-wrap: break-word;">Tab key (towards the right) Shift + Tab (towards the left)</td><td style="text-align: center; word-wrap: break-word;">Sets the cursor with the rotary knob.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">Pressing the rotary knob</td><td style="text-align: center; word-wrap: break-word;">Enter</td><td style="text-align: center; word-wrap: break-word;">Pressing the rotary knob confirms an entry; it has the same function as the ENTER key.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">Arrow keys</td><td style="text-align: center; word-wrap: break-word;">Arrow keys</td><td style="text-align: center; word-wrap: break-word;">Moves the cursor.</td></tr><tr><td rowspan="3">ENTER / *1 / dB(m)</td><td style="text-align: center; word-wrap: break-word;">Enter</td><td style="text-align: center; word-wrap: break-word;">Terminates an entry.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">ALT + F12</td><td style="text-align: center; word-wrap: break-word;">Confirms entries in the base unit and values with-out a unit.</td></tr><tr><td style="text-align: center; word-wrap: break-word;"></td><td style="text-align: center; word-wrap: break-word;">Selects dBm for the RF level and dB for level offset and level step width.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">./*...#</td><td style="text-align: center; word-wrap: break-word;">./*...#</td><td style="text-align: center; word-wrap: break-word;">Enters a period/decimal point. Enters a special character.</td></tr><tr><td rowspan="2">-/A&lt;-&gt;a</td><td style="text-align: center; word-wrap: break-word;">-/ (shift+) a—z</td><td style="text-align: center; word-wrap: break-word;">Enters the sign.</td></tr><tr><td style="text-align: center; word-wrap: break-word;"></td><td style="text-align: center; word-wrap: break-word;">Switches between upper-case and lower-case letters.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">0-9 / a...z</td><td style="text-align: center; word-wrap: break-word;">CTRL+ 0-9 / a...z CTRL</td><td style="text-align: center; word-wrap: break-word;">Enters the number/letter.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[BACKSPACE]</td><td style="text-align: center; word-wrap: break-word;">Backspace</td><td style="text-align: center; word-wrap: break-word;">Clears the last entry (number, sign or decimal point)</td></tr><tr><td rowspan="2">[ESC / CLOSE]</td><td style="text-align: center; word-wrap: break-word;">ESC / CTRL + G</td><td style="text-align: center; word-wrap: break-word;">Selects the next higher menu/selection level. When the editing mode is exited with ESC, the previous value is restored.</td></tr><tr><td style="text-align: center; word-wrap: break-word;"></td><td style="text-align: center; word-wrap: break-word;">Closes an active menu.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[DIAGR]</td><td style="text-align: center; word-wrap: break-word;">CTRL+D</td><td style="text-align: center; word-wrap: break-word;">Sets the cursor on the block diagram and hides all menus.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[FILE]</td><td style="text-align: center; word-wrap: break-word;">CTRL+S</td><td style="text-align: center; word-wrap: break-word;">Activates the menu for storing instrument settings.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[FREQ]</td><td style="text-align: center; word-wrap: break-word;">CTRL+F</td><td style="text-align: center; word-wrap: break-word;">Activates the frequency entry.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">G/n / dBuV</td><td style="text-align: center; word-wrap: break-word;">ALT+F9</td><td style="text-align: center; word-wrap: break-word;">Selects the unit Giga/Nano, dBuV for the RF level and dBu for the LF level.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[HELP]</td><td style="text-align: center; word-wrap: break-word;">F1</td><td style="text-align: center; word-wrap: break-word;">Opens/closes context-sensitive help.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[INFO]</td><td style="text-align: center; word-wrap: break-word;">CTRL+I</td><td style="text-align: center; word-wrap: break-word;">Opens/closes the info window</td></tr><tr><td style="text-align: center; word-wrap: break-word;">k/m / mV</td><td style="text-align: center; word-wrap: break-word;">ALT+F11</td><td style="text-align: center; word-wrap: break-word;">Selects the units kilo/milli and mV for RF levels.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[LEVEL]</td><td style="text-align: center; word-wrap: break-word;">CTRL+L</td><td style="text-align: center; word-wrap: break-word;">Activates the level entry.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[LOCAL]</td><td style="text-align: center; word-wrap: break-word;">CTRL+Q</td><td style="text-align: center; word-wrap: break-word;">Switches the instrument from remote control to manual control.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">M/u / uV</td><td style="text-align: center; word-wrap: break-word;">ALT+F10</td><td style="text-align: center; word-wrap: break-word;">Selects the units Mega/Micro and uV for RF levels.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[MOD ON/OFF]</td><td style="text-align: center; word-wrap: break-word;">CTRL+O</td><td style="text-align: center; word-wrap: break-word;">Switches modulation on/off. "MOD OFF" is indica-ted in the status line.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[TOGGLE]</td><td style="text-align: center; word-wrap: break-word;">CTRL+T</td><td style="text-align: center; word-wrap: break-word;">Switches a block or parameter on/off. Toggles between the different possibilities of set-ting a selection parameter.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[PRESET]</td><td style="text-align: center; word-wrap: break-word;">CTRL+P</td><td style="text-align: center; word-wrap: break-word;">Restores a defined basic instrument setup.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[RF ON/OFF]</td><td style="text-align: center; word-wrap: break-word;">CTRL+R</td><td style="text-align: center; word-wrap: break-word;">Switches the RF output signal on/off. "RF OFF" is indicated in the status line.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[SETUP]</td><td style="text-align: center; word-wrap: break-word;">CTRL+E</td><td style="text-align: center; word-wrap: break-word;">Opens the setup menu for general instrument set-tings.</td></tr><tr><td style="text-align: center; word-wrap: break-word;">[WINBAR]</td><td style="text-align: center; word-wrap: break-word;">CTRL+W</td><td style="text-align: center; word-wrap: break-word;">Toggles between the active menus.</td></tr></table>
-
-
+| Front-panel key | Key of PC keyboard | Function |
+| --- | --- | --- |
+| Turning the rotary knob | Tab key (towards the right) Shift + Tab (towards the left) | Sets the cursor with the rotary knob. |
+| Pressing the rotary knob | Enter | Pressing the rotary knob confirms an entry; it has the same function as the ENTER key. |
+| Arrow keys | Arrow keys | Moves the cursor. |
+| ENTER / *1 / dB(m) | Enter | Terminates an entry. |
+|  | ALT + F12 | Confirms entries in the base unit and values with-out a unit. |
+|  |  | Selects dBm for the RF level and dB for level offset and level step width. |
+| ./*...# | ./*...# | Enters a period/decimal point. Enters a special character. |
+| -/A<->a | -/ (shift+) a—z | Enters the sign. |
+|  |  | Switches between upper-case and lower-case letters. |
+| 0-9 / a...z | CTRL+ 0-9 / a...z CTRL | Enters the number/letter. |
+| [BACKSPACE] | Backspace | Clears the last entry (number, sign or decimal point) |
+| [ESC / CLOSE] | ESC / CTRL + G | Selects the next higher menu/selection level. When the editing mode is exited with ESC, the previous value is restored. |
+|  |  | Closes an active menu. |
+| [DIAGR] | CTRL+D | Sets the cursor on the block diagram and hides all menus. |
+| [FILE] | CTRL+S | Activates the menu for storing instrument settings. |
+| [FREQ] | CTRL+F | Activates the frequency entry. |
+| G/n / dBuV | ALT+F9 | Selects the unit Giga/Nano, dBuV for the RF level and dBu for the LF level. |
+| [HELP] | F1 | Opens/closes context-sensitive help. |
+| [INFO] | CTRL+I | Opens/closes the info window |
+| k/m / mV | ALT+F11 | Selects the units kilo/milli and mV for RF levels. |
+| [LEVEL] | CTRL+L | Activates the level entry. |
+| [LOCAL] | CTRL+Q | Switches the instrument from remote control to manual control. |
+| M/u / uV | ALT+F10 | Selects the units Mega/Micro and uV for RF levels. |
+| [MOD ON/OFF] | CTRL+O | Switches modulation on/off. "MOD OFF" is indica-ted in the status line. |
+| [TOGGLE] | CTRL+T | Switches a block or parameter on/off. Toggles between the different possibilities of set-ting a selection parameter. |
+| [PRESET] | CTRL+P | Restores a defined basic instrument setup. |
+| [RF ON/OFF] | CTRL+R | Switches the RF output signal on/off. "RF OFF" is indicated in the status line. |
+| [SETUP] | CTRL+E | Opens the setup menu for general instrument set-tings. |
+| [WINBAR] | CTRL+W | Toggles between the active menus. |
 
 
 ##### Front Panel Key Emulation
@@ -4025,8 +3442,17 @@ In addition, a front panel key emulation and an on-screen keyboard can be used f
 The R&S SMB provides a front panel key emulation to enable execution of the front panel key functions by mouse e.g. for remote access. The emulation is called by a right mouse click. The front panel key functions are executed by a mouse click on the associated button.
 
 
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Freq</td><td style='text-align: center; word-wrap: break-word;'>Diagram</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Level</td><td style='text-align: center; word-wrap: break-word;'>Menu</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>File</td><td style='text-align: center; word-wrap: break-word;'>Rearr.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>RF On/Off</td><td style='text-align: center; word-wrap: break-word;'>WinBar</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Mod On/Off</td><td style='text-align: center; word-wrap: break-word;'>Help</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Preset</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Local</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Setup</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Hardcopy</td><td style='text-align: center; word-wrap: break-word;'></td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Info</td><td style='text-align: center; word-wrap: break-word;'></td></tr></table>
+| Freq | Diagram |
+| --- | --- |
+| Level | Menu |
+| File | Rearr. |
+| RF On/Off | WinBar |
+| Mod On/Off | Help |
+| Preset |  |
+| Local |  |
+| Setup |  |
+| Hardcopy |  |
+| Info |  |
 
 #### 3.5.2 Remote Control
 
@@ -4042,17 +3468,6 @@ The R&S SMB supports various remote control connections:
 
 • Remote control via the USB interface
 
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2dda3ffc-cb5a-41ac-9aa8-054cb593bff8/markdown_1/imgs/img_in_image_box_226_947_263_1002.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F3fbcb049a225b73841a29693f4125f31efb28c8a2f8ae54e720f5f44bd799b78" alt="Image" width="3%" />
-
-<div style="text-align: center;"><img src="https://pplines-online.bj.bcebos.com/deploy/official/paddleocr/pp-ocr-vl-15//2dda3ffc-cb5a-41ac-9aa8-054cb593bff8/markdown_1/imgs/img_in_image_box_226_947_263_1002.jpg?authorization=bce-auth-v1%2FALTAKDN8mY5KlNI7zaRpLmOqrw%2F2026-04-30T19%3A59%3A53Z%2F-1%2F%2F3fbcb049a225b73841a29693f4125f31efb28c8a2f8ae54e720f5f44bd799b78" alt="Image" width="3%" />
-
-?
-
-</div>
-
-
-</div>
-
 
 Tip: For remote control over LAN or USB, you can use the R&S VISA (Virtual Instrument Software Architecture) library provided for download at the Rohde & Schwarz website http://www.rohde-schwarz.com/rsvisa.
 
@@ -4067,4 +3482,3 @@ Remote access in contrast to remote control does not use remote-control commands
 ted using specific key combinations on the keyboard or a front panel key emulation that can be operated with the mouse.
 
 This way of operation and the instructions how to set up a connection for remote access are described in Chapter 3.1.16, "Remote Access via an External Controller", on page 32.
-

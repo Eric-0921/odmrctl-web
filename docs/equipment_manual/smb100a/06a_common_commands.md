@@ -70,7 +70,7 @@ Available common commands:
 *TST?.....288    
 *WAI.....288
 
-#####  $ ^{*} $CLS
+##### *CLS
 
 ##### Clear status
 
@@ -90,7 +90,7 @@ Parameters:
 
 Range: 0 to 255
 
-#####  $ ^{*} $ESR?
+##### *ESR?
 
 Event status read
 
@@ -102,7 +102,7 @@ Returns the contents of the event status register in decimal form and then sets 
 
 Usage: Query only
 
-#####  $ ^{*} $IDN?
+##### *IDN?
 
 Identification
 
@@ -110,7 +110,7 @@ Returns the instrument identification.
 
 ##### Return values:
 
-<ID> "Rohde&Schwarz,&device type>,<part number>/<serial number>,<firmware version>"
+<ID> "Rohde&Schwarz,<device type>,<part number>/<serial number>,<firmware version>"
 
 Example: Rohde&Schwarz, SMB, 1412.0000K02/000000, 03.01.158
 
@@ -142,9 +142,11 @@ Option identification query
 
 Queries the options included in the instrument. For a list of all available options and their description, refer to the data sheet.
 
-
-
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">Return values:</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>&lt;Options&gt;</td><td style='text-align: center; word-wrap: break-word;'>The query returns a list of options. The options are returned at fixed positions in a comma-separated string. A zero is returned for options that are not installed.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Query only</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Manual operation:</td><td style='text-align: center; word-wrap: break-word;'>See &quot;Hardware Options / Software Options&quot; on page 99</td></tr></table>
+| Return values: | |
+|---|---|
+| `<Options>` | The query returns a list of options. The options are returned at fixed positions in a comma-separated string. A zero is returned for options that are not installed. |
+| Usage: | Query only |
+| Manual operation: | See "Hardware Options / Software Options" on page 99 |
 
 ##### *PRE <Value>
 
@@ -170,6 +172,8 @@ Determines whether the contents of the ENABLE registers are preserved or reset w
 
 The contents of the status registers are preserved.
 
+1
+
 Resets the status registers.
 
 ##### *RCL <Number>
@@ -182,7 +186,7 @@ It also activates the instrument settings which are stored in a file and loaded 
 
 Manual operation: See "Recall Immediate x" on page 131
 
-*RST
+##### *RST
 
 Reset
 
@@ -194,7 +198,7 @@ Usage: Setting only
 
 Manual operation: See "Preset" on page 96
 
-*SAV <Number>
+##### *SAV <Number>
 
 ##### Save
 
@@ -206,7 +210,7 @@ STORE:STATE.
 
 Manual operation: See "Save Immediate x" on page 129
 
-*SRE <Contents>
+##### *SRE <Contents>
 
 Service request enable
 
@@ -230,7 +234,7 @@ Reads the contents of the status byte in decimal form.
 
 Usage: Query only
 
-#####  $ ^{*} $TRG
+##### *TRG
 
 ##### Trigger
 
@@ -240,15 +244,27 @@ Usage: Event
 
 Manual operation: See "Execute Single Trigger" on page 234
 
+##### *TST?
 
+Self-test query
 
-<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td colspan="2">*TST?</td></tr><tr><td colspan="2">Self-test query</td></tr><tr><td colspan="2">Initiates self-tests of the instrument and returns an error code.</td></tr><tr><td colspan="2">Return values:</td></tr><tr><td rowspan="5">&lt;ErrorCode&gt;</td><td style='text-align: center; word-wrap: break-word;'>integer &gt; 0 (in decimal format)</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>An error occurred.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>(For details, see the Service Manual supplied with the instrument).</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>0</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>No errors occurred.</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>Usage:</td><td style='text-align: center; word-wrap: break-word;'>Query only</td></tr></table>
+Initiates self-tests of the instrument and returns an error code.
+
+##### Return values:
+
+`<ErrorCode>`
+
+| Value | Description |
+|---|---|
+| integer > 0 (in decimal format) | An error occurred. (For details, see the Service Manual supplied with the instrument). |
+| 0 | No errors occurred. |
+
+Usage: Query only
 
 ##### *WAI
 
 Wait to continue
 
-Prevents servicing of the subsequent commands until all preceding commands have been executed and all signals have settled (see also command synchronization and  $ * $OPC).
+Prevents servicing of the subsequent commands until all preceding commands have been executed and all signals have settled (see also command synchronization and *OPC).
 
 Usage: Event
-
