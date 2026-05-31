@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "two_device_odmr_like_sweep_recipe",
+  "id": "m3_4_two_device_sweep",
+  "description": "Recipe-shaped SMB100A/OE1022D software-stepped run; no physical ODMR response required.",
+  "devices": {
+    "smb100a": {
+      "device_id": "smb100a_main",
+      "mode": "real_or_fake_by_runtime"
+    },
+    "oe1022d": {
+      "device_id": "oe1022d_main",
+      "mode": "real_or_fake_by_runtime"
+    },
+    "magnetic": {
+      "in_scope": false
+    }
+  },
+  "rf": {
+    "start_hz": 2878000000,
+    "stop_hz": 2886000000,
+    "points": 11,
+    "power_dbm": -30,
+    "max_power_dbm": -20
+  },
+  "modulation": {
+    "fm_source": "INT",
+    "fm_deviation_hz": 4000000,
+    "max_fm_deviation_hz": 5000000,
+    "internal_lf": {
+      "enabled": true,
+      "frequency_hz": 500,
+      "shape": "SQU",
+      "voltage_v": 0.137,
+      "lf_output_enabled": false
+    }
+  },
+  "acquisition": {
+    "frames_per_step": 5,
+    "repeat_count": 2,
+    "inter_frame_delay_ms": 20
+  },
+  "safety": {
+    "require_operator_approval": true,
+    "no_internal_sweep": true,
+    "no_csv": true,
+    "no_gui": true,
+    "no_magnetic": true,
+    "physical_response_required": false
+  }
+}
