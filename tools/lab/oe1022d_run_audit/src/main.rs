@@ -130,6 +130,39 @@ fn run_audit(run_dir: &Path) -> AuditReport {
         }
     }
 
+    // M2.8 optional metadata files — validate JSON if present
+    for m28_meta in [
+        "metadata/station_snapshot_quality.json",
+        "metadata/state_profile_diff.json",
+        "metadata/hash_manifest.json",
+        "metadata/smb100a_query_timing.json",
+    ] {
+        let path = run_dir.join(m28_meta);
+        if path.exists() {
+            if let Err(e) = fs::read_to_string(&path).and_then(|s| {
+                serde_json::from_str::<serde_json::Value>(&s)
+                    .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))
+            }) {
+                r.fail(format!("{} invalid JSON: {}", m28_meta, e));
+            }
+        }
+    }
+
+    // timeline.jsonl is optional for M2.8 — validate JSONL if present
+    let timeline_path = run_dir.join("timeline.jsonl");
+    if timeline_path.exists() {
+        match read_jsonl_lines(&timeline_path) {
+            Ok(lines) => {
+                for (i, line) in lines.iter().enumerate() {
+                    if let Err(e) = serde_json::from_str::<serde_json::Value>(line) {
+                        r.fail(format!("timeline.jsonl line {} invalid JSON: {}", i + 1, e));
+                    }
+                }
+            }
+            Err(e) => r.fail(format!("timeline.jsonl unreadable: {}", e)),
+        }
+    }
+
     // 2. manifest.json valid JSON
     let manifest_path = run_dir.join("manifest.json");
     let manifest: Option<serde_json::Value> = if manifest_path.exists() {
@@ -824,5 +857,44 @@ mod tests {
         let r1 = run_audit(&run_dir);
         let r2 = run_audit(&run_dir);
         assert_eq!(r1, r2);
+    }
+
+    #[test]
+    fn m28_run_with_optional_metadata_passes_audit() {
+        let tmp = tempfile::tempdir().unwrap();
+        let run_dir = tmp.path().join("m28_run");
+        make_valid_run(&run_dir, 5);
+
+        // Add M2.8 optional metadata files
+        fs::write(
+            run_dir.join("metadata/station_snapshot_quality.json"),
+            r#"{"status":"passed","eligible_for_rf_on_microtest":true,"warnings":[],"errors":[],"query_interrupted_seen":false,"smb_query_delay_ms":100,"smb_connection_closed_before_acquisition":true,"oe_command_allowlist":["*IDN?","RALL?"],"smb_command_allowlist":["*IDN?","OUTP?"] }"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("metadata/state_profile_diff.json"),
+            r#"{"differences":[],"summary":"no fake profile provided"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("metadata/hash_manifest.json"),
+            r#"{"station_snapshot_hash":"sha256:abc","smb100a_query_snapshot_hash":"sha256:def","acquisition_config_hash":"sha256:ghi"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("metadata/smb100a_query_timing.json"),
+            r#"{"queries":[]}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("timeline.jsonl"),
+            r#"{"event_type":"run_created","wall_time_utc":"2026-01-01T00:00:00Z","monotonic_ns":0,"monotonic_ns_since_run_start":0,"device_id":"system"}"#,
+        )
+        .unwrap();
+
+        let report = run_audit(&run_dir);
+        assert!(report.passed, "M2.8 run should pass audit: {:#?}", report);
+        assert!(report.csv_files_found.is_empty());
+        assert!(report.errors.is_empty());
     }
 }

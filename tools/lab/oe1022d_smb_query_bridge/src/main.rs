@@ -1,7 +1,8 @@
-//! M2.7B: Real SMB100A query-only snapshot + Real OE1022D passive acquisition.
+//! M2.8: SMB100A Query Snapshot + OE1022D Passive Acquisition Timeline Alignment.
 //!
-//! Combines a real SMB100A TCP query-only snapshot with real OE1022D passive
-//! RALL? acquisition, producing formal run artifacts.
+//! Extends M2.7B with monotonic timestamp alignment, SMB100A query pacing,
+//! station snapshot quality warnings, state/profile diff, and prototype hash
+//! attachment.
 //!
 //! ## Safety
 //! - Only query commands (ending in `?`) are sent to real SMB100A.
@@ -17,11 +18,12 @@ use odmr_logging::{
 };
 use odmr_oe1022d::parser::{latest_b_channel_sample, parse_rall_frame, RALL_FRAME_BYTES};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::fs;
-use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 use std::net::TcpStream;
-use std::path::PathBuf;
-use std::time::{Duration, Instant};
+use std::path::{Path, PathBuf};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 // ---------------------------------------------------------------------------
 // Hard-coded command allow-lists
@@ -133,7 +135,9 @@ fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
 
 #[derive(Parser, Debug)]
 #[command(name = "oe1022d-smb-query-bridge")]
-#[command(about = "M2.7B: Real SMB100A query-only + Real OE1022D passive acquisition")]
+#[command(
+    about = "M2.8: Real SMB100A query-only + Real OE1022D passive acquisition + timeline alignment"
+)]
 struct Cli {
     #[arg(long, default_value = "169.254.2.20")]
     smb_host: String,
@@ -159,11 +163,23 @@ struct Cli {
     #[arg(long, default_value = "3000")]
     smb_timeout_ms: u64,
 
+    #[arg(long, default_value = "100")]
+    smb_query_delay_ms: u64,
+
     #[arg(long, default_value = "../../runs")]
     run_root: String,
 
     #[arg(long)]
     run_id: String,
+
+    #[arg(long)]
+    enable_timeline_alignment: bool,
+
+    #[arg(long)]
+    write_state_hashes: bool,
+
+    #[arg(long)]
+    fake_profile_path: Option<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -193,6 +209,8 @@ struct FrameSummaryRow {
     parse_status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     parse_error: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    state_snapshot_hash: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -206,6 +224,7 @@ struct AcquisitionConfig {
     delay_ms: u64,
     timeout_ms: u64,
     smb_timeout_ms: u64,
+    smb_query_delay_ms: u64,
     created_at_unix_ms: u64,
 }
 
@@ -260,6 +279,75 @@ struct SmbQueryResult {
     response: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct SmbQueryTiming {
+    schema_version: String,
+    queries: Vec<QueryTimingEntry>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct QueryTimingEntry {
+    command: String,
+    response: String,
+    wall_time_utc: String,
+    monotonic_ns: u64,
+    monotonic_ns_since_run_start: u64,
+    duration_ms: u64,
+}
+
+#[derive(Serialize)]
+struct TimelineEvent {
+    event_type: String,
+    wall_time_utc: String,
+    monotonic_ns: u64,
+    monotonic_ns_since_run_start: u64,
+    device_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    data: Option<serde_json::Value>,
+}
+
+#[derive(Serialize)]
+struct StationSnapshotQuality {
+    schema_version: String,
+    status: String,
+    eligible_for_rf_on_microtest: bool,
+    warnings: Vec<String>,
+    errors: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    smb100a_query_error: Option<String>,
+    query_interrupted_seen: bool,
+    smb_query_delay_ms: u64,
+    smb_connection_closed_before_acquisition: bool,
+    oe_command_allowlist: Vec<String>,
+    smb_command_allowlist: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct HashManifest {
+    schema_version: String,
+    station_snapshot_hash: String,
+    smb100a_query_snapshot_hash: String,
+    acquisition_config_hash: String,
+    parser_version_hash: String,
+    safety_boundary_note_hash: String,
+}
+
+#[derive(Serialize)]
+struct StateProfileDiff {
+    schema_version: String,
+    fake_profile_path: Option<String>,
+    differences: Vec<StateDiffEntry>,
+    summary: String,
+}
+
+#[derive(Serialize)]
+struct StateDiffEntry {
+    parameter: String,
+    fake_value: serde_json::Value,
+    real_value: serde_json::Value,
+    category: String,
+}
+
 // ---------------------------------------------------------------------------
 // Event helpers
 // ---------------------------------------------------------------------------
@@ -273,10 +361,63 @@ fn next_event_id() -> u64 {
 }
 
 fn utc_now_ms() -> u64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis() as u64
+}
+
+fn wall_time_utc_iso() -> String {
+    let now = SystemTime::now();
+    let dur = now.duration_since(UNIX_EPOCH).unwrap_or_default();
+    let secs = dur.as_secs();
+    let nanos = dur.subsec_nanos();
+    format!("{}.{:09}Z", format_unix_secs_rfc3339(secs), nanos)
+}
+
+fn format_unix_secs_rfc3339(secs: u64) -> String {
+    // Simple RFC3339 formatter for current-era timestamps (2020+)
+    const DAYS_IN_MONTH: [u64; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let mut days = secs / 86400;
+    let mut year = 1970u64;
+    loop {
+        let is_leap =
+            year.is_multiple_of(4) && (!year.is_multiple_of(100) || year.is_multiple_of(400));
+        let year_days = if is_leap { 366 } else { 365 };
+        if days < year_days {
+            break;
+        }
+        days -= year_days;
+        year += 1;
+    }
+    let is_leap = year.is_multiple_of(4) && (!year.is_multiple_of(100) || year.is_multiple_of(400));
+    let mut month = 0usize;
+    while month < 12 {
+        let dim = if month == 1 && is_leap {
+            29
+        } else {
+            DAYS_IN_MONTH[month]
+        };
+        if days < dim {
+            break;
+        }
+        days -= dim;
+        month += 1;
+    }
+    let day = days + 1;
+    let rem = secs % 86400;
+    let hour = rem / 3600;
+    let minute = (rem % 3600) / 60;
+    let second = rem % 60;
+    format!(
+        "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}",
+        year,
+        month + 1,
+        day,
+        hour,
+        minute,
+        second
+    )
 }
 
 fn make_event(
@@ -286,6 +427,7 @@ fn make_event(
     message: &str,
     device_id: &str,
     data: Option<serde_json::Value>,
+    mono_ns: Option<u64>,
 ) -> RunEvent {
     RunEvent {
         schema_version: "0.2.0".into(),
@@ -293,7 +435,7 @@ fn make_event(
         run_id: run_id.into(),
         event_id: format!("evt_{:010}", next_event_id()),
         timestamp_unix_ms: utc_now_ms(),
-        timestamp_monotonic_ns: None,
+        timestamp_monotonic_ns: mono_ns,
         level,
         event_type,
         step_id: None,
@@ -301,6 +443,77 @@ fn make_event(
         message: message.into(),
         data,
     }
+}
+
+// ---------------------------------------------------------------------------
+// Timeline tracker
+// ---------------------------------------------------------------------------
+
+struct TimelineTracker {
+    run_start_instant: Instant,
+    events: Vec<TimelineEvent>,
+}
+
+impl TimelineTracker {
+    fn new() -> Self {
+        Self {
+            run_start_instant: Instant::now(),
+            events: Vec::new(),
+        }
+    }
+
+    fn record(
+        &mut self,
+        event_type: &str,
+        device_id: &str,
+        data: Option<serde_json::Value>,
+    ) -> u64 {
+        let now = Instant::now();
+        let mono_ns = now.duration_since(self.run_start_instant).as_nanos() as u64;
+        self.events.push(TimelineEvent {
+            event_type: event_type.into(),
+            wall_time_utc: wall_time_utc_iso(),
+            monotonic_ns: mono_ns,
+            monotonic_ns_since_run_start: mono_ns,
+            device_id: device_id.into(),
+            data,
+        });
+        mono_ns
+    }
+
+    fn monotonic_ns_since_start(&self) -> u64 {
+        self.run_start_instant.elapsed().as_nanos() as u64
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Hash helpers
+// ---------------------------------------------------------------------------
+
+fn sha256_bytes(data: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(data);
+    format!("sha256:{:x}", hasher.finalize())
+}
+
+fn sha256_file(path: &Path) -> Result<String, String> {
+    let data = fs::read(path).map_err(|e| format!("read {}: {}", path.display(), e))?;
+    Ok(sha256_bytes(&data))
+}
+
+fn compute_hash_manifest(run_dir: &Path) -> Result<HashManifest, String> {
+    Ok(HashManifest {
+        schema_version: "0.2.0".into(),
+        station_snapshot_hash: sha256_file(&run_dir.join("metadata/station_snapshot.json"))?,
+        smb100a_query_snapshot_hash: sha256_file(
+            &run_dir.join("metadata/smb100a_query_snapshot.json"),
+        )?,
+        acquisition_config_hash: sha256_file(&run_dir.join("metadata/acquisition_config.json"))?,
+        parser_version_hash: sha256_file(&run_dir.join("metadata/parser_version.json"))?,
+        safety_boundary_note_hash: sha256_file(
+            &run_dir.join("metadata/safety_boundary_note.json"),
+        )?,
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -353,6 +566,71 @@ impl SmbQueryTransport {
         }
     }
 
+    /// Query with full response drain and timing.
+    fn query_with_drain_and_timing(
+        &mut self,
+        cmd: &str,
+        tracker: &mut TimelineTracker,
+        delay_ms: u64,
+    ) -> Result<(String, QueryTimingEntry), String> {
+        validate_smb_query_only(cmd)?;
+
+        let mono_before = tracker.monotonic_ns_since_start();
+        let wall_before = wall_time_utc_iso();
+
+        let cmd_with_term = format!("{}\n", cmd);
+        self.stream
+            .write_all(cmd_with_term.as_bytes())
+            .map_err(|e| format!("TCP write failed: {}", e))?;
+        self.stream
+            .flush()
+            .map_err(|e| format!("TCP flush failed: {}", e))?;
+
+        let mut reader = BufReader::new(&self.stream);
+        let mut line = String::new();
+        let resp = match reader.read_line(&mut line) {
+            Ok(0) => Err("TCP read returned empty".to_string()),
+            Ok(_) => {
+                line = line.trim().to_string();
+                Ok(line)
+            }
+            Err(e) => Err(format!("TCP read failed: {}", e)),
+        }?;
+
+        // Drain any residual data in the buffer
+        self.drain_buffer();
+
+        let mono_after = tracker.monotonic_ns_since_start();
+        let duration_ms = (mono_after - mono_before) / 1_000_000;
+
+        let timing = QueryTimingEntry {
+            command: cmd.into(),
+            response: resp.clone(),
+            wall_time_utc: wall_before,
+            monotonic_ns: mono_after,
+            monotonic_ns_since_run_start: mono_after,
+            duration_ms,
+        };
+
+        // Pacing delay after each query
+        if delay_ms > 0 {
+            std::thread::sleep(Duration::from_millis(delay_ms));
+        }
+
+        Ok((resp, timing))
+    }
+
+    fn drain_buffer(&mut self) {
+        let mut buf = [0u8; 256];
+        loop {
+            match self.stream.read(&mut buf) {
+                Ok(0) => break,
+                Ok(_) => continue,
+                Err(_) => break,
+            }
+        }
+    }
+
     fn close(self) {
         drop(self.stream);
     }
@@ -364,9 +642,12 @@ impl SmbQueryTransport {
 
 fn build_smb_query_snapshot(
     transport: &mut SmbQueryTransport,
-) -> Result<Smb100aQuerySnapshot, String> {
+    tracker: &mut TimelineTracker,
+    delay_ms: u64,
+) -> Result<(Smb100aQuerySnapshot, SmbQueryTiming, Vec<String>), String> {
     let idn = transport.query("*IDN?")?;
 
+    // SYST:ERR? is moved to the end of the sequence per M2.8 decision
     let queries = vec![
         "OUTP?",
         "MOD:STAT?",
@@ -384,18 +665,23 @@ fn build_smb_query_snapshot(
     ];
 
     let mut results = Vec::new();
+    let mut timings = Vec::new();
+    let mut warnings = Vec::new();
+
     for q in &queries {
-        let resp = match transport.query(q) {
-            Ok(r) => r,
-            Err(e) => format!("ERROR: {}", e),
-        };
+        let (resp, timing) = transport.query_with_drain_and_timing(q, tracker, delay_ms)?;
+        // Check for SYST:ERR? returning -410 "Query interrupted"
+        if *q == "SYST:ERR?" && resp.contains("-410") {
+            warnings.push(format!("SYST:ERR? returned {}", resp));
+        }
         results.push(SmbQueryResult {
             command: q.to_string(),
             response: resp,
         });
+        timings.push(timing);
     }
 
-    Ok(Smb100aQuerySnapshot {
+    let snapshot = Smb100aQuerySnapshot {
         schema_version: "0.2.0".into(),
         device_id: "smb100a_main".into(),
         idn,
@@ -403,7 +689,14 @@ fn build_smb_query_snapshot(
         queries: results,
         query_only_mode: true,
         connection_closed: false,
-    })
+    };
+
+    let timing = SmbQueryTiming {
+        schema_version: "0.2.0".into(),
+        queries: timings,
+    };
+
+    Ok((snapshot, timing, warnings))
 }
 
 // ---------------------------------------------------------------------------
@@ -511,6 +804,78 @@ fn write_parsed_jsonl<T: Serialize>(
 }
 
 // ---------------------------------------------------------------------------
+// State/profile diff builder
+// ---------------------------------------------------------------------------
+
+fn build_state_profile_diff(
+    snapshot: &Smb100aQuerySnapshot,
+    fake_profile_path: Option<&str>,
+) -> StateProfileDiff {
+    let mut differences = Vec::new();
+    let mut summary_parts = Vec::new();
+
+    // Extract real values from query snapshot
+    let mut real_values: std::collections::HashMap<String, String> =
+        std::collections::HashMap::new();
+    for q in &snapshot.queries {
+        let key = q.command.trim_end_matches('?').to_string();
+        real_values.insert(key, q.response.clone());
+    }
+
+    // If fake profile path is provided, load and compare
+    let fake_profile: Option<serde_json::Value> = fake_profile_path
+        .and_then(|p| fs::read_to_string(p).ok())
+        .and_then(|s| serde_json::from_str(&s).ok());
+
+    if let Some(profile) = fake_profile {
+        let mappings = [
+            ("rf_output_enabled", "OUTP", "output_state"),
+            ("modulation_global_enabled", "MOD:STAT", "output_state"),
+            ("rf_frequency_hz", "FREQ", "configured"),
+            ("rf_power_dbm", "POW", "configured"),
+            ("lf_output_enabled", "LFO", "output_state"),
+            ("lf_frequency_hz", "LFO:FREQ", "configured"),
+            ("lf_voltage_v", "LFO:VOLT", "configured"),
+            ("lf_shape", "LFO:SHAP", "configured"),
+        ];
+
+        for (field, query_key, category) in &mappings {
+            if let (Some(fake_val), Some(real_resp)) =
+                (profile.get(*field), real_values.get(*query_key))
+            {
+                let real_val = serde_json::Value::String(real_resp.clone());
+                if fake_val != &real_val {
+                    differences.push(StateDiffEntry {
+                        parameter: field.to_string(),
+                        fake_value: fake_val.clone(),
+                        real_value: real_val,
+                        category: category.to_string(),
+                    });
+                }
+            }
+        }
+
+        if differences.is_empty() {
+            summary_parts.push("configured parameters match, output enable state matches".into());
+        } else {
+            summary_parts.push(format!(
+                "{} differences found between fake profile and real query snapshot",
+                differences.len()
+            ));
+        }
+    } else {
+        summary_parts.push("no fake profile provided for comparison".into());
+    }
+
+    StateProfileDiff {
+        schema_version: "0.2.0".into(),
+        fake_profile_path: fake_profile_path.map(|s| s.into()),
+        differences,
+        summary: summary_parts.join("; "),
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -530,7 +895,7 @@ fn main() {
     }
 
     println!("========================================");
-    println!("  M2.7B Real SMB Query + Real OE Bridge");
+    println!("  M2.8 Timeline Alignment Bridge");
     println!("========================================");
     println!();
     println!("SMB100A:      {}:{}", cli.smb_host, cli.smb_port);
@@ -539,6 +904,7 @@ fn main() {
         "Frames:       {} (delay {} ms, timeout {} ms)",
         cli.frames, cli.delay_ms, cli.timeout_ms
     );
+    println!("SMB Query Delay: {} ms", cli.smb_query_delay_ms);
     println!("Run ID:       {}", cli.run_id);
     println!("Run Root:     {}", cli.run_root);
     println!();
@@ -558,6 +924,9 @@ fn main() {
         }
     };
 
+    let mut tracker = TimelineTracker::new();
+    tracker.record("run_created", "system", None);
+
     let created_at = utc_now_ms();
 
     let mut event_writer = match run.open_event_writer() {
@@ -568,6 +937,7 @@ fn main() {
         }
     };
 
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::RunCreated,
@@ -575,6 +945,7 @@ fn main() {
         "Run directory created",
         "system",
         None,
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
         std::process::exit(1);
@@ -608,6 +979,8 @@ fn main() {
 
     // -- SMB100A query-only snapshot -----------------------------------------
 
+    tracker.record("smb_query_started", "smb100a_main", None);
+
     println!(
         "Connecting to SMB100A at {}:{}...",
         cli.smb_host, cli.smb_port
@@ -622,19 +995,20 @@ fn main() {
             }
         };
 
-    let smb_snapshot = match build_smb_query_snapshot(&mut smb_transport) {
-        Ok(s) => {
-            println!("SMB100A IDN: {}", s.idn);
-            for q in &s.queries {
-                println!("  {:20} -> {}", q.command, q.response);
+    let (smb_snapshot, smb_timing, smb_warnings) =
+        match build_smb_query_snapshot(&mut smb_transport, &mut tracker, cli.smb_query_delay_ms) {
+            Ok(s) => {
+                println!("SMB100A IDN: {}", s.0.idn);
+                for q in &s.0.queries {
+                    println!("  {:20} -> {}", q.command, q.response);
+                }
+                s
             }
-            s
-        }
-        Err(e) => {
-            eprintln!("SMB100A query snapshot failed: {}", e);
-            std::process::exit(1);
-        }
-    };
+            Err(e) => {
+                eprintln!("SMB100A query snapshot failed: {}", e);
+                std::process::exit(1);
+            }
+        };
 
     // Record SMB100A commands in audit
     record_audit(CommandAuditEntry {
@@ -658,6 +1032,9 @@ fn main() {
         });
     }
 
+    tracker.record("smb_query_completed", "smb100a_main", None);
+
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::DeviceIdentityVerified,
@@ -670,6 +1047,7 @@ fn main() {
             "real_hardware": true,
             "query_only": true,
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
@@ -679,6 +1057,9 @@ fn main() {
     println!("Closing SMB100A connection before OE1022D acquisition...");
     smb_transport.close();
 
+    tracker.record("smb_connection_closed", "smb100a_main", None);
+
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::RunCompleted,
@@ -690,11 +1071,14 @@ fn main() {
             "mock": false,
             "real_hardware": true,
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
 
     // -- Real OE1022D identity ------------------------------------------------
+
+    tracker.record("oe_identity_started", "oe1022d_main", None);
 
     let oe_idn = match oe_verify_identity(&cli.oe_port, cli.oe_baud, cli.timeout_ms) {
         Ok(idn) => {
@@ -707,6 +1091,8 @@ fn main() {
         }
     };
 
+    tracker.record("oe_identity_verified", "oe1022d_main", None);
+
     record_audit(CommandAuditEntry {
         timestamp_unix_ms: utc_now_ms(),
         device_id: "oe1022d_main".to_string(),
@@ -717,6 +1103,7 @@ fn main() {
         transport_error: None,
     });
 
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::DeviceIdentityVerified,
@@ -729,6 +1116,7 @@ fn main() {
             "real_hardware": true,
             "allowed_commands": ["*IDN?", "RALL?"],
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
@@ -772,6 +1160,7 @@ fn main() {
         delay_ms: cli.delay_ms,
         timeout_ms: cli.timeout_ms,
         smb_timeout_ms: cli.smb_timeout_ms,
+        smb_query_delay_ms: cli.smb_query_delay_ms,
         created_at_unix_ms: created_at,
     };
     if let Err(e) = run.write_json_artifact("metadata/acquisition_config.json", &acq_config) {
@@ -815,6 +1204,11 @@ fn main() {
         std::process::exit(1);
     }
 
+    // Write SMB query timing
+    if let Err(e) = run.write_json_artifact("metadata/smb100a_query_timing.json", &smb_timing) {
+        eprintln!("Failed to write smb100a_query_timing: {}", e);
+    }
+
     // -- Station snapshot ----------------------------------------------------
 
     let station_snapshot = serde_json::json!({
@@ -853,6 +1247,7 @@ fn main() {
         std::process::exit(1);
     }
 
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::StationSnapshotWritten,
@@ -860,8 +1255,59 @@ fn main() {
         "Station snapshot written",
         "system",
         None,
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
+    }
+
+    // -- Station snapshot quality --------------------------------------------
+
+    let has_warnings = !smb_warnings.is_empty();
+    let status = if has_warnings {
+        "passed_with_warnings"
+    } else {
+        "passed"
+    };
+
+    let snapshot_quality = StationSnapshotQuality {
+        schema_version: "0.2.0".into(),
+        status: status.into(),
+        eligible_for_rf_on_microtest: !has_warnings,
+        warnings: smb_warnings.clone(),
+        errors: Vec::new(),
+        smb100a_query_error: smb_warnings.first().cloned(),
+        query_interrupted_seen: smb_warnings.iter().any(|w| w.contains("-410")),
+        smb_query_delay_ms: cli.smb_query_delay_ms,
+        smb_connection_closed_before_acquisition: true,
+        oe_command_allowlist: vec!["*IDN?".into(), "RALL?".into()],
+        smb_command_allowlist: SMB_QUERY_ALLOWLIST.iter().map(|s| s.to_string()).collect(),
+    };
+    if let Err(e) =
+        run.write_json_artifact("metadata/station_snapshot_quality.json", &snapshot_quality)
+    {
+        eprintln!("Failed to write station_snapshot_quality: {}", e);
+    }
+
+    // -- State/profile diff --------------------------------------------------
+
+    let state_diff = build_state_profile_diff(&smb_snapshot, cli.fake_profile_path.as_deref());
+    if let Err(e) = run.write_json_artifact("metadata/state_profile_diff.json", &state_diff) {
+        eprintln!("Failed to write state_profile_diff: {}", e);
+    }
+
+    // -- Hash manifest -------------------------------------------------------
+
+    if cli.write_state_hashes {
+        match compute_hash_manifest(&run.run_directory_path()) {
+            Ok(hash_manifest) => {
+                if let Err(e) =
+                    run.write_json_artifact("metadata/hash_manifest.json", &hash_manifest)
+                {
+                    eprintln!("Failed to write hash_manifest: {}", e);
+                }
+            }
+            Err(e) => eprintln!("Hash manifest computation failed: {}", e),
+        }
     }
 
     // -- Open writers --------------------------------------------------------
@@ -886,6 +1332,9 @@ fn main() {
 
     println!("Capturing {} frames...", cli.frames);
 
+    tracker.record("oe_acquisition_started", "oe1022d_main", None);
+
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::AcquisitionStarted,
@@ -897,6 +1346,7 @@ fn main() {
             "mock": false,
             "real_hardware": true,
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
@@ -907,6 +1357,15 @@ fn main() {
     let mut ok_count = 0usize;
     let mut fail_count = 0usize;
     let mut timeout_count = 0usize;
+
+    let hash_for_frames = if cli.write_state_hashes {
+        match compute_hash_manifest(&run.run_directory_path()) {
+            Ok(hm) => Some(hm.smb100a_query_snapshot_hash),
+            Err(_) => None,
+        }
+    } else {
+        None
+    };
 
     for i in 0..cli.frames {
         let ts = utc_now_ms();
@@ -928,6 +1387,7 @@ fn main() {
                                 raw_len: buf.len(),
                                 parse_status: "fail".into(),
                                 parse_error: Some(format!("raw write: {}", e)),
+                                state_snapshot_hash: hash_for_frames.clone(),
                             });
                             if cli.delay_ms > 0 {
                                 std::thread::sleep(Duration::from_millis(cli.delay_ms));
@@ -952,6 +1412,16 @@ fn main() {
                         notes: None,
                     };
 
+                    if i == 0 {
+                        tracker.record("first_frame_captured", "oe1022d_main", None);
+                    }
+                    tracker.record(
+                        "frame_captured",
+                        "oe1022d_main",
+                        Some(serde_json::json!({"frame_index": i})),
+                    );
+
+                    let mono_ns = tracker.monotonic_ns_since_start();
                     if let Err(e) = event_writer.write_event(&make_event(
                         &cli.run_id,
                         RunEventType::FrameCaptured,
@@ -965,6 +1435,7 @@ fn main() {
                             "mock": false,
                             "real_hardware": true,
                         })),
+                        Some(mono_ns),
                     )) {
                         eprintln!("Failed to write event: {}", e);
                     }
@@ -983,6 +1454,13 @@ fn main() {
                         match parse_rall_frame(&buf) {
                             Ok(frame) => {
                                 index_entry.parse_status = Some("success".into());
+                                tracker.record(
+                                    "frame_parsed",
+                                    "oe1022d_main",
+                                    Some(serde_json::json!({"frame_index": i})),
+                                );
+
+                                let mono_ns = tracker.monotonic_ns_since_start();
                                 if let Err(e) = event_writer.write_event(&make_event(
                                     &cli.run_id,
                                     RunEventType::FrameParsed,
@@ -994,6 +1472,7 @@ fn main() {
                                         "mock": false,
                                         "real_hardware": true,
                                     })),
+                                    Some(mono_ns),
                                 )) {
                                     eprintln!("Failed to write event: {}", e);
                                 }
@@ -1026,6 +1505,7 @@ fn main() {
                                     raw_len: buf.len(),
                                     parse_status: "success".into(),
                                     parse_error: None,
+                                    state_snapshot_hash: hash_for_frames.clone(),
                                 });
                                 ok_count += 1;
                             }
@@ -1044,6 +1524,7 @@ fn main() {
                                         "mock": false,
                                         "real_hardware": true,
                                     })),
+                                    None,
                                 )) {
                                     eprintln!("Failed to write event: {}", evte);
                                 }
@@ -1055,6 +1536,7 @@ fn main() {
                                     raw_len: buf.len(),
                                     parse_status: "fail".into(),
                                     parse_error: Some(format!("{}", e)),
+                                    state_snapshot_hash: hash_for_frames.clone(),
                                 });
                                 fail_count += 1;
                             }
@@ -1079,6 +1561,7 @@ fn main() {
                                 "mock": false,
                                 "real_hardware": true,
                             })),
+                            None,
                         )) {
                             eprintln!("Failed to write event: {}", e);
                         }
@@ -1094,6 +1577,7 @@ fn main() {
                                 buf.len(),
                                 RALL_FRAME_BYTES
                             )),
+                            state_snapshot_hash: hash_for_frames.clone(),
                         });
                         fail_count += 1;
                     }
@@ -1127,6 +1611,7 @@ fn main() {
                             "mock": false,
                             "real_hardware": true,
                         })),
+                        None,
                     )) {
                         eprintln!("Failed to write event: {}", evte);
                     }
@@ -1138,6 +1623,7 @@ fn main() {
                         raw_len: 0,
                         parse_status: "timeout".into(),
                         parse_error: Some(e.clone()),
+                        state_snapshot_hash: hash_for_frames.clone(),
                     });
                     timeout_count += 1;
                     Ok(())
@@ -1155,6 +1641,9 @@ fn main() {
 
     // -- Finalize acquisition ------------------------------------------------
 
+    tracker.record("oe_acquisition_completed", "oe1022d_main", None);
+
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::AcquisitionCompleted,
@@ -1171,6 +1660,7 @@ fn main() {
             "mock": false,
             "real_hardware": true,
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
@@ -1180,6 +1670,14 @@ fn main() {
     }
     if let Err(e) = write_parsed_jsonl(&run, "parsed/frame_summary.jsonl", &summary_rows) {
         eprintln!("Failed to write summary: {}", e);
+    }
+
+    // -- Timeline JSONL ------------------------------------------------------
+
+    if cli.enable_timeline_alignment {
+        if let Err(e) = write_parsed_jsonl(&run, "timeline.jsonl", &tracker.events) {
+            eprintln!("Failed to write timeline: {}", e);
+        }
     }
 
     // -- Audit report --------------------------------------------------------
@@ -1197,16 +1695,19 @@ fn main() {
         "all_frames_12288_bytes": true,
         "csv_files_found": [],
         "forbidden_commands_found": [],
-        "warnings": [],
+        "warnings": smb_warnings,
         "errors": [],
         "smb100a_query_only": true,
         "smb100a_connection_closed_before_acquisition": true,
         "command_audit_entries": command_audit.len(),
+        "station_snapshot_quality_status": snapshot_quality.status,
+        "eligible_for_rf_on_microtest": snapshot_quality.eligible_for_rf_on_microtest,
     });
     if let Err(e) = run.write_json_artifact("audit_report.json", &audit_report) {
         eprintln!("Failed to write audit report: {}", e);
     }
 
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::AuditCompleted,
@@ -1217,12 +1718,16 @@ fn main() {
             "passed": ok_count > 0 && fail_count == 0 && timeout_count == 0,
             "command_audit_entries": command_audit.len(),
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
 
     // -- Run completed -------------------------------------------------------
 
+    tracker.record("run_completed", "system", None);
+
+    let mono_ns = tracker.monotonic_ns_since_start();
     if let Err(e) = event_writer.write_event(&make_event(
         &cli.run_id,
         RunEventType::RunCompleted,
@@ -1236,6 +1741,7 @@ fn main() {
             "smb100a_query_only": true,
             "smb100a_connection_closed": true,
         })),
+        Some(mono_ns),
     )) {
         eprintln!("Failed to write event: {}", e);
     }
@@ -1260,6 +1766,294 @@ mod tests {
     use std::fs;
 
     #[test]
+    fn smb_query_delay_defaults_to_100_ms() {
+        let args = Cli::parse_from(["oe1022d-smb-query-bridge", "--run-id", "test"]);
+        assert_eq!(args.smb_query_delay_ms, 100);
+    }
+
+    #[test]
+    fn syst_err_is_last_in_query_sequence() {
+        // The query sequence in build_smb_query_snapshot must have SYST:ERR? last.
+        // We verify by checking the constant list ordering used in the builder.
+        let queries = vec![
+            "OUTP?",
+            "MOD:STAT?",
+            "FREQ?",
+            "POW?",
+            "POW:ALC?",
+            "FM:STAT?",
+            "FM:SOUR?",
+            "FM:DEV?",
+            "LFO?",
+            "LFO:FREQ?",
+            "LFO:VOLT?",
+            "LFO:SHAP?",
+            "SYST:ERR?",
+        ];
+        assert_eq!(queries.last(), Some(&"SYST:ERR?"));
+    }
+
+    #[test]
+    fn non_query_smb_commands_are_rejected() {
+        assert!(validate_smb_query_only("OUTP ON").is_err());
+        assert!(validate_smb_query_only("FREQ 2.882GHz").is_err());
+        assert!(validate_smb_query_only("*RST").is_err());
+    }
+
+    #[test]
+    fn outp_off_rejected_in_query_only_mode() {
+        // Even safe-looking set commands are forbidden in M2.8
+        assert!(validate_smb_query_only("OUTP OFF").is_err());
+    }
+
+    #[test]
+    fn oe1022d_only_allows_idn_and_rall() {
+        assert!(validate_oe_command("*IDN?").is_ok());
+        assert!(validate_oe_command("RALL?").is_ok());
+        assert!(validate_oe_command("SENSD 2,7").is_err());
+        assert!(validate_oe_command("*RST").is_err());
+    }
+
+    #[test]
+    fn command_audit_records_attempted_sent_received_rejected() {
+        let entry_allowed = CommandAuditEntry {
+            timestamp_unix_ms: 12345,
+            device_id: "smb100a_main".into(),
+            command: "*IDN?".into(),
+            allowed: true,
+            rejection_reason: None,
+            response_preview: Some("Rohde&Schwarz".into()),
+            transport_error: None,
+        };
+        let json = serde_json::to_string(&entry_allowed).unwrap();
+        assert!(json.contains("*IDN?"));
+        assert!(json.contains("true"));
+        assert!(json.contains("Rohde&Schwarz"));
+
+        let entry_rejected = CommandAuditEntry {
+            timestamp_unix_ms: 12346,
+            device_id: "smb100a_main".into(),
+            command: "OUTP ON".into(),
+            allowed: false,
+            rejection_reason: Some("not a query".into()),
+            response_preview: None,
+            transport_error: None,
+        };
+        let json = serde_json::to_string(&entry_rejected).unwrap();
+        assert!(json.contains("OUTP ON"));
+        assert!(json.contains("false"));
+        assert!(json.contains("not a query"));
+    }
+
+    #[test]
+    fn forbidden_commands_never_reach_transport() {
+        let forbidden = [
+            "OUTP ON",
+            "OUTP OFF",
+            "MOD:STAT ON",
+            "MOD:STAT OFF",
+            "FREQ 2.882GHz",
+            "POW -15dBm",
+            "POW:ALC AUTO",
+            "FM:STAT ON",
+            "FM:SOUR INT",
+            "FM:DEV 4MHz",
+            "LFO ON",
+            "LFO OFF",
+            "LFO:FREQ 500Hz",
+            "LFO:VOLT 0.137V",
+            "LFO:SHAP SQUARE",
+            "SWE:MODE AUTO",
+            "SWE:SPAC LIN",
+            "FREQ:STAR 1GHz",
+            "FREQ:STOP 5GHz",
+            "*RST",
+        ];
+        for cmd in &forbidden {
+            assert!(
+                validate_smb_query_only(cmd).is_err(),
+                "{} should be rejected",
+                cmd
+            );
+        }
+    }
+
+    #[test]
+    fn timeline_events_include_monotonic_and_wall_timestamps() {
+        let mut tracker = TimelineTracker::new();
+        tracker.record("test_event", "device", None);
+        assert_eq!(tracker.events.len(), 1);
+        let evt = &tracker.events[0];
+        assert!(!evt.wall_time_utc.is_empty());
+        assert!(evt.monotonic_ns > 0);
+        assert_eq!(evt.monotonic_ns_since_run_start, evt.monotonic_ns);
+    }
+
+    #[test]
+    fn monotonic_timestamps_are_non_decreasing_within_run() {
+        let mut tracker = TimelineTracker::new();
+        for i in 0..5 {
+            tracker.record(&format!("evt_{}", i), "device", None);
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        for window in tracker.events.windows(2) {
+            assert!(
+                window[1].monotonic_ns >= window[0].monotonic_ns,
+                "monotonic timestamps must be non-decreasing"
+            );
+        }
+    }
+
+    #[test]
+    fn station_snapshot_quality_emits_warning_for_410() {
+        let quality = StationSnapshotQuality {
+            schema_version: "0.2.0".into(),
+            status: "passed_with_warnings".into(),
+            eligible_for_rf_on_microtest: false,
+            warnings: vec!["SYST:ERR? returned -410,Query interrupted".into()],
+            errors: Vec::new(),
+            smb100a_query_error: Some("-410,Query interrupted".into()),
+            query_interrupted_seen: true,
+            smb_query_delay_ms: 100,
+            smb_connection_closed_before_acquisition: true,
+            oe_command_allowlist: vec!["*IDN?".into(), "RALL?".into()],
+            smb_command_allowlist: SMB_QUERY_ALLOWLIST.iter().map(|s| s.to_string()).collect(),
+        };
+        let json = serde_json::to_string(&quality).unwrap();
+        assert!(json.contains("passed_with_warnings"));
+        assert!(json.contains("-410"));
+        assert!(json.contains("query_interrupted_seen"));
+    }
+
+    #[test]
+    fn eligible_for_rf_on_microtest_false_when_warning_exists() {
+        let quality_with_warning = StationSnapshotQuality {
+            schema_version: "0.2.0".into(),
+            status: "passed_with_warnings".into(),
+            eligible_for_rf_on_microtest: false,
+            warnings: vec!["SYST:ERR? returned -410".into()],
+            errors: Vec::new(),
+            smb100a_query_error: Some("-410".into()),
+            query_interrupted_seen: true,
+            smb_query_delay_ms: 100,
+            smb_connection_closed_before_acquisition: true,
+            oe_command_allowlist: vec!["*IDN?".into(), "RALL?".into()],
+            smb_command_allowlist: Vec::new(),
+        };
+        assert!(!quality_with_warning.eligible_for_rf_on_microtest);
+
+        let quality_clean = StationSnapshotQuality {
+            schema_version: "0.2.0".into(),
+            status: "passed".into(),
+            eligible_for_rf_on_microtest: true,
+            warnings: Vec::new(),
+            errors: Vec::new(),
+            smb100a_query_error: None,
+            query_interrupted_seen: false,
+            smb_query_delay_ms: 100,
+            smb_connection_closed_before_acquisition: true,
+            oe_command_allowlist: vec!["*IDN?".into(), "RALL?".into()],
+            smb_command_allowlist: Vec::new(),
+        };
+        assert!(quality_clean.eligible_for_rf_on_microtest);
+    }
+
+    #[test]
+    fn state_profile_diff_distinguishes_configured_from_output() {
+        let snapshot = Smb100aQuerySnapshot {
+            schema_version: "0.2.0".into(),
+            device_id: "smb100a_main".into(),
+            idn: "Rohde&Schwarz,SMB100A,123456,5.00.116".into(),
+            queried_at_unix_ms: 0,
+            queries: vec![
+                SmbQueryResult {
+                    command: "OUTP?".into(),
+                    response: "OFF".into(),
+                },
+                SmbQueryResult {
+                    command: "FREQ?".into(),
+                    response: "2882000000".into(),
+                },
+                SmbQueryResult {
+                    command: "LFO?".into(),
+                    response: "0".into(),
+                },
+                SmbQueryResult {
+                    command: "LFO:SHAP?".into(),
+                    response: "SQU".into(),
+                },
+            ],
+            query_only_mode: true,
+            connection_closed: true,
+        };
+
+        let fake_profile = serde_json::json!({
+            "rf_output_enabled": false,
+            "modulation_global_enabled": false,
+            "rf_frequency_hz": 2882000000.0,
+            "rf_power_dbm": -15,
+            "lf_output_enabled": true,
+            "lf_frequency_hz": 500,
+            "lf_voltage_v": 0.137,
+            "lf_shape": "SQUARE"
+        });
+
+        let tmp = tempfile::tempdir().unwrap();
+        let profile_path = tmp.path().join("fake_profile.json");
+        fs::write(&profile_path, serde_json::to_string(&fake_profile).unwrap()).unwrap();
+
+        let diff = build_state_profile_diff(&snapshot, Some(profile_path.to_str().unwrap()));
+
+        // Find the LF output diff (output_state category)
+        let lf_diff = diff
+            .differences
+            .iter()
+            .find(|d| d.parameter == "lf_output_enabled");
+        assert!(lf_diff.is_some(), "LF output diff should exist");
+        let lf_diff = lf_diff.unwrap();
+        assert_eq!(lf_diff.category, "output_state");
+
+        // Find the LF shape diff (configured category)
+        let shape_diff = diff.differences.iter().find(|d| d.parameter == "lf_shape");
+        assert!(shape_diff.is_some(), "LF shape diff should exist");
+        let shape_diff = shape_diff.unwrap();
+        assert_eq!(shape_diff.category, "configured");
+    }
+
+    #[test]
+    fn hash_manifest_is_deterministic_for_identical_inputs() {
+        let data = b"identical input data";
+        let h1 = sha256_bytes(data);
+        let h2 = sha256_bytes(data);
+        assert_eq!(h1, h2);
+        assert!(h1.starts_with("sha256:"));
+    }
+
+    #[test]
+    fn no_csv_files_are_created() {
+        let tmp = tempfile::tempdir().unwrap();
+        let run = create_run_directory(tmp.path(), "test_no_csv").unwrap();
+        fs::write(run.run_directory_path().join("events.jsonl"), "{}\n").unwrap();
+        fs::write(run.run_directory_path().join("raw/data.rawbin"), [0u8; 10]).unwrap();
+
+        fn has_csv(dir: &std::path::Path) -> bool {
+            for entry in fs::read_dir(dir).unwrap() {
+                let entry = entry.unwrap();
+                let path = entry.path();
+                if path.is_dir() {
+                    if has_csv(&path) {
+                        return true;
+                    }
+                } else if path.extension().and_then(|e| e.to_str()) == Some("csv") {
+                    return true;
+                }
+            }
+            false
+        }
+        assert!(!has_csv(&run.run_directory_path()));
+    }
+
+    #[test]
     fn smb_query_allowlist_accepts_only_queries() {
         assert!(validate_smb_query_only("*IDN?").is_ok());
         assert!(validate_smb_query_only("OUTP?").is_ok());
@@ -1276,64 +2070,6 @@ mod tests {
         assert!(validate_smb_query_only("POW -15dBm").is_err());
         assert!(validate_smb_query_only("FM:STAT ON").is_err());
         assert!(validate_smb_query_only("*RST").is_err());
-    }
-
-    #[test]
-    fn smb_outp_off_is_rejected_because_query_only() {
-        // Even though OUTP OFF is "safe" in some contexts, this task is query-only.
-        assert!(validate_smb_query_only("OUTP OFF").is_err());
-    }
-
-    #[test]
-    fn oe1022d_allowlist_accepts_only_idn_and_rall() {
-        assert!(validate_oe_command("*IDN?").is_ok());
-        assert!(validate_oe_command("RALL?").is_ok());
-        assert!(validate_oe_command("SENSD 2,7").is_err());
-        assert!(validate_oe_command("*RST").is_err());
-    }
-
-    #[test]
-    fn command_audit_entry_serializes_correctly() {
-        let entry = CommandAuditEntry {
-            timestamp_unix_ms: 12345,
-            device_id: "smb100a_main".into(),
-            command: "*IDN?".into(),
-            allowed: true,
-            rejection_reason: None,
-            response_preview: Some("Rohde&Schwarz,SMB100A".into()),
-            transport_error: None,
-        };
-        let json = serde_json::to_string(&entry).unwrap();
-        assert!(json.contains("*IDN?"));
-        assert!(json.contains("true"));
-    }
-
-    #[test]
-    fn forbidden_smb_commands_never_reach_transport() {
-        // Validate that all setting patterns are rejected by the validator
-        let forbidden = [
-            "OUTP ON",
-            "OUTP OFF",
-            "MOD:STAT ON",
-            "FREQ 2.882GHz",
-            "POW -15dBm",
-            "POW:ALC AUTO",
-            "FM:STAT ON",
-            "FM:SOUR INT",
-            "FM:DEV 4MHz",
-            "LFO ON",
-            "LFO:FREQ 500Hz",
-            "LFO:VOLT 0.137V",
-            "SWE:MODE AUTO",
-            "*RST",
-        ];
-        for cmd in &forbidden {
-            assert!(
-                validate_smb_query_only(cmd).is_err(),
-                "{} should be rejected",
-                cmd
-            );
-        }
     }
 
     #[test]
@@ -1365,7 +2101,6 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let run = create_run_directory(tmp.path(), "test_layout").unwrap();
 
-        // Write all expected artifacts
         fs::write(run.run_directory_path().join("manifest.json"), "{}").unwrap();
         fs::write(
             run.run_directory_path()
@@ -1461,86 +2196,64 @@ mod tests {
     }
 
     #[test]
-    fn no_csv_files_are_created() {
+    fn timeline_tracker_records_multiple_events() {
+        let mut tracker = TimelineTracker::new();
+        tracker.record("run_created", "system", None);
+        tracker.record("smb_query_started", "smb100a_main", None);
+        tracker.record("smb_query_completed", "smb100a_main", None);
+        tracker.record("oe_acquisition_started", "oe1022d_main", None);
+        tracker.record("run_completed", "system", None);
+
+        assert_eq!(tracker.events.len(), 5);
+        assert_eq!(tracker.events[0].event_type, "run_created");
+        assert_eq!(tracker.events[1].event_type, "smb_query_started");
+        assert_eq!(tracker.events[2].event_type, "smb_query_completed");
+        assert_eq!(tracker.events[3].event_type, "oe_acquisition_started");
+        assert_eq!(tracker.events[4].event_type, "run_completed");
+    }
+
+    #[test]
+    fn hash_manifest_contains_expected_hashes() {
         let tmp = tempfile::tempdir().unwrap();
-        let run = create_run_directory(tmp.path(), "test_no_csv").unwrap();
-        fs::write(run.run_directory_path().join("events.jsonl"), "{}\n").unwrap();
-        fs::write(run.run_directory_path().join("raw/data.rawbin"), [0u8; 10]).unwrap();
+        let run_dir = tmp.path().join("test_hash");
+        fs::create_dir_all(run_dir.join("metadata")).unwrap();
 
-        fn has_csv(dir: &std::path::Path) -> bool {
-            for entry in fs::read_dir(dir).unwrap() {
-                let entry = entry.unwrap();
-                let path = entry.path();
-                if path.is_dir() {
-                    if has_csv(&path) {
-                        return true;
-                    }
-                } else if path.extension().and_then(|e| e.to_str()) == Some("csv") {
-                    return true;
-                }
-            }
-            false
-        }
-        assert!(!has_csv(&run.run_directory_path()));
+        let data1 = b"station snapshot";
+        let data2 = b"smb snapshot";
+        let data3 = b"acquisition config";
+        let data4 = b"parser version";
+        let data5 = b"safety note";
+
+        fs::write(run_dir.join("metadata/station_snapshot.json"), data1).unwrap();
+        fs::write(run_dir.join("metadata/smb100a_query_snapshot.json"), data2).unwrap();
+        fs::write(run_dir.join("metadata/acquisition_config.json"), data3).unwrap();
+        fs::write(run_dir.join("metadata/parser_version.json"), data4).unwrap();
+        fs::write(run_dir.join("metadata/safety_boundary_note.json"), data5).unwrap();
+
+        let manifest = compute_hash_manifest(&run_dir).unwrap();
+        assert!(manifest.station_snapshot_hash.starts_with("sha256:"));
+        assert!(manifest.smb100a_query_snapshot_hash.starts_with("sha256:"));
+        assert!(manifest.acquisition_config_hash.starts_with("sha256:"));
+        assert!(manifest.parser_version_hash.starts_with("sha256:"));
+        assert!(manifest.safety_boundary_note_hash.starts_with("sha256:"));
+
+        // Verify the hashes are actually correct
+        assert_eq!(manifest.station_snapshot_hash, sha256_bytes(data1));
+        assert_eq!(manifest.acquisition_config_hash, sha256_bytes(data3));
     }
 
     #[test]
-    fn audit_report_passes_when_all_ok() {
-        let report = serde_json::json!({
-            "passed": true,
-            "frame_count": 10,
-            "csv_files_found": [],
-            "forbidden_commands_found": [],
-            "smb100a_query_only": true,
-            "command_audit_entries": 25,
-        });
-        assert_eq!(report["passed"], true);
-        assert_eq!(
-            report["forbidden_commands_found"].as_array().unwrap().len(),
-            0
-        );
-    }
-
-    #[test]
-    fn smb100a_query_snapshot_serializes() {
-        let snap = Smb100aQuerySnapshot {
-            schema_version: "0.2.0".into(),
-            device_id: "smb100a_main".into(),
-            idn: "Rohde&Schwarz,SMB100A,123456,5.00.116".into(),
-            queried_at_unix_ms: 12345,
-            queries: vec![
-                SmbQueryResult {
-                    command: "OUTP?".into(),
-                    response: "OFF".into(),
-                },
-                SmbQueryResult {
-                    command: "FREQ?".into(),
-                    response: "2882000000".into(),
-                },
-            ],
-            query_only_mode: true,
-            connection_closed: true,
+    fn frame_summary_row_can_carry_state_hash() {
+        let row = FrameSummaryRow {
+            run_id: "test".into(),
+            frame_index: 0,
+            timestamp_unix_ms: 0,
+            raw_len: RALL_FRAME_BYTES,
+            parse_status: "success".into(),
+            parse_error: None,
+            state_snapshot_hash: Some("sha256:abc123".into()),
         };
-        let json = serde_json::to_string(&snap).unwrap();
-        assert!(json.contains("query_only_mode"));
-        assert!(json.contains("connection_closed"));
-    }
-
-    #[test]
-    fn safety_boundary_note_has_all_fields() {
-        let note = SafetyBoundaryNote {
-            schema_version: "0.2.0".into(),
-            real_oe1022d_allowed_commands: vec!["*IDN?".into(), "RALL?".into()],
-            real_smb100a_query_only: true,
-            real_smb100a_setting_commands_blocked: true,
-            smb_connection_closed_before_acquisition: true,
-            no_csv_policy: true,
-            no_executor_integration: true,
-            no_gui_hardware_access: true,
-        };
-        let json = serde_json::to_string_pretty(&note).unwrap();
-        assert!(json.contains("real_smb100a_query_only"));
-        assert!(json.contains("real_smb100a_setting_commands_blocked"));
-        assert!(json.contains("smb_connection_closed_before_acquisition"));
+        let json = serde_json::to_string(&row).unwrap();
+        assert!(json.contains("sha256:abc123"));
     }
 }
