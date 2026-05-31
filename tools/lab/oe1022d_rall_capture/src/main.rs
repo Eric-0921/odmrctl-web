@@ -52,7 +52,8 @@ fn main() {
     println!("Frames: {} (delay {} ms, timeout {} ms)", cli.frames, cli.delay_ms, cli.timeout_ms);
     println!();
 
-    let capture = Oe1022dRallCapture::new(&cli.port, cli.baud);
+    let mut capture = Oe1022dRallCapture::new(&cli.port, cli.baud);
+    capture.timeout_ms = cli.timeout_ms;
 
     // Verify identity
     println!("Verifying identity...");
@@ -103,7 +104,8 @@ fn main() {
         eprintln!("Warning: could not create out_dir: {}", e);
     }
 
-    // rawbin: append each frame with length prefix
+    // rawbin: raw concatenated frames (no length prefix)
+    // Index offset_bytes directly maps into this file.
     let rawbin_path = format!("{}/rall_frames.rawbin", out_subdir);
     let mut rawbin = Vec::new();
     for r in &records {
@@ -111,8 +113,6 @@ fn main() {
             let start = r.offset_bytes as usize;
             let end = start + r.length_bytes;
             let payload = &raw_payload[start..end.min(raw_payload.len())];
-            // Length-prefixed: u32_le len + payload
-            rawbin.extend_from_slice(&(payload.len() as u32).to_le_bytes());
             rawbin.extend_from_slice(payload);
         }
     }

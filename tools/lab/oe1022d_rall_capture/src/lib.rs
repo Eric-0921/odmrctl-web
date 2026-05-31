@@ -553,8 +553,8 @@ mod tests {
     }
 
     #[test]
-    fn probe_handles_4096_bytes() {
-        let payload = vec![0x3Fu8; 4096];
+    fn probe_handles_12288_bytes() {
+        let payload = vec![0x3Fu8; 12288];
         let results = probe_frame(&payload);
         assert_eq!(results.len(), 4);
         for r in &results {
@@ -611,7 +611,7 @@ mod tests {
             frame_index: 0,
             command: "RALL?".to_string(),
             offset_bytes: 0,
-            length_bytes: 4096,
+            length_bytes: 12288,
             timestamp_unix_ms: 0,
             duration_ms: 604,
             pass_fail: "pass".to_string(),
@@ -619,6 +619,6 @@ mod tests {
         }];
         let jsonl = records_to_jsonl(&records);
         assert!(jsonl.contains("RALL?"));
-        assert!(jsonl.contains("4096"));
+        assert!(jsonl.contains("12288"));
     }
 }
