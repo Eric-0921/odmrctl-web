@@ -153,7 +153,7 @@ pub fn query_sensitivity(channel: u8) -> String {
 
 /// `RMODD i,j` — set dynamic reserve for channel i.
 ///
-/// j values: 0 = High Reserve, 1 = Normal, 2 = Low Noise
+/// j values: 0 = Low Noise, 1 = Normal, 2 = High Reserve
 ///
 /// Source: oe1022d_labview_input_filter_commands.json
 pub fn set_dynamic_reserve(channel: u8, mode: u8) -> String {

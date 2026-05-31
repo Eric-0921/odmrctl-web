@@ -166,6 +166,11 @@ impl FakeOe1022d {
             "OFSLD" => with_ch!(set_filter_slope, filter_slope),
             "HARMD" => with_ch!(set_harmonic, harmonic),
             "SYNCD" => with_ch!(set_sync_filter, sync_filter),
+            "*RSTD" => {
+                self.ch_a = ChannelState::default();
+                self.ch_b = ChannelState::default();
+                Ok(DeviceResponse::Ack)
+            }
             _ => Err(DeviceError::UnknownCommand(cmd.to_string())),
         }
     }
@@ -211,7 +216,9 @@ impl FakeOe1022d {
             "SYNCD" => state.sync_filter.to_string(),
             "INOVD" => "0".to_string(),
             "GNOVD" => "0".to_string(),
-            "PLLD" => "0".to_string(),
+            "*PLLD" => "0".to_string(),
+            "OUTPD" => "0.0".to_string(),
+            "SNAPD" => "0.0,0.0,0.0,0.0".to_string(),
             _ => return Err(DeviceError::UnknownCommand(cmd.to_string())),
         };
         Ok(DeviceResponse::Value(val))

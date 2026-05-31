@@ -677,8 +677,8 @@ runs/<run_id>/events/events.jsonl
     "required": true
   },
   "capabilities": {
-    "rf_frequency_hz": { "min": 100000.0, "max": 12750000000.0 },
-    "rf_power_dbm": { "min": -120.0, "max": 20.0 },
+    "rf_frequency_hz": { "min": 8000.0, "max": 6000000000.0 },
+    "rf_power_dbm": { "min": -120.0, "max": 10.0 },
     "supports_fm": true,
     "supports_lf_output": true,
     "supports_frequency_sweep": true
@@ -1288,12 +1288,12 @@ Capability 不是 recipe，也不是 safety limit 的替代品。
   "supports_fm": true,
   "supports_frequency_sweep": true,
   "rf_frequency_hz": {
-    "min": 100000.0,
-    "max": 12750000000.0
+    "min": 8000.0,
+    "max": 6000000000.0
   },
   "rf_power_dbm": {
     "min": -120.0,
-    "max": 20.0
+    "max": 10.0
   }
 }
 ```

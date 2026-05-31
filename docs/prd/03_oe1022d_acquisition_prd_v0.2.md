@@ -137,6 +137,26 @@ primary_output: B-X or B-R
 
 采集核心只负责读取和记录，不负责决定这些实验参数是否科学。参数决策属于 recipe/profile/safety/timing 模块。
 
+### 2.2a 精密参数与约束（Verified）
+
+```text
+A/D 采样率:        312.5 kHz（双通道独立 ADC）
+输入噪声底:        ~5 nVrms/√Hz @ 1kHz（High Reserve 模式更高）
+响应建立时间:      4.6 × TC（6 dB/oct） ~ 10 × TC（24 dB/oct）
+```
+
+**同步滤波器约束：**
+- `SYNCD i,1`（开启）要求 `OFSLD i,j` 中 `j ≥ 2`（即 Filter Slope ≥ 18 dB/oct）
+- 若当前 slope < 18 dB/oct，开启 SYNC 不会报错但可能不生效
+
+**参考频率约束：**
+- 外部参考频率 < 1 Hz 时，必须使用 TTL 触发（`RSLPD i,0`）
+- 正弦过零检测（`RSLPD i,1`）在 < 1 Hz 下不可靠
+
+**接口约束：**
+- `RALL?` 仅在 USB 接口下可用（RS232 不支持此命令）
+- USB 虚拟串口波特率固定为 921600（不可协商）
+
 ### 2.3 旧系统瓶颈
 
 旧 Python/PyQt 系统中容易出现：
@@ -396,6 +416,7 @@ raw output path
   },
   "acquisition": {
     "command": "RALL?",
+    "rall_requires_usb": true,
     "period_ms": 100,
     "mode": "query_response",
     "primary_channel": "B",
@@ -912,6 +933,28 @@ pub trait Oe1022dParser {
 | 8479 | A-Input Overload | uint8 |
 | 8480 | A-Gain Overload | uint8 |
 | 8481 | A-PLL Locked | uint8 |
+
+B-channel 配置偏移（与 A-channel 等距 +300 bytes）：
+
+| 字节偏移 | 配置项 | 格式 |
+|----------|--------|------|
+| 8690 | B-Sensitivity | uint8 |
+| 8691 | B-Reserve | uint8 |
+| 8704 | B-Time Constant | uint8 |
+| 8705 | B-Filter dB/oct | uint8 |
+| 8706 | B-Synchronous | uint8 |
+| 8741 ~ 8748 | B-Sample Time | float64 |
+| 8749 ~ 8756 | B-Sample Length | int64 |
+| 8762 | B-Sample Mode | uint8 |
+| 8779 | B-Input Overload | uint8 |
+| 8780 | B-Gain Overload | uint8 |
+| 8781 | B-PLL Locked | uint8 |
+
+IDN / Serial 信息：
+
+| 字节偏移 | 配置项 | 格式 |
+|----------|--------|------|
+| 9170 ~ 9209 | Serial Number | ASCII string |
 
 **Padding (bytes 9216 ~ 12287)**
 
