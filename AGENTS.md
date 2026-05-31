@@ -10,8 +10,8 @@
 当前阶段：**GUI-M0 Mock Viewer 已完成，M2 硬件 bring-up 待进行。**
 
 - **Rust 后端**：设备编排、recipe 编译与安全检查、执行引擎、高频采集、raw-first 数据落盘。
-- **前端**：Tauri + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
-- **Python**：仅离线分析与 recipe 生成工具，**不参与实时链路**。
+- **前端**：Tauri v2 + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
+- **Python**：仅离线分析与 recipe 生成工具，**不参与实时链路**。当前目录下仅有 `.gitkeep`（预留）。
 
 ## 技术栈
 
@@ -20,7 +20,7 @@
 | 后端核心 | Rust (Edition 2021) | 12 crate 的 Cargo workspace |
 | 桌面 GUI | Tauri v2 | 跨平台 Webview 桌面壳 |
 | 前端框架 | React 18 + TypeScript 5 | Vite 5 构建，React Router v6 路由 |
-| 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist` |
+| 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist=true`、`strict-peer-dependencies=false`、`auto-install-peers=true` |
 | Python 离线 | （预留） | `python/analysis/`、`python/recipe_tools/` 当前仅含 `.gitkeep` |
 | CI/CD | GitHub Actions | `.github/workflows/ci.yml` |
 
@@ -38,6 +38,7 @@
 | `schemas/` | 9 份 JSON Schema（recipe、resolved_recipe、safety 等） | 验证 recipe 输入 |
 | `examples/` | 示例 recipe 与设备指令 JSON | 参考用法 |
 | `tests/` | 集成测试 fixture + golden 数据（预留） | mock-first 开发 |
+| `tools/` | Lab bring-up 工具（M2 阶段） | 硬件发现、只读快照、命令验证 |
 | `reverse_application/` | 旧系统逆向工程产物（C# 反编译、日志、协议分析） | 参考遗留系统行为 |
 
 ## 架构硬约束
@@ -65,20 +66,22 @@ Layer 0: Types            odmr-types
 
 ### Crate 职责速查
 
-| Crate | Layer | 核心职责 | 关键依赖 |
-|-------|-------|----------|----------|
-| `odmr-types` | 0 | `DeviceId`、`RecipeStep`、`Event`、`RunId`、`Timestamp`、错误枚举 | 无（std only） |
-| `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` |
-| `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` |
-| `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` |
-| `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值 | `odmr-types` |
-| `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开 | `odmr-types` |
-| `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-safety`, `odmr-types` |
-| `odmr-safety` | 2 | `SafetyPolicy` trait、`InterlockEngine`、参数边界检查、急停逻辑、安全报告 | `odmr-types` |
-| `odmr-executor` | 3 | 执行状态机、step 调度、设备命令编排、实时采集协调 | `odmr-recipe`, `odmr-compiler`, `odmr-safety`, `odmr-logging`, `odmr-device`, `odmr-smb100a`, `odmr-oe1022d`, `odmr-types` |
-| `odmr-logging` | 3 | `RawRecorder`（raw bin）、`IndexWriter`（`index.jsonl`）、`EventWriter`（`events.jsonl`） | `odmr-types` |
-| `odmr-replay` | 3 | 从 raw bin + index 重建采集数据流 | `odmr-logging`, `odmr-types` |
-| `odmr-harness` | 3 | `FakeDevice` 实现、mock 设备注册、测试 fixture 工具 | `odmr-device`, `odmr-types` |
+| Crate | Layer | 核心职责 | 关键依赖 | 状态 |
+|-------|-------|----------|----------|------|
+| `odmr-types` | 0 | `DeviceId`、`RecipeStep`、`Event`、`RunId`、`Timestamp`、错误枚举 | 无（std only） | 活跃 |
+| `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` | 活跃 |
+| `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+| `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+| `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
+| `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开、SHA-256 哈希 | `odmr-types`, `serde`, `serde_json`, `sha2`, `hex` | 活跃 |
+| `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-safety` | 2 | `SafetyPolicy` trait、`InterlockEngine`、参数边界检查、急停逻辑、安全报告 | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-executor` | 3 | 执行状态机、step 调度、设备命令编排、实时采集协调 | `odmr-recipe`, `odmr-compiler`, `odmr-safety`, `odmr-logging`, `odmr-device`, `odmr-smb100a`, `odmr-oe1022d`, `odmr-types` | 活跃 |
+| `odmr-logging` | 3 | `RawRecorder`（raw bin）、`IndexWriter`（`index.jsonl`）、`EventWriter`（`events.jsonl`） | `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-replay` | 3 | 从 raw bin + index 重建采集数据流（预留） | `odmr-logging`, `odmr-types` | **占位**（仅 `placeholder()`） |
+| `odmr-harness` | 3 | `FakeDevice` 实现、mock 设备注册、测试 fixture 工具 | `odmr-device`, `odmr-types` | 活跃 |
+
+> **占位 crate 说明**：`odmr-config` 与 `odmr-replay` 当前为预留占位，源码仅含 `pub fn placeholder() {}`，`Cargo.toml` 无 `description` 字段。后续迭代中实现。
 
 ## 构建与运行
 
@@ -107,6 +110,13 @@ pnpm tauri build      # 发布构建
 
 > GUI-M0 当前为 **mock-only**：所有数据来自构建时 bundl 的静态 snapshot，运行时无 fs/fetch；Start Run / Pause / Stop / Emergency Stop 等按钮全部禁用；无 serial / USB / VISA / TCP / SCPI 代码。
 
+### Tauri 配置要点
+
+- `tauri.conf.json` 中 `identifier` 为 `com.odmrctl.gui.m0`
+- 开发服务器固定端口 `1420`（`strictPort: true`）
+- 前端构建输出目录为 `../dist`
+- `bundle.targets = "all"`，输出平台原生安装包
+
 ## 测试策略
 
 1. **Mock-first 开发**：新功能先在 `odmr-harness` 中用 `FakeDevice` 验证，再对接真实硬件。
@@ -118,6 +128,7 @@ pnpm tauri build      # 发布构建
    - `crates/odmr-logging/tests/generate_run_directory.rs`
    - `crates/odmr-safety/tests/generate_safety_reports.rs`
 4. **Fixture / Golden**：`tests/fixtures/` 与 `tests/golden/` 预留，用于跨 crate 的集成测试数据。
+   - 当前 fixture 示例：`tests/fixtures/oe1022d_rall/rall_frame_*.raw` + `rall_capture_index.jsonl`
 
 ## 代码风格指南
 
@@ -201,8 +212,10 @@ git config core.hooksPath .githooks
 
 `.github/workflows/ci.yml` 包含两个 job：
 
-1. **Mechanical Checks**：运行 `check-docs-links.sh`、`check-prd-adr-index.sh`、`check-frontend-hardware.sh`、`check-realtime-csv.sh`、`check-agents-md.sh`、`check-consistency.sh`。
-2. **Rust Build & Test**：安装 stable Rust（含 `rustfmt`、`clippy`）→ `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test --workspace` → `check-schema-examples.sh` → `check-command-catalog.sh`。
+1. **Mechanical Checks**（`ubuntu-latest`）：运行 `check-docs-links.sh`、`check-prd-adr-index.sh`、`check-frontend-hardware.sh`、`check-realtime-csv.sh`、`check-agents-md.sh`、`check-consistency.sh`。
+2. **Rust Build & Test**（`ubuntu-latest`）：安装 stable Rust（含 `rustfmt`、`clippy`）→ `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test --workspace` → `check-schema-examples.sh` → `check-command-catalog.sh`。
+
+触发条件：`push` 与 `pull_request` 到 `main` / `master`。
 
 ## 开发流程
 
