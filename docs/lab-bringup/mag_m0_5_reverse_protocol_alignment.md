@@ -28,6 +28,25 @@ Mag-M0.5 is a **narrow alignment layer** between the mock-only Mag-M0 planning m
 3. **Simple algorithm**: `Mag(nT) = Curr(mA) × CoilConstant(nT/mA)` with 5000mA hard limit.
 4. **Verified on hardware**: All three axes (X/Y/Z) respond correctly to the documented sequence.
 
+## Device Fingerprint Verification (2026-06-01)
+
+**Method**: Power-cycle identification — send `*IDN?` to all ports, power off one axis, rescan to see which SN disappears.
+
+**Result**: The SN→axis mapping from `odmr-types` and `para.xml` is **correct**.
+
+| 轴 | 完整 SN (*IDN? 第3字段) | 验证方式 |
+|---|------------------------|---------|
+| **X** | `0800209602204020**20**` | 关闭后 `/dev/cu.PL2303G-USBtoUART11120` 无响应 |
+| **Y** | `0800209602204020**22**` | 关闭后 `/dev/cu.PL2303G-USBtoUART11110` 无响应 |
+| **Z** | `0800209602204020**03**` | X+Y 关闭后唯一在线设备 |
+
+**重要**: macOS 上 `/dev/cu.PL2303G-USBtoUART111xx` 这类路径是 USB 重新枚举时**动态分配**的，每次插拔/重启后编号会变。`COM3/COM4/COM6` 是 Windows 下的记录，同样不稳定。**唯一可靠的设备标识是 SN（*IDN? 返回的第三个字段）**。
+
+Device Registry M2 实现时必须：
+1. 枚举所有串口，发送 `*IDN?`
+2. 按返回的 SN 匹配到逻辑轴（X/Y/Z）
+3. 绝不依赖端口路径作为绑定依据
+
 ## Maynuo M8812 Command Sequence
 
 ### Serial Parameters

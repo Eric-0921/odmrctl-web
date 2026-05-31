@@ -3,7 +3,7 @@
   "kind": "maynuo_axes_profile",
   "id": "maynuo_m8812_lab_xyz",
   "name": "Lab Maynuo M8812 XYZ Axes Profile",
-  "description": "Reverse-derived profile from SimplePowerController para.xml and FormMain.cs. This is a profile/example file, not a runnable command file.",
+  "description": "Verified device fingerprint mapping for lab Maynuo M8812 XYZ magnetic axes. SN is the permanent identifier; port paths are dynamically assigned per session and must NOT be used for device binding.",
   "serial_settings": {
     "baudrate": 9600,
     "data_bits": 8,
@@ -65,5 +65,12 @@
   "verified": true,
   "verified_by": "reverse_analysis_agent",
   "source": "reverse_application/reverse_output/para.xml",
+  "verification": {
+    "method": "power_cycle_identification",
+    "date": "2026-06-01",
+    "verified_by": "operator_power_cycle_test",
+    "result": "X=080020960220402020, Y=080020960220402022, Z=080020960220402003",
+    "note": "Port paths are dynamic per session. Only SN should be used for device binding."
+  },
   "note": "POWER_MAX_CURR = 5000 mA is the hardware limit from original software. The only permitted micro-test current in Mag-M0.5 is 10 mA."
 }

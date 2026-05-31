@@ -2090,6 +2090,11 @@ mod tests {
     }
 
     fn example_maynuo_axes_profile() -> MaynuoAxesProfile {
+        // Verified SN mapping (2026-06-01, power-cycle identification):
+        // X -> SN 080020960220402020 (port dynamically assigned)
+        // Y -> SN 080020960220402022 (port dynamically assigned)
+        // Z -> SN 080020960220402003 (port dynamically assigned)
+        // Port paths MUST NOT be used as stable identifiers.
         MaynuoAxesProfile {
             schema_version: "0.2.0".into(),
             kind: "maynuo_axes_profile".into(),
