@@ -2,8 +2,10 @@
 
 pub mod commands;
 pub mod fake;
+pub mod parser;
 
 pub use fake::{ChannelState, FakeOe1022d};
+pub use parser::*;
 
 #[cfg(test)]
 mod tests {
