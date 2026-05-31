@@ -1,0 +1,24 @@
+{
+  "source_run_id": "oe1022d_m2_6_full_20260531_213050",
+  "extracted_at_unix_ms": 1780237181116,
+  "frames": [
+    {
+      "file_name": "frame_000.rawbin",
+      "frame_index": 0,
+      "raw_offset": 0,
+      "raw_length": 12288
+    },
+    {
+      "file_name": "frame_050.rawbin",
+      "frame_index": 50,
+      "raw_offset": 614400,
+      "raw_length": 12288
+    },
+    {
+      "file_name": "frame_099.rawbin",
+      "frame_index": 99,
+      "raw_offset": 1216512,
+      "raw_length": 12288
+    }
+  ]
+}

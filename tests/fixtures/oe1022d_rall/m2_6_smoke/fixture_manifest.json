@@ -1,0 +1,24 @@
+{
+  "source_run_id": "oe1022d_m2_6_smoke_20260531_212942",
+  "extracted_at_unix_ms": 1780237180505,
+  "frames": [
+    {
+      "file_name": "frame_000.rawbin",
+      "frame_index": 0,
+      "raw_offset": 0,
+      "raw_length": 12288
+    },
+    {
+      "file_name": "frame_005.rawbin",
+      "frame_index": 5,
+      "raw_offset": 61440,
+      "raw_length": 12288
+    },
+    {
+      "file_name": "frame_009.rawbin",
+      "frame_index": 9,
+      "raw_offset": 110592,
+      "raw_length": 12288
+    }
+  ]
+}

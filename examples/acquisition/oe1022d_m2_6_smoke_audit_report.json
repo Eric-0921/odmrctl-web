@@ -1,0 +1,25 @@
+{
+  "run_id": "oe1022d_m2_6_smoke_20260531_212942",
+  "passed": true,
+  "frame_count": 10,
+  "rawbin_size_bytes": 122880,
+  "expected_rawbin_size_bytes": 122880,
+  "index_entries": 10,
+  "preview_entries": 10,
+  "summary_entries": 10,
+  "event_counts": {
+    "frame_parsed": 10,
+    "device_identity_verified": 1,
+    "acquisition_completed": 1,
+    "acquisition_started": 1,
+    "run_created": 1,
+    "frame_captured": 10,
+    "run_completed": 1
+  },
+  "offsets_contiguous": true,
+  "all_frames_12288_bytes": true,
+  "csv_files_found": [],
+  "forbidden_commands_found": [],
+  "warnings": [],
+  "errors": []
+}
