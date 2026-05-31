@@ -19,6 +19,7 @@ pub struct ChannelState {
     pub time_constant_index: u8, // 0..19 → 10us..30ks
     pub filter_slope: u8,        // 0=6, 1=12, 2=18, 3=24 dB/oct
     pub harmonic: u8,            // 1..99
+    pub sync_filter: u8,         // 0=Off, 1=On
 }
 
 impl Default for ChannelState {
@@ -37,6 +38,7 @@ impl Default for ChannelState {
             time_constant_index: 10, // ~100 ms
             filter_slope: 1,         // 12 dB/oct
             harmonic: 1,
+            sync_filter: 0, // Off
         }
     }
 }
@@ -157,12 +159,13 @@ impl FakeOe1022d {
             "ISRCD" => with_ch!(set_input_source, input_source),
             "IGNDD" => with_ch!(set_input_grounding, input_grounding),
             "ICPLD" => with_ch!(set_input_coupling, input_coupling),
-            "ILNFD" => with_ch!(set_line_notch_filter, line_notch_filter),
+            "ILIND" => with_ch!(set_line_notch_filter, line_notch_filter),
             "SENSD" => with_ch!(set_sensitivity, sensitivity_index),
             "RMODD" => with_ch!(set_dynamic_reserve, dynamic_reserve),
             "OFLTD" => with_ch!(set_time_constant, time_constant_index),
             "OFSLD" => with_ch!(set_filter_slope, filter_slope),
             "HARMD" => with_ch!(set_harmonic, harmonic),
+            "SYNCD" => with_ch!(set_sync_filter, sync_filter),
             _ => Err(DeviceError::UnknownCommand(cmd.to_string())),
         }
     }
@@ -199,12 +202,16 @@ impl FakeOe1022d {
             "ISRCD" => state.input_source.to_string(),
             "IGNDD" => state.input_grounding.to_string(),
             "ICPLD" => state.input_coupling.to_string(),
-            "ILNFD" => state.line_notch_filter.to_string(),
+            "ILIND" => state.line_notch_filter.to_string(),
             "SENSD" => state.sensitivity_index.to_string(),
             "RMODD" => state.dynamic_reserve.to_string(),
             "OFLTD" => state.time_constant_index.to_string(),
             "OFSLD" => state.filter_slope.to_string(),
             "HARMD" => state.harmonic.to_string(),
+            "SYNCD" => state.sync_filter.to_string(),
+            "INOVD" => "0".to_string(),
+            "GNOVD" => "0".to_string(),
+            "PLLD" => "0".to_string(),
             _ => return Err(DeviceError::UnknownCommand(cmd.to_string())),
         };
         Ok(DeviceResponse::Value(val))

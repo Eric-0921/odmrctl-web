@@ -118,18 +118,18 @@ pub fn query_input_coupling(channel: u8) -> String {
     format!("ICPLD? {channel}")
 }
 
-/// `ILNFD i,j` — set line notch filter for channel i.
+/// `ILIND i,j` — set line notch filter for channel i.
 ///
 /// j values: 0 = Off, 1 = 50Hz, 2 = 100Hz, 3 = Both
 ///
-/// Source: oe1022d_labview_input_filter_commands.json
+/// Source: `docs/equipment_manual/oe1022d/05_oe1022d_remote_programming_commands_55_74.md`
 pub fn set_line_notch_filter(channel: u8, filter: u8) -> String {
-    format!("ILNFD {channel},{filter}")
+    format!("ILIND {channel},{filter}")
 }
 
-/// `ILNFD? i` — query line notch filter.
+/// `ILIND? i` — query line notch filter.
 pub fn query_line_notch_filter(channel: u8) -> String {
-    format!("ILNFD? {channel}")
+    format!("ILIND? {channel}")
 }
 
 // ---------------------------------------------------------------------------
@@ -213,15 +213,97 @@ pub fn query_harmonic(channel: u8) -> String {
 }
 
 // ---------------------------------------------------------------------------
+// Synchronous Filter
+// ---------------------------------------------------------------------------
+
+/// `SYNCD i,j` — set synchronous filter on/off for channel i.
+///
+/// j values: 0 = Off, 1 = On
+///
+/// Source: `docs/equipment_manual/oe1022d/05_oe1022d_remote_programming_commands_55_74.md`
+pub fn set_sync_filter(channel: u8, on: u8) -> String {
+    format!("SYNCD {channel},{on}")
+}
+
+/// `SYNCD? i` — query synchronous filter state.
+pub fn query_sync_filter(channel: u8) -> String {
+    format!("SYNCD? {channel}")
+}
+
+// ---------------------------------------------------------------------------
+// Status Query — overload / PLL (single-point alternatives to RALL?)
+// ---------------------------------------------------------------------------
+
+/// `INOVD? i` — query input overload status for channel i.
+///
+/// Returns "0" (no overload) or "1" (overload).
+///
+/// Source: `docs/equipment_manual/oe1022d/05_oe1022d_remote_programming_commands_55_74.md`
+pub fn query_input_overload(channel: u8) -> String {
+    format!("INOVD? {channel}")
+}
+
+/// `GNOVD? i` — query gain overload status for channel i.
+///
+/// Returns "0" (no overload) or "1" (overload).
+pub fn query_gain_overload(channel: u8) -> String {
+    format!("GNOVD? {channel}")
+}
+
+/// `*PLLD? i` — query PLL lock status for channel i.
+///
+/// Returns "0" (unlocked) or "1" (locked).
+pub fn query_pll_locked(channel: u8) -> String {
+    format!("*PLLD? {channel}")
+}
+
+// ---------------------------------------------------------------------------
 // Data Query
 // ---------------------------------------------------------------------------
 
-/// `RALL?` — read all display values.
+/// `RALL?` — read all display values and configuration.
 ///
-/// Response format depends on active channels and display settings.
-/// This is a placeholder for the acquisition core to implement.
+/// Returns a fixed 12288-byte binary frame (20 params × 50 samples).
 ///
-/// Source: OE1022D manual section 5.2.9
+/// Source: `docs/equipment_manual/oe1022d/05_oe1022d_remote_programming_commands_55_74.md`
 pub fn read_all() -> &'static str {
     "RALL?"
+}
+
+/// `SNAPD? i,j,k{,l,m,n}` — read multiple parameters at a single time point.
+///
+/// i = channel (1=A, 2=B)
+/// j,k,l,m,n = parameter indices (see manual §5.2.9)
+pub fn query_snapshot(channel: u8, params: &[u8]) -> String {
+    let param_str = params
+        .iter()
+        .map(|p| p.to_string())
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("SNAPD? {channel},{param_str}")
+}
+
+/// `OUTPD? i,j` — read a single output parameter for channel i.
+///
+/// j = parameter index (see manual §5.2.9)
+pub fn query_output(channel: u8, param: u8) -> String {
+    format!("OUTPD? {channel},{param}")
+}
+
+// ---------------------------------------------------------------------------
+// System
+// ---------------------------------------------------------------------------
+
+/// `*RSTD` — reset the OE1022D to default state.
+///
+/// **Safety**: clears all data buffers. Use with caution.
+pub fn reset() -> &'static str {
+    "*RSTD"
+}
+
+/// `*IDND?` — query instrument identification string.
+///
+/// Typical response: `"SSI,LLA-OE1022D, SNXXXXXX, VerXXX"`
+pub fn query_idn() -> &'static str {
+    "*IDND?"
 }

@@ -81,6 +81,51 @@ mod tests {
         assert_eq!(read_all(), "RALL?");
     }
 
+    #[test]
+    fn golden_sync_filter_command() {
+        assert_eq!(set_sync_filter(2, 1), "SYNCD 2,1");
+    }
+
+    #[test]
+    fn golden_query_sync_filter() {
+        assert_eq!(query_sync_filter(1), "SYNCD? 1");
+    }
+
+    #[test]
+    fn golden_query_input_overload() {
+        assert_eq!(query_input_overload(2), "INOVD? 2");
+    }
+
+    #[test]
+    fn golden_query_gain_overload() {
+        assert_eq!(query_gain_overload(2), "GNOVD? 2");
+    }
+
+    #[test]
+    fn golden_query_pll_locked() {
+        assert_eq!(query_pll_locked(2), "*PLLD? 2");
+    }
+
+    #[test]
+    fn golden_reset_command() {
+        assert_eq!(reset(), "*RSTD");
+    }
+
+    #[test]
+    fn golden_query_idn() {
+        assert_eq!(query_idn(), "*IDND?");
+    }
+
+    #[test]
+    fn golden_snapshot_command() {
+        assert_eq!(query_snapshot(1, &[1, 2, 3]), "SNAPD? 1,1,2,3");
+    }
+
+    #[test]
+    fn golden_output_command() {
+        assert_eq!(query_output(2, 1), "OUTPD? 2,1");
+    }
+
     // -----------------------------------------------------------------------
     // Fake-device tests
     // -----------------------------------------------------------------------
