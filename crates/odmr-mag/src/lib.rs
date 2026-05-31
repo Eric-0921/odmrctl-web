@@ -33,7 +33,10 @@ pub enum MagError {
     /// Singular or non-invertible coil matrix.
     SingularMatrix { reason: String },
     /// Coil matrix is ill-conditioned.
-    IllConditionedMatrix { condition_number: f64, threshold: f64 },
+    IllConditionedMatrix {
+        condition_number: f64,
+        threshold: f64,
+    },
     /// Missing or unverified calibration.
     CalibrationMissing { field: String },
     /// Calibration is too old.
@@ -41,13 +44,24 @@ pub enum MagError {
     /// Target B field exceeds absolute limit.
     BFieldOutOfRange { b_abs_t: f64, limit_t: f64 },
     /// Computed current exceeds per-axis limit.
-    CurrentLimitExceeded { axis: char, current_a: f64, limit_a: f64 },
+    CurrentLimitExceeded {
+        axis: char,
+        current_a: f64,
+        limit_a: f64,
+    },
     /// Computed vector current exceeds combined limit.
     VectorCurrentLimitExceeded { current_a: f64, limit_a: f64 },
     /// Ramp rate exceeds per-axis limit.
-    RampRateExceeded { axis: char, rate_a_per_s: f64, limit_a_per_s: f64 },
+    RampRateExceeded {
+        axis: char,
+        rate_a_per_s: f64,
+        limit_a_per_s: f64,
+    },
     /// Vector ramp rate exceeds combined limit.
-    VectorRampRateExceeded { rate_a_per_s: f64, limit_a_per_s: f64 },
+    VectorRampRateExceeded {
+        rate_a_per_s: f64,
+        limit_a_per_s: f64,
+    },
     /// Settle time is below minimum.
     SettleTimeTooShort { settle_ms: u64, min_ms: u64 },
     /// Target contains NaN or Inf.
@@ -60,28 +74,54 @@ impl fmt::Display for MagError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             MagError::SingularMatrix { reason } => write!(f, "singular coil matrix: {reason}"),
-            MagError::IllConditionedMatrix { condition_number, threshold } => {
+            MagError::IllConditionedMatrix {
+                condition_number,
+                threshold,
+            } => {
                 write!(f, "ill-conditioned coil matrix: condition_number={condition_number:.2e}, threshold={threshold:.2e}")
             }
             MagError::CalibrationMissing { field } => {
                 write!(f, "calibration missing or unverified: {field}")
             }
             MagError::CalibrationStale { age_days, max_days } => {
-                write!(f, "calibration stale: age={age_days} days, max={max_days} days")
+                write!(
+                    f,
+                    "calibration stale: age={age_days} days, max={max_days} days"
+                )
             }
             MagError::BFieldOutOfRange { b_abs_t, limit_t } => {
-                write!(f, "B field out of range: |B|={b_abs_t:.6e} T, limit={limit_t:.6e} T")
+                write!(
+                    f,
+                    "B field out of range: |B|={b_abs_t:.6e} T, limit={limit_t:.6e} T"
+                )
             }
-            MagError::CurrentLimitExceeded { axis, current_a, limit_a } => {
-                write!(f, "current limit exceeded on axis {axis}: {current_a:.6e} A > {limit_a:.6e} A")
+            MagError::CurrentLimitExceeded {
+                axis,
+                current_a,
+                limit_a,
+            } => {
+                write!(
+                    f,
+                    "current limit exceeded on axis {axis}: {current_a:.6e} A > {limit_a:.6e} A"
+                )
             }
             MagError::VectorCurrentLimitExceeded { current_a, limit_a } => {
-                write!(f, "vector current limit exceeded: |I|={current_a:.6e} A > {limit_a:.6e} A")
+                write!(
+                    f,
+                    "vector current limit exceeded: |I|={current_a:.6e} A > {limit_a:.6e} A"
+                )
             }
-            MagError::RampRateExceeded { axis, rate_a_per_s, limit_a_per_s } => {
+            MagError::RampRateExceeded {
+                axis,
+                rate_a_per_s,
+                limit_a_per_s,
+            } => {
                 write!(f, "ramp rate exceeded on axis {axis}: {rate_a_per_s:.6e} A/s > {limit_a_per_s:.6e} A/s")
             }
-            MagError::VectorRampRateExceeded { rate_a_per_s, limit_a_per_s } => {
+            MagError::VectorRampRateExceeded {
+                rate_a_per_s,
+                limit_a_per_s,
+            } => {
                 write!(f, "vector ramp rate exceeded: |dI/dt|={rate_a_per_s:.6e} A/s > {limit_a_per_s:.6e} A/s")
             }
             MagError::SettleTimeTooShort { settle_ms, min_ms } => {
@@ -168,7 +208,7 @@ impl BVectorSpherical {
             theta = 2.0 * std::f64::consts::PI - theta;
             phi += std::f64::consts::PI;
         }
-        phi = phi % (2.0 * std::f64::consts::PI);
+        phi %= 2.0 * std::f64::consts::PI;
         if phi < 0.0 {
             phi += 2.0 * std::f64::consts::PI;
         }
@@ -300,7 +340,8 @@ impl CoilMatrix {
 
     /// Return the effective condition number (cached or computed).
     pub fn condition_number(&self) -> f64 {
-        self.condition_number.unwrap_or_else(|| self.compute_condition_number())
+        self.condition_number
+            .unwrap_or_else(|| self.compute_condition_number())
     }
 
     /// Invert a 3×3 matrix.
@@ -382,12 +423,12 @@ impl CoilMatrix {
         let diy = current.iy_a - self.i_offset_a[1];
         let diz = current.iz_a - self.i_offset_a[2];
 
-        let bx = self.m[0][0] * dix + self.m[0][1] * diy + self.m[0][2] * diz
-            + self.b_zero_offset_t[0];
-        let by = self.m[1][0] * dix + self.m[1][1] * diy + self.m[1][2] * diz
-            + self.b_zero_offset_t[1];
-        let bz = self.m[2][0] * dix + self.m[2][1] * diy + self.m[2][2] * diz
-            + self.b_zero_offset_t[2];
+        let bx =
+            self.m[0][0] * dix + self.m[0][1] * diy + self.m[0][2] * diz + self.b_zero_offset_t[0];
+        let by =
+            self.m[1][0] * dix + self.m[1][1] * diy + self.m[1][2] * diz + self.b_zero_offset_t[1];
+        let bz =
+            self.m[2][0] * dix + self.m[2][1] * diy + self.m[2][2] * diz + self.b_zero_offset_t[2];
 
         Ok(BVectorCartesian::new(bx, by, bz))
     }
@@ -764,11 +805,7 @@ impl MockMagAxes {
             target_current.iy_a - self.current_a.iy_a,
             target_current.iz_a - self.current_a.iz_a,
         );
-        let max_delta = delta_i
-            .abs_per_axis()
-            .iter()
-            .copied()
-            .fold(0.0, f64::max);
+        let max_delta = delta_i.abs_per_axis().iter().copied().fold(0.0, f64::max);
         let ramp_time_ms = if max_delta == 0.0 {
             0
         } else {
@@ -776,10 +813,11 @@ impl MockMagAxes {
         };
 
         // Step 6: Validate ramp rate (using computed ramp time)
-        if let Err(e) = self
-            .safety_policy
-            .check_ramp_rate(&self.current_a, &target_current, ramp_time_ms.max(1))
-        {
+        if let Err(e) = self.safety_policy.check_ramp_rate(
+            &self.current_a,
+            &target_current,
+            ramp_time_ms.max(1),
+        ) {
             let result = MockMagResult::Rejected {
                 requested_target_b_t: req.target_b_t,
                 reason: e.to_string(),
@@ -804,7 +842,10 @@ impl MockMagAxes {
 
         // Update state
         self.current_a = target_current;
-        self.b_field_t = self.coil_matrix.b_from_current(&target_current).unwrap_or(req.target_b_t);
+        self.b_field_t = self
+            .coil_matrix
+            .b_from_current(&target_current)
+            .unwrap_or(req.target_b_t);
         self.timestamp_ms += ramp_time_ms + req.settle_ms;
 
         self.events.push(MockMagEvent::SettleComplete {
@@ -991,12 +1032,12 @@ impl MaynuoAxesProfile {
         let ky = self.y.gain_t_per_a;
         let kz = self.z.gain_t_per_a;
         CoilMatrix {
-            m: [
-                [kx, 0.0, 0.0],
-                [0.0, ky, 0.0],
-                [0.0, 0.0, kz],
+            m: [[kx, 0.0, 0.0], [0.0, ky, 0.0], [0.0, 0.0, kz]],
+            i_offset_a: [
+                self.x.zero_offset_a,
+                self.y.zero_offset_a,
+                self.z.zero_offset_a,
             ],
-            i_offset_a: [self.x.zero_offset_a, self.y.zero_offset_a, self.z.zero_offset_a],
             b_zero_offset_t: [0.0, 0.0, 0.0],
             condition_number: Some(1.0), // diagonal matrix, perfectly conditioned
             calibrated_at: self.calibration_date.clone(),
@@ -1230,7 +1271,8 @@ pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
         axis_id: axis.axis_id.clone(),
         profile_id: "maynuo_m8812_lab_xyz".into(),
         executable: false,
-        executable_reason: "Mag-M0.5 mock-only: requires Mag-M2B backend bring-up for real execution".into(),
+        executable_reason:
+            "Mag-M0.5 mock-only: requires Mag-M2B backend bring-up for real execution".into(),
         commands: entries,
     }
 }
@@ -1377,7 +1419,8 @@ pub fn build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoComma
         axis_id: axis.axis_id.clone(),
         profile_id: "maynuo_m8812_lab_xyz".into(),
         executable: false,
-        executable_reason: "Mag-M0.5 mock-only: future Mag-M3 candidate, not executable in Mag-M0.5".into(),
+        executable_reason:
+            "Mag-M0.5 mock-only: future Mag-M3 candidate, not executable in Mag-M0.5".into(),
         commands: entries,
     })
 }
@@ -1412,11 +1455,7 @@ mod tests {
 
     fn singular_coil_matrix() -> CoilMatrix {
         CoilMatrix {
-            m: [
-                [1.0, 2.0, 3.0],
-                [2.0, 4.0, 6.0],
-                [3.0, 6.0, 9.0],
-            ],
+            m: [[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [3.0, 6.0, 9.0]],
             i_offset_a: [0.0, 0.0, 0.0],
             b_zero_offset_t: [0.0, 0.0, 0.0],
             condition_number: None,
@@ -1555,7 +1594,10 @@ mod tests {
         let b = BVectorCartesian::new(0.001, 0.0, 0.0);
         let result = cm.current_from_b(&b);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::SingularMatrix { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::SingularMatrix { .. }
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -1568,7 +1610,10 @@ mod tests {
         let current = CoilCurrent::new(2.5, 0.0, 0.0); // exceeds 2.0 A on X
         let result = policy.check_current(&current);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::CurrentLimitExceeded { axis: 'x', .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::CurrentLimitExceeded { axis: 'x', .. }
+        ));
     }
 
     #[test]
@@ -1577,7 +1622,10 @@ mod tests {
         let current = CoilCurrent::new(0.0, 3.0, 0.0); // exceeds 2.0 A on Y
         let result = policy.check_current(&current);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::CurrentLimitExceeded { axis: 'y', .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::CurrentLimitExceeded { axis: 'y', .. }
+        ));
     }
 
     #[test]
@@ -1588,9 +1636,10 @@ mod tests {
         let current = CoilCurrent::new(2.0, 2.0, 2.0);
         let result = policy.check_current(&current);
         assert!(result.is_err());
-        assert!(
-            matches!(result.unwrap_err(), MagError::VectorCurrentLimitExceeded { .. })
-        );
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::VectorCurrentLimitExceeded { .. }
+        ));
     }
 
     #[test]
@@ -1612,7 +1661,10 @@ mod tests {
         // 1.0 A in 1 second = 1.0 A/s > 0.5 A/s limit
         let result = policy.check_ramp_rate(&from, &to, 1000);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::RampRateExceeded { axis: 'x', .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::RampRateExceeded { axis: 'x', .. }
+        ));
     }
 
     #[test]
@@ -1624,9 +1676,10 @@ mod tests {
         // 0.866 A/s > 0.8 A/s vector limit
         let result = policy.check_ramp_rate(&from, &to, 1000);
         assert!(result.is_err());
-        assert!(
-            matches!(result.unwrap_err(), MagError::VectorRampRateExceeded { .. })
-        );
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::VectorRampRateExceeded { .. }
+        ));
     }
 
     #[test]
@@ -1656,7 +1709,13 @@ mod tests {
         let policy = example_safety_policy();
         let result = policy.check_settle_time(50);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::SettleTimeTooShort { settle_ms: 50, min_ms: 100 }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::SettleTimeTooShort {
+                settle_ms: 50,
+                min_ms: 100
+            }
+        ));
     }
 
     #[test]
@@ -1676,7 +1735,10 @@ mod tests {
         let b = BVectorCartesian::new(0.0, 0.0, 0.02); // |B| = 0.02 T > 0.01 T limit
         let result = policy.check_b_field(&b);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::BFieldOutOfRange { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::BFieldOutOfRange { .. }
+        ));
     }
 
     #[test]
@@ -1697,7 +1759,10 @@ mod tests {
         cm.verified = false;
         let result = policy.check_calibration(&cm);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::CalibrationMissing { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::CalibrationMissing { .. }
+        ));
     }
 
     #[test]
@@ -1708,7 +1773,10 @@ mod tests {
         cm.condition_number = Some(1e13);
         let result = policy.check_calibration(&cm);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::IllConditionedMatrix { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::IllConditionedMatrix { .. }
+        ));
     }
 
     #[test]
@@ -1743,8 +1811,14 @@ mod tests {
 
         // Should have 2 events: RampAccepted + SettleComplete
         assert_eq!(axes.events().len(), 2);
-        assert!(matches!(axes.events()[0], MockMagEvent::RampAccepted { .. }));
-        assert!(matches!(axes.events()[1], MockMagEvent::SettleComplete { .. }));
+        assert!(matches!(
+            axes.events()[0],
+            MockMagEvent::RampAccepted { .. }
+        ));
+        assert!(matches!(
+            axes.events()[1],
+            MockMagEvent::SettleComplete { .. }
+        ));
     }
 
     #[test]
@@ -1768,7 +1842,10 @@ mod tests {
         );
 
         assert_eq!(axes.events().len(), 1);
-        assert!(matches!(axes.events()[0], MockMagEvent::RampRejected { .. }));
+        assert!(matches!(
+            axes.events()[0],
+            MockMagEvent::RampRejected { .. }
+        ));
     }
 
     #[test]
@@ -1815,7 +1892,8 @@ mod tests {
     fn mock_axes_state_updates_correctly() {
         let cm = example_coil_matrix();
         let policy = example_safety_policy();
-        let mut axes = MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy).unwrap();
+        let mut axes =
+            MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy).unwrap();
 
         let req = RampRequest {
             target_b_t: BVectorCartesian::new(0.001, 0.0, 0.002),
@@ -1848,8 +1926,10 @@ mod tests {
         let cm = example_coil_matrix();
         let policy = example_safety_policy();
 
-        let mut axes1 = MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy.clone()).unwrap();
-        let mut axes2 = MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy.clone()).unwrap();
+        let mut axes1 =
+            MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy.clone()).unwrap();
+        let mut axes2 =
+            MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm.clone(), policy.clone()).unwrap();
 
         let reqs = vec![
             RampRequest {
@@ -1955,7 +2035,10 @@ mod tests {
         let b = BVectorCartesian::new(f64::NAN, 0.0, 0.0);
         let result = cm.current_from_b(&b);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::NonFiniteValue { .. }
+        ));
     }
 
     #[test]
@@ -1964,7 +2047,10 @@ mod tests {
         let current = CoilCurrent::new(f64::INFINITY, 0.0, 0.0);
         let result = policy.check_current(&current);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::NonFiniteValue { .. }
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -2056,14 +2142,20 @@ mod tests {
     fn negative_current_rejected() {
         let result = format_current_command_from_ma(-10.0);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::SafetyViolation { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::SafetyViolation { .. }
+        ));
     }
 
     #[test]
     fn nan_current_rejected() {
         let result = format_current_command_from_ma(f64::NAN);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::NonFiniteValue { .. }
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -2324,7 +2416,10 @@ mod tests {
         axis.max_current_ma = 5.0; // 5 mA limit, 10 mA test should fail
         let result = build_10ma_microtest_plan(&axis);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::CurrentLimitExceeded { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::CurrentLimitExceeded { .. }
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -2336,10 +2431,22 @@ mod tests {
         let profile = example_maynuo_axes_profile();
         let json = serde_json::to_string(&profile).unwrap();
         let back: MaynuoAxesProfile = serde_json::from_str(&json).unwrap();
-        assert_eq!(profile.x.coil_constant_nt_per_ma, back.x.coil_constant_nt_per_ma);
-        assert_eq!(profile.y.coil_constant_nt_per_ma, back.y.coil_constant_nt_per_ma);
-        assert_eq!(profile.z.coil_constant_nt_per_ma, back.z.coil_constant_nt_per_ma);
-        assert_eq!(profile.serial_settings.baudrate, back.serial_settings.baudrate);
+        assert_eq!(
+            profile.x.coil_constant_nt_per_ma,
+            back.x.coil_constant_nt_per_ma
+        );
+        assert_eq!(
+            profile.y.coil_constant_nt_per_ma,
+            back.y.coil_constant_nt_per_ma
+        );
+        assert_eq!(
+            profile.z.coil_constant_nt_per_ma,
+            back.z.coil_constant_nt_per_ma
+        );
+        assert_eq!(
+            profile.serial_settings.baudrate,
+            back.serial_settings.baudrate
+        );
         assert_eq!(profile.serial_settings.dtr, back.serial_settings.dtr);
     }
 
@@ -2423,7 +2530,10 @@ mod tests {
         assert_eq!(back["kind"], "maynuo_gui_contract");
         assert_eq!(back["gui_milestone"], "M0.5");
         assert_eq!(back["axis_cards"][0]["axis_id"], "mag_x");
-        assert_eq!(back["axis_cards"][0]["calibration"]["coil_constant_nt_per_ma"], 143.26);
+        assert_eq!(
+            back["axis_cards"][0]["calibration"]["coil_constant_nt_per_ma"],
+            143.26
+        );
     }
 
     // -----------------------------------------------------------------------
