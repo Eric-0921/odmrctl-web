@@ -83,6 +83,12 @@ pub enum RunEventType {
     StepCompleted,
     RunCompleted,
     RunFailed,
+    DeviceIdentityVerified,
+    AcquisitionStarted,
+    FrameCaptured,
+    FrameParsed,
+    FrameFailed,
+    AcquisitionCompleted,
 }
 
 // ---------------------------------------------------------------------------
@@ -182,6 +188,14 @@ pub struct RawIndexEntry {
     pub step_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sample_count: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub frame_index: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub duration_ms: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parse_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub notes: Option<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -212,6 +226,7 @@ impl RunDirectory {
         fs::create_dir_all(&run_path)?;
         fs::create_dir_all(run_path.join("metadata"))?;
         fs::create_dir_all(run_path.join("raw"))?;
+        fs::create_dir_all(run_path.join("parsed"))?;
 
         Ok(Self {
             root: root.to_path_buf(),
@@ -292,6 +307,32 @@ impl RunDirectory {
         let file = OpenOptions::new().create(true).append(true).open(&path)?;
         Ok(RawBinWriter { file })
     }
+
+    /// Open a raw bin writer at a custom relative path inside the run directory.
+    pub fn open_raw_bin_writer_at(
+        &self,
+        relative_path: &str,
+    ) -> Result<RawBinWriter, LoggingError> {
+        let path = self.run_directory_path().join(relative_path);
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        let file = OpenOptions::new().create(true).append(true).open(&path)?;
+        Ok(RawBinWriter { file })
+    }
+
+    /// Open a JSONL writer for a parsed artifact.
+    pub fn open_parsed_jsonl_writer(
+        &self,
+        relative_path: &str,
+    ) -> Result<BufWriter<File>, LoggingError> {
+        let path = self.run_directory_path().join(relative_path);
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        let file = OpenOptions::new().create(true).append(true).open(&path)?;
+        Ok(BufWriter::new(file))
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -355,6 +396,10 @@ impl RawBinWriter {
             timestamp_unix_ms: 0,
             step_id: None,
             sample_count: None,
+            frame_index: None,
+            duration_ms: None,
+            parse_status: None,
+            notes: None,
         })
     }
 }
@@ -484,6 +529,10 @@ mod tests {
             timestamp_unix_ms: now_ms(),
             step_id: Some("step_000001".into()),
             sample_count: Some(16),
+            frame_index: None,
+            duration_ms: None,
+            parse_status: None,
+            notes: None,
         };
 
         writer.write_entry(&entry).unwrap();

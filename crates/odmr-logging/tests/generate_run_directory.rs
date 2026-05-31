@@ -168,6 +168,10 @@ fn generate_basic_odmr_mock_run_directory() {
             timestamp_unix_ms: now_ms(),
             step_id: Some("step_000001".into()),
             sample_count: Some(2),
+            frame_index: None,
+            duration_ms: None,
+            parse_status: None,
+            notes: None,
         },
         RawIndexEntry {
             schema_version: "0.2.0".into(),
@@ -179,6 +183,10 @@ fn generate_basic_odmr_mock_run_directory() {
             timestamp_unix_ms: now_ms(),
             step_id: Some("step_000002".into()),
             sample_count: Some(3),
+            frame_index: None,
+            duration_ms: None,
+            parse_status: None,
+            notes: None,
         },
     ];
     for entry in &index_entries {
