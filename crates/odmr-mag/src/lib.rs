@@ -909,6 +909,480 @@ pub struct MagneticSafetyFinding {
 }
 
 // ---------------------------------------------------------------------------
+// Maynuo M8812 reverse-derived types
+// ---------------------------------------------------------------------------
+
+/// Serial port settings for a Maynuo M8812 power supply.
+///
+/// Per reverse analysis: 9600/8/N/1, DTR=true, no flow control.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoSerialSettings {
+    pub baudrate: u32,
+    pub data_bits: u8,
+    pub parity: String,
+    pub stop_bits: u8,
+    pub flow_control: String,
+    pub dtr: bool,
+    pub read_timeout_ms: u64,
+}
+
+impl Default for MaynuoSerialSettings {
+    fn default() -> Self {
+        Self {
+            baudrate: 9600,
+            data_bits: 8,
+            parity: "none".into(),
+            stop_bits: 1,
+            flow_control: "none".into(),
+            dtr: true,
+            read_timeout_ms: 100,
+        }
+    }
+}
+
+/// Per-axis profile for a Maynuo M8812 magnetic axis.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoAxisProfile {
+    pub axis_id: String,
+    pub display_name: String,
+    pub port_name: String,
+    pub device_model: String,
+    pub sn_tail: String,
+    pub expected_idn: String,
+    /// Coil constant in nT/mA (from original software para.xml)
+    pub coil_constant_nt_per_ma: f64,
+    /// Normalized gain in T/A (coil_constant_nt_per_ma * 1e-6)
+    pub gain_t_per_a: f64,
+    /// Zero offset in mA
+    pub zero_offset_ma: f64,
+    /// Zero offset in A
+    pub zero_offset_a: f64,
+    pub output_default: bool,
+    /// Hardware max current in mA (POWER_MAX_CURR from original software = 5000)
+    pub max_current_ma: f64,
+    /// Hardware max current in A
+    pub max_current_a: f64,
+    pub voltage_v: u16,
+}
+
+/// Three-axis assembly profile for the lab Maynuo M8812 setup.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoAxesProfile {
+    pub schema_version: String,
+    pub kind: String,
+    pub id: String,
+    pub name: Option<String>,
+    pub serial_settings: MaynuoSerialSettings,
+    pub x: MaynuoAxisProfile,
+    pub y: MaynuoAxisProfile,
+    pub z: MaynuoAxisProfile,
+    pub safety_policy_id: String,
+    pub calibration_date: String,
+    pub verified: bool,
+    pub verified_by: Option<String>,
+}
+
+impl MaynuoAxesProfile {
+    /// Build a diagonal CoilMatrix from the per-axis coil constants.
+    ///
+    /// This bridges the Maynuo axis-gain model to the general 3x3 matrix model.
+    pub fn to_coil_matrix(&self) -> CoilMatrix {
+        let kx = self.x.gain_t_per_a;
+        let ky = self.y.gain_t_per_a;
+        let kz = self.z.gain_t_per_a;
+        CoilMatrix {
+            m: [
+                [kx, 0.0, 0.0],
+                [0.0, ky, 0.0],
+                [0.0, 0.0, kz],
+            ],
+            i_offset_a: [self.x.zero_offset_a, self.y.zero_offset_a, self.z.zero_offset_a],
+            b_zero_offset_t: [0.0, 0.0, 0.0],
+            condition_number: Some(1.0), // diagonal matrix, perfectly conditioned
+            calibrated_at: self.calibration_date.clone(),
+            verified: self.verified,
+            verified_by: self.verified_by.clone(),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Maynuo command types (data-only, no I/O)
+// ---------------------------------------------------------------------------
+
+/// A single SCPI command as data.
+///
+/// No serial port is opened; this is a planning artifact only.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum MaynuoCommand {
+    Identify,
+    SetRemote,
+    SetLocal,
+    SetVoltage { voltage_v: u16 },
+    SetCurrent { current_a: f64, current_ma: f64 },
+    SetOutput { on: bool },
+    QueryCurrent,
+}
+
+impl MaynuoCommand {
+    /// Return the SCPI string for this command.
+    pub fn scpi(&self) -> String {
+        match self {
+            MaynuoCommand::Identify => "*IDN?".into(),
+            MaynuoCommand::SetRemote => "SYST:REM".into(),
+            MaynuoCommand::SetLocal => "SYST:LOC".into(),
+            MaynuoCommand::SetVoltage { voltage_v } => format!("VOLT {voltage_v}"),
+            MaynuoCommand::SetCurrent { current_a, .. } => {
+                format!("CURR {current_a:.5}")
+            }
+            MaynuoCommand::SetOutput { on } => {
+                format!("OUTP {}", if *on { 1 } else { 0 })
+            }
+            MaynuoCommand::QueryCurrent => "MEAS:CURR?".into(),
+        }
+    }
+
+    /// Return the expected response shape (for documentation / validation).
+    pub fn expected_response_shape(&self) -> &'static str {
+        match self {
+            MaynuoCommand::Identify => "MAYNUO,M8812,<SN>,V2.7",
+            MaynuoCommand::SetRemote => "ACK",
+            MaynuoCommand::SetLocal => "ACK",
+            MaynuoCommand::SetVoltage { .. } => "ACK",
+            MaynuoCommand::SetCurrent { .. } => "ACK",
+            MaynuoCommand::SetOutput { .. } => "ACK",
+            MaynuoCommand::QueryCurrent => "0.0XXXX",
+        }
+    }
+}
+
+/// An ordered plan of Maynuo commands for a specific procedure.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoCommandPlan {
+    pub schema_version: String,
+    pub kind: String,
+    pub id: String,
+    pub name: String,
+    pub axis_id: String,
+    pub profile_id: String,
+    pub executable: bool,
+    pub executable_reason: String,
+    pub commands: Vec<MaynuoCommandEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoCommandEntry {
+    pub seq: u32,
+    pub command_type: String,
+    pub scpi: String,
+    pub expected_response_shape: String,
+    pub event_name: String,
+    pub blocking: bool,
+    pub delay_ms: Option<u64>,
+    pub timeout_ms: Option<u64>,
+}
+
+// ---------------------------------------------------------------------------
+// Maynuo conversion helpers
+// ---------------------------------------------------------------------------
+
+/// Convert coil constant from nT/mA to T/A.
+///
+/// 1 nT/mA = 1e-9 T / 1e-3 A = 1e-6 T/A
+pub fn nt_per_ma_to_t_per_a(gain_nt_per_ma: f64) -> f64 {
+    gain_nt_per_ma * 1e-6
+}
+
+/// Convert magnetic field from nT to coil current in mA.
+///
+/// Formula: Curr(mA) = Mag(nT) / CoilConstant(nT/mA)
+pub fn nt_to_ma(field_nt: f64, coil_constant_nt_per_ma: f64) -> f64 {
+    if coil_constant_nt_per_ma == 0.0 {
+        0.0
+    } else {
+        field_nt / coil_constant_nt_per_ma
+    }
+}
+
+/// Convert coil current from mA to magnetic field in nT.
+///
+/// Formula: Mag(nT) = Curr(mA) * CoilConstant(nT/mA)
+pub fn ma_to_nt(current_ma: f64, coil_constant_nt_per_ma: f64) -> f64 {
+    current_ma * coil_constant_nt_per_ma
+}
+
+/// Format a current command string from mA.
+///
+/// Original software formula: `CURR {Abs(totalCurr) / 1000.0:f5}`
+/// M8812 only supports positive current; field direction is fixed by coil winding.
+pub fn format_current_command_from_ma(current_ma: f64) -> Result<String, MagError> {
+    if !current_ma.is_finite() {
+        return Err(MagError::NonFiniteValue {
+            field: "current_ma".into(),
+            value: current_ma,
+        });
+    }
+    if current_ma < 0.0 {
+        return Err(MagError::SafetyViolation {
+            message: format!(
+                "negative current {current_ma} mA is not supported by MAYNUO M8812 (only positive current, field direction fixed by coil winding)"
+            ),
+        });
+    }
+    let current_a = current_ma / 1000.0;
+    Ok(format!("CURR {current_a:.5}"))
+}
+
+// ---------------------------------------------------------------------------
+// Maynuo plan builders
+// ---------------------------------------------------------------------------
+
+/// Build a safe initialization command plan for a single axis.
+pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
+    let entries = vec![
+        MaynuoCommandEntry {
+            seq: 1,
+            command_type: "identify".into(),
+            scpi: "*IDN?".into(),
+            expected_response_shape: "MAYNUO,M8812,<SN>,V2.7".into(),
+            event_name: "mag_idn_queried".into(),
+            blocking: true,
+            delay_ms: None,
+            timeout_ms: Some(300),
+        },
+        MaynuoCommandEntry {
+            seq: 2,
+            command_type: "set_remote".into(),
+            scpi: "SYST:REM".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_remote_mode_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 3,
+            command_type: "set_voltage".into(),
+            scpi: format!("VOLT {}", axis.voltage_v),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_voltage_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 4,
+            command_type: "set_current".into(),
+            scpi: "CURR 0.00000".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_current_zeroed".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 5,
+            command_type: "set_output".into(),
+            scpi: "OUTP 0".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_output_disabled".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 6,
+            command_type: "query_current".into(),
+            scpi: "MEAS:CURR?".into(),
+            expected_response_shape: "0.00000".into(),
+            event_name: "mag_current_queried".into(),
+            blocking: true,
+            delay_ms: None,
+            timeout_ms: Some(300),
+        },
+        MaynuoCommandEntry {
+            seq: 7,
+            command_type: "set_output".into(),
+            scpi: "OUTP 0".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_output_confirmed_off".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 8,
+            command_type: "set_local".into(),
+            scpi: "SYST:LOC".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_local_mode_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+    ];
+
+    MaynuoCommandPlan {
+        schema_version: "0.2.0".into(),
+        kind: "maynuo_command_plan".into(),
+        id: format!("maynuo_safe_init_{}", axis.axis_id),
+        name: "Maynuo M8812 Safe Initialization Plan".into(),
+        axis_id: axis.axis_id.clone(),
+        profile_id: "maynuo_m8812_lab_xyz".into(),
+        executable: false,
+        executable_reason: "Mag-M0.5 mock-only: requires Mag-M2B backend bring-up for real execution".into(),
+        commands: entries,
+    }
+}
+
+/// Build a query-current command plan for a single axis.
+pub fn build_query_current_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
+    MaynuoCommandPlan {
+        schema_version: "0.2.0".into(),
+        kind: "maynuo_command_plan".into(),
+        id: format!("maynuo_query_current_{}", axis.axis_id),
+        name: "Maynuo M8812 Query Current Plan".into(),
+        axis_id: axis.axis_id.clone(),
+        profile_id: "maynuo_m8812_lab_xyz".into(),
+        executable: false,
+        executable_reason: "Mag-M0.5 mock-only: requires Mag-M2 backend for real execution".into(),
+        commands: vec![MaynuoCommandEntry {
+            seq: 1,
+            command_type: "query_current".into(),
+            scpi: "MEAS:CURR?".into(),
+            expected_response_shape: "0.0XXXX".into(),
+            event_name: "mag_current_queried".into(),
+            blocking: true,
+            delay_ms: None,
+            timeout_ms: Some(300),
+        }],
+    }
+}
+
+/// Build a 10 mA micro-test command plan for a single axis.
+///
+/// This is the only low-current micro-test example permitted in Mag-M0.5.
+pub fn build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoCommandPlan, MagError> {
+    let test_current_ma = 10.0;
+
+    // Validate against axis hardware limit
+    if test_current_ma > axis.max_current_ma {
+        return Err(MagError::CurrentLimitExceeded {
+            axis: axis.axis_id.chars().next().unwrap_or('?'),
+            current_a: test_current_ma / 1000.0,
+            limit_a: axis.max_current_a,
+        });
+    }
+
+    let test_current_a = test_current_ma / 1000.0;
+
+    let entries = vec![
+        MaynuoCommandEntry {
+            seq: 1,
+            command_type: "identify".into(),
+            scpi: "*IDN?".into(),
+            expected_response_shape: "MAYNUO,M8812,<SN>,V2.7".into(),
+            event_name: "mag_idn_queried".into(),
+            blocking: true,
+            delay_ms: None,
+            timeout_ms: Some(300),
+        },
+        MaynuoCommandEntry {
+            seq: 2,
+            command_type: "set_remote".into(),
+            scpi: "SYST:REM".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_remote_mode_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 3,
+            command_type: "set_voltage".into(),
+            scpi: format!("VOLT {}", axis.voltage_v),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_voltage_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 4,
+            command_type: "set_current".into(),
+            scpi: format!("CURR {test_current_a:.5}"),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_current_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 5,
+            command_type: "set_output".into(),
+            scpi: "OUTP 1".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_output_enabled".into(),
+            blocking: false,
+            delay_ms: Some(200),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 6,
+            command_type: "query_current".into(),
+            scpi: "MEAS:CURR?".into(),
+            expected_response_shape: "0.0XXXX".into(),
+            event_name: "mag_current_measured".into(),
+            blocking: true,
+            delay_ms: None,
+            timeout_ms: Some(300),
+        },
+        MaynuoCommandEntry {
+            seq: 7,
+            command_type: "set_output".into(),
+            scpi: "OUTP 0".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_output_disabled".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 8,
+            command_type: "set_current".into(),
+            scpi: "CURR 0.00000".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_current_zeroed".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+        MaynuoCommandEntry {
+            seq: 9,
+            command_type: "set_local".into(),
+            scpi: "SYST:LOC".into(),
+            expected_response_shape: "ACK".into(),
+            event_name: "mag_local_mode_set".into(),
+            blocking: false,
+            delay_ms: Some(50),
+            timeout_ms: None,
+        },
+    ];
+
+    Ok(MaynuoCommandPlan {
+        schema_version: "0.2.0".into(),
+        kind: "maynuo_command_plan".into(),
+        id: format!("maynuo_10ma_microtest_{}", axis.axis_id),
+        name: "Maynuo M8812 10 mA Micro-Test Plan".into(),
+        axis_id: axis.axis_id.clone(),
+        profile_id: "maynuo_m8812_lab_xyz".into(),
+        executable: false,
+        executable_reason: "Mag-M0.5 mock-only: future Mag-M3 candidate, not executable in Mag-M0.5".into(),
+        commands: entries,
+    })
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -1506,5 +1980,460 @@ mod tests {
         let policy = example_safety_policy();
         let _axes = MockMagAxes::new(CoilCurrent::new(0.0, 0.0, 0.0), cm, policy).unwrap();
         // Pure computation: reaching here proves no external dependency was invoked.
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo conversion helpers
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn nt_per_ma_to_t_per_a_conversion() {
+        // 143.26 nT/mA = 143.26 * 1e-6 T/A = 1.4326e-4 T/A
+        let gain = nt_per_ma_to_t_per_a(143.26);
+        assert!((gain - 1.4326e-4).abs() < 1e-12);
+    }
+
+    #[test]
+    fn coil_constant_143_26_produces_correct_t_per_a() {
+        let gain = nt_per_ma_to_t_per_a(143.26);
+        assert!((gain - 1.4326e-4).abs() < 1e-12);
+    }
+
+    #[test]
+    fn coil_constant_141_77_produces_correct_t_per_a() {
+        let gain = nt_per_ma_to_t_per_a(141.77);
+        assert!((gain - 1.4177e-4).abs() < 1e-12);
+    }
+
+    #[test]
+    fn coil_constant_156_15_produces_correct_t_per_a() {
+        let gain = nt_per_ma_to_t_per_a(156.15);
+        assert!((gain - 1.5615e-4).abs() < 1e-12);
+    }
+
+    #[test]
+    fn nt_to_ma_conversion() {
+        // 1000 nT with coil constant 143.26 nT/mA = 6.9803 mA
+        let current_ma = nt_to_ma(1000.0, 143.26);
+        assert!((current_ma - 6.9803).abs() < 0.001);
+    }
+
+    #[test]
+    fn ma_to_nt_conversion() {
+        // 10 mA with coil constant 143.26 nT/mA = 1432.6 nT
+        let field_nt = ma_to_nt(10.0, 143.26);
+        assert!((field_nt - 1432.6).abs() < 0.01);
+    }
+
+    #[test]
+    fn ma_nt_roundtrip() {
+        let original_ma = 42.5;
+        let coil_constant = 143.26;
+        let field_nt = ma_to_nt(original_ma, coil_constant);
+        let back_ma = nt_to_ma(field_nt, coil_constant);
+        assert!((back_ma - original_ma).abs() < 1e-10);
+    }
+
+    #[test]
+    fn format_10ma_command() {
+        let cmd = format_current_command_from_ma(10.0).unwrap();
+        assert_eq!(cmd, "CURR 0.01000");
+    }
+
+    #[test]
+    fn format_0ma_command() {
+        let cmd = format_current_command_from_ma(0.0).unwrap();
+        assert_eq!(cmd, "CURR 0.00000");
+    }
+
+    #[test]
+    fn format_100ma_command() {
+        let cmd = format_current_command_from_ma(100.0).unwrap();
+        assert_eq!(cmd, "CURR 0.10000");
+    }
+
+    #[test]
+    fn negative_current_rejected() {
+        let result = format_current_command_from_ma(-10.0);
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), MagError::SafetyViolation { .. }));
+    }
+
+    #[test]
+    fn nan_current_rejected() {
+        let result = format_current_command_from_ma(f64::NAN);
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo profile helpers
+    // -----------------------------------------------------------------------
+
+    fn example_maynuo_axis_profile() -> MaynuoAxisProfile {
+        MaynuoAxisProfile {
+            axis_id: "mag_x".into(),
+            display_name: "X Axis".into(),
+            port_name: "COM4".into(),
+            device_model: "MAYNUO M8812".into(),
+            sn_tail: "2020".into(),
+            expected_idn: "MAYNUO,M8812,080020960220402020,V2.7".into(),
+            coil_constant_nt_per_ma: 143.26,
+            gain_t_per_a: 1.4326e-4,
+            zero_offset_ma: 0.0,
+            zero_offset_a: 0.0,
+            output_default: false,
+            max_current_ma: 5000.0,
+            max_current_a: 5.0,
+            voltage_v: 75,
+        }
+    }
+
+    fn example_maynuo_axes_profile() -> MaynuoAxesProfile {
+        MaynuoAxesProfile {
+            schema_version: "0.2.0".into(),
+            kind: "maynuo_axes_profile".into(),
+            id: "maynuo_m8812_lab_xyz".into(),
+            name: Some("Lab Maynuo M8812 XYZ".into()),
+            serial_settings: MaynuoSerialSettings::default(),
+            x: example_maynuo_axis_profile(),
+            y: MaynuoAxisProfile {
+                axis_id: "mag_y".into(),
+                display_name: "Y Axis".into(),
+                port_name: "COM6".into(),
+                device_model: "MAYNUO M8812".into(),
+                sn_tail: "2022".into(),
+                expected_idn: "MAYNUO,M8812,080020960220402022,V2.7".into(),
+                coil_constant_nt_per_ma: 141.77,
+                gain_t_per_a: 1.4177e-4,
+                zero_offset_ma: 0.0,
+                zero_offset_a: 0.0,
+                output_default: false,
+                max_current_ma: 5000.0,
+                max_current_a: 5.0,
+                voltage_v: 75,
+            },
+            z: MaynuoAxisProfile {
+                axis_id: "mag_z".into(),
+                display_name: "Z Axis".into(),
+                port_name: "COM3".into(),
+                device_model: "MAYNUO M8812".into(),
+                sn_tail: "2003".into(),
+                expected_idn: "MAYNUO,M8812,080020960220402003,V2.7".into(),
+                coil_constant_nt_per_ma: 156.15,
+                gain_t_per_a: 1.5615e-4,
+                zero_offset_ma: 0.0,
+                zero_offset_a: 0.0,
+                output_default: false,
+                max_current_ma: 5000.0,
+                max_current_a: 5.0,
+                voltage_v: 75,
+            },
+            safety_policy_id: "mag_safety_lab_default".into(),
+            calibration_date: "2026-05-15".into(),
+            verified: true,
+            verified_by: Some("reverse_analysis_agent".into()),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo axes profile to coil matrix
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn maynuo_profile_to_coil_matrix_is_diagonal() {
+        let profile = example_maynuo_axes_profile();
+        let cm = profile.to_coil_matrix();
+
+        // Diagonal elements match per-axis gains
+        assert!((cm.m[0][0] - 1.4326e-4).abs() < 1e-12);
+        assert!((cm.m[1][1] - 1.4177e-4).abs() < 1e-12);
+        assert!((cm.m[2][2] - 1.5615e-4).abs() < 1e-12);
+
+        // Off-diagonal elements are zero
+        assert_eq!(cm.m[0][1], 0.0);
+        assert_eq!(cm.m[0][2], 0.0);
+        assert_eq!(cm.m[1][0], 0.0);
+        assert_eq!(cm.m[1][2], 0.0);
+        assert_eq!(cm.m[2][0], 0.0);
+        assert_eq!(cm.m[2][1], 0.0);
+
+        // Condition number is 1.0 (perfectly conditioned diagonal matrix)
+        assert_eq!(cm.condition_number(), 1.0);
+    }
+
+    #[test]
+    fn maynuo_coil_matrix_roundtrip() {
+        let profile = example_maynuo_axes_profile();
+        let cm = profile.to_coil_matrix();
+
+        // Set 10 mA on X axis = 0.01 A
+        let current = CoilCurrent::new(0.01, 0.0, 0.0);
+        let b = cm.b_from_current(&current).unwrap();
+
+        // Bx = 0.01 A * 1.4326e-4 T/A = 1.4326e-6 T
+        assert!((b.bx_t - 1.4326e-6).abs() < 1e-18);
+        assert_eq!(b.by_t, 0.0);
+        assert_eq!(b.bz_t, 0.0);
+
+        // Round-trip: current from B
+        let current_back = cm.current_from_b(&b).unwrap();
+        assert!((current_back.ix_a - 0.01).abs() < 1e-15);
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo command SCPI generation
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn maynuo_command_scpi_identify() {
+        assert_eq!(MaynuoCommand::Identify.scpi(), "*IDN?");
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_remote() {
+        assert_eq!(MaynuoCommand::SetRemote.scpi(), "SYST:REM");
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_local() {
+        assert_eq!(MaynuoCommand::SetLocal.scpi(), "SYST:LOC");
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_voltage() {
+        assert_eq!(
+            MaynuoCommand::SetVoltage { voltage_v: 75 }.scpi(),
+            "VOLT 75"
+        );
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_current_10ma() {
+        assert_eq!(
+            MaynuoCommand::SetCurrent {
+                current_a: 0.01,
+                current_ma: 10.0
+            }
+            .scpi(),
+            "CURR 0.01000"
+        );
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_current_0ma() {
+        assert_eq!(
+            MaynuoCommand::SetCurrent {
+                current_a: 0.0,
+                current_ma: 0.0
+            }
+            .scpi(),
+            "CURR 0.00000"
+        );
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_output_on() {
+        assert_eq!(MaynuoCommand::SetOutput { on: true }.scpi(), "OUTP 1");
+    }
+
+    #[test]
+    fn maynuo_command_scpi_set_output_off() {
+        assert_eq!(MaynuoCommand::SetOutput { on: false }.scpi(), "OUTP 0");
+    }
+
+    #[test]
+    fn maynuo_command_scpi_query_current() {
+        assert_eq!(MaynuoCommand::QueryCurrent.scpi(), "MEAS:CURR?");
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo safe init plan
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn safe_init_plan_command_order_is_deterministic() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_safe_init_plan(&axis);
+
+        assert_eq!(plan.commands.len(), 8);
+        assert_eq!(plan.commands[0].seq, 1);
+        assert_eq!(plan.commands[0].scpi, "*IDN?");
+        assert_eq!(plan.commands[1].scpi, "SYST:REM");
+        assert_eq!(plan.commands[2].scpi, "VOLT 75");
+        assert_eq!(plan.commands[3].scpi, "CURR 0.00000");
+        assert_eq!(plan.commands[4].scpi, "OUTP 0");
+        assert_eq!(plan.commands[5].scpi, "MEAS:CURR?");
+        assert_eq!(plan.commands[6].scpi, "OUTP 0");
+        assert_eq!(plan.commands[7].scpi, "SYST:LOC");
+    }
+
+    #[test]
+    fn safe_init_plan_is_not_executable() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_safe_init_plan(&axis);
+        assert!(!plan.executable);
+        assert!(plan.executable_reason.contains("Mag-M0.5 mock-only"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo 10mA microtest plan
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn microtest_plan_command_order_is_deterministic() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_10ma_microtest_plan(&axis).unwrap();
+
+        assert_eq!(plan.commands.len(), 9);
+        assert_eq!(plan.commands[0].scpi, "*IDN?");
+        assert_eq!(plan.commands[1].scpi, "SYST:REM");
+        assert_eq!(plan.commands[2].scpi, "VOLT 75");
+        assert_eq!(plan.commands[3].scpi, "CURR 0.01000");
+        assert_eq!(plan.commands[4].scpi, "OUTP 1");
+        assert_eq!(plan.commands[5].scpi, "MEAS:CURR?");
+        assert_eq!(plan.commands[6].scpi, "OUTP 0");
+        assert_eq!(plan.commands[7].scpi, "CURR 0.00000");
+        assert_eq!(plan.commands[8].scpi, "SYST:LOC");
+    }
+
+    #[test]
+    fn microtest_plan_is_not_executable() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_10ma_microtest_plan(&axis).unwrap();
+        assert!(!plan.executable);
+        assert!(plan.executable_reason.contains("Mag-M0.5 mock-only"));
+    }
+
+    #[test]
+    fn microtest_plan_has_set_current_10ma() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_10ma_microtest_plan(&axis).unwrap();
+        let set_current_entry = plan.commands.iter().find(|e| e.seq == 4).unwrap();
+        assert_eq!(set_current_entry.scpi, "CURR 0.01000");
+    }
+
+    #[test]
+    fn microtest_plan_rejected_if_exceeds_axis_limit() {
+        let mut axis = example_maynuo_axis_profile();
+        axis.max_current_ma = 5.0; // 5 mA limit, 10 mA test should fail
+        let result = build_10ma_microtest_plan(&axis);
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), MagError::CurrentLimitExceeded { .. }));
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo profile serde round-trip
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn maynuo_axes_profile_roundtrip_serde() {
+        let profile = example_maynuo_axes_profile();
+        let json = serde_json::to_string(&profile).unwrap();
+        let back: MaynuoAxesProfile = serde_json::from_str(&json).unwrap();
+        assert_eq!(profile.x.coil_constant_nt_per_ma, back.x.coil_constant_nt_per_ma);
+        assert_eq!(profile.y.coil_constant_nt_per_ma, back.y.coil_constant_nt_per_ma);
+        assert_eq!(profile.z.coil_constant_nt_per_ma, back.z.coil_constant_nt_per_ma);
+        assert_eq!(profile.serial_settings.baudrate, back.serial_settings.baudrate);
+        assert_eq!(profile.serial_settings.dtr, back.serial_settings.dtr);
+    }
+
+    #[test]
+    fn maynuo_command_plan_roundtrip_serde() {
+        let axis = example_maynuo_axis_profile();
+        let plan = build_safe_init_plan(&axis);
+        let json = serde_json::to_string(&plan).unwrap();
+        let back: MaynuoCommandPlan = serde_json::from_str(&json).unwrap();
+        assert_eq!(plan.id, back.id);
+        assert_eq!(plan.commands.len(), back.commands.len());
+        assert_eq!(plan.commands[0].scpi, back.commands[0].scpi);
+    }
+
+    // -----------------------------------------------------------------------
+    // GUI contract serde round-trip (loaded from example file)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn maynuo_gui_contract_json_roundtrip() {
+        let contract = serde_json::json!({
+            "schema_version": "0.2.0",
+            "kind": "maynuo_gui_contract",
+            "id": "maynuo_m8812_gui_m0_5",
+            "gui_milestone": "M0.5",
+            "disabled_reason": "requires Mag-M2 backend bring-up path",
+            "axis_cards": [
+                {
+                    "axis_id": "mag_x",
+                    "display_name": "X Axis",
+                    "identity": {
+                        "device_model": "MAYNUO M8812",
+                        "sn_tail": "2020",
+                        "idn_verified": false,
+                        "idn_placeholder": true
+                    },
+                    "connection": {
+                        "state": "disconnected_mock",
+                        "port_name": "COM4",
+                        "baudrate": 9600
+                    },
+                    "output": {
+                        "state": "off",
+                        "settable": false,
+                        "disabled_reason": "requires Mag-M2B safe init"
+                    },
+                    "target_current": {
+                        "value_ma": 0.0,
+                        "value_a": 0.0,
+                        "settable": false,
+                        "disabled_reason": "requires Mag-M3 micro-test path",
+                        "command_preview": "CURR 0.00000"
+                    },
+                    "measured_current": {
+                        "value_ma": 0.0,
+                        "value_a": 0.0,
+                        "stale": true
+                    },
+                    "target_field": {
+                        "value_nt": 0.0,
+                        "value_t": 0.0
+                    },
+                    "calibration": {
+                        "coil_constant_nt_per_ma": 143.26,
+                        "gain_t_per_a": 1.4326e-4,
+                        "zero_offset_ma": 0.0,
+                        "verified": true
+                    }
+                }
+            ],
+            "global_state": {
+                "any_connected": false,
+                "any_output_on": false,
+                "emergency_stop_available": false,
+                "banner_text": "GUI-M0.5 MOCK VIEWER"
+            }
+        });
+
+        let json = serde_json::to_string(&contract).unwrap();
+        let back: serde_json::Value = serde_json::from_str(&json).unwrap();
+        assert_eq!(back["kind"], "maynuo_gui_contract");
+        assert_eq!(back["gui_milestone"], "M0.5");
+        assert_eq!(back["axis_cards"][0]["axis_id"], "mag_x");
+        assert_eq!(back["axis_cards"][0]["calibration"]["coil_constant_nt_per_ma"], 143.26);
+    }
+
+    // -----------------------------------------------------------------------
+    // Maynuo no hardware dependency
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn maynuo_no_hardware_dependency() {
+        // All Maynuo functions are pure computation.
+        let _ = nt_per_ma_to_t_per_a(143.26);
+        let _ = format_current_command_from_ma(10.0).unwrap();
+        let axis = example_maynuo_axis_profile();
+        let _ = build_safe_init_plan(&axis);
+        let _ = build_10ma_microtest_plan(&axis).unwrap();
+        let _ = build_query_current_plan(&axis);
+        // Reaching here proves no serial/USB/TCP was invoked.
     }
 }

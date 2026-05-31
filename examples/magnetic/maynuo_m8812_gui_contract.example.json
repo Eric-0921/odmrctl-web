@@ -1,0 +1,275 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "maynuo_gui_contract",
+  "id": "maynuo_m8812_gui_m0_5",
+  "name": "Maynuo M8812 GUI Backend Contract (M0.5 Mock)",
+  "description": "Data shape that the Tauri Rust backend will eventually return to the React GUI for magnetic axis display. In M0.5 all values are mock placeholders; real controls are disabled.",
+  "gui_milestone": "M0.5",
+  "disabled_reason": "requires Mag-M2 backend bring-up path",
+  "axis_cards": [
+    {
+      "axis_id": "mag_x",
+      "display_name": "X Axis",
+      "identity": {
+        "device_model": "MAYNUO M8812",
+        "sn_tail": "2020",
+        "expected_idn": "MAYNUO,M8812,080020960220402020,V2.7",
+        "idn_verified": false,
+        "idn_placeholder": true
+      },
+      "connection": {
+        "state": "disconnected_mock",
+        "port_name": "COM4",
+        "baudrate": 9600,
+        "connected_at": null,
+        "last_error": null
+      },
+      "output": {
+        "state": "off",
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B safe init"
+      },
+      "target_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M3 micro-test path",
+        "command_preview": "CURR 0.00000"
+      },
+      "measured_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "last_updated_ms": null,
+        "stale": true
+      },
+      "target_field": {
+        "value_nt": 0.0,
+        "value_t": 0.0,
+        "computed_from": "current_ma * coil_constant_nt_per_ma"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 143.26,
+        "gain_t_per_a": 1.4326e-4,
+        "zero_offset_ma": 0.0,
+        "verified": true,
+        "calibration_date": "2026-05-15",
+        "profile_id": "maynuo_m8812_lab_xyz"
+      },
+      "lock_zero": {
+        "enabled": false,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "zero_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_field": {
+        "value_nt": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      }
+    },
+    {
+      "axis_id": "mag_y",
+      "display_name": "Y Axis",
+      "identity": {
+        "device_model": "MAYNUO M8812",
+        "sn_tail": "2022",
+        "expected_idn": "MAYNUO,M8812,080020960220402022,V2.7",
+        "idn_verified": false,
+        "idn_placeholder": true
+      },
+      "connection": {
+        "state": "disconnected_mock",
+        "port_name": "COM6",
+        "baudrate": 9600,
+        "connected_at": null,
+        "last_error": null
+      },
+      "output": {
+        "state": "off",
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B safe init"
+      },
+      "target_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M3 micro-test path",
+        "command_preview": "CURR 0.00000"
+      },
+      "measured_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "last_updated_ms": null,
+        "stale": true
+      },
+      "target_field": {
+        "value_nt": 0.0,
+        "value_t": 0.0,
+        "computed_from": "current_ma * coil_constant_nt_per_ma"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 141.77,
+        "gain_t_per_a": 1.4177e-4,
+        "zero_offset_ma": 0.0,
+        "verified": true,
+        "calibration_date": "2026-05-15",
+        "profile_id": "maynuo_m8812_lab_xyz"
+      },
+      "lock_zero": {
+        "enabled": false,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "zero_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_field": {
+        "value_nt": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      }
+    },
+    {
+      "axis_id": "mag_z",
+      "display_name": "Z Axis",
+      "identity": {
+        "device_model": "MAYNUO M8812",
+        "sn_tail": "2003",
+        "expected_idn": "MAYNUO,M8812,080020960220402003,V2.7",
+        "idn_verified": false,
+        "idn_placeholder": true
+      },
+      "connection": {
+        "state": "disconnected_mock",
+        "port_name": "COM3",
+        "baudrate": 9600,
+        "connected_at": null,
+        "last_error": null
+      },
+      "output": {
+        "state": "off",
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B safe init"
+      },
+      "target_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M3 micro-test path",
+        "command_preview": "CURR 0.00000"
+      },
+      "measured_current": {
+        "value_ma": 0.0,
+        "value_a": 0.0,
+        "last_updated_ms": null,
+        "stale": true
+      },
+      "target_field": {
+        "value_nt": 0.0,
+        "value_t": 0.0,
+        "computed_from": "current_ma * coil_constant_nt_per_ma"
+      },
+      "calibration": {
+        "coil_constant_nt_per_ma": 156.15,
+        "gain_t_per_a": 1.5615e-4,
+        "zero_offset_ma": 0.0,
+        "verified": true,
+        "calibration_date": "2026-05-15",
+        "profile_id": "maynuo_m8812_lab_xyz"
+      },
+      "lock_zero": {
+        "enabled": false,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "zero_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_current": {
+        "value_ma": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      },
+      "recur_set_field": {
+        "value_nt": 0.0,
+        "settable": false,
+        "disabled_reason": "requires Mag-M2B backend"
+      }
+    }
+  ],
+  "global_state": {
+    "any_connected": false,
+    "any_output_on": false,
+    "emergency_stop_available": false,
+    "emergency_stop_disabled_reason": "Visual-only in M0.5; no hardware authority",
+    "banner_text": "GUI-M0.5 MOCK VIEWER — No hardware access. No executor connection. Real controls disabled.",
+    "command_preview_panel": {
+      "visible": true,
+      "editable": false,
+      "content": "Read-only SCPI command preview from plan builders"
+    }
+  },
+  "last_event": {
+    "event_type": "mag_gui_initialized",
+    "timestamp": "2026-06-01T00:00:00Z",
+    "message": "GUI mock state initialized. No hardware connection attempted."
+  },
+  "backend_api_contract": {
+    "tauri_commands": [
+      {
+        "name": "magnetic_preview_plan",
+        "input": "MagneticPlanInput JSON",
+        "output": "MagneticPreview JSON",
+        "available": false,
+        "available_reason": "Requires Mag-M1 planner backend"
+      },
+      {
+        "name": "magnetic_generate_block",
+        "input": "MagneticPlanInput JSON",
+        "output": "MagneticBlock JSON",
+        "available": false,
+        "available_reason": "Requires Mag-M1 planner backend"
+      },
+      {
+        "name": "magnetic_validate_block",
+        "input": "MagneticBlock JSON",
+        "output": "MagneticSafetyReport JSON",
+        "available": false,
+        "available_reason": "Requires Mag-M1 safety backend"
+      },
+      {
+        "name": "magnetic_get_mock_state",
+        "input": "none",
+        "output": "This contract JSON",
+        "available": true,
+        "available_reason": "Static mock data for M0.5 UI development"
+      }
+    ],
+    "forbidden_patterns": [
+      "onClick -> serialport.open()",
+      "onClick -> write(\"CURR ...\")",
+      "onClick -> OUTP 1",
+      "onClick -> MEAS:CURR?",
+      "frontend direct SCPI",
+      "frontend direct serial/USB/TCP"
+    ]
+  }
+}
