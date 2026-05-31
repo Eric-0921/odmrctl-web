@@ -33,7 +33,7 @@ Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_co
 | 目录 | 内容 | 数量 |
 |------|------|------|
 | `docs/prd/` | 产品需求文档 | 13 份 |
-| `docs/adr/` | 架构决策记录 | 6 份 |
+| `docs/adr/` | 架构决策记录 | 7 份 |
 | `tools/` | 实验室联调工具 | 见下方 |
 | `docs/architecture/` | 架构总图、分层规则 | — |
 | `docs/decisions/` | 进行中的设计决策 | — |
