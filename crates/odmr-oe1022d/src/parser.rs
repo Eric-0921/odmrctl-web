@@ -14,7 +14,7 @@
 //! Measurement encoding: big-endian IEEE 754 f64.
 //!
 //! Configuration offsets documented in:
-//! `docs/equipment_manual/oe1022d/oe1022d_rall_global_data_config_reading.md`
+//! `docs/equipment_manual/oe1022d/05_oe1022d_rall_global_data_config_reading.md`
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -150,7 +150,7 @@ pub struct RallMeasurements {
 /// - some fields may not be initialised by firmware in the current mode
 /// - the parser must never panic on unexpected frame content
 ///
-/// Offsets sourced from `oe1022d_rall_global_data_config_reading.md`.
+/// Offsets sourced from `05_oe1022d_rall_global_data_config_reading.md`.
 #[derive(Debug, Clone, PartialEq)]
 pub struct RallConfigSnapshot {
     // A-channel Ref Phase (8200..8237)

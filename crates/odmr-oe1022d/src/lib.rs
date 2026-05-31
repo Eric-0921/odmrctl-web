@@ -112,8 +112,13 @@ mod tests {
     }
 
     #[test]
-    fn golden_query_idn() {
-        assert_eq!(query_idn(), "*IDND?");
+    fn golden_query_standard_idn() {
+        assert_eq!(query_standard_idn(), "*IDN?");
+    }
+
+    #[test]
+    fn golden_query_oe1022d_idn() {
+        assert_eq!(query_oe1022d_idn(), "*IDND?");
     }
 
     #[test]

@@ -7,7 +7,8 @@
 //! - `examples/oe1022d_labview_input_filter_commands.json`
 //! - `examples/oe1022d_labview_channel_output_sine_output_commands.json`
 //! - `examples/oe1022d_labview_formula_system_commands.json`
-//! - `docs/equipment_manual/oe1022d/05_remote_programming.md`
+//! - `docs/equipment_manual/oe1022d/05_oe1022d_remote_programming_commands_55_74.md`
+//! - `docs/equipment_manual/oe1022d/05_oe1022d_rall_global_data_config_reading.md`
 
 // ---------------------------------------------------------------------------
 // Channel argument convention
@@ -301,9 +302,17 @@ pub fn reset() -> &'static str {
     "*RSTD"
 }
 
-/// `*IDND?` — query instrument identification string.
+/// `*IDN?` — IEEE 488.2 standard identification query.
 ///
-/// Typical response: `"SSI,LLA-OE1022D, SNXXXXXX, VerXXX"`
-pub fn query_idn() -> &'static str {
+/// Typical response: `"SSI,LLA-OE1022D, SNXXXXXX, VerXXX"`.
+/// This is the primary path; confirmed working on real hardware (M2.1).
+pub fn query_standard_idn() -> &'static str {
+    "*IDN?"
+}
+
+/// `*IDND?` — OE1022D-proprietary identification query (per manual).
+///
+/// Falls back to this if `*IDN?` does not return a valid response.
+pub fn query_oe1022d_idn() -> &'static str {
     "*IDND?"
 }
