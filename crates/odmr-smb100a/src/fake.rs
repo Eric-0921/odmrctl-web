@@ -245,6 +245,10 @@ impl FakeSmb100a {
                 self.state.sweep_mode = val.to_ascii_uppercase();
                 Ok(DeviceResponse::Ack)
             }
+            "*CLS" => {
+                // Clear status registers and error queue (no-op in fake)
+                Ok(DeviceResponse::Ack)
+            }
             _ => Err(DeviceError::UnknownCommand(cmd.to_string())),
         }
     }
@@ -271,6 +275,7 @@ impl FakeSmb100a {
             "SWE:FREQ:DWEL" => format!("{}", self.state.sweep_dwell_ms),
             "SWE:SPAC" => self.state.sweep_spacing.clone(),
             "SWE:MODE" => self.state.sweep_mode.clone(),
+            "SYST:ERR" => "0,\"No error\"".to_string(),
             _ => {
                 return Err(DeviceError::UnknownCommand(cmd.to_string()));
             }
