@@ -55,8 +55,20 @@ pub const SMB_FORBIDDEN_PATTERNS: &[&str] = &[
     "INIT",
 ];
 
+/// Valid LF generator shape values per SMB100A manual §6.13.6.
+pub const LF_SHAPE_ALLOWLIST: &[&str] = &[
+    "SIN", "SQU", "TRI", "SAW", "ISAW", "SINE", "SQUARE", "TRIANGLE", "SAWTOOTH",
+    "ISAWTOOTH",
+];
+
 pub fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
+    if trimmed.contains(';') {
+        return Err(format!(
+            "SMB query '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
     if !trimmed.ends_with('?') {
         return Err(format!(
             "SMB command '{}' is not a query (does not end in '?')",
@@ -82,6 +94,13 @@ pub fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
 
 pub fn validate_microtest_set_command(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
+    // Reject SCPI command chaining first (defense-in-depth)
+    if trimmed.contains(';') {
+        return Err(format!(
+            "SMB set command '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
     // Reject forbidden patterns first
     for pat in SMB_FORBIDDEN_PATTERNS {
         if trimmed.contains(pat) {
@@ -136,6 +155,23 @@ pub fn is_safety_relevant(cmd: &str) -> bool {
             | "FM:STAT ON"
             | "FM:STAT OFF"
     )
+}
+
+pub fn validate_lf_shape(shape: &str) -> Result<(), String> {
+    let trimmed = shape.trim();
+    if trimmed.contains(';') {
+        return Err(format!(
+            "LF shape '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
+    if !LF_SHAPE_ALLOWLIST.contains(&trimmed) {
+        return Err(format!(
+            "LF shape '{}' is not a valid SMB100A LF shape. Allowed: {:?}",
+            trimmed, LF_SHAPE_ALLOWLIST
+        ));
+    }
+    Ok(())
 }
 
 pub fn count_forbidden_category(audit: &[CommandAuditEntry], pattern: &str) -> usize {

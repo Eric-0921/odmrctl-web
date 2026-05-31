@@ -39,6 +39,8 @@ pub fn attempt_emergency_shutdown(
     }
     std::thread::sleep(Duration::from_millis(delay_ms));
 
+    // Drain any stale ACKs before verification queries
+    transport.drain_buffer();
     if let Ok(resp) = transport.query("OUTP?") {
         transport.drain_buffer();
         outp_after = Some(resp);

@@ -25,8 +25,9 @@ mod types;
 pub use artifacts::{sha256_bytes, sha256_file, write_jsonl};
 pub use cli::Cli;
 pub use safety::{
-    is_safety_relevant, validate_microtest_set_command, validate_smb_query_only,
-    SMB_FORBIDDEN_PATTERNS, SMB_MICROTEST_SET_ALLOWLIST, SMB_QUERY_ALLOWLIST,
+    is_safety_relevant, validate_lf_shape, validate_microtest_set_command,
+    validate_smb_query_only, LF_SHAPE_ALLOWLIST, SMB_FORBIDDEN_PATTERNS,
+    SMB_MICROTEST_SET_ALLOWLIST, SMB_QUERY_ALLOWLIST,
 };
 pub use sequence::run_microtest;
 pub use timeline::{make_event, utc_now_ms};

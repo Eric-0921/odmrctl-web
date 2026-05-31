@@ -1,5 +1,5 @@
 use crate::cli::Cli;
-use crate::safety::count_forbidden_category;
+use crate::safety::{count_forbidden_category, validate_lf_shape};
 use crate::timeline::{utc_now_ms, TimelineTracker};
 use crate::transport::{do_smb_query, do_smb_set, SmbTransport};
 use crate::types::*;
@@ -332,6 +332,12 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             "FREQ?",
         )?;
         frequency_hz_verified = freq_resp.trim().parse().unwrap_or(0.0);
+        if (frequency_hz_verified - cli.rf_frequency_hz).abs() > 1.0 {
+            errors.push(format!(
+                "FREQ? = {:.0} after FREQ set (requested {:.0})",
+                frequency_hz_verified, cli.rf_frequency_hz
+            ));
+        }
     }
 
     // Set power
@@ -360,6 +366,12 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             "POW?",
         )?;
         power_dbm_verified = pow_resp.trim().parse().unwrap_or(0.0);
+        if (power_dbm_verified - cli.rf_power_dbm).abs() > 0.1 {
+            errors.push(format!(
+                "POW? = {:.2} after POW set (requested {:.2})",
+                power_dbm_verified, cli.rf_power_dbm
+            ));
+        }
     }
 
     // Set ALC
@@ -415,6 +427,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
         }
 
         let lf_shap_cmd = format!("LFO:SHAP {}", cli.lf_shape);
+        if errors.is_empty() {
+            if let Err(e) = validate_lf_shape(&cli.lf_shape) {
+                errors.push(format!("LFO:SHAP validation failed: {}", e));
+            }
+        }
         if errors.is_empty() {
             if let Err(e) = do_smb_set(
                 &mut transport,
@@ -537,6 +554,12 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             "FM:DEV?",
         )?;
         fm_deviation_hz_verified = fm_dev_resp.trim().parse().unwrap_or(0.0);
+        if (fm_deviation_hz_verified - cli.fm_deviation_hz).abs() > 100.0 {
+            errors.push(format!(
+                "FM:DEV? = {:.0} after FM:DEV set (requested {:.0})",
+                fm_deviation_hz_verified, cli.fm_deviation_hz
+            ));
+        }
     }
 
     // FM:STAT ON
@@ -564,7 +587,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "FM:STAT?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("FM:STAT? verify after FM:STAT ON failed: {}", e));
+            String::new()
+        });
         if !(fm_stat_resp.trim() == "1" || fm_stat_resp.trim().eq_ignore_ascii_case("ON")) {
             errors.push(format!(
                 "FM:STAT? = '{}' after FM:STAT ON (expected ON/1)",
@@ -581,7 +608,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "OUTP?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("OUTP? verify before MOD:STAT ON failed: {}", e));
+            String::new()
+        });
         if outp_resp.trim() != "0" && !outp_resp.trim().eq_ignore_ascii_case("OFF") {
             errors.push(format!(
                 "OUTP? = '{}' before MOD:STAT ON (expected OFF/0)",
@@ -615,7 +646,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "MOD:STAT?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("MOD:STAT? verify after MOD:STAT ON failed: {}", e));
+            String::new()
+        });
         modulation_confirmed_on =
             mod_stat_resp.trim() == "1" || mod_stat_resp.trim().eq_ignore_ascii_case("ON");
         if !modulation_confirmed_on {
@@ -651,7 +686,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
                 &mut forbidden_attempted,
                 delay_ms,
                 "OUTP?",
-            )?;
+            )
+            .unwrap_or_else(|e| {
+                errors.push(format!("OUTP? verify after OUTP ON failed: {}", e));
+                String::new()
+            });
             rf_output_confirmed_on =
                 outp_during.trim() == "1" || outp_during.trim().eq_ignore_ascii_case("ON");
             if !rf_output_confirmed_on {
@@ -699,7 +738,8 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             snapshot_during = Some(build_snapshot(&idn, during_queries));
 
             // Wait for the requested duration (minus the 100 ms already waited)
-            let remaining = cli.fm_on_duration_ms.saturating_sub(100 + delay_ms);
+            // Two delay_ms sleeps incurred: one in do_smb_set("OUTP ON"), one in do_smb_query("OUTP?")
+            let remaining = cli.fm_on_duration_ms.saturating_sub(100 + 2 * delay_ms);
             if remaining > 0 {
                 std::thread::sleep(Duration::from_millis(remaining));
             }
@@ -724,8 +764,13 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
         }
     }
 
-    // If any failure occurred after OUTP ON, attempt emergency shutdown
-    if !errors.is_empty() && rf_on_command_sent && !rf_off_command_sent {
+    // If any failure occurred after state-changing commands, attempt emergency shutdown.
+    // Covers: RF ON without OFF, FM enabled, or MOD ON without OFF.
+    let needs_emergency_shutdown = !errors.is_empty()
+        && ((rf_on_command_sent && !rf_off_command_sent)
+            || fm_enabled
+            || (mod_on_command_sent && !mod_off_command_sent));
+    if needs_emergency_shutdown {
         let (evidence, outp_after, mod_after) = crate::shutdown::attempt_emergency_shutdown(
             &mut transport,
             delay_ms,
@@ -751,7 +796,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "OUTP?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("OUTP? verify after OUTP OFF failed: {}", e));
+            String::new()
+        });
         rf_output_confirmed_off_after =
             outp_after.trim() == "0" || outp_after.trim().eq_ignore_ascii_case("OFF");
         if !rf_output_confirmed_off_after {
@@ -783,7 +832,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "MOD:STAT?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("MOD:STAT? verify after MOD:STAT OFF failed: {}", e));
+            String::new()
+        });
         modulation_confirmed_off_after =
             mod_after.trim() == "0" || mod_after.trim().eq_ignore_ascii_case("OFF");
         if !modulation_confirmed_off_after {
@@ -818,7 +871,11 @@ pub fn run_microtest(cli: &Cli) -> Result<MicrotestResult, String> {
             &mut forbidden_attempted,
             delay_ms,
             "FM:STAT?",
-        )?;
+        )
+        .unwrap_or_else(|e| {
+            errors.push(format!("FM:STAT? verify after FM:STAT OFF failed: {}", e));
+            String::new()
+        });
         let fm_is_off = fm_after.trim() == "0" || fm_after.trim().eq_ignore_ascii_case("OFF");
         if !cli.leave_fm_config_enabled && !fm_is_off {
             errors.push(format!(

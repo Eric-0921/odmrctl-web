@@ -551,7 +551,12 @@ fn query_allowlist_rejects_non_queries() {
 
 #[test]
 fn forbidden_patterns_rejected_in_queries() {
-    assert!(validate_smb_query_only("FREQ:MODE?").is_err());
+    // "LFO ON?" contains the forbidden pattern "LFO ON" (substring match)
+    assert!(validate_smb_query_only("LFO ON?").is_err());
+    // "FREQ:STAR?" contains the forbidden pattern "FREQ:STAR " — well, no,
+    // "FREQ:STAR?" does not contain "FREQ:STAR " (trailing space vs ?).
+    // Instead use a query that genuinely contains a forbidden pattern:
+    assert!(validate_smb_query_only("LFO OFF?").is_err());
 }
 
 #[test]
@@ -638,6 +643,43 @@ fn magnetic_axis_sns_serialization() {
     };
     let json = serde_json::to_string(&sns).unwrap();
     assert!(json.contains("080020960220402020"));
+}
+
+#[test]
+fn semicolons_rejected_in_set_commands() {
+    assert!(validate_microtest_set_command("FREQ 1e9; OUTP ON").is_err());
+    assert!(validate_microtest_set_command("POW -30; FM:STAT ON").is_err());
+    assert!(validate_microtest_set_command("LFO:SHAP SIN; MOD:STAT ON").is_err());
+}
+
+#[test]
+fn semicolons_rejected_in_queries() {
+    assert!(validate_smb_query_only("FREQ?; OUTP ON").is_err());
+    assert!(validate_smb_query_only("FM:STAT?; LFO ON").is_err());
+}
+
+#[test]
+fn lf_shape_accepts_valid_shapes() {
+    for shape in LF_SHAPE_ALLOWLIST {
+        assert!(
+            validate_lf_shape(shape).is_ok(),
+            "valid shape '{}' should be accepted",
+            shape
+        );
+    }
+}
+
+#[test]
+fn lf_shape_rejects_semicolons() {
+    assert!(validate_lf_shape("SIN; OUTP ON").is_err());
+    assert!(validate_lf_shape("SQU; FM:STAT ON").is_err());
+}
+
+#[test]
+fn lf_shape_rejects_unknown_shapes() {
+    assert!(validate_lf_shape("WAV").is_err());
+    assert!(validate_lf_shape("NOISE").is_err());
+    assert!(validate_lf_shape("").is_err());
 }
 
 #[test]
