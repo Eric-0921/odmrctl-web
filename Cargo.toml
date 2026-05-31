@@ -13,4 +13,5 @@ members = [
     "crates/odmr-harness",
     "crates/odmr-smb100a",
     "crates/odmr-oe1022d",
+    "crates/odmr-mag",
 ]

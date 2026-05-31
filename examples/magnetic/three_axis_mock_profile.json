@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "magnetic_profile",
+  "id": "mag_xyz_default",
+  "name": "Default Three-Axis Mock Profile",
+  "description": "Mock magnetic field profile for Mag-M0 testing. Defines a single B-field point and a grid sweep.",
+  "coordinate_system": "cartesian",
+  "points": [
+    {
+      "point_id": "pt_001",
+      "b_target_t": [0.001, 0.0, 0.002],
+      "settle_ms": 200,
+      "label": "X+Z field"
+    },
+    {
+      "point_id": "pt_002",
+      "b_target_t": [0.0, 0.001, 0.002],
+      "settle_ms": 200,
+      "label": "Y+Z field"
+    }
+  ],
+  "sweeps": [
+    {
+      "sweep_id": "sweep_bz_grid",
+      "type": "grid_sweep",
+      "axis": "bz_t",
+      "start_t": -0.005,
+      "stop_t": 0.005,
+      "step_t": 0.001,
+      "fixed": {
+        "bx_t": 0.0,
+        "by_t": 0.0
+      },
+      "settle_ms": 150,
+      "coordinate_system": "cartesian"
+    },
+    {
+      "sweep_id": "sweep_spherical",
+      "type": "spherical_sweep",
+      "b_abs_t": 0.003,
+      "theta_range_deg": [0, 90],
+      "theta_step_deg": 15,
+      "phi_range_deg": [0, 360],
+      "phi_step_deg": 30,
+      "settle_ms": 200,
+      "coordinate_system": "spherical"
+    }
+  ],
+  "safety_policy_id": "mag_safety_lab_default",
+  "coil_matrix_id": "coil_matrix_lab_default"
+}

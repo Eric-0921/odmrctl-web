@@ -246,6 +246,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "odmr-mag"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
 name = "odmr-oe1022d"
 version = "0.1.0"
 dependencies = [
