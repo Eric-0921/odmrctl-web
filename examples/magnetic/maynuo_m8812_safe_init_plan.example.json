@@ -8,12 +8,14 @@
   "profile_id": "maynuo_m8812_lab_xyz",
   "executable": false,
   "executable_reason": "Mag-M0.5 mock-only: requires Mag-M2B backend bring-up for real execution",
+  "shutdown_mode": null,
   "expected_duration_ms": 500,
   "commands": [
     {
       "seq": 1,
       "command_type": "identify",
       "scpi": "*IDN?",
+      "expects_response": true,
       "expected_response_shape": "MAYNUO,M8812,<SN>,V2.7",
       "event_name": "mag_idn_queried",
       "blocking": true,
@@ -23,7 +25,8 @@
       "seq": 2,
       "command_type": "set_remote",
       "scpi": "SYST:REM",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_remote_mode_set",
       "blocking": false,
       "delay_ms": 50
@@ -32,57 +35,58 @@
       "seq": 3,
       "command_type": "set_voltage",
       "scpi": "VOLT 75",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_voltage_set",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "voltage_v": 75 }
+      "delay_ms": 50
     },
     {
       "seq": 4,
       "command_type": "set_current",
       "scpi": "CURR 0.00000",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_current_zeroed",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "current_a": 0.0, "current_ma": 0.0 }
+      "delay_ms": 50
     },
     {
       "seq": 5,
       "command_type": "set_output",
       "scpi": "OUTP 0",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_output_disabled",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "output": false }
+      "delay_ms": 50
     },
     {
       "seq": 6,
       "command_type": "query_current",
       "scpi": "MEAS:CURR?",
-      "expected_response_shape": "0.00000",
+      "expects_response": true,
+      "expected_response_shape": "float_ampere",
       "event_name": "mag_current_queried",
       "blocking": true,
-      "timeout_ms": 300,
-      "expected_value_ma": 0.0
+      "timeout_ms": 300
     },
     {
       "seq": 7,
       "command_type": "set_output",
       "scpi": "OUTP 0",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_output_confirmed_off",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "output": false }
+      "delay_ms": 50
     },
     {
       "seq": 8,
       "command_type": "set_local",
       "scpi": "SYST:LOC",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_local_mode_set",
       "blocking": false,
       "delay_ms": 50

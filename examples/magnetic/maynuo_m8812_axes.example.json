@@ -16,7 +16,7 @@
   "axes": {
     "x": {
       "axis_id": "mag_x",
-      "port_name": "COM4",
+      "last_known_port_name": "COM4",
       "device_model": "MAYNUO M8812",
       "sn_tail": "2020",
       "expected_idn": "MAYNUO,M8812,080020960220402020,V2.7",
@@ -31,7 +31,7 @@
     },
     "y": {
       "axis_id": "mag_y",
-      "port_name": "COM6",
+      "last_known_port_name": "COM6",
       "device_model": "MAYNUO M8812",
       "sn_tail": "2022",
       "expected_idn": "MAYNUO,M8812,080020960220402022,V2.7",
@@ -46,7 +46,7 @@
     },
     "z": {
       "axis_id": "mag_z",
-      "port_name": "COM3",
+      "last_known_port_name": "COM3",
       "device_model": "MAYNUO M8812",
       "sn_tail": "2003",
       "expected_idn": "MAYNUO,M8812,080020960220402003,V2.7",

@@ -206,17 +206,85 @@ If zeroSetCurr + recurSetCurr > 5000 mA:
 
 **Mag-M0.5 policy**: The 5000 mA hardware limit is documented but is **not** the default bring-up test current. The only low-current micro-test example permitted is **10 mA**.
 
+## Mag-M0.6: Schema Consistency + GUI Contract Validation (2026-06-01)
+
+### Schema Fixes Applied
+
+| Change | Before | After |
+|--------|--------|-------|
+| Axes nesting | `MaynuoAxesProfile { x, y, z }` | `MaynuoAxesProfile { axes: MaynuoAxes { x, y, z } }` |
+| Port binding | `port_name: String` | `last_known_port_name: String` (with `#[serde(alias = "port_name")]` for backward compat) |
+| Display name | required `display_name: String` | optional `display_name: Option<String>` |
+| Verification metadata | at top level, unstructured | `VerificationMetadata` struct: `method, date, verified_by, result, note` |
+| Profile metadata | missing fields | added: `description, source, verification, note` |
+
+### Command Response Semantics Fix
+
+Per `verify_protocol.py`: only `*IDN?` and `MEAS:CURR?` return data. Set commands are fire-and-forget.
+
+```rust
+// MaynuoCommandEntry now has:
+expects_response: bool       // ← NEW field
+
+// Plan builders set:
+*IDN?       → expects_response = true,  expected_response_shape = "MAYNUO,M8812,<SN>,V2.7"
+MEAS:CURR?  → expects_response = true,  expected_response_shape = "float_ampere"
+SYST:REM    → expects_response = false, expected_response_shape = "none"
+VOLT 75     → expects_response = false, expected_response_shape = "none"
+CURR ...    → expects_response = false, expected_response_shape = "none"
+OUTP 0/1    → expects_response = false, expected_response_shape = "none"
+SYST:LOC    → expects_response = false, expected_response_shape = "none"
+```
+
+All example JSON files updated. No set command claims "ACK" anymore.
+
+### Condition Number Fix
+
+`to_coil_matrix()` replaced with `try_to_coil_matrix()` returning `Result<CoilMatrix, MagError>`:
+
+- Rejects NaN, Inf, ≤0 gains (`NonFiniteValue` / `CalibrationMissing`)
+- Rejects non-finite zero offsets
+- Computes actual condition number: `max(|kx|,|ky|,|kz|) / min(|kx|,|ky|,|kz|)` ≈ 1.1015
+
+### Shutdown Mode Differentiation
+
+Two explicit shutdown plan builders added:
+
+| Plan | Sequence | Purpose |
+|------|----------|---------|
+| `build_verified_normal_shutdown_plan` | CURR 0 → OUTP 0 → SYST:LOC | Verified disconnect (matches verify_protocol.py) |
+| `build_emergency_shutdown_plan` | OUTP 0 → CURR 0 → SYST:LOC | Output killed first, zero delay on OUTP 0 |
+
+`MaynuoCommandPlan` now has `shutdown_mode: Option<String>` ("verified_normal" | "emergency"). The 10 mA microtest plan uses `verified_normal`.
+
+### Port Binding Semantics
+
+- `last_known_port_name` is a hint only; the SN within `expected_idn` is the stable binding key.
+- Tests assert: SN mapping present in all profiles, port paths are not the binding key.
+- GUI contract explicitly documents: `binding_policy.stable_identity_field = "expected_idn"`
+
+### Example File Deserialization Tests
+
+All four `examples/magnetic/*.example.json` files are now loaded and deserialized in tests:
+- `deserialize_maynuo_axes_example_json` — verifies `MaynuoAxesProfile` with verification metadata round-trip
+- `deserialize_safe_init_plan_example_json` — verifies `expects_response` semantics
+- `deserialize_10ma_microtest_plan_example_json` — verifies `shutdown_mode: "verified_normal"`
+- `deserialize_gui_contract_example_json` — verifies disabled controls, no executable flag, forbidden patterns present
+
 ## Mapping to `odmr-mag`
 
-### New Types Added in Mag-M0.5
+### New Types Added in Mag-M0.5 / M0.6
 
-| Type | Purpose |
-|------|---------|
-| `MaynuoAxisProfile` | Per-axis config: port, SN, coil constant, serial settings |
-| `MaynuoSerialSettings` | Baudrate, data bits, parity, stop bits, flow control, DTR |
-| `MaynuoAxesProfile` | Three-axis assembly: X/Y/Z profiles + safety policy ref |
-| `MaynuoCommand` | Enum of all SCPI commands as data (no I/O) |
-| `MaynuoCommandPlan` | Ordered list of commands + metadata for a procedure |
+| Type | Purpose | Added |
+|------|---------|-------|
+| `MaynuoAxisProfile` | Per-axis config: last-known port, SN, coil constant, serial settings | M0.5 |
+| `MaynuoSerialSettings` | Baudrate, data bits, parity, stop bits, flow control, DTR | M0.5 |
+| `MaynuoAxes` | Three-axis wrapper: X/Y/Z profiles | M0.6 |
+| `MaynuoAxesProfile` | Three-axis assembly + metadata + verification | M0.5 |
+| `VerificationMetadata` | Device fingerprint verification record | M0.6 |
+| `MaynuoCommand` | Enum of all SCPI commands as data (no I/O) | M0.5 |
+| `MaynuoCommandPlan` | Ordered list of commands + shutdown_mode + metadata | M0.5 |
+| `MaynuoCommandEntry` | Per-command entry with `expects_response` | M0.5 |
 
 ### Command String Generation (pure data)
 
@@ -232,26 +300,22 @@ These functions return `String`, not `Result` with serial port side effects.
 ```rust
 build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan
 build_query_current_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan
-build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan
+build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoCommandPlan, MagError>
+build_verified_normal_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan
+build_emergency_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan
 ```
 
-Each returns an ordered list of `MaynuoCommand` variants with expected response shapes and event names.
+Each returns an ordered list of `MaynuoCommand` variants with `expects_response` flags and event names.
 
 ### Calibration Bridging
 
 A `MaynuoAxesProfile` can be converted to a `CoilMatrix`:
 
 ```rust
-impl From<&MaynuoAxesProfile> for CoilMatrix {
-    fn from(profile: &MaynuoAxesProfile) -> Self {
-        // Diagonal matrix from per-axis coil constants
-        // kx_T_per_A = profile.x.coil_constant_nt_per_ma * 1e-6
-        // ...
-    }
-}
+profile.try_to_coil_matrix() -> Result<CoilMatrix, MagError>
 ```
 
-This allows the existing `MockMagAxes`, safety checks, and planner to work with Maynuo-derived calibration without code duplication.
+This validates all gains and offsets are finite and positive, computes the true condition number from the diagonal, and bridges the Maynuo axis-gain model to the general 3×3 matrix model.
 
 ## Mapping to Future Executor Steps
 

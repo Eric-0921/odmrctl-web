@@ -3,7 +3,7 @@
   "kind": "maynuo_gui_contract",
   "id": "maynuo_m8812_gui_m0_5",
   "name": "Maynuo M8812 GUI Backend Contract (M0.5 Mock)",
-  "description": "Data shape that the Tauri Rust backend will eventually return to the React GUI for magnetic axis display. In M0.5 all values are mock placeholders; real controls are disabled.",
+  "description": "Data shape that the Tauri Rust backend will eventually return to the React GUI for magnetic axis display. In M0.5 all values are mock placeholders; real controls are disabled. The React GUI receives display payloads only and does NOT issue serial or SCPI commands directly.",
   "gui_milestone": "M0.5",
   "disabled_reason": "requires Mag-M2 backend bring-up path",
   "axis_cards": [
@@ -19,7 +19,7 @@
       },
       "connection": {
         "state": "disconnected_mock",
-        "port_name": "COM4",
+        "last_known_port_name": "COM4",
         "baudrate": 9600,
         "connected_at": null,
         "last_error": null
@@ -88,7 +88,7 @@
       },
       "connection": {
         "state": "disconnected_mock",
-        "port_name": "COM6",
+        "last_known_port_name": "COM6",
         "baudrate": 9600,
         "connected_at": null,
         "last_error": null
@@ -157,7 +157,7 @@
       },
       "connection": {
         "state": "disconnected_mock",
-        "port_name": "COM3",
+        "last_known_port_name": "COM3",
         "baudrate": 9600,
         "connected_at": null,
         "last_error": null
@@ -220,7 +220,7 @@
     "any_output_on": false,
     "emergency_stop_available": false,
     "emergency_stop_disabled_reason": "Visual-only in M0.5; no hardware authority",
-    "banner_text": "GUI-M0.5 MOCK VIEWER — No hardware access. No executor connection. Real controls disabled.",
+    "banner_text": "GUI-M0.5 MOCK VIEWER — No hardware access. No executor connection. Real controls disabled. React GUI receives display payloads only; it does NOT issue serial or SCPI commands.",
     "command_preview_panel": {
       "visible": true,
       "editable": false,
@@ -270,6 +270,11 @@
       "onClick -> MEAS:CURR?",
       "frontend direct SCPI",
       "frontend direct serial/USB/TCP"
-    ]
+    ],
+    "binding_policy": {
+      "stable_identity_field": "expected_idn",
+      "port_policy": "last_known_port_name is a hint only; port paths are dynamic per session and must NOT be used for device binding",
+      "identification_method": "enumerate all ports, send *IDN?, match SN tail to logical axis"
+    }
   }
 }

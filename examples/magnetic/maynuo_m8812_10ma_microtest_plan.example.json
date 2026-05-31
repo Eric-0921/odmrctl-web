@@ -3,20 +3,19 @@
   "kind": "maynuo_command_plan",
   "id": "maynuo_10ma_microtest_plan",
   "name": "Maynuo M8812 10 mA Micro-Test Plan",
-  "description": "Future Mag-M3 candidate: low-current single-axis micro-test. Target axis is selectable; default is X. This plan is NOT executable in Mag-M0.5.",
-  "label": "future Mag-M3 candidate, not executable in Mag-M0.5",
-  "target_axis": "x",
+  "description": "Future Mag-M3 candidate: low-current single-axis micro-test. Target axis is selectable; default is X. This plan is NOT executable in Mag-M0.5. Shutdown uses verified_normal sequence: OUTP 0 → CURR 0 → SYST:LOC.",
+  "axis_id": "mag_x",
   "profile_id": "maynuo_m8812_lab_xyz",
   "executable": false,
   "executable_reason": "Mag-M0.5 mock-only: requires Mag-M3 backend bring-up for real execution",
+  "shutdown_mode": "verified_normal",
   "expected_duration_ms": 1500,
-  "test_current_ma": 10.0,
-  "test_current_a": 0.01,
   "commands": [
     {
       "seq": 1,
       "command_type": "identify",
       "scpi": "*IDN?",
+      "expects_response": true,
       "expected_response_shape": "MAYNUO,M8812,<SN>,V2.7",
       "event_name": "mag_idn_queried",
       "blocking": true,
@@ -26,7 +25,8 @@
       "seq": 2,
       "command_type": "set_remote",
       "scpi": "SYST:REM",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_remote_mode_set",
       "blocking": false,
       "delay_ms": 50
@@ -35,69 +35,68 @@
       "seq": 3,
       "command_type": "set_voltage",
       "scpi": "VOLT 75",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_voltage_set",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "voltage_v": 75 }
+      "delay_ms": 50
     },
     {
       "seq": 4,
       "command_type": "set_current",
       "scpi": "CURR 0.01000",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_current_set",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "current_a": 0.01, "current_ma": 10.0 }
+      "delay_ms": 50
     },
     {
       "seq": 5,
       "command_type": "set_output",
       "scpi": "OUTP 1",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_output_enabled",
       "blocking": false,
-      "delay_ms": 200,
-      "params": { "output": true }
+      "delay_ms": 200
     },
     {
       "seq": 6,
       "command_type": "query_current",
       "scpi": "MEAS:CURR?",
-      "expected_response_shape": "0.0XXXX",
+      "expects_response": true,
+      "expected_response_shape": "float_ampere",
       "event_name": "mag_current_measured",
       "blocking": true,
-      "timeout_ms": 300,
-      "expected_value_ma_min": 5.0,
-      "expected_value_ma_max": 15.0,
-      "note": "Actual value depends on power supply accuracy and load. Verified range: 9.93~11.82 mA across X/Y/Z axes."
+      "timeout_ms": 300
     },
     {
       "seq": 7,
       "command_type": "set_output",
       "scpi": "OUTP 0",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_output_disabled",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "output": false }
+      "delay_ms": 50
     },
     {
       "seq": 8,
       "command_type": "set_current",
       "scpi": "CURR 0.00000",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_current_zeroed",
       "blocking": false,
-      "delay_ms": 50,
-      "params": { "current_a": 0.0, "current_ma": 0.0 }
+      "delay_ms": 50
     },
     {
       "seq": 9,
       "command_type": "set_local",
       "scpi": "SYST:LOC",
-      "expected_response_shape": "ACK",
+      "expects_response": false,
+      "expected_response_shape": "none",
       "event_name": "mag_local_mode_set",
       "blocking": false,
       "delay_ms": 50
