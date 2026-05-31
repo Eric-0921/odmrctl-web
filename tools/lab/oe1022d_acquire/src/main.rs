@@ -69,7 +69,7 @@ struct Cli {
     #[arg(long, default_value = "5000")]
     timeout_ms: u64,
 
-    #[arg(long, default_value = "docs/lab-bringup")]
+    #[arg(long, default_value = "../../../docs/lab-bringup")]
     out_dir: String,
 }
 

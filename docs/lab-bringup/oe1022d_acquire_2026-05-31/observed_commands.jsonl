@@ -1,0 +1,2 @@
+{"command":"*IDN?","response":"SSI LIA-OE1022D,SN:D6522078,Version:Ver6.3200831"}
+{"command":"RALL?","count":"see frame_summary"}
