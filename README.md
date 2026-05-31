@@ -12,7 +12,7 @@ Layer 5: GUI               apps/desktop/
 Layer 4: Application API   Tauri commands
 Layer 3: Runtime           odmr-executor  odmr-logging  odmr-replay  odmr-harness
 Layer 2: Domain            odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers           odmr-smb100a  odmr-oe1022d  odmr-device
+Layer 1: Drivers           odmr-smb100a  odmr-oe1022d  odmr-device  odmr-mag
 Layer 0: Types             odmr-types
 
 Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_command_verify/
@@ -40,13 +40,27 @@ Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_co
 | `schemas/` | Recipe JSON Schema | — |
 | `examples/` | 示例 recipe | — |
 
-## Lab Bringup 工具（M2 阶段）
+## Lab Bringup 工具（M2–M3 阶段）
 
 | 工具 | 路径 | 用途 |
 |------|------|------|
 | 硬件发现 | `tools/discover/` | macOS 自动扫描 LAN / Serial / USB 设备，生成 station fingerprint |
 | 只读快照 | `tools/lab/snapshot/` | 连接真实 SMB100A（TCP）和 OE1022D（Serial），执行安全只读查询，生成 Markdown + JSONL 快照报告 |
 | 命令验证 | `tools/manual_command_verify/` | Human-in-the-loop 验证协议：人工审批 → 执行 → 记录 JSONL 回执 |
+| **SMB100A M3 工具** | | |
+| 飞行前清空错误队列 | `tools/lab/smb100a_preflight_clearance/` | 仅查询模式，验证 SMB100A 处于干净、安全、RF 关闭状态 |
+| RF 开关微测试 | `tools/lab/smb100a_rf_microtest/` | 受控 RF 开关，固定频率、低功率、无调制，需操作员审批 |
+| FM/MOD 微测试 | `tools/lab/smb100a_fm_mod_microtest/` | 受控 FM:STAT ON / MOD:STAT ON / OUTP ON 序列，需操作员审批 |
+| 安全设置 | `tools/lab/smb100a_safe_set/` | 通过允许列表验证的 SMB100A 单一 SCPI 设置命令 |
+| **OE1022D M2 工具** | | |
+| 采集 | `tools/lab/oe1022d_acquire/` | OE1022D 基础采集 |
+| 日志采集 | `tools/lab/oe1022d_logged_acquire/` | OE1022D 采集，含结构化日志 |
+| RALL 捕获 | `tools/lab/oe1022d_rall_capture/` | 全寄存器捕获 + 采集 |
+| 运行审计 | `tools/lab/oe1022d_run_audit/` | OE1022D 采集运行审计 |
+| 虚假桥接 | `tools/lab/oe1022d_smb_fake_bridge/` | OE1022D ↔ 虚假 SMB100A 桥接 |
+| 查询桥接 | `tools/lab/oe1022d_smb_query_bridge/` | OE1022D ↔ 真实 SMB100A 查询桥接 |
+| **其他** | | |
+| 执行器影子运行 | `tools/lab/executor_shadow_run/` | 执行器影子运行（不接触硬件）|
 
 > ⚠️ **ADR-004 约束**：所有 lab 工具均为只读或 human-in-the-loop 模式；AI 禁止直接控制硬件输出。
 
@@ -88,4 +102,4 @@ pnpm tauri build      # 发布构建
 
 ## 技术栈
 
-Rust workspace（12 crates）+ Tauri + Web 前端 + Python 离线分析
+Rust workspace（13 crates）+ Tauri + Web 前端 + Python 离线分析

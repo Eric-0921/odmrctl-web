@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.2.2] — M3 Lab Bringup Phase 2: SMB100A Controlled RF/FM/MOD Micro-tests
+
+### Added
+
+- **M3.0-A: SMB100A preflight error queue clearance (query-only)**
+  - `tools/lab/smb100a_preflight_clearance/` — Rust CLI tool
+  - Verifies SMB100A in clean, safe, RF-OFF state before any RF output milestone
+  - Hard-coded query allowlist (13 queries) + forbidden pattern rejection
+  - Diagnostic `*CLS` mode with explicit operator approval gate
+  - Safety: rejects if OUTP? ≠ 0 or MOD:STAT? ≠ 0; no set commands reach transport in normal mode
+
+- **M3.0-B: SMB100A RF ON/OFF micro-test (fixed frequency, low power, no modulation)**
+  - `tools/lab/smb100a_rf_microtest/` — Rust CLI tool
+  - Controlled OUTP ON/OFF with full command audit and safety evidence
+  - Operator approval gate for OUTP ON (`--operator-approves-rf-on`)
+  - Preflight checks: OUTP=OFF, MOD:STAT=OFF, SYST:ERR clean
+  - Emergency shutdown: OUTP OFF if failure after RF ON
+  - Hard limits: power ≤ -10 dBm, duration ≤ 5 s
+
+- **M3.1: SMB100A fixed-frequency FM/MOD ON/OFF micro-test**
+  - `tools/lab/smb100a_fm_mod_microtest/` — Rust CLI tool
+  - FREQ = 2.882 GHz, POW = -30 dBm, FM:DEV = 4 MHz verified
+  - FM:SOUR INT → FM:STAT ON → MOD:STAT ON → OUTP ON → hold → OUTP OFF → MOD:STAT OFF → FM:STAT OFF
+  - Internal LF generator parameter support (LFO:FREQ / LFO:SHAP / LFO:VOLT, LFO output kept OFF)
+  - Operator approval gate for FM:STAT ON, MOD:STAT ON, OUTP ON (`--operator-approves-fm-mod-on`)
+  - Full command audit JSONL, preflight check, forbidden command check, emergency shutdown evidence
+  - `--leave-fm-config-enabled` flag for FM configuration persistence
+  - 35 characterization tests covering safety gates, allowlists, forbidden patterns, serialization
+
+- **M3.1.1: Modularize M3.1 tool (behavior-preserving refactor)**
+  - main.rs reduced from ~2900 lines to 44 lines
+  - 10 modules extracted: app, cli, types, timeline, artifacts, safety, transport, sequence, shutdown, tests
+  - All CLI flags, defaults, command sequences, JSON schemas, and artifact paths preserved
+
+### Fixed
+
+- **M3.1 safety hardening** (8 fixes)
+  - Reject SCPI semicolons (command chaining) in all validation functions
+  - Validate `--lf-shape` against SMB100A manual §6.13.6 allowlist (SIN/SQU/TRI/SAW/ISAW)
+  - Replace `?` with `unwrap_or_else` after state-changing commands so cleanup always runs
+  - Expand emergency shutdown trigger to cover FM/MOD-enabled states, not only RF ON
+  - Compare FREQ?/POW?/FM:DEV? readback against requested values after each set
+  - Fix RF-ON timing math (was off by one `delay_ms`, ~50ms)
+  - Add `drain_buffer()` before emergency shutdown verification queries
+  - 40 total tests, all passing
+
+### Changed
+
+- Lab bringup tools: 12 total (up from 3 in M2): smb100a_preflight_clearance, smb100a_rf_microtest, smb100a_fm_mod_microtest, smb100a_safe_set, oe1022d_acquire, oe1022d_logged_acquire, oe1022d_rall_capture, oe1022d_run_audit, oe1022d_smb_fake_bridge, oe1022d_smb_query_bridge, executor_shadow_run, snapshot
+
+### Documents
+
+- `docs/lab-bringup/m3_0_preflight_error_queue_clearance_plan.md` — M3.0-A test plan
+- `docs/lab-bringup/smb100a_safe_set_audit_2026-05-31.md` — safe set audit record
+- `docs/lab-bringup/smb100a_command_verification.md` — command verification protocol
+- `docs/lab-bringup/real_station_snapshot_2026-06-14.md` — real station snapshot
+
+---
+
 ## [0.2.1] — M2 Lab Bringup Phase 1: Discovery, Verification, Snapshot
 
 ### Added
