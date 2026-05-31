@@ -550,6 +550,8 @@ impl SmbTransport {
     }
 
     fn drain_buffer(&mut self) {
+        // Temporarily set a very short read timeout for draining
+        let _ = self.stream.set_read_timeout(Some(Duration::from_millis(50)));
         let mut buf = [0u8; 256];
         loop {
             match self.stream.read(&mut buf) {
@@ -558,6 +560,10 @@ impl SmbTransport {
                 Err(_) => break,
             }
         }
+        // Restore original timeout
+        let _ = self
+            .stream
+            .set_read_timeout(Some(Duration::from_millis(self.timeout_ms)));
     }
 
     fn close(self) {
