@@ -1291,10 +1291,10 @@ Tauri command API 草案
 ADR 初稿：
   ADR-001-tauri-ui.md
   ADR-002-rust-oe1022d-core.md
-  ADR-003-smb100a-scpi-socket-first.md
-  ADR-004-json-recipe-driven.md
-  ADR-005-no-ai-live-hardware.md
-  ADR-006-raw-bin-before-csv.md
+  ADR-003-smb100a-scpi-lan-socket.md
+  ADR-004-no-ai-live-hardware.md
+  ADR-005-raw-bin-before-csv.md
+  ADR-006-gui-m0-mock-only-boundary.md
 ```
 
 ---
