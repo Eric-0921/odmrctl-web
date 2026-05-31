@@ -1,0 +1,13 @@
+[package]
+name = "oe1022d-rall-capture"
+version = "0.1.0"
+edition = "2021"
+description = "OE1022D RALL? raw binary capture and offline parser probe for ODMR lab bring-up."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serialport = "4"
+
+# Exclude from the parent workspace so this tool can be built independently.
+[workspace]
