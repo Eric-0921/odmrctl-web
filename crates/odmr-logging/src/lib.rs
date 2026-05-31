@@ -89,6 +89,10 @@ pub enum RunEventType {
     FrameParsed,
     FrameFailed,
     AcquisitionCompleted,
+    MockDeviceRegistered,
+    FakeSmb100aStateLoaded,
+    StationSnapshotWritten,
+    AuditCompleted,
 }
 
 // ---------------------------------------------------------------------------
