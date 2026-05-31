@@ -423,6 +423,12 @@ fn sha256_file(path: &Path) -> Result<String, String> {
 /// Validate that a command is a permitted query in M3.0-A.
 fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
+    if trimmed.contains(';') {
+        return Err(format!(
+            "SMB command '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
     if !trimmed.ends_with('?') {
         return Err(format!(
             "SMB command '{}' is not a query (does not end in '?')",
@@ -1615,5 +1621,11 @@ mod tests {
         fs::write(&path, "hello").unwrap();
         let h = sha256_file(&path).unwrap();
         assert!(h.starts_with("sha256:"));
+    }
+
+    #[test]
+    fn semicolons_rejected_in_queries() {
+        assert!(validate_smb_query_only("FREQ?; OUTP ON").is_err());
+        assert!(validate_smb_query_only("*IDN?; *RST").is_err());
     }
 }

@@ -446,6 +446,12 @@ fn sha256_file(path: &Path) -> Result<String, String> {
 
 fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
+    if trimmed.contains(';') {
+        return Err(format!(
+            "SMB query '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
     if !trimmed.ends_with('?') {
         return Err(format!(
             "SMB command '{}' is not a query (does not end in '?')",
@@ -471,6 +477,12 @@ fn validate_smb_query_only(cmd: &str) -> Result<(), String> {
 
 fn validate_microtest_set_command(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
+    if trimmed.contains(';') {
+        return Err(format!(
+            "SMB set command '{}' contains semicolon (SCPI command chaining rejected)",
+            trimmed
+        ));
+    }
     // Reject forbidden patterns first
     for pat in SMB_FORBIDDEN_PATTERNS {
         if trimmed.contains(pat) {
@@ -2168,5 +2180,17 @@ mod tests {
         let result = run_microtest(&cli);
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("-10"));
+    }
+
+    #[test]
+    fn semicolons_rejected_in_set_commands() {
+        assert!(validate_microtest_set_command("FREQ 1e9; OUTP ON").is_err());
+        assert!(validate_microtest_set_command("POW -30; OUTP ON").is_err());
+    }
+
+    #[test]
+    fn semicolons_rejected_in_queries() {
+        assert!(validate_smb_query_only("FREQ?; OUTP ON").is_err());
+        assert!(validate_smb_query_only("OUTP?; *RST").is_err());
     }
 }

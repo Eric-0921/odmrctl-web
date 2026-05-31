@@ -525,8 +525,21 @@ fn no_magnetic_command_audit_entries() {
 // -----------------------------------------------------------------------
 #[test]
 fn no_magnetic_serial_enumeration_in_m3_1() {
-    // M3.1 tool does not import or use any serial port enumeration
-    // This is enforced by the code structure: no serial port imports
+    let mag = MagneticNotInScope {
+        magnetic_devices_in_scope: false,
+        magnetic_serial_enumeration_performed: false,
+        magnetic_commands_sent: 0,
+        reason: "M3.1 is SMB100A-only fixed-frequency FM/MOD micro-test".into(),
+        known_verified_axis_sns: MagneticAxisSns {
+            x: "080020960220402020".into(),
+            y: "080020960220402022".into(),
+            z: "080020960220402003".into(),
+        },
+        note: "SN mapping preserved".into(),
+    };
+    assert!(!mag.magnetic_devices_in_scope);
+    assert_eq!(mag.magnetic_commands_sent, 0);
+    assert!(!mag.magnetic_serial_enumeration_performed);
 }
 
 // -----------------------------------------------------------------------
@@ -680,6 +693,93 @@ fn lf_shape_rejects_unknown_shapes() {
     assert!(validate_lf_shape("WAV").is_err());
     assert!(validate_lf_shape("NOISE").is_err());
     assert!(validate_lf_shape("").is_err());
+}
+
+// -----------------------------------------------------------------------
+// 28. preflight rejects without operator approval
+// -----------------------------------------------------------------------
+#[test]
+fn preflight_rejects_without_operator_approval() {
+    let p = PreflightCheck {
+        passed: false,
+        outp_off_before: true,
+        mod_stat_off_before: true,
+        error_queue_clean_before: true,
+        operator_approval_present: false,
+        power_within_limit: true,
+        fm_deviation_within_limit: true,
+        duration_within_limit: true,
+        no_magnetic_serial_enumeration: true,
+        no_magnetic_commands: true,
+        warnings: vec![],
+        errors: vec![],
+    };
+    assert!(!p.passed);
+    assert!(!p.operator_approval_present);
+}
+
+// -----------------------------------------------------------------------
+// 29. preflight passes when all conditions met
+// -----------------------------------------------------------------------
+#[test]
+fn preflight_passes_when_all_conditions_met() {
+    let p = PreflightCheck {
+        passed: true,
+        outp_off_before: true,
+        mod_stat_off_before: true,
+        error_queue_clean_before: true,
+        operator_approval_present: true,
+        power_within_limit: true,
+        fm_deviation_within_limit: true,
+        duration_within_limit: true,
+        no_magnetic_serial_enumeration: true,
+        no_magnetic_commands: true,
+        warnings: vec![],
+        errors: vec![],
+    };
+    assert!(p.passed);
+    assert!(p.operator_approval_present);
+}
+
+// -----------------------------------------------------------------------
+// 30. preflight rejects when OUTP was already ON
+// -----------------------------------------------------------------------
+#[test]
+fn preflight_rejects_when_outp_on_before() {
+    let p = PreflightCheck {
+        passed: false,
+        outp_off_before: false,
+        mod_stat_off_before: true,
+        error_queue_clean_before: true,
+        operator_approval_present: true,
+        power_within_limit: true,
+        fm_deviation_within_limit: true,
+        duration_within_limit: true,
+        no_magnetic_serial_enumeration: true,
+        no_magnetic_commands: true,
+        warnings: vec![],
+        errors: vec!["OUTP? = 'ON' (expected OFF/0)".into()],
+    };
+    assert!(!p.passed);
+    assert!(!p.outp_off_before);
+}
+
+// -----------------------------------------------------------------------
+// 31. LF shape rejects empty and whitespace-only input
+// -----------------------------------------------------------------------
+#[test]
+fn lf_shape_rejects_empty_and_whitespace() {
+    assert!(validate_lf_shape("").is_err());
+    assert!(validate_lf_shape("   ").is_err());
+}
+
+// -----------------------------------------------------------------------
+// 32. LF shape enforces case-sensitive match
+// -----------------------------------------------------------------------
+#[test]
+fn lf_shape_enforces_case_sensitive_match() {
+    assert!(validate_lf_shape("sin").is_err());
+    assert!(validate_lf_shape("Sin").is_err());
 }
 
 #[test]

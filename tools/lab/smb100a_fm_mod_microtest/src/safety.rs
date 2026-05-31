@@ -122,17 +122,6 @@ pub fn validate_microtest_set_command(cmd: &str) -> Result<(), String> {
     ))
 }
 
-#[allow(dead_code)]
-pub fn is_forbidden_command(cmd: &str) -> bool {
-    let trimmed = cmd.trim();
-    for pat in SMB_FORBIDDEN_PATTERNS {
-        if trimmed.contains(pat) {
-            return true;
-        }
-    }
-    false
-}
-
 pub fn classify_command_for_audit(cmd: &str) -> &'static str {
     let trimmed = cmd.trim();
     if trimmed.ends_with('?') {
