@@ -163,6 +163,47 @@ fn run_audit(run_dir: &Path) -> AuditReport {
         }
     }
 
+    // M2.9 optional metadata files — validate JSON if present
+    for m29_meta in [
+        "recipe/input_recipe.json",
+        "recipe/resolved_recipe.json",
+        "recipe/dry_run_plan.json",
+        "recipe/safety_report.json",
+        "shadow/executor_shadow_summary.json",
+        "shadow/forbidden_real_command_check.json",
+    ] {
+        let path = run_dir.join(m29_meta);
+        if path.exists() {
+            if let Err(e) = fs::read_to_string(&path).and_then(|s| {
+                serde_json::from_str::<serde_json::Value>(&s)
+                    .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))
+            }) {
+                r.fail(format!("{} invalid JSON: {}", m29_meta, e));
+            }
+        }
+    }
+
+    // M2.9 optional JSONL files — validate JSONL if present
+    for m29_jsonl in [
+        "shadow/shadow_command_plan.jsonl",
+        "shadow/shadow_step_timeline.jsonl",
+        "shadow/frame_to_shadow_step_alignment.jsonl",
+    ] {
+        let path = run_dir.join(m29_jsonl);
+        if path.exists() {
+            match read_jsonl_lines(&path) {
+                Ok(lines) => {
+                    for (i, line) in lines.iter().enumerate() {
+                        if let Err(e) = serde_json::from_str::<serde_json::Value>(line) {
+                            r.fail(format!("{} line {} invalid JSON: {}", m29_jsonl, i + 1, e));
+                        }
+                    }
+                }
+                Err(e) => r.fail(format!("{} unreadable: {}", m29_jsonl, e)),
+            }
+        }
+    }
+
     // 2. manifest.json valid JSON
     let manifest_path = run_dir.join("manifest.json");
     let manifest: Option<serde_json::Value> = if manifest_path.exists() {
@@ -894,6 +935,68 @@ mod tests {
 
         let report = run_audit(&run_dir);
         assert!(report.passed, "M2.8 run should pass audit: {:#?}", report);
+        assert!(report.csv_files_found.is_empty());
+        assert!(report.errors.is_empty());
+    }
+
+    #[test]
+    fn m29_run_with_optional_recipe_shadow_metadata_passes_audit() {
+        let tmp = tempfile::tempdir().unwrap();
+        let run_dir = tmp.path().join("m29_run");
+        make_valid_run(&run_dir, 5);
+
+        // Add M2.9 recipe/shadow metadata files
+        fs::create_dir_all(run_dir.join("recipe")).unwrap();
+        fs::create_dir_all(run_dir.join("shadow")).unwrap();
+
+        fs::write(
+            run_dir.join("recipe/input_recipe.json"),
+            r#"{"kind":"recipe","id":"test"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("recipe/resolved_recipe.json"),
+            r#"{"kind":"resolved_recipe","id":"resolved_test"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("recipe/dry_run_plan.json"),
+            r#"{"kind":"dry_run_plan","id":"dry_test"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("recipe/safety_report.json"),
+            r#"{"kind":"safety_report","id":"safety_test"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("shadow/shadow_command_plan.jsonl"),
+            r#"{"shadow_command_id":"sc_001","command":"OUTP ON","shadow_only":true}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("shadow/shadow_step_timeline.jsonl"),
+            r#"{"shadow_step_id":"step_001","phase":"sweep"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("shadow/frame_to_shadow_step_alignment.jsonl"),
+            r#"{"frame_seq":0,"shadow_step_id":"step_001","alignment_method":"time_window"}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("shadow/executor_shadow_summary.json"),
+            r#"{"shadow_mode":true,"shadow_command_count":1}"#,
+        )
+        .unwrap();
+        fs::write(
+            run_dir.join("shadow/forbidden_real_command_check.json"),
+            r#"{"passed":true,"forbidden_commands_sent_to_transport":[],"real_smb100a_set_commands_sent":0}"#,
+        )
+        .unwrap();
+
+        let report = run_audit(&run_dir);
+        assert!(report.passed, "M2.9 run should pass audit: {:#?}", report);
         assert!(report.csv_files_found.is_empty());
         assert!(report.errors.is_empty());
     }

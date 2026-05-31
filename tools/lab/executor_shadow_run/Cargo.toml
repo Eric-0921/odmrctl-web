@@ -1,0 +1,23 @@
+[package]
+name = "executor-shadow-run"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serialport = "4"
+odmr-oe1022d = { path = "../../../crates/odmr-oe1022d" }
+odmr-logging = { path = "../../../crates/odmr-logging" }
+odmr-smb100a = { path = "../../../crates/odmr-smb100a" }
+odmr-device = { path = "../../../crates/odmr-device" }
+odmr-types = { path = "../../../crates/odmr-types" }
+odmr-recipe = { path = "../../../crates/odmr-recipe" }
+odmr-compiler = { path = "../../../crates/odmr-compiler" }
+odmr-safety = { path = "../../../crates/odmr-safety" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+
+[workspace]
