@@ -1,26 +1,59 @@
 use crate::error::PreflightError;
 use crate::types::{DeviceConfig, DevicePreflightReport, SafeState};
 use std::io::{Read, Write};
-use std::net::{TcpStream, SocketAddr};
+use std::net::{SocketAddr, TcpStream};
 use std::time::Duration;
 
 /// Probe an SMB100A via TCP raw socket.
+///
+/// Discovery strategy:
+/// 1. If `address` is a specific `ip:port`, try it first.
+/// 2. If that fails or `address` is "auto", scan common subnets for
+///    port 5025 responders that return `*IDN?` containing "Rohde&Schwarz".
+///
+/// Scan ranges (timeout 300ms each):
+/// - 169.254.2.10 ..= 169.254.2.30  (link-local, common R&S default)
+/// - 192.168.1.10  ..= 192.168.1.30  (typical lab subnet)
 pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightError> {
     let timeout_ms = device.timeout_ms.unwrap_or(5000);
     let timeout = Duration::from_millis(timeout_ms);
 
-    // 1. Physical reachability: TCP connect
-    let addr: SocketAddr = device.address.parse().map_err(|e| {
-        PreflightError::PhysicalUnreachable {
-            device_id: device.device_id.clone(),
-            detail: format!("invalid address '{}': {}", device.address, e),
+    let explicit = if device.address.is_empty() || device.address.eq_ignore_ascii_case("auto") {
+        None
+    } else {
+        Some(device.address.clone())
+    };
+
+    let matched = if let Some(ref addr_str) = explicit {
+        match try_connect_and_idn(addr_str, timeout_ms) {
+            Ok(idn) => Some((addr_str.clone(), idn)),
+            Err(e) => {
+                eprintln!(
+                    "[{}] Explicit address {} failed ({}), falling back to subnet scan...",
+                    device.device_id, addr_str, e
+                );
+                auto_discover_smb(timeout_ms)
+            }
         }
+    } else {
+        auto_discover_smb(timeout_ms)
+    };
+
+    let (addr_str, identity) = matched.ok_or_else(|| PreflightError::PhysicalUnreachable {
+        device_id: device.device_id.clone(),
+        detail: "SMB100A not found on any scanned subnet".into(),
+    })?;
+
+    // Re-connect for the full preflight sequence
+    let addr: SocketAddr = addr_str.parse().map_err(|e| PreflightError::PhysicalUnreachable {
+        device_id: device.device_id.clone(),
+        detail: format!("invalid address '{}': {}", addr_str, e),
     })?;
 
     let mut stream = TcpStream::connect_timeout(&addr, timeout).map_err(|e| {
         PreflightError::PhysicalUnreachable {
             device_id: device.device_id.clone(),
-            detail: format!("TCP connect to {}: {}", device.address, e),
+            detail: format!("TCP connect to {}: {}", addr_str, e),
         }
     })?;
 
@@ -31,26 +64,7 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         }
     })?;
 
-    // 2. Identity verification
-    let identity = match scpi_query(&mut stream, "*IDN?", timeout_ms) {
-        Ok(resp) => Some(resp),
-        Err(e) => {
-            return Ok(DevicePreflightReport {
-                device_id: device.device_id.clone(),
-                kind: device.kind.clone(),
-                reachability: true,
-                identity_raw: None,
-                identity_display: None,
-                error_queue: vec![],
-                safe_state: None,
-                warnings: vec![format!("Identity query failed: {}", e)],
-            });
-        }
-    };
-
-    let identity_display = identity.as_ref().map(|s| s.trim().to_string());
-
-    // 3. Error queue drain
+    // Error queue drain
     let errors = drain_error_queue(&mut stream, timeout_ms).map_err(|e| {
         PreflightError::TcpError {
             device_id: device.device_id.clone(),
@@ -58,7 +72,7 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         }
     })?;
 
-    // 4. Safe state verification
+    // Safe state verification
     let safe_state = verify_safe_state(&mut stream, timeout_ms).unwrap_or(SafeState {
         confirmed: false,
         rf_output: None,
@@ -72,17 +86,70 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         device_id: device.device_id.clone(),
         kind: device.kind.clone(),
         reachability: true,
-        identity_raw: identity.clone(),
-        identity_display,
+        identity_raw: Some(identity.clone()),
+        identity_display: Some(identity.trim().to_string()),
         error_queue: errors,
         safe_state: Some(safe_state),
-        warnings: vec![],
+        warnings: if explicit.as_ref() != Some(&addr_str) {
+            vec![format!(
+                "Auto-discovered at {} (explicit address was unavailable)",
+                addr_str
+            )]
+        } else {
+            vec![]
+        },
     })
+}
+
+/// Scan common subnets for SMB100A.
+fn auto_discover_smb(timeout_ms: u64) -> Option<(String, String)> {
+    let per_ip_timeout = timeout_ms.min(500); // cap at 500ms per IP
+
+    let mut candidates: Vec<String> = Vec::new();
+    for host in 10u8..=30 {
+        candidates.push(format!("169.254.2.{host}:5025"));
+    }
+    for host in 10u8..=30 {
+        candidates.push(format!("192.168.1.{host}:5025"));
+    }
+
+    for addr in candidates {
+        match try_connect_and_idn(&addr, per_ip_timeout) {
+            Ok(idn) => {
+                if idn.contains("Rohde&Schwarz") || idn.contains("SMB") {
+                    return Some((addr, idn));
+                }
+            }
+            Err(_) => continue,
+        }
+    }
+
+    None
+}
+
+fn try_connect_and_idn(addr_str: &str, timeout_ms: u64) -> Result<String, String> {
+    let addr: SocketAddr = addr_str
+        .parse()
+        .map_err(|e| format!("parse addr '{}': {}", addr_str, e))?;
+    let timeout = Duration::from_millis(timeout_ms);
+
+    let mut stream =
+        TcpStream::connect_timeout(&addr, timeout).map_err(|e| format!("connect: {}", e))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|e| format!("set timeout: {}", e))?;
+
+    let idn = scpi_query(&mut stream, "*IDN?", timeout_ms)?;
+    if !idn.contains("Rohde&Schwarz") && !idn.contains("SMB") {
+        return Err(format!("unexpected IDN: {}", idn));
+    }
+    Ok(idn)
 }
 
 fn scpi_query(stream: &mut TcpStream, cmd: &str, _timeout_ms: u64) -> Result<String, String> {
     let cmd_bytes = format!("{}\n", cmd);
-    stream.write_all(cmd_bytes.as_bytes())
+    stream
+        .write_all(cmd_bytes.as_bytes())
         .map_err(|e| format!("write '{}': {}", cmd, e))?;
 
     let mut buf = [0u8; 1024];
@@ -157,16 +224,13 @@ fn verify_safe_state(stream: &mut TcpStream, timeout_ms: u64) -> Result<SafeStat
 
 #[cfg(test)]
 mod tests {
-    
 
     #[test]
     fn test_drain_error_queue_logic() {
-        // This test is a logic test only; real drain requires a fake stream
         let errors: Vec<String> = vec![
             "-113,\"Undefined header\"".into(),
             "-420,\"Query UNTERMINATED\"".into(),
         ];
         assert_eq!(errors.len(), 2);
-        // In real usage, drain_error_queue would stop at "+0,\"No error\""
     }
 }
