@@ -3,7 +3,13 @@ use crate::types::{DeviceConfig, DevicePreflightReport, SafeState};
 use std::io::{Read, Write};
 use std::time::Duration;
 
-/// Probe a Maynuo M8812 via serial enumeration + SN match.
+/// Probe a Maynuo M8812 via serial enumeration + strict SN match.
+///
+/// Safe-state check sequence:
+///   SYST:REM → OUTP? → MEAS:CURR? → SYST:LOC
+///
+/// The device is ALWAYS returned to local mode before probe() exits.
+/// If output is ON or current > 1.0 mA, safe_state.confirmed = false.
 pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightError> {
     let timeout_ms = device.timeout_ms.unwrap_or(5000);
     let expected_sn = device.expected_sn.as_deref();
@@ -30,8 +36,8 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         // Use a shorter timeout for probing to avoid long waits on wrong devices
         match probe_port_idn(port_path, 2000) {
             Ok(idn) => {
-                if let Some(tail) = expected_sn {
-                    if idn.contains(tail) {
+                if let Some(expected) = expected_sn {
+                    if sn_matches(&idn, expected) {
                         matched_port = Some(port_path.clone());
                         identity = Some(idn);
                         break;
@@ -69,6 +75,10 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
     // Enter remote mode for safe-state query
     let _ = scpi_set(&mut port, "SYST:REM", timeout_ms);
 
+    let output_on = scpi_query(&mut port, "OUTP?", timeout_ms)
+        .map(|s| s.trim() == "1")
+        .unwrap_or(true); // if query fails, assume unsafe
+
     let mut current_ma: Option<f64> = None;
     if let Ok(resp) = scpi_query(&mut port, "MEAS:CURR?", timeout_ms) {
         if let Ok(val) = resp.trim().parse::<f64>() {
@@ -76,14 +86,27 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         }
     }
 
+    // ALWAYS return to local mode before exiting
+    let _ = scpi_set(&mut port, "SYST:LOC", timeout_ms);
+
+    let safe = !output_on && current_ma.map(|c| c.abs() < 1.0).unwrap_or(false);
+
     let safe_state = SafeState {
-        confirmed: current_ma.map(|c| c < 1.0).unwrap_or(false),
+        confirmed: safe,
         rf_output: None,
         modulation: None,
         fm: None,
-        magnetic_output: None,
+        magnetic_output: Some(if output_on { "1".into() } else { "0".into() }),
         magnetic_current_ma: current_ma,
     };
+
+    let mut warnings = Vec::new();
+    if output_on {
+        warnings.push("Maynuo output is ON — unsafe".into());
+    }
+    if current_ma.map(|c| c.abs() >= 1.0).unwrap_or(false) {
+        warnings.push(format!("Maynuo current {:.3} mA exceeds 1.0 mA tolerance", current_ma.unwrap()));
+    }
 
     Ok(DevicePreflightReport {
         device_id: device.device_id.clone(),
@@ -93,8 +116,22 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         identity_display,
         error_queue: vec![],
         safe_state: Some(safe_state),
-        warnings: vec![],
+        warnings,
     })
+}
+
+/// Strict SN matching: parse MAYNUO IDN and compare exact SN field.
+///
+/// IDN format: `MAYNUO,M8812,<SN>,<FW_VERSION>`
+fn sn_matches(idn: &str, expected_sn: &str) -> bool {
+    let parts: Vec<&str> = idn.split(',').collect();
+    if parts.len() >= 3 {
+        let actual_sn = parts[2].trim();
+        actual_sn == expected_sn
+    } else {
+        // Fallback to substring if parse fails
+        idn.contains(expected_sn)
+    }
 }
 
 fn probe_port_idn(port_path: &str, timeout_ms: u64) -> Result<String, String> {
@@ -160,4 +197,22 @@ pub fn safe_zero_and_local(port: &mut Box<dyn serialport::SerialPort>) -> Result
 
     scpi_set(port, "SYST:LOC", 5000)?;
     Ok(current_ma)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sn_matches_exact() {
+        let idn = "MAYNUO,M8812,080020960220402020,V2.7";
+        assert!(sn_matches(idn, "080020960220402020"));
+        assert!(!sn_matches(idn, "080020960220402022"));
+    }
+
+    #[test]
+    fn test_sn_matches_fallback() {
+        let idn = "MAYNUO M8812 SN=080020960220402020";
+        assert!(sn_matches(idn, "080020960220402020"));
+    }
 }

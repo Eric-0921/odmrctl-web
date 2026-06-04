@@ -1,7 +1,12 @@
 //! CNI Laser off-only preflight probe (M2).
 //!
-//! **SAFETY**: This probe ONLY sends `laser_off` frames.
-//! It NEVER sends `laser_on` or `set_power`.
+//! **SAFETY**: The preflight probe() itself ONLY sends `laser_off` frames.
+//! It NEVER sends `laser_on` or `set_power` with non-zero power.
+//!
+//! **DISCOVERY NOTE**: Auto-discovery (`address: "auto"`) sends two different
+//! frames (`laser_off` and `set_power(0)`) to verify the binary frame echo
+//! behaviour. Both frames keep the laser OFF (`set_power(0)` sets target to 0).
+//! No emission-capable command is ever sent during preflight.
 //!
 //! Protocol: binary frame over serial, 9600 8N1.
 //! See `docs/equipment_manual/CNI Laser psu-sr/RS232语言协议_恒功率.md`

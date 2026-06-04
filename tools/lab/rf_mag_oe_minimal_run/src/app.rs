@@ -27,7 +27,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         ).map_err(|e| format!("load station profile: {e}"))?;
 
         println!("=== Station Preflight ===");
-        let preflight_report = common_preflight::run_station_preflight(&station_profile, None)
+        let preflight_report = common_preflight::run_station_preflight(&station_profile, None, true)
             .map_err(|e| format!("station preflight failed: {e}"))?;
 
         println!(
@@ -543,9 +543,20 @@ pub fn run(cli: &Cli) -> Result<(), String> {
 
     // SMB RF OFF
     let _ = smb.query("OUTP OFF", &mut smb_audit, now_ms());
-    let _ = smb.query("OUTP?", &mut smb_audit, now_ms());
+    let outp_after_off = smb.query("OUTP?", &mut smb_audit, now_ms());
     let _ = smb.query("SYST:ERR?", &mut smb_audit, now_ms());
-    report.rf.rf_final_off = true;
+
+    report.rf.rf_final_off = match outp_after_off {
+        Ok(ref v) if v.trim() == "0" || v.trim().eq_ignore_ascii_case("OFF") => true,
+        Ok(ref v) => {
+            report.errors.push(format!("SMB cleanup: OUTP? = '{}' after OUTP OFF", v));
+            false
+        }
+        Err(ref e) => {
+            report.errors.push(format!("SMB cleanup: OUTP? query failed: {}", e));
+            false
+        }
+    };
     push_event(&mut events, "rf_off", Some("smb100a"), None);
 
     // Maynuo cleanup: CURR 0 → OUTP 0 → settle → verify → SYST:LOC
@@ -588,9 +599,15 @@ pub fn run(cli: &Cli) -> Result<(), String> {
     sleep(Duration::from_millis(500));
 
     // Verify current is near zero BEFORE sending SYST:LOC (device must still be in remote)
-    let final_current_a = mag.query_meas_current().unwrap_or(999.0);
+    let (final_current_a, current_ok) = match mag.query_meas_current() {
+        Ok(val) => (val, true),
+        Err(e) => {
+            report.errors.push(format!("Mag cleanup: MEAS:CURR? failed: {}", e));
+            (999.0, false)
+        }
+    };
     let final_current_ma = final_current_a * 1000.0;
-    report.magnetic.mag_final_current_zero = final_current_ma.abs() < 1.0;
+    report.magnetic.mag_final_current_zero = current_ok && final_current_ma.abs() < 1.0;
     maynuo_audit.push(CommandAuditEntry {
         seq: maynuo_audit.len() as u64,
         timestamp_unix_ms: now_ms(),
@@ -601,7 +618,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         sent_to_transport: true,
         rejection_reason: None,
         response_preview: Some(format!("{:.6}", final_current_a)),
-        transport_error: None,
+        transport_error: if current_ok { None } else { Some("query failed".into()) },
         safety_relevant: false,
     });
 

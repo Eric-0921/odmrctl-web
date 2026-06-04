@@ -9,7 +9,7 @@
 //! use common_preflight::{StationProfile, run_station_preflight};
 //!
 //! let profile = StationProfile::load("station.json").unwrap();
-//! let report = run_station_preflight(&profile, None).unwrap();
+//! let report = run_station_preflight(&profile, None, true).unwrap();
 //! assert!(report.all_devices_reachable);
 //! assert!(report.all_safe_states_confirmed);
 //! ```
@@ -39,10 +39,15 @@ use std::time::Instant;
 ///
 /// If `ledger_path` is provided, the ledger is loaded before probing
 /// and saved after. Devices that were previously marked unsafe trigger
-/// an extended preflight warning.
+/// an extended preflight mode which **requires** `operator_approved`
+/// to be `true` — otherwise the preflight is rejected.
+///
+/// If `operator_approved` is `true`, the report's `operator_approved`
+/// field will be set accordingly; this does NOT skip any safety checks.
 pub fn run_station_preflight(
     profile: &StationProfile,
     ledger_path: Option<&PathBuf>,
+    operator_approved: bool,
 ) -> Result<StationPreflightReport, PreflightError> {
     let started_at = Instant::now();
 
@@ -59,7 +64,34 @@ pub fn run_station_preflight(
                 eprintln!("   - {} was UNSAFE at {}", id, entry.last_seen);
             }
         }
-        eprintln!("   Extra verification will be performed.");
+        if !operator_approved {
+            eprintln!("\n❌ EXTENDED MODE BLOCKED — Pass --operator-approve to acknowledge.");
+            return Err(PreflightError::Other {
+                detail: "Extended preflight mode requires --operator-approve".into(),
+            });
+        }
+        eprintln!("   Operator approval acknowledged. Extra verification will be performed.");
+    }
+
+    // Acquire device locks before probing
+    let mut locks: Vec<device_lock::DeviceLock> = Vec::new();
+    let mut lock_failures: Vec<String> = Vec::new();
+    for device in &profile.devices {
+        match device_lock::DeviceLock::try_acquire(&device.device_id) {
+            Ok(lock) => locks.push(lock),
+            Err(e) => {
+                lock_failures.push(format!("[{}] Lock failed: {}", device.device_id, e));
+            }
+        }
+    }
+    if !lock_failures.is_empty() {
+        for err in &lock_failures {
+            eprintln!("ERROR: {}", err);
+        }
+        return Err(PreflightError::DeviceBusy {
+            device_id: profile.devices.first().map(|d| d.device_id.clone()).unwrap_or_default(),
+            pid: None,
+        });
     }
 
     let mut reports: Vec<DevicePreflightReport> = Vec::new();
@@ -92,7 +124,7 @@ pub fn run_station_preflight(
         all_devices_reachable: reports.iter().all(|r| r.reachability),
         all_identities_verified: reports.iter().all(|r| r.identity_display.is_some()),
         all_safe_states_confirmed: reports.iter().all(|r| r.safe_state.as_ref().map(|s| s.confirmed).unwrap_or(false)),
-        operator_approved: false,
+        operator_approved,
         elapsed_ms: started_at.elapsed().as_millis() as u64,
         devices: reports,
     };

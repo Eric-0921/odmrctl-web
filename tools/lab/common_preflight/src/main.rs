@@ -29,6 +29,10 @@ struct Cli {
     /// Path to station ledger (state persistence across runs)
     #[arg(long)]
     ledger_path: Option<PathBuf>,
+
+    /// Acknowledge extended preflight mode (required when ledger shows unsafe devices)
+    #[arg(long)]
+    operator_approve: bool,
 }
 
 fn main() {
@@ -53,7 +57,7 @@ fn main() {
     }
     println!();
 
-    let report = match run_station_preflight(&profile, cli.ledger_path.as_ref()) {
+    let report = match run_station_preflight(&profile, cli.ledger_path.as_ref(), cli.operator_approve) {
         Ok(r) => r,
         Err(e) => {
             eprintln!("ERROR: Preflight failed: {}", e);
