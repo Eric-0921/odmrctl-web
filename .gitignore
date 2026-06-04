@@ -39,3 +39,4 @@ runs/
 # Screenshot verification artifacts
 screenshots/
 screenshot_verify.py
+out/
