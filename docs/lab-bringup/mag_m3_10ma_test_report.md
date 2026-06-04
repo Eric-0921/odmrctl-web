@@ -80,7 +80,9 @@ measured_recur_field_nt   = measured_recur_current_ma × coil_constant_nt_per_ma
 所有三轴独立通过：
 
 ```
-nonzero_current_sent:          false ✓
+nonzero_current_sent:          true ✓
+exactly_one_nonzero_current_command_per_axis: true  ✓
+nonzero_current_within_limit:  true  ✓
 outp_on_sent:                  true  ✓
 outp_on_only_after_curr_zero:  true  ✓
 measured_current_queries_sent: 每轴 10 次  ✓
