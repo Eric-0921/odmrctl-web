@@ -23,6 +23,7 @@ pub fn run_real(
     let mut total_parsed: u64 = 0;
     let mut total_failed: u64 = 0;
     let mut alignment_entries: Vec<String> = Vec::new(); // JSONL lines
+    let mut index_entries: Vec<String> = Vec::new(); // JSONL lines for replay
     let mut raw_offset: u64 = 0;
     let mut emergency = false;
 
@@ -159,6 +160,15 @@ pub fn run_real(
                             .write_all(frame_data)
                             .map_err(|e| format!("write raw: {}", e))?;
 
+                        index_entries.push(
+                            serde_json::to_string(&serde_json::json!({
+                                "offset_bytes": raw_offset,
+                                "length_bytes": RALL_FRAME_BYTES,
+                                "step_id": step.step_id,
+                            }))
+                            .unwrap_or_default(),
+                        );
+
                         match parse_rall_frame(frame_data) {
                             Ok(parsed) => {
                                 total_parsed += 1;
@@ -288,6 +298,11 @@ pub fn run_real(
         .map_err(|e| format!("create alignment dir: {}", e))?;
     fs::write(&align_path, alignment_entries.join("\n") + "\n")
         .map_err(|e| format!("write alignment: {}", e))?;
+
+    // Write index.jsonl for replay compatibility
+    let index_path = run_dir.run_directory_path().join("index.jsonl");
+    fs::write(&index_path, index_entries.join("\n") + "\n")
+        .map_err(|e| format!("write index: {}", e))?;
 
     // Write command audit
     let audit_path = run_dir.run_directory_path().join("command_audit.jsonl");
