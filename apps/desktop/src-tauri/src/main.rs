@@ -182,10 +182,7 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
     // --- Required: quality_flags.json ---
     let qf_path = analysis_dir.join("quality_flags.json");
     if !qf_path.exists() {
-        return Err(format!(
-            "Required file not found: {}",
-            qf_path.display()
-        ));
+        return Err(format!("Required file not found: {}", qf_path.display()));
     }
     let qf_text =
         fs::read_to_string(&qf_path).map_err(|e| format!("read {}: {}", qf_path.display(), e))?;
@@ -195,10 +192,7 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
     // --- Required: odmr_like_analysis_summary.json ---
     let as_path = analysis_dir.join("odmr_like_analysis_summary.json");
     if !as_path.exists() {
-        return Err(format!(
-            "Required file not found: {}",
-            as_path.display()
-        ));
+        return Err(format!("Required file not found: {}", as_path.display()));
     }
     let as_text =
         fs::read_to_string(&as_path).map_err(|e| format!("read {}: {}", as_path.display(), e))?;
@@ -208,10 +202,7 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
     // --- Required: run_overlay_summary.json ---
     let ro_path = analysis_dir.join("run_overlay_summary.json");
     if !ro_path.exists() {
-        return Err(format!(
-            "Required file not found: {}",
-            ro_path.display()
-        ));
+        return Err(format!("Required file not found: {}", ro_path.display()));
     }
     let ro_text =
         fs::read_to_string(&ro_path).map_err(|e| format!("read {}: {}", ro_path.display(), e))?;
@@ -221,10 +212,7 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
     // --- Required: spectrum_points.jsonl ---
     let sp_path = analysis_dir.join("spectrum_points.jsonl");
     if !sp_path.exists() {
-        return Err(format!(
-            "Required file not found: {}",
-            sp_path.display()
-        ));
+        return Err(format!("Required file not found: {}", sp_path.display()));
     }
     let sp_text =
         fs::read_to_string(&sp_path).map_err(|e| format!("read {}: {}", sp_path.display(), e))?;
@@ -233,9 +221,8 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
         .filter(|l| !l.trim().is_empty())
         .enumerate()
         .map(|(i, line)| {
-            serde_json::from_str::<SpectrumPoint>(line).map_err(|e| {
-                format!("parse {} line {}: {}", sp_path.display(), i + 1, e)
-            })
+            serde_json::from_str::<SpectrumPoint>(line)
+                .map_err(|e| format!("parse {} line {}: {}", sp_path.display(), i + 1, e))
         })
         .collect::<Result<Vec<_>, String>>()?;
 
@@ -248,11 +235,7 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
             match serde_json::from_str::<ExportManifestData>(&em_text) {
                 Ok(m) => Some(m),
                 Err(e) => {
-                    warnings.push(format!(
-                        "Failed to parse {}: {}",
-                        em_path.display(),
-                        e
-                    ));
+                    warnings.push(format!("Failed to parse {}: {}", em_path.display(), e));
                     None
                 }
             }
@@ -274,14 +257,33 @@ fn read_analysis_directory(path: String) -> Result<AnalysisData, String> {
 /// Open a native folder picker and return the selected path.
 /// Returns None if the user cancelled.
 #[tauri::command]
-async fn pick_analysis_directory(
-    app: tauri::AppHandle,
-) -> Result<Option<String>, String> {
+async fn pick_analysis_directory(app: tauri::AppHandle) -> Result<Option<String>, String> {
+    use tauri_plugin_dialog::DialogExt;
+    let path = app.dialog().file().blocking_pick_folder();
+    Ok(path.map(|p| p.to_string()))
+}
+
+// ---------------------------------------------------------------------------
+// M4.1 recipe viewer commands — read-only, no hardware access
+// ---------------------------------------------------------------------------
+
+/// Read a recipe JSON file as raw text.
+#[tauri::command]
+fn read_recipe_file(path: String) -> Result<String, String> {
+    let text = std::fs::read_to_string(&path).map_err(|e| format!("read {}: {}", path, e))?;
+    Ok(text)
+}
+
+/// Open a native file picker for recipe JSON files.
+/// Returns None if the user cancelled.
+#[tauri::command]
+async fn pick_recipe_file(app: tauri::AppHandle) -> Result<Option<String>, String> {
     use tauri_plugin_dialog::DialogExt;
     let path = app
         .dialog()
         .file()
-        .blocking_pick_folder();
+        .add_filter("Recipe JSON", &["json"])
+        .blocking_pick_file();
     Ok(path.map(|p| p.to_string()))
 }
 
@@ -292,7 +294,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             app_metadata,
             read_analysis_directory,
-            pick_analysis_directory
+            pick_analysis_directory,
+            read_recipe_file,
+            pick_recipe_file
         ])
         .setup(|app| {
             let _window = app.get_webview_window("main").unwrap();

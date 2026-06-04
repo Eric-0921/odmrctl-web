@@ -9,6 +9,7 @@ const navItems = [
   { path: "/events", label: "Events" },
   { path: "/raw-data", label: "Raw Data Preview" },
   { path: "/analysis-viewer", label: "Analysis Viewer" },
+  { path: "/recipe-viewer", label: "Recipe Viewer" },
   { path: "/about", label: "About / Boundaries" },
 ];
 
