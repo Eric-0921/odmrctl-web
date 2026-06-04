@@ -1,16 +1,14 @@
-//! odmr-maynuo-m8812 — Identity-only real serial transport for Maynuo M8812.
+//! odmr-maynuo-m8812 — Real serial transport for Maynuo M8812 DC current source.
 //!
-//! This crate is the first real-hardware bridge for the magnetic-axis line.
-//! It is intentionally narrow:
+//! This crate is the real-hardware bridge for the magnetic-axis line.
+//! Capabilities grow with each Mag milestone:
 //!
-//! - enumerate candidate serial ports
-//! - open a port with verified parameters
-//! - send `*IDN?`
-//! - read one response line
-//! - report structured probe errors
+//! Mag-M2A : enumerate ports, open, `*IDN?` query
+//! Mag-M2B : `SYST:REM`, `VOLT 75`, `CURR 0.00000`,
+//!           `OUTP 0|1`, `MEAS:CURR?`, `SYST:LOC`
 //!
-//! It does **not** implement `SYST:REM`, `VOLT`, `CURR`, `OUTP`, `MEAS:CURR?`,
-//! zero-lock, or executor integration.
+//! It does **not** implement nonzero current, zero-lock, executor, or GUI
+//! integration — those remain in odmr-mag or future milestones.
 
 use odmr_device::{Device, DeviceStatus};
 use odmr_types::{DeviceId, DeviceKind};
@@ -20,7 +18,23 @@ use std::fmt;
 use std::io::{self, Write};
 use std::time::Duration;
 
-const MAYNUO_ALLOWED_QUERY: &str = "*IDN?";
+use std::sync::LazyLock;
+
+fn is_m2b_allowed(cmd: &str) -> bool {
+    static ALLOWED: LazyLock<Vec<&str>> = LazyLock::new(|| {
+        vec![
+            "*IDN?",
+            "SYST:REM",
+            "SYST:LOC",
+            "VOLT 75",
+            "CURR 0.00000",
+            "OUTP 0",
+            "OUTP 1",
+            "MEAS:CURR?",
+        ]
+    });
+    ALLOWED.iter().any(|&a| a == cmd.trim())
+}
 
 /// Serial configuration for Maynuo M8812 identity probing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -109,6 +123,7 @@ pub enum MaynuoProbeError {
     Timeout { port_path: String },
     EmptyResponse { port_path: String },
     NonAsciiResponse { port_path: String },
+    ParseFloat { port_path: String, raw: String },
 }
 
 impl fmt::Display for MaynuoProbeError {
@@ -142,6 +157,9 @@ impl fmt::Display for MaynuoProbeError {
             MaynuoProbeError::EmptyResponse { port_path } => write!(f, "empty response on {port_path}"),
             MaynuoProbeError::NonAsciiResponse { port_path } => {
                 write!(f, "response on {port_path} is not valid ASCII")
+            }
+            MaynuoProbeError::ParseFloat { port_path, raw } => {
+                write!(f, "cannot parse float from {port_path}: {raw}")
             }
         }
     }
@@ -204,12 +222,80 @@ impl MaynuoM8812Transport {
         &self.config
     }
 
+    // ---- query methods (write-then-read) ----
+
+    /// Send `*IDN?` and read the identity string.
     pub fn query_idn(&mut self) -> Result<String, MaynuoProbeError> {
-        self.query_line(MAYNUO_ALLOWED_QUERY)
+        self.query_response_line("*IDN?")
     }
 
-    fn query_line(&mut self, command: &str) -> Result<String, MaynuoProbeError> {
-        if command.trim() != MAYNUO_ALLOWED_QUERY {
+    /// Send `MEAS:CURR?` and parse the response as amperes (A).
+    pub fn query_meas_current(&mut self) -> Result<f64, MaynuoProbeError> {
+        let response = self.query_response_line("MEAS:CURR?")?;
+        response.parse::<f64>().map_err(|_| MaynuoProbeError::ParseFloat {
+            port_path: self.port_path.clone(),
+            raw: response,
+        })
+    }
+
+    // ---- set (fire-and-forget) methods ----
+
+    /// Send `SYST:REM` to put the device in remote mode.
+    pub fn send_set_remote(&mut self) -> Result<(), MaynuoProbeError> {
+        self.write_command("SYST:REM")
+    }
+
+    /// Send `VOLT {v}`. Only `VOLT 75` is in the M2B allowlist.
+    pub fn send_set_voltage(&mut self, voltage_v: u16) -> Result<(), MaynuoProbeError> {
+        self.write_command(&format!("VOLT {}", voltage_v))
+    }
+
+    /// Send `CURR {a:.5}`. Only `CURR 0.00000` is in the M2B allowlist.
+    pub fn send_set_current(&mut self, current_a: f64) -> Result<(), MaynuoProbeError> {
+        self.write_command(&format!("CURR {:.5}", current_a))
+    }
+
+    /// Send `OUTP 0` or `OUTP 1`.
+    pub fn send_set_output(&mut self, on: bool) -> Result<(), MaynuoProbeError> {
+        self.write_command(if on { "OUTP 1" } else { "OUTP 0" })
+    }
+
+    /// Send `SYST:LOC` to return the device to local mode.
+    pub fn send_set_local(&mut self) -> Result<(), MaynuoProbeError> {
+        self.write_command("SYST:LOC")
+    }
+
+    // ---- internal command dispatch ----
+
+    /// Write a command without waiting for a response (for set commands).
+    fn write_command(&mut self, command: &str) -> Result<(), MaynuoProbeError> {
+        if !is_m2b_allowed(command) {
+            return Err(MaynuoProbeError::UnsupportedCommand {
+                command: command.into(),
+            });
+        }
+        self.port
+            .clear(ClearBuffer::Input)
+            .map_err(|e| MaynuoProbeError::ClearFailed {
+                port_path: self.port_path.clone(),
+                message: e.to_string(),
+            })?;
+        self.port
+            .write_all(format!("{}\n", command.trim()).as_bytes())
+            .map_err(|e| MaynuoProbeError::WriteFailed {
+                port_path: self.port_path.clone(),
+                message: e.to_string(),
+            })?;
+        self.port.flush().map_err(|e| MaynuoProbeError::FlushFailed {
+            port_path: self.port_path.clone(),
+            message: e.to_string(),
+        })?;
+        Ok(())
+    }
+
+    /// Write a command and read back a response line (for query commands).
+    fn query_response_line(&mut self, command: &str) -> Result<String, MaynuoProbeError> {
+        if !is_m2b_allowed(command) {
             return Err(MaynuoProbeError::UnsupportedCommand {
                 command: command.into(),
             });
@@ -413,7 +499,131 @@ mod tests {
             port: Box::new(port),
             status: DeviceStatus::default(),
         };
-        let err = transport.query_line("CURR 0").unwrap_err();
+        let err = transport.write_command("CURR 0.00001").unwrap_err();
+        assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
+    }
+
+    #[test]
+    fn write_command_sends_syst_rem() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        // SYST:REM is in the allowlist — write_command should succeed.
+        assert!(transport.write_command("SYST:REM").is_ok());
+    }
+
+    #[test]
+    fn write_command_sends_curr_zero() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        assert!(transport.write_command("CURR 0.00000").is_ok());
+    }
+
+    #[test]
+    fn write_command_rejects_nonzero_curr() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let err = transport.write_command("CURR 0.00001").unwrap_err();
+        assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
+    }
+
+    #[test]
+    fn write_command_rejects_outp_2() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let err = transport.write_command("OUTP 2").unwrap_err();
+        assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
+    }
+
+    #[test]
+    fn write_command_sends_outp_on() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        assert!(transport.write_command("OUTP 1").is_ok());
+    }
+
+    #[test]
+    fn query_meas_current_parses_response() {
+        let mut reads = VecDeque::new();
+        for b in b"0.00015\r\n" {
+            reads.push_back(Ok(*b));
+        }
+        let port = FakePort {
+            reads,
+            ..Default::default()
+        };
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let current = transport.query_meas_current().unwrap();
+        assert!((current - 0.00015).abs() < 1e-9);
+    }
+
+    #[test]
+    fn query_meas_current_rejects_non_float() {
+        let mut reads = VecDeque::new();
+        for b in b"garbage\r\n" {
+            reads.push_back(Ok(*b));
+        }
+        let port = FakePort {
+            reads,
+            ..Default::default()
+        };
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let err = transport.query_meas_current().unwrap_err();
+        assert!(matches!(err, MaynuoProbeError::ParseFloat { .. }));
+    }
+
+    #[test]
+    fn write_command_rejects_syst_rem_with_typo() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let err = transport.write_command("SYSTEM:REM").unwrap_err();
         assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
     }
 }
