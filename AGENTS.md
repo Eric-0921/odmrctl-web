@@ -163,6 +163,34 @@ pnpm tauri build      # 发布构建
 4. **Fixture / Golden**：`tests/fixtures/` 与 `tests/golden/` 预留，用于跨 crate 的集成测试数据。
    - 当前 fixture 示例：`tests/fixtures/oe1022d_rall/rall_frame_*.raw` + `rall_capture_index.jsonl`
 
+### Coding Agent 设备连接/测试提示（必读）
+
+> 本条专门针对 AI coding agent，防止以"硬件不可用"为由跳过可完成的软件层工作。
+
+**以下工作不需要真实硬件，用 mock/harness 完成即为标准流程：**
+
+| 工作类型 | 示例 | 测试方式 |
+|----------|------|----------|
+| Recipe parser / validator | `odmr-recipe` 新增 recipe kind | `cargo test -p odmr-recipe`，用 `include_str!` 加载 example JSON |
+| Recipe compiler / expander | `odmr-compiler` 新增展开逻辑 | 纯单元测试，无需任何 transport |
+| Safety 静态检查 | `odmr-safety` 新增检查项 | 纯逻辑判断，无需设备 |
+| GUI 类型/预览适配 | `apps/desktop` 新增 recipe kind 识别 | `pnpm tsc --noEmit` |
+| Schema / example JSON | 新增 `examples/*.json` | 集成测试验证解析+序列化 |
+
+**以下工作才需要真实硬件，且必须有人工操作员在场：**
+
+| 工作类型 | 示例 | 前提条件 |
+|----------|------|----------|
+| Lab bring-up 工具端到端验证 | `rf_mag_oe_minimal_run` 真实跑一次 | 设备上电、操作员在场、实验室安全确认 |
+| Driver 真实 transport 验证 | `odmr-smb100a` LAN socket 通信 | 设备联网、VISA 可用 |
+| 采集链路真实数据验证 | OE1022D `RALL?` 实采 | 设备串口连接、示波器确认 |
+| Preflight 真实设备发现 | `common_preflight` 枚举 station | 设备物理连接 |
+
+**核心原则：**
+- **Mock-first 是设计意图，不是临时 workaround。** `odmr-harness` 中的 `FakeDevice` 实现与真实设备驱动共享同一 `Device` trait，通过 harness 测试即视为有效验证。
+- **Layer 2（domain）和 Layer 3（runtime）的新功能，不应以"硬件 unavailable"为由 block。** 这些层只操作数据结构（`Recipe`、`ResolvedRecipe`、`SafetyReport`），不直接访问硬件。
+- **只有 Layer 1（driver）和 `tools/lab/` 的端到端工具才需要真实硬件。** 且这些工具的测试也先在 `FakeTransport` / `FakeDevice` 上跑通，再预约 lab 时间做真实验证。
+
 ## 代码风格指南
 
 ### Rust

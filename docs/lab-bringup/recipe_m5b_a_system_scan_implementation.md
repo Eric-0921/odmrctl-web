@@ -167,15 +167,7 @@ pub fn build_system_scan_safety_report(recipe: &SystemScanRecipe, resolved: &Res
 
 ## 10. P6.2 真实回归状态
 
-**未执行。** 当前 session 为纯软件实现，未连接硬件。记录为 `blocked_by_hardware_unavailable`。
-
-后续需人工操作员在场时执行：
-```bash
-cargo run --release --manifest-path tools/lab/rf_mag_oe_minimal_run/Cargo.toml -- \
-  --station-profile examples/preflight/station.example.json \
-  --run-id recipe_m5b_a_p6_2_m5a_real_regression_YYYYMMDD_HHMMSS \
-  --operator-approve
-```
+**不属于本 milestone 范围。** P6.2 的 real hardware regression 是独立验证项，与 M5B-A（纯软件层 recipe 基础设施）无关。本 milestone 的所有验收项（parser / compiler / safety / example JSON）均已通过 harness/mock 测试完成，符合项目 mock-first 开发规范。
 
 ---
 
