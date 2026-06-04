@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1.0",
+  "run_id": "mag_m5a_20260604_123201",
+  "passed": true,
+  "rf": {
+    "requested_frequency_hz": 2882000000,
+    "requested_power_dbm": -30.0,
+    "readback_frequency_hz": 2882000000.0,
+    "readback_power_dbm": -30.0,
+    "rf_on_window_start_unix_ms": 1780576328331,
+    "rf_on_window_end_unix_ms": 1780576336762,
+    "rf_final_off": true
+  },
+  "magnetic": {
+    "axis_id": "mag_x",
+    "expected_sn": "080020960220402020",
+    "observed_sn": "080020960220402020",
+    "zero_readback_current_ma": 0.04,
+    "zero_readback_std_ma": 0.0,
+    "commanded_recur_current_ma": 10.0,
+    "measured_recur_current_ma": 10.0,
+    "measured_recur_field_nt": 1432.6,
+    "current_error_ma": 0.0,
+    "mag_final_output_off": true,
+    "mag_final_current_zero": true,
+    "mag_final_local_requested": true
+  },
+  "oe": {
+    "frames_requested": 10,
+    "frames_acquired": 10,
+    "raw_bin_bytes": 122880,
+    "frame_size_bytes": 12288,
+    "parse_failures": 0,
+    "timeout_count": 0
+  },
+  "timeline": {
+    "rf_on_before_oe_capture": true,
+    "mag_hold_before_oe_capture": true,
+    "oe_capture_completed_before_cleanup": true,
+    "cleanup_completed": true
+  },
+  "errors": []
+}

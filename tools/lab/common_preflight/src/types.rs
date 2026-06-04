@@ -39,6 +39,7 @@ pub struct StationPreflightReport {
     pub operator_approved: bool,
     pub elapsed_ms: u64,
     pub devices: Vec<DevicePreflightReport>,
+    pub lock_status: Vec<DeviceLockStatus>,
 }
 
 impl StationPreflightReport {
@@ -60,6 +61,24 @@ pub struct DevicePreflightReport {
     pub error_queue: Vec<String>,
     pub safe_state: Option<SafeState>,
     pub warnings: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub commands_sent: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub laser_on_sent: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nonzero_power_sent: Option<bool>,
+}
+
+/// Device lock acquisition status for a single device.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DeviceLockStatus {
+    pub device_id: String,
+    pub acquired: bool,
+    pub lock_file: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pid: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<String>,
 }
 
 /// Safe state snapshot for a device.

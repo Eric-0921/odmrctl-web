@@ -81,6 +81,9 @@ pub struct Cli {
     pub station_profile: Option<PathBuf>,
 
     #[arg(long)]
+    pub ledger_path: Option<PathBuf>,
+
+    #[arg(long)]
     pub preflight_only: bool,
 
     // ---- Dry-run ----

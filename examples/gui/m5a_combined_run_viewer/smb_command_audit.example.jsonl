@@ -1,0 +1,11 @@
+{"seq":0,"timestamp_unix_ms":1780576321444,"device_id":"smb100a","command":"*IDN?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"Rohde&Schwarz,SMB100A,1406.6000k02/101623,3.1.19.15-3.20.390.24","safety_relevant":false}
+{"seq":1,"timestamp_unix_ms":1780576321511,"device_id":"smb100a","command":"OUTP?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"0","safety_relevant":true}
+{"seq":2,"timestamp_unix_ms":1780576321572,"device_id":"smb100a","command":"MOD:STAT?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"0","safety_relevant":true}
+{"seq":3,"timestamp_unix_ms":1780576321638,"device_id":"smb100a","command":"SYST:ERR?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"0,\"No error\"","safety_relevant":true}
+{"seq":4,"timestamp_unix_ms":1780576321705,"device_id":"smb100a","command":"FREQ?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"2882000000","safety_relevant":false}
+{"seq":5,"timestamp_unix_ms":1780576321772,"device_id":"smb100a","command":"POW?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"-30.0","safety_relevant":false}
+{"seq":6,"timestamp_unix_ms":1780576328331,"device_id":"smb100a","command":"FREQ 2882000000Hz","command_class":"set_frequency","allowed":true,"sent_to_transport":true,"safety_relevant":false}
+{"seq":7,"timestamp_unix_ms":1780576328331,"device_id":"smb100a","command":"POW -30.0dBm","command_class":"set_power","allowed":true,"sent_to_transport":true,"safety_relevant":true}
+{"seq":8,"timestamp_unix_ms":1780576328331,"device_id":"smb100a","command":"OUTP ON","command_class":"set_output","allowed":true,"sent_to_transport":true,"safety_relevant":true}
+{"seq":9,"timestamp_unix_ms":1780576336762,"device_id":"smb100a","command":"OUTP OFF","command_class":"set_output","allowed":true,"sent_to_transport":true,"safety_relevant":true}
+{"seq":10,"timestamp_unix_ms":1780576336762,"device_id":"smb100a","command":"OUTP?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"0","safety_relevant":true}

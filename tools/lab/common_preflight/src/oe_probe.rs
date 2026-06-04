@@ -87,6 +87,9 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         } else {
             vec![]
         },
+        commands_sent: None,
+        laser_on_sent: None,
+        nonzero_power_sent: None,
     })
 }
 

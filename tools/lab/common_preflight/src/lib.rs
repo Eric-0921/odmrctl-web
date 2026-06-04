@@ -75,19 +75,52 @@ pub fn run_station_preflight(
 
     // Acquire device locks before probing
     let mut locks: Vec<device_lock::DeviceLock> = Vec::new();
-    let mut lock_failures: Vec<String> = Vec::new();
+    let mut lock_status: Vec<types::DeviceLockStatus> = Vec::new();
+    let mut any_lock_failed = false;
     for device in &profile.devices {
+        let lock_file = device_lock::lock_file_path(&device.device_id);
         match device_lock::DeviceLock::try_acquire(&device.device_id) {
-            Ok(lock) => locks.push(lock),
+            Ok(lock) => {
+                lock_status.push(types::DeviceLockStatus {
+                    device_id: device.device_id.clone(),
+                    acquired: true,
+                    lock_file: lock_file.display().to_string(),
+                    pid: None,
+                    error: None,
+                });
+                locks.push(lock);
+            }
             Err(e) => {
-                lock_failures.push(format!("[{}] Lock failed: {}", device.device_id, e));
+                any_lock_failed = true;
+                let err_str = format!("{}", e);
+                let pid = match &e {
+                    device_lock::LockError::AlreadyLocked { pid, .. } => *pid,
+                    _ => None,
+                };
+                lock_status.push(types::DeviceLockStatus {
+                    device_id: device.device_id.clone(),
+                    acquired: false,
+                    lock_file: lock_file.display().to_string(),
+                    pid,
+                    error: Some(err_str),
+                });
+                eprintln!("ERROR: [{}] Lock failed: {}", device.device_id, e);
             }
         }
     }
-    if !lock_failures.is_empty() {
-        for err in &lock_failures {
-            eprintln!("ERROR: {}", err);
-        }
+    if any_lock_failed {
+        let _report = StationPreflightReport {
+            schema_version: "0.1.0".to_string(),
+            generated_at: chrono::Utc::now().to_rfc3339(),
+            station_profile: profile.name.clone(),
+            all_devices_reachable: false,
+            all_identities_verified: false,
+            all_safe_states_confirmed: false,
+            operator_approved,
+            elapsed_ms: started_at.elapsed().as_millis() as u64,
+            devices: vec![],
+            lock_status,
+        };
         return Err(PreflightError::DeviceBusy {
             device_id: profile.devices.first().map(|d| d.device_id.clone()).unwrap_or_default(),
             pid: None,
@@ -111,6 +144,9 @@ pub fn run_station_preflight(
                     error_queue: vec![format!("{}", e)],
                     safe_state: None,
                     warnings: vec![format!("Probe failed: {}", e)],
+                    commands_sent: None,
+                    laser_on_sent: None,
+                    nonzero_power_sent: None,
                 }
             }
         };
@@ -127,6 +163,7 @@ pub fn run_station_preflight(
         operator_approved,
         elapsed_ms: started_at.elapsed().as_millis() as u64,
         devices: reports,
+        lock_status,
     };
 
     // Update ledger based on results

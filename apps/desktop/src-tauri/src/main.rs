@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use tauri::Manager;
 
 /// Returns static application metadata.
 #[tauri::command]
@@ -287,6 +288,284 @@ async fn pick_recipe_file(app: tauri::AppHandle) -> Result<Option<String>, Strin
     Ok(path.map(|p| p.to_string()))
 }
 
+// ---------------------------------------------------------------------------
+// M5A combined run data types — must match frontend types/m5aRun.ts exactly
+// ---------------------------------------------------------------------------
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct SafeStateData {
+    confirmed: bool,
+    rf_output: Option<String>,
+    modulation: Option<String>,
+    fm: Option<String>,
+    magnetic_output: Option<String>,
+    magnetic_current_ma: Option<f64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct DevicePreflightReportData {
+    device_id: String,
+    kind: String,
+    reachability: bool,
+    identity_raw: Option<String>,
+    identity_display: Option<String>,
+    error_queue: Vec<String>,
+    safe_state: Option<SafeStateData>,
+    warnings: Vec<String>,
+    commands_sent: Option<Vec<String>>,
+    laser_on_sent: Option<bool>,
+    nonzero_power_sent: Option<bool>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct DeviceLockStatusData {
+    device_id: String,
+    acquired: bool,
+    lock_file: String,
+    pid: Option<u32>,
+    error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct StationPreflightReportData {
+    schema_version: String,
+    generated_at: String,
+    station_profile: String,
+    all_devices_reachable: bool,
+    all_identities_verified: bool,
+    all_safe_states_confirmed: bool,
+    operator_approved: bool,
+    elapsed_ms: u64,
+    devices: Vec<DevicePreflightReportData>,
+    lock_status: Vec<DeviceLockStatusData>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct RfReportSectionData {
+    requested_frequency_hz: u64,
+    requested_power_dbm: f64,
+    readback_frequency_hz: Option<f64>,
+    readback_power_dbm: Option<f64>,
+    rf_on_window_start_unix_ms: Option<u64>,
+    rf_on_window_end_unix_ms: Option<u64>,
+    rf_final_off: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct MagReportSectionData {
+    axis_id: String,
+    expected_sn: String,
+    observed_sn: String,
+    zero_readback_current_ma: f64,
+    zero_readback_std_ma: f64,
+    commanded_recur_current_ma: f64,
+    measured_recur_current_ma: f64,
+    measured_recur_field_nt: f64,
+    current_error_ma: f64,
+    mag_final_output_off: bool,
+    mag_final_current_zero: bool,
+    mag_final_local_requested: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct OeReportSectionData {
+    frames_requested: u64,
+    frames_acquired: u64,
+    raw_bin_bytes: u64,
+    frame_size_bytes: u64,
+    parse_failures: u64,
+    timeout_count: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct TimelineReportSectionData {
+    rf_on_before_oe_capture: bool,
+    mag_hold_before_oe_capture: bool,
+    oe_capture_completed_before_cleanup: bool,
+    cleanup_completed: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct CombinedRunReportData {
+    schema_version: String,
+    run_id: String,
+    passed: bool,
+    rf: RfReportSectionData,
+    magnetic: MagReportSectionData,
+    oe: OeReportSectionData,
+    timeline: TimelineReportSectionData,
+    errors: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct CombinedRunEventData {
+    event_type: String,
+    timestamp_unix_ms: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    device_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    detail: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct CommandAuditEntryData {
+    seq: u64,
+    timestamp_unix_ms: u64,
+    device_id: String,
+    command: String,
+    command_class: String,
+    allowed: bool,
+    sent_to_transport: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    rejection_reason: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    response_preview: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    transport_error: Option<String>,
+    safety_relevant: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct FrameIndexEntryData {
+    frame_index: u64,
+    length: u64,
+    offset: u64,
+    timestamp_unix_ms: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct FrameSummaryEntryData {
+    elapsed_ms: u64,
+    frame_index: u64,
+    size_bytes: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct M5aRunData {
+    preflight: Option<StationPreflightReportData>,
+    combined_run_report: Option<CombinedRunReportData>,
+    events: Vec<CombinedRunEventData>,
+    smb_audit: Vec<CommandAuditEntryData>,
+    maynuo_audit: Vec<CommandAuditEntryData>,
+    oe_audit: Vec<CommandAuditEntryData>,
+    frame_index: Vec<FrameIndexEntryData>,
+    frame_summary: Vec<FrameSummaryEntryData>,
+    warnings: Vec<String>,
+}
+
+// ---------------------------------------------------------------------------
+// M5A Tauri commands — read-only, no hardware access
+// ---------------------------------------------------------------------------
+
+/// Read all M5A combined run artifacts from a directory.
+///
+/// Looks for:
+/// - preflight/station_preflight_report.json
+/// - combined_run_report.json
+/// - combined_events.jsonl
+/// - smb_command_audit.jsonl
+/// - maynuo_command_audit.jsonl
+/// - oe_command_audit.jsonl
+/// - frame_index.jsonl
+/// - frame_summary.jsonl
+///
+/// Returns structured M5aRunData with all parsed artifacts.
+/// Never writes to disk. Never touches hardware.
+#[tauri::command]
+fn read_m5a_run_directory(path: String) -> Result<M5aRunData, String> {
+    let base = Path::new(&path);
+    let mut warnings: Vec<String> = Vec::new();
+
+    // --- Optional: preflight/station_preflight_report.json ---
+    let preflight: Option<StationPreflightReportData> = {
+        let p = base.join("preflight").join("station_preflight_report.json");
+        if p.exists() {
+            let text = fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
+            match serde_json::from_str(&text) {
+                Ok(v) => Some(v),
+                Err(e) => {
+                    warnings.push(format!("parse {}: {}", p.display(), e));
+                    None
+                }
+            }
+        } else {
+            None
+        }
+    };
+
+    // --- Optional: combined_run_report.json ---
+    let combined_run_report: Option<CombinedRunReportData> = {
+        let p = base.join("combined_run_report.json");
+        if p.exists() {
+            let text = fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
+            match serde_json::from_str(&text) {
+                Ok(v) => Some(v),
+                Err(e) => {
+                    warnings.push(format!("parse {}: {}", p.display(), e));
+                    None
+                }
+            }
+        } else {
+            None
+        }
+    };
+
+    // --- Helper: read JSONL ---
+    fn read_jsonl<T: serde::de::DeserializeOwned>(path: &Path, warnings: &mut Vec<String>) -> Vec<T> {
+        if !path.exists() {
+            return Vec::new();
+        }
+        let text = match fs::read_to_string(path) {
+            Ok(t) => t,
+            Err(e) => {
+                warnings.push(format!("read {}: {}", path.display(), e));
+                return Vec::new();
+            }
+        };
+        text.lines()
+            .filter(|l| !l.trim().is_empty())
+            .enumerate()
+            .filter_map(|(i, line)| {
+                match serde_json::from_str::<T>(line) {
+                    Ok(v) => Some(v),
+                    Err(e) => {
+                        warnings.push(format!("parse {} line {}: {}", path.display(), i + 1, e));
+                        None
+                    }
+                }
+            })
+            .collect()
+    }
+
+    let events = read_jsonl(&base.join("combined_events.jsonl"), &mut warnings);
+    let smb_audit = read_jsonl(&base.join("smb_command_audit.jsonl"), &mut warnings);
+    let maynuo_audit = read_jsonl(&base.join("maynuo_command_audit.jsonl"), &mut warnings);
+    let oe_audit = read_jsonl(&base.join("oe_command_audit.jsonl"), &mut warnings);
+    let frame_index = read_jsonl(&base.join("frame_index.jsonl"), &mut warnings);
+    let frame_summary = read_jsonl(&base.join("frame_summary.jsonl"), &mut warnings);
+
+    Ok(M5aRunData {
+        preflight,
+        combined_run_report,
+        events,
+        smb_audit,
+        maynuo_audit,
+        oe_audit,
+        frame_index,
+        frame_summary,
+        warnings,
+    })
+}
+
+/// Open a native folder picker for M5A run directories.
+/// Returns None if the user cancelled.
+#[tauri::command]
+async fn pick_m5a_run_directory(app: tauri::AppHandle) -> Result<Option<String>, String> {
+    use tauri_plugin_dialog::DialogExt;
+    let path = app.dialog().file().blocking_pick_folder();
+    Ok(path.map(|p| p.to_string()))
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
@@ -296,7 +575,9 @@ fn main() {
             read_analysis_directory,
             pick_analysis_directory,
             read_recipe_file,
-            pick_recipe_file
+            pick_recipe_file,
+            read_m5a_run_directory,
+            pick_m5a_run_directory
         ])
         .setup(|app| {
             let _window = app.get_webview_window("main").unwrap();

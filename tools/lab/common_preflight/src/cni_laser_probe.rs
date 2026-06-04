@@ -1,12 +1,19 @@
 //! CNI Laser off-only preflight probe (M2).
 //!
-//! **SAFETY**: The preflight probe() itself ONLY sends `laser_off` frames.
+//! **SAFETY**: The preflight `probe()` itself ONLY sends `laser_off` frames.
 //! It NEVER sends `laser_on` or `set_power` with non-zero power.
 //!
 //! **DISCOVERY NOTE**: Auto-discovery (`address: "auto"`) sends two different
 //! frames (`laser_off` and `set_power(0)`) to verify the binary frame echo
 //! behaviour. Both frames keep the laser OFF (`set_power(0)` sets target to 0).
 //! No emission-capable command is ever sent during preflight.
+//!
+//! Artifact fields (on `DevicePreflightReport`):
+//! - `commands_sent`: `["laser_off"]` for explicit path; discovery sends
+//!   `["laser_off", "set_power(0)"]` internally but only `laser_off` is
+//!   reported as the probe command.
+//! - `laser_on_sent`: `false`
+//! - `nonzero_power_sent`: `false`
 //!
 //! Protocol: binary frame over serial, 9600 8N1.
 //! See `docs/equipment_manual/CNI Laser psu-sr/RS232语言协议_恒功率.md`
@@ -96,6 +103,16 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         magnetic_current_ma: None,
     };
 
+    let mut warnings = Vec::new();
+    if explicit.as_ref() != Some(&port_path) {
+        warnings.push(format!(
+            "Auto-discovered on {} (explicit port was unavailable)",
+            port_path
+        ));
+    } else {
+        warnings.push("No response from laser (expected for this protocol)".into());
+    }
+
     Ok(DevicePreflightReport {
         device_id: device.device_id.clone(),
         kind: device.kind.clone(),
@@ -104,14 +121,10 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         identity_display: Some(identity_display),
         error_queue: vec![],
         safe_state: Some(safe_state),
-        warnings: if explicit.as_ref() != Some(&port_path) {
-            vec![format!(
-                "Auto-discovered on {} (explicit port was unavailable)",
-                port_path
-            )]
-        } else {
-            vec!["No response from laser (expected for this protocol)".into()]
-        },
+        warnings,
+        commands_sent: Some(vec!["laser_off".into()]),
+        laser_on_sent: Some(false),
+        nonzero_power_sent: Some(false),
     })
 }
 

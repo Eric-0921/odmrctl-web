@@ -117,21 +117,25 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         error_queue: vec![],
         safe_state: Some(safe_state),
         warnings,
+        commands_sent: None,
+        laser_on_sent: None,
+        nonzero_power_sent: None,
     })
 }
 
 /// Strict SN matching: parse MAYNUO IDN and compare exact SN field.
 ///
 /// IDN format: `MAYNUO,M8812,<SN>,<FW_VERSION>`
+/// Malformed IDN (wrong field count or wrong manufacturer/model) is rejected.
 fn sn_matches(idn: &str, expected_sn: &str) -> bool {
     let parts: Vec<&str> = idn.split(',').collect();
-    if parts.len() >= 3 {
-        let actual_sn = parts[2].trim();
-        actual_sn == expected_sn
-    } else {
-        // Fallback to substring if parse fails
-        idn.contains(expected_sn)
+    if parts.len() < 4 {
+        return false;
     }
+    let manufacturer = parts[0].trim();
+    let model = parts[1].trim();
+    let actual_sn = parts[2].trim();
+    manufacturer.eq_ignore_ascii_case("MAYNUO") && model == "M8812" && actual_sn == expected_sn
 }
 
 fn probe_port_idn(port_path: &str, timeout_ms: u64) -> Result<String, String> {
@@ -211,8 +215,21 @@ mod tests {
     }
 
     #[test]
-    fn test_sn_matches_fallback() {
+    fn test_sn_matches_rejects_malformed() {
+        // Wrong field count
+        let idn = "MAYNUO,M8812,080020960220402020";
+        assert!(!sn_matches(idn, "080020960220402020"));
+
+        // Wrong manufacturer
+        let idn = "KEITHLEY,M8812,080020960220402020,V2.7";
+        assert!(!sn_matches(idn, "080020960220402020"));
+
+        // Wrong model
+        let idn = "MAYNUO,M8813,080020960220402020,V2.7";
+        assert!(!sn_matches(idn, "080020960220402020"));
+
+        // Substring match in unstructured text must NOT succeed
         let idn = "MAYNUO M8812 SN=080020960220402020";
-        assert!(sn_matches(idn, "080020960220402020"));
+        assert!(!sn_matches(idn, "080020960220402020"));
     }
 }

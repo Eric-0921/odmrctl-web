@@ -27,7 +27,11 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         ).map_err(|e| format!("load station profile: {e}"))?;
 
         println!("=== Station Preflight ===");
-        let preflight_report = common_preflight::run_station_preflight(&station_profile, None, true)
+        let preflight_report = common_preflight::run_station_preflight(
+                &station_profile,
+                cli.ledger_path.as_ref(),
+                cli.operator_approve,
+            )
             .map_err(|e| format!("station preflight failed: {e}"))?;
 
         println!(
@@ -770,6 +774,7 @@ fn make_default_cli() -> Cli {
         operator_approve: false,
         operator_note: None,
         station_profile: None,
+        ledger_path: None,
         preflight_only: false,
         dry_run: false,
     }

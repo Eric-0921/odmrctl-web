@@ -8,8 +8,12 @@ use std::path::PathBuf;
 /// Works on macOS, Linux, and Windows.
 pub struct DeviceLock {
     _file: File,
-    #[allow(dead_code)]
     device_id: String,
+}
+
+impl DeviceLock {
+    pub fn device_id(&self) -> &str { &self.device_id }
+    pub fn lock_file(&self) -> PathBuf { lock_file_path(&self.device_id) }
 }
 
 #[derive(Debug, Clone)]
@@ -90,7 +94,7 @@ impl Drop for DeviceLock {
     }
 }
 
-fn lock_file_path(device_id: &str) -> PathBuf {
+pub fn lock_file_path(device_id: &str) -> PathBuf {
     let sanitized: String = device_id
         .chars()
         .map(|c| if c.is_alphanumeric() || c == '-' || c == '_' { c } else { '_' })
