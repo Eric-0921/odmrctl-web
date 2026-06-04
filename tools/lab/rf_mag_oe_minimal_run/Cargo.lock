@@ -171,19 +171,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "common_preflight"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "clap",
- "cni_laser_fake_driver",
- "fs2",
- "serde",
- "serde_json",
- "serialport",
-]
-
-[[package]]
 name = "core-foundation"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -498,6 +485,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "odmr-preflight"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "cni_laser_fake_driver",
+ "fs2",
+ "odmr-types",
+ "serde",
+ "serde_json",
+ "serialport",
+]
+
+[[package]]
 name = "odmr-types"
 version = "0.1.0"
 
@@ -564,11 +564,12 @@ name = "rf-mag-oe-minimal-run"
 version = "0.1.0"
 dependencies = [
  "clap",
- "common_preflight",
+ "libc",
  "odmr-logging",
  "odmr-mag",
  "odmr-maynuo-m8812",
  "odmr-oe1022d",
+ "odmr-preflight",
  "odmr-types",
  "serde",
  "serde_json",

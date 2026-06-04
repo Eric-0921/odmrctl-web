@@ -12,8 +12,12 @@ pub struct DeviceLock {
 }
 
 impl DeviceLock {
-    pub fn device_id(&self) -> &str { &self.device_id }
-    pub fn lock_file(&self) -> PathBuf { lock_file_path(&self.device_id) }
+    pub fn device_id(&self) -> &str {
+        &self.device_id
+    }
+    pub fn lock_file(&self) -> PathBuf {
+        lock_file_path(&self.device_id)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -97,7 +101,13 @@ impl Drop for DeviceLock {
 pub fn lock_file_path(device_id: &str) -> PathBuf {
     let sanitized: String = device_id
         .chars()
-        .map(|c| if c.is_alphanumeric() || c == '-' || c == '_' { c } else { '_' })
+        .map(|c| {
+            if c.is_alphanumeric() || c == '-' || c == '_' {
+                c
+            } else {
+                '_'
+            }
+        })
         .collect();
     std::env::temp_dir().join(format!("odmr_lock_{}.lock", sanitized))
 }

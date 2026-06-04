@@ -15,18 +15,22 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
     let expected_sn = device.expected_sn.as_deref();
 
     // 1. Enumerate serial ports and probe IDN
-    let ports = serialport::available_ports().map_err(|e| {
-        PreflightError::PhysicalUnreachable {
-            device_id: device.device_id.clone(),
-            detail: format!("enumerate serial ports: {}", e),
-        }
+    let ports = serialport::available_ports().map_err(|e| PreflightError::PhysicalUnreachable {
+        device_id: device.device_id.clone(),
+        detail: format!("enumerate serial ports: {}", e),
     })?;
 
     // Filter: only probe USB serial ports, skip Bluetooth/audio
-    let usb_ports: Vec<_> = ports.iter().filter(|p| {
-        let name = p.port_name.to_lowercase();
-        name.contains("usb") || name.contains("pl2303") || name.contains("ftdi") || name.contains("cp210")
-    }).collect();
+    let usb_ports: Vec<_> = ports
+        .iter()
+        .filter(|p| {
+            let name = p.port_name.to_lowercase();
+            name.contains("usb")
+                || name.contains("pl2303")
+                || name.contains("ftdi")
+                || name.contains("cp210")
+        })
+        .collect();
 
     let mut matched_port: Option<String> = None;
     let mut identity: Option<String> = None;
@@ -105,7 +109,10 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         warnings.push("Maynuo output is ON — unsafe".into());
     }
     if current_ma.map(|c| c.abs() >= 1.0).unwrap_or(false) {
-        warnings.push(format!("Maynuo current {:.3} mA exceeds 1.0 mA tolerance", current_ma.unwrap()));
+        warnings.push(format!(
+            "Maynuo current {:.3} mA exceeds 1.0 mA tolerance",
+            current_ma.unwrap()
+        ));
     }
 
     Ok(DevicePreflightReport {
@@ -149,7 +156,11 @@ fn probe_port_idn(port_path: &str, timeout_ms: u64) -> Result<String, String> {
     scpi_query(&mut port, "*IDN?", timeout_ms)
 }
 
-fn scpi_query(port: &mut Box<dyn serialport::SerialPort>, cmd: &str, _timeout_ms: u64) -> Result<String, String> {
+fn scpi_query(
+    port: &mut Box<dyn serialport::SerialPort>,
+    cmd: &str,
+    _timeout_ms: u64,
+) -> Result<String, String> {
     let cmd_bytes = format!("{}\r", cmd);
     port.write_all(cmd_bytes.as_bytes())
         .map_err(|e| format!("write '{}': {}", cmd, e))?;
@@ -173,7 +184,11 @@ fn scpi_query(port: &mut Box<dyn serialport::SerialPort>, cmd: &str, _timeout_ms
     Ok(resp)
 }
 
-fn scpi_set(port: &mut Box<dyn serialport::SerialPort>, cmd: &str, _timeout_ms: u64) -> Result<(), String> {
+fn scpi_set(
+    port: &mut Box<dyn serialport::SerialPort>,
+    cmd: &str,
+    _timeout_ms: u64,
+) -> Result<(), String> {
     let cmd_bytes = format!("{}\r", cmd);
     port.write_all(cmd_bytes.as_bytes())
         .map_err(|e| format!("write '{}': {}", cmd, e))?;
@@ -196,7 +211,10 @@ pub fn safe_zero_and_local(port: &mut Box<dyn serialport::SerialPort>) -> Result
     let current_ma = current_a * 1000.0;
 
     if current_ma.abs() >= 1.0 {
-        return Err(format!("current {} mA exceeds 1.0 mA tolerance", current_ma));
+        return Err(format!(
+            "current {} mA exceeds 1.0 mA tolerance",
+            current_ma
+        ));
     }
 
     scpi_set(port, "SYST:LOC", 5000)?;

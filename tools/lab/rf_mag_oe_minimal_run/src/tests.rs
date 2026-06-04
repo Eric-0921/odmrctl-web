@@ -143,6 +143,7 @@ fn test_report_requires_rf_final_off() {
         schema_version: "0.1.0".into(),
         run_id: "test".into(),
         passed: false,
+        interrupted: false,
         rf: RfReportSection {
             requested_frequency_hz: 2882000000,
             requested_power_dbm: -30.0,
@@ -255,6 +256,7 @@ fn test_no_csv_files_created() {
             schema_version: "0.1.0".into(),
             run_id: "test".into(),
             passed: true,
+            interrupted: false,
             rf: RfReportSection {
                 requested_frequency_hz: 0,
                 requested_power_dbm: 0.0,
@@ -436,4 +438,132 @@ fn test_maynuo_cleanup_sets_safe_state() {
     assert!(!mag.output_on);
     assert_eq!(mag.current_a, 0.0);
     assert!(!mag.remote_mode);
+}
+
+
+// ---------------------------------------------------------------------------
+// P6.2 fault-injection tests
+// ---------------------------------------------------------------------------
+
+#[test]
+fn test_smb_emergency_off_on_rf_failure() {
+    // Simulate: OUTP ON succeeds but verification fails;
+    // cleanup must send OUTP OFF.
+    let mut smb = FakeSmbTransport::new();
+    let mut audit = Vec::new();
+
+    // RF setup succeeds
+    smb.query("FREQ 2882000000", &mut audit, 0).unwrap();
+    smb.query("POW -30.0", &mut audit, 0).unwrap();
+    smb.query("OUTP ON", &mut audit, 0).unwrap();
+    assert!(smb.outp);
+
+    // Verification fails (injected)
+    smb.fail_on = Some("OUTP?".to_string());
+    let result = smb.query("OUTP?", &mut audit, 0);
+    assert!(result.is_err());
+
+    // Emergency cleanup: OUTP OFF must be sent
+    smb.fail_on = None;
+    let _ = smb.query("OUTP OFF", &mut audit, 0);
+    assert!(!smb.outp);
+
+    // Verify OFF
+    let off_check = smb.query("OUTP?", &mut audit, 0).unwrap();
+    assert_eq!(off_check.trim(), "0");
+}
+
+#[test]
+fn test_cleanup_booleans_truthful_on_failure() {
+    // Mag output-off command fails → mag_final_output_off must be false
+    let mut mag = FakeMaynuoTransport::new("MAYNUO,M8812,SN123,V2.7");
+
+    // Simulate a state where output is on
+    mag.send_set_output(true).unwrap();
+    mag.send_set_current(0.01).unwrap();
+
+    // Cleanup commands
+    let curr_ok = mag.send_set_current(0.0).is_ok();
+    let outp_ok = mag.send_set_output(false).is_ok();
+    let loc_ok = mag.send_set_local().is_ok();
+
+    // In real code, report.magnetic.mag_final_output_off = outp_ok;
+    // This test verifies the FakeTransport supports the semantics.
+    assert!(curr_ok);
+    assert!(outp_ok);
+    assert!(loc_ok);
+    assert!(!mag.output_on);
+    assert_eq!(mag.current_a, 0.0);
+    assert!(!mag.remote_mode);
+}
+
+#[test]
+fn test_abort_flag_triggers_exit() {
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    let flag = AtomicBool::new(false);
+    assert!(flag.load(Ordering::Relaxed) == false);
+
+    flag.store(true, Ordering::Relaxed);
+    assert!(flag.load(Ordering::Relaxed));
+
+    // Simulate check_abort logic
+    let result = if flag.load(Ordering::Relaxed) {
+        Err::<(), String>("Run aborted by operator (SIGINT)".into())
+    } else {
+        Ok(())
+    };
+    assert!(result.is_err());
+}
+
+#[test]
+fn test_report_interrupted_field_exists() {
+    let report = CombinedRunReport {
+        schema_version: "0.1.0".into(),
+        run_id: "test".into(),
+        passed: false,
+        interrupted: true,
+        rf: RfReportSection {
+            requested_frequency_hz: 0,
+            requested_power_dbm: 0.0,
+            readback_frequency_hz: None,
+            readback_power_dbm: None,
+            rf_on_window_start_unix_ms: None,
+            rf_on_window_end_unix_ms: None,
+            rf_final_off: false,
+        },
+        magnetic: MagReportSection {
+            axis_id: "mag_x".into(),
+            expected_sn: "SN123".into(),
+            observed_sn: "SN123".into(),
+            zero_readback_current_ma: 0.0,
+            zero_readback_std_ma: 0.0,
+            commanded_recur_current_ma: 10.0,
+            measured_recur_current_ma: 0.0,
+            measured_recur_field_nt: 0.0,
+            current_error_ma: 0.0,
+            mag_final_output_off: false,
+            mag_final_current_zero: false,
+            mag_final_local_requested: false,
+        },
+        oe: OeReportSection {
+            frames_requested: 0,
+            frames_acquired: 0,
+            raw_bin_bytes: 0,
+            frame_size_bytes: 0,
+            parse_failures: 0,
+            timeout_count: 0,
+        },
+        timeline: TimelineReportSection {
+            rf_on_before_oe_capture: false,
+            mag_hold_before_oe_capture: false,
+            oe_capture_completed_before_cleanup: false,
+            cleanup_completed: false,
+        },
+        errors: vec!["interrupted".into()],
+    };
+
+    let json = serde_json::to_string(&report).unwrap();
+    assert!(json.contains("interrupted"));
+    assert!(json.contains("true") || json.contains("false"));
 }

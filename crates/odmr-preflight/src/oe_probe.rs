@@ -101,7 +101,10 @@ fn auto_discover_oe(_timeout_ms: u64) -> Option<(String, String)> {
         .iter()
         .filter(|p| {
             let name = p.port_name.to_lowercase();
-            name.contains("usb") || name.contains("pl2303") || name.contains("ftdi") || name.contains("cp210")
+            name.contains("usb")
+                || name.contains("pl2303")
+                || name.contains("ftdi")
+                || name.contains("cp210")
         })
         .collect();
 

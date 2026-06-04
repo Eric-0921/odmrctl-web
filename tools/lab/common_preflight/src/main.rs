@@ -8,7 +8,7 @@
 //! laser emission.
 
 use clap::Parser;
-use common_preflight::{run_station_preflight, StationProfile};
+use odmr_preflight::{run_station_preflight, StationProfile};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -69,14 +69,14 @@ fn main() {
     std::fs::create_dir_all(&cli.out_dir).unwrap_or_default();
 
     let json_path = cli.out_dir.join("station_preflight_report.json");
-    if let Err(e) = common_preflight::station_report::write_json(&report, &json_path) {
+    if let Err(e) = odmr_preflight::station_report::write_json(&report, &json_path) {
         eprintln!("Warning: failed to write JSON report: {}", e);
     } else {
         println!("JSON report: {}", json_path.display());
     }
 
     let md_path = cli.out_dir.join("station_preflight_report.md");
-    if let Err(e) = common_preflight::station_report::write_markdown(&report, &md_path) {
+    if let Err(e) = odmr_preflight::station_report::write_markdown(&report, &md_path) {
         eprintln!("Warning: failed to write Markdown report: {}", e);
     } else {
         println!("Markdown report: {}", md_path.display());

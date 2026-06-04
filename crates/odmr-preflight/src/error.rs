@@ -5,10 +5,7 @@ pub type PreflightResult<T> = Result<T, PreflightError>;
 #[derive(Debug, Clone, PartialEq)]
 pub enum PreflightError {
     /// Physical layer unreachable (ping failed, serial port not found)
-    PhysicalUnreachable {
-        device_id: String,
-        detail: String,
-    },
+    PhysicalUnreachable { device_id: String, detail: String },
     /// Transport opened but identity mismatch or no response
     IdentityMismatch {
         device_id: String,
@@ -27,24 +24,13 @@ pub enum PreflightError {
         observed: String,
     },
     /// Device is locked by another process
-    DeviceBusy {
-        device_id: String,
-        pid: Option<u32>,
-    },
+    DeviceBusy { device_id: String, pid: Option<u32> },
     /// Unsupported device kind in profile
-    UnsupportedDeviceKind {
-        kind: String,
-    },
+    UnsupportedDeviceKind { kind: String },
     /// Serial port I/O error
-    SerialError {
-        device_id: String,
-        detail: String,
-    },
+    SerialError { device_id: String, detail: String },
     /// TCP socket I/O error
-    TcpError {
-        device_id: String,
-        detail: String,
-    },
+    TcpError { device_id: String, detail: String },
     /// Timeout waiting for device response
     Timeout {
         device_id: String,
@@ -52,9 +38,7 @@ pub enum PreflightError {
         timeout_ms: u64,
     },
     /// Generic catch-all
-    Other {
-        detail: String,
-    },
+    Other { detail: String },
 }
 
 impl fmt::Display for PreflightError {
@@ -63,14 +47,30 @@ impl fmt::Display for PreflightError {
             PreflightError::PhysicalUnreachable { device_id, detail } => {
                 write!(f, "[{}] Physical unreachable: {}", device_id, detail)
             }
-            PreflightError::IdentityMismatch { device_id, expected, observed } => {
-                write!(f, "[{}] Identity mismatch: expected={:?}, observed={:?}", device_id, expected, observed)
+            PreflightError::IdentityMismatch {
+                device_id,
+                expected,
+                observed,
+            } => {
+                write!(
+                    f,
+                    "[{}] Identity mismatch: expected={:?}, observed={:?}",
+                    device_id, expected, observed
+                )
             }
             PreflightError::ErrorQueueNonEmpty { device_id, errors } => {
                 write!(f, "[{}] Error queue non-empty: {:?}", device_id, errors)
             }
-            PreflightError::SafeStateFailed { device_id, expected, observed } => {
-                write!(f, "[{}] Safe state failed: expected={}, observed={}", device_id, expected, observed)
+            PreflightError::SafeStateFailed {
+                device_id,
+                expected,
+                observed,
+            } => {
+                write!(
+                    f,
+                    "[{}] Safe state failed: expected={}, observed={}",
+                    device_id, expected, observed
+                )
             }
             PreflightError::DeviceBusy { device_id, pid } => {
                 write!(f, "[{}] Device busy (locked by pid={:?})", device_id, pid)
@@ -84,8 +84,16 @@ impl fmt::Display for PreflightError {
             PreflightError::TcpError { device_id, detail } => {
                 write!(f, "[{}] TCP error: {}", device_id, detail)
             }
-            PreflightError::Timeout { device_id, command, timeout_ms } => {
-                write!(f, "[{}] Timeout on '{}' after {}ms", device_id, command, timeout_ms)
+            PreflightError::Timeout {
+                device_id,
+                command,
+                timeout_ms,
+            } => {
+                write!(
+                    f,
+                    "[{}] Timeout on '{}' after {}ms",
+                    device_id, command, timeout_ms
+                )
             }
             PreflightError::Other { detail } => {
                 write!(f, "{}", detail)

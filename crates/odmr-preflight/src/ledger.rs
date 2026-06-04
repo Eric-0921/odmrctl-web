@@ -31,10 +31,9 @@ impl StationLedger {
     }
 
     pub fn save(&self, path: &PathBuf) -> Result<(), String> {
-        let json = serde_json::to_string_pretty(self)
-            .map_err(|e| format!("serialize ledger: {e}"))?;
-        std::fs::write(path, json)
-            .map_err(|e| format!("write ledger: {e}"))
+        let json =
+            serde_json::to_string_pretty(self).map_err(|e| format!("serialize ledger: {e}"))?;
+        std::fs::write(path, json).map_err(|e| format!("write ledger: {e}"))
     }
 
     pub fn any_unsafe(&self) -> bool {
@@ -43,11 +42,7 @@ impl StationLedger {
 }
 
 /// Mark all devices as safe in the ledger.
-pub fn mark_safe(
-    ledger: &mut StationLedger,
-    device_id: &str,
-    sn: Option<&str>,
-) {
+pub fn mark_safe(ledger: &mut StationLedger, device_id: &str, sn: Option<&str>) {
     ledger.devices.insert(
         device_id.to_string(),
         DeviceLedgerEntry {
@@ -59,11 +54,7 @@ pub fn mark_safe(
 }
 
 /// Mark a device as unsafe (e.g., after a crash or failed cleanup).
-pub fn mark_unsafe(
-    ledger: &mut StationLedger,
-    device_id: &str,
-    sn: Option<&str>,
-) {
+pub fn mark_unsafe(ledger: &mut StationLedger, device_id: &str, sn: Option<&str>) {
     ledger.devices.insert(
         device_id.to_string(),
         DeviceLedgerEntry {

@@ -12,27 +12,51 @@ use odmr_oe1022d::RALL_FRAME_BYTES;
 use std::fs;
 use std::io::Write;
 use std::path::Path;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread::sleep;
 use std::time::Duration;
 
+/// Global abort flag for SIGINT / Ctrl-C emergency stop.
+static ABORT_FLAG: AtomicBool = AtomicBool::new(false);
+
+fn check_abort() -> Result<(), String> {
+    if ABORT_FLAG.load(Ordering::Relaxed) {
+        Err("Run aborted by operator (SIGINT)".into())
+    } else {
+        Ok(())
+    }
+}
+
 pub fn run(cli: &Cli) -> Result<(), String> {
+    // Register SIGINT handler once per process (Unix-only)
+    #[cfg(unix)]
+    unsafe {
+        extern "C" fn handle_sigint(_: libc::c_int) {
+            eprintln!("\n🛑 SIGINT received — aborting run...");
+            ABORT_FLAG.store(true, Ordering::Relaxed);
+        }
+        libc::signal(libc::SIGINT, handle_sigint as *const () as libc::sighandler_t);
+    }
+
     let started_at = chrono_like_now();
     let run_id = format!("mag_m5a_{}", started_at.replace(|c: char| !c.is_alphanumeric(), "_"));
 
     // ---- Station preflight (if --station-profile provided) ----
     // Preflight is read-only; it runs BEFORE operator approval
+    let mut _device_locks: Vec<odmr_preflight::DeviceLock> = Vec::new();
     if let Some(ref profile_path) = cli.station_profile {
-        let station_profile = common_preflight::StationProfile::load(
+        let station_profile = odmr_preflight::StationProfile::load(
             profile_path.to_str().unwrap_or("")
         ).map_err(|e| format!("load station profile: {e}"))?;
 
         println!("=== Station Preflight ===");
-        let preflight_report = common_preflight::run_station_preflight(
+        let (preflight_report, locks) = odmr_preflight::run_station_preflight_with_locks(
                 &station_profile,
                 cli.ledger_path.as_ref(),
                 cli.operator_approve,
             )
             .map_err(|e| format!("station preflight failed: {e}"))?;
+        _device_locks = locks; // held until end of run
 
         println!(
             "Preflight: reachable={}, identities={}, safe_states={}",
@@ -50,11 +74,11 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         // Write preflight artifacts to out_dir
         let preflight_dir = cli.out_dir.join("preflight");
         let _ = fs::create_dir_all(&preflight_dir);
-        let _ = common_preflight::station_report::write_json(
+        let _ = odmr_preflight::station_report::write_json(
             &preflight_report,
             &preflight_dir.join("station_preflight_report.json")
         );
-        let _ = common_preflight::station_report::write_markdown(
+        let _ = odmr_preflight::station_report::write_markdown(
             &preflight_report,
             &preflight_dir.join("station_preflight_report.md")
         );
@@ -93,6 +117,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         schema_version: "0.1.0".into(),
         run_id: run_id.clone(),
         passed: false,
+        interrupted: false,
         rf: RfReportSection {
             requested_frequency_hz: cli.rf_frequency_hz,
             requested_power_dbm: cli.rf_power_dbm,
@@ -192,6 +217,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
     let smb_freq = smb.query("FREQ?", &mut smb_audit, now_ms()).unwrap_or_default();
     let smb_pow = smb.query("POW?", &mut smb_audit, now_ms()).unwrap_or_default();
 
+    check_abort()?;
     push_event(&mut events, "smb_preflight_complete", Some("smb100a"), Some(&smb_idn));
 
     // Verify RF is OFF before run
@@ -246,6 +272,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         }
     };
 
+    check_abort()?;
     push_event(&mut events, "oe_preflight_complete", Some("oe1022d"), Some(&oe_idn));
 
     let oe_snapshot = OeSnapshot {
@@ -285,6 +312,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
 
     let observed_sn = odmr_mag::expected_sn_from_idn(&mag_idn).unwrap_or_default();
     report.magnetic.observed_sn = observed_sn.clone();
+    check_abort()?;
     push_event(
         &mut events,
         "mag_identity_complete",
@@ -334,6 +362,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         }
     };
 
+    check_abort()?;
     report.magnetic.zero_readback_current_ma = zero_mean;
     report.magnetic.zero_readback_std_ma = zero_std;
     push_event(
@@ -397,6 +426,9 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         rf_on_start,
     ) {
         report.errors.push(format!("SMB FREQ: {e}"));
+        // Emergency SMB OFF before Maynuo cleanup
+        let _ = smb.query("OUTP OFF", &mut smb_audit, now_ms());
+        report.rf.rf_final_off = false; // unverified emergency off
         let _ = run_cleanup(&mut mag, &cli.mag_axis_id, &mut maynuo_audit);
         maynuo_cleanup_and_exit(
             out_dir,
@@ -415,6 +447,8 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         now_ms(),
     ) {
         report.errors.push(format!("SMB POW: {e}"));
+        let _ = smb.query("OUTP OFF", &mut smb_audit, now_ms());
+        report.rf.rf_final_off = false;
         let _ = run_cleanup(&mut mag, &cli.mag_axis_id, &mut maynuo_audit);
         maynuo_cleanup_and_exit(
             out_dir,
@@ -429,6 +463,8 @@ pub fn run(cli: &Cli) -> Result<(), String> {
 
     if let Err(e) = smb.query("OUTP ON", &mut smb_audit, now_ms()) {
         report.errors.push(format!("SMB OUTP ON: {e}"));
+        let _ = smb.query("OUTP OFF", &mut smb_audit, now_ms());
+        report.rf.rf_final_off = false;
         let _ = run_cleanup(&mut mag, &cli.mag_axis_id, &mut maynuo_audit);
         maynuo_cleanup_and_exit(
             out_dir,
@@ -456,6 +492,8 @@ pub fn run(cli: &Cli) -> Result<(), String> {
 
     if rb_outp.trim() != "1" {
         report.errors.push("SMB RF ON verification failed".into());
+        let _ = smb.query("OUTP OFF", &mut smb_audit, now_ms());
+        report.rf.rf_final_off = false;
         let _ = run_cleanup(&mut mag, &cli.mag_axis_id, &mut maynuo_audit);
         maynuo_cleanup_and_exit(
             out_dir,
@@ -468,6 +506,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         return Err("SMB RF ON verification failed".into());
     }
 
+    check_abort()?;
     report.rf.readback_frequency_hz = rb_freq;
     report.rf.readback_power_dbm = rb_pow;
     report.rf.rf_on_window_start_unix_ms = Some(rf_on_start);
@@ -492,6 +531,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
     let mut timeout_count: u64 = 0;
 
     for i in 0..cli.frames {
+        check_abort()?;
         let ts = now_ms();
         match oe.capture_frame(&mut oe_audit, ts, cli.oe_frame_delay_ms) {
             Ok((frame, elapsed_ms)) => {
@@ -581,9 +621,10 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         safety_relevant: false,
     });
 
-    mag.send_set_output(false)
-        .map_err(|e| format!("cleanup OUTP 0: {e}"))
-        .ok();
+    let outp_ok = mag.send_set_output(false).is_ok();
+    if !outp_ok {
+        report.errors.push("Mag cleanup: OUTP 0 failed".into());
+    }
     maynuo_audit.push(CommandAuditEntry {
         seq: maynuo_audit.len() as u64,
         timestamp_unix_ms: now_ms(),
@@ -591,13 +632,13 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         command: "OUTP 0".into(),
         command_class: "set_output".into(),
         allowed: true,
-        sent_to_transport: true,
+        sent_to_transport: outp_ok,
         rejection_reason: None,
         response_preview: None,
-        transport_error: None,
+        transport_error: if outp_ok { None } else { Some("send failed".into()) },
         safety_relevant: true,
     });
-    report.magnetic.mag_final_output_off = true;
+    report.magnetic.mag_final_output_off = outp_ok;
 
     // Brief settle after OUTP 0 before verifying current
     sleep(Duration::from_millis(500));
@@ -626,9 +667,10 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         safety_relevant: false,
     });
 
-    mag.send_set_local()
-        .map_err(|e| format!("cleanup SYST:LOC: {e}"))
-        .ok();
+    let loc_ok = mag.send_set_local().is_ok();
+    if !loc_ok {
+        report.errors.push("Mag cleanup: SYST:LOC failed".into());
+    }
     maynuo_audit.push(CommandAuditEntry {
         seq: maynuo_audit.len() as u64,
         timestamp_unix_ms: now_ms(),
@@ -636,13 +678,13 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         command: "SYST:LOC".into(),
         command_class: "set_local".into(),
         allowed: true,
-        sent_to_transport: true,
+        sent_to_transport: loc_ok,
         rejection_reason: None,
         response_preview: None,
-        transport_error: None,
+        transport_error: if loc_ok { None } else { Some("send failed".into()) },
         safety_relevant: false,
     });
-    report.magnetic.mag_final_local_requested = true;
+    report.magnetic.mag_final_local_requested = loc_ok;
 
     push_event(&mut events, "mag_cleanup_complete", Some(&cli.mag_axis_id), Some(&format!("final_current={:.3}_mA", final_current_ma)));
 
@@ -679,6 +721,24 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         &oe_snapshot,
         &mag_snapshot,
     )?;
+
+    // Update station ledger with post-run state
+    if let Some(ref ledger_path) = cli.ledger_path {
+        let mut ledger = odmr_preflight::StationLedger::load(ledger_path)
+            .unwrap_or_else(odmr_preflight::new_ledger);
+        if report.passed {
+            odmr_preflight::mark_safe(&mut ledger, "smb100a", None);
+            odmr_preflight::mark_safe(&mut ledger, "oe1022d", None);
+            odmr_preflight::mark_safe(&mut ledger, &format!("maynuo_{}", cli.mag_axis_id), None);
+        } else {
+            odmr_preflight::mark_unsafe(&mut ledger, "smb100a", None);
+            odmr_preflight::mark_unsafe(&mut ledger, "oe1022d", None);
+            odmr_preflight::mark_unsafe(&mut ledger, &format!("maynuo_{}", cli.mag_axis_id), None);
+        }
+        if let Err(e) = ledger.save(ledger_path) {
+            eprintln!("Warning: failed to save station ledger: {}", e);
+        }
+    }
 
     eprintln!("Run {} complete. passed={}", run_id, report.passed);
     if !report.errors.is_empty() {
@@ -906,6 +966,8 @@ fn maynuo_cleanup_and_exit(
     oe_audit: &[CommandAuditEntry],
 ) {
     push_event(events, "cleanup_triggered", Some(&report.magnetic.axis_id), None);
-    report.timeline.cleanup_completed = true;
+    // In error-path cleanup we attempt cleanup but cannot guarantee success;
+    // do not claim cleanup_completed = true.
+    report.timeline.cleanup_completed = false;
     let _ = write_final_artifacts(out_dir, report, events, smb_audit, maynuo_audit, oe_audit);
 }

@@ -129,6 +129,7 @@ pub struct CombinedRunReport {
     pub schema_version: String,
     pub run_id: String,
     pub passed: bool,
+    pub interrupted: bool,
     pub rf: RfReportSection,
     pub magnetic: MagReportSection,
     pub oe: OeReportSection,

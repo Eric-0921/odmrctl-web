@@ -17,7 +17,9 @@ odmr-mag = { path = "../../../crates/odmr-mag" }
 odmr-maynuo-m8812 = { path = "../../../crates/odmr-maynuo-m8812" }
 odmr-oe1022d = { path = "../../../crates/odmr-oe1022d" }
 
-common_preflight = { path = "../common_preflight" }
+odmr-preflight = { path = "../../../crates/odmr-preflight" }
+
+libc = "0.2"
 
 [dev-dependencies]
 tempfile = "3"

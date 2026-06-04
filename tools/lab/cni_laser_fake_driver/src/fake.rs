@@ -54,9 +54,7 @@ impl FakeCniLaser {
                     Some(&0x01) => {
                         // Laser on: only allow if power setpoint > 0
                         if self.power_setpoint_mw == 0 {
-                            return Err(
-                                "Refused to enable laser: power setpoint is 0 mW".into()
-                            );
+                            return Err("Refused to enable laser: power setpoint is 0 mW".into());
                         }
                         self.output_enabled = true;
                         Ok(())

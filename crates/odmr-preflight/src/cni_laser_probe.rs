@@ -117,7 +117,13 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         device_id: device.device_id.clone(),
         kind: device.kind.clone(),
         reachability: true,
-        identity_raw: Some(off_bytes.iter().map(|b| format!("{:02X}", b)).collect::<Vec<_>>().join(" ")),
+        identity_raw: Some(
+            off_bytes
+                .iter()
+                .map(|b| format!("{:02X}", b))
+                .collect::<Vec<_>>()
+                .join(" "),
+        ),
         identity_display: Some(identity_display),
         error_queue: vec![],
         safe_state: Some(safe_state),
@@ -136,7 +142,10 @@ fn auto_discover_laser(timeout_ms: u64) -> Option<String> {
         .iter()
         .filter(|p| {
             let name = p.port_name.to_lowercase();
-            (name.contains("usb") || name.contains("pl2303") || name.contains("ftdi") || name.contains("cp210"))
+            (name.contains("usb")
+                || name.contains("pl2303")
+                || name.contains("ftdi")
+                || name.contains("cp210"))
                 && !name.contains("bluetooth")
         })
         .collect();

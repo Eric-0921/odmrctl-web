@@ -168,13 +168,8 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 name = "common_preflight"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "clap",
- "cni_laser_fake_driver",
- "fs2",
- "serde",
- "serde_json",
- "serialport",
+ "odmr-preflight",
 ]
 
 [[package]]
@@ -363,6 +358,23 @@ checksum = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
 dependencies = [
  "autocfg",
 ]
+
+[[package]]
+name = "odmr-preflight"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "cni_laser_fake_driver",
+ "fs2",
+ "odmr-types",
+ "serde",
+ "serde_json",
+ "serialport",
+]
+
+[[package]]
+name = "odmr-types"
+version = "0.1.0"
 
 [[package]]
 name = "once_cell"

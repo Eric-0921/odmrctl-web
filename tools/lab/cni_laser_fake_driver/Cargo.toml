@@ -6,5 +6,3 @@ license = "MIT OR Apache-2.0"
 description = "CNI Laser protocol (binary frame) fake driver for M1 preflight testing"
 
 [dependencies]
-
-[workspace]

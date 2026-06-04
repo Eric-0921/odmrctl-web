@@ -3,14 +3,16 @@ use std::path::Path;
 
 /// Write the station preflight report to a JSON file.
 pub fn write_json<P: AsRef<Path>>(report: &StationPreflightReport, path: P) -> Result<(), String> {
-    let json = serde_json::to_string_pretty(report)
-        .map_err(|e| format!("serialize report: {}", e))?;
-    std::fs::write(path, json)
-        .map_err(|e| format!("write report: {}", e))
+    let json =
+        serde_json::to_string_pretty(report).map_err(|e| format!("serialize report: {}", e))?;
+    std::fs::write(path, json).map_err(|e| format!("write report: {}", e))
 }
 
 /// Write the station preflight report as a Markdown summary.
-pub fn write_markdown<P: AsRef<Path>>(report: &StationPreflightReport, path: P) -> Result<(), String> {
+pub fn write_markdown<P: AsRef<Path>>(
+    report: &StationPreflightReport,
+    path: P,
+) -> Result<(), String> {
     let mut lines = Vec::new();
     lines.push("# Station Preflight Report".to_string());
     lines.push("".to_string());
@@ -19,12 +21,22 @@ pub fn write_markdown<P: AsRef<Path>>(report: &StationPreflightReport, path: P) 
     lines.push(format!("- **Elapsed**: {} ms", report.elapsed_ms));
     lines.push("".to_string());
 
-    let overall = if report.passed() { "✅ PASS" } else { "❌ FAIL" };
+    let overall = if report.passed() {
+        "✅ PASS"
+    } else {
+        "❌ FAIL"
+    };
     lines.push(format!("## Overall: {}", overall));
     lines.push("".to_string());
     lines.push(format!("- All reachable: {}", report.all_devices_reachable));
-    lines.push(format!("- All identities verified: {}", report.all_identities_verified));
-    lines.push(format!("- All safe states confirmed: {}", report.all_safe_states_confirmed));
+    lines.push(format!(
+        "- All identities verified: {}",
+        report.all_identities_verified
+    ));
+    lines.push(format!(
+        "- All safe states confirmed: {}",
+        report.all_safe_states_confirmed
+    ));
     lines.push(format!("- Operator approved: {}", report.operator_approved));
     lines.push("".to_string());
 
@@ -35,13 +47,25 @@ pub fn write_markdown<P: AsRef<Path>>(report: &StationPreflightReport, path: P) 
 
     for d in &report.devices {
         let id_short = d.identity_display.as_deref().unwrap_or("—");
-        let id_str = if id_short.len() > 40 { &id_short[..40] } else { id_short };
-        let safe = d.safe_state.as_ref().map(|s| if s.confirmed { "✅" } else { "❌" }).unwrap_or("—");
+        let id_str = if id_short.len() > 40 {
+            &id_short[..40]
+        } else {
+            id_short
+        };
+        let safe = d
+            .safe_state
+            .as_ref()
+            .map(|s| if s.confirmed { "✅" } else { "❌" })
+            .unwrap_or("—");
         let warn_count = d.warnings.len();
         lines.push(format!(
             "| {} | {} | {} | {} | {} | {} |",
-            d.device_id, d.kind, if d.reachability { "✅" } else { "❌" },
-            id_str, safe, warn_count
+            d.device_id,
+            d.kind,
+            if d.reachability { "✅" } else { "❌" },
+            id_str,
+            safe,
+            warn_count
         ));
     }
 
@@ -68,6 +92,5 @@ pub fn write_markdown<P: AsRef<Path>>(report: &StationPreflightReport, path: P) 
         }
     }
 
-    std::fs::write(path, lines.join("\n"))
-        .map_err(|e| format!("write markdown: {}", e))
+    std::fs::write(path, lines.join("\n")).map_err(|e| format!("write markdown: {}", e))
 }

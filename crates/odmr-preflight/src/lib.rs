@@ -1,12 +1,15 @@
-//! Common Preflight — Unified device connection and initialization for ODMR lab tools.
+//! odmr-preflight — Unified station preflight for ODMR devices.
 //!
-//! This crate provides Phase A (passive preflight) and Phase B (armed execution gate)
-//! for all real-device lab tools. It is NOT a core workspace crate; it lives in
-//! `tools/lab/` to allow rapid iteration before stabilization.
+//! Layer 1+2 boundary crate. Provides:
+//! - Device discovery and identity verification
+//! - Safe-state probing (query-only or safe-state-write)
+//! - Cross-process device locks (`DeviceLock`)
+//! - Station ledger persistence
+//! - Preflight report generation
 //!
 //! ## Usage
 //! ```no_run
-//! use common_preflight::{StationProfile, run_station_preflight};
+//! use odmr_preflight::{StationProfile, run_station_preflight};
 //!
 //! let profile = StationProfile::load("station.json").unwrap();
 //! let report = run_station_preflight(&profile, None, true).unwrap();
@@ -14,20 +17,20 @@
 //! assert!(report.all_safe_states_confirmed);
 //! ```
 
-pub mod error;
-pub mod types;
-pub mod smb_probe;
-pub mod oe_probe;
-pub mod maynuo_probe;
 pub mod cni_laser_probe;
 pub mod device_lock;
-pub mod station_report;
+pub mod error;
 pub mod ledger;
+pub mod maynuo_probe;
+pub mod oe_probe;
+pub mod smb_probe;
+pub mod station_report;
+pub mod types;
 
-pub use error::{PreflightError, PreflightResult};
-pub use types::{StationProfile, StationPreflightReport, DevicePreflightReport};
 pub use device_lock::{DeviceLock, LockError};
-pub use ledger::{StationLedger, DeviceLedgerEntry, mark_safe, mark_unsafe, new_ledger};
+pub use error::{PreflightError, PreflightResult};
+pub use ledger::{mark_safe, mark_unsafe, new_ledger, DeviceLedgerEntry, StationLedger};
+pub use types::{DevicePreflightReport, StationPreflightReport, StationProfile};
 
 use std::path::PathBuf;
 use std::time::Instant;
@@ -49,6 +52,20 @@ pub fn run_station_preflight(
     ledger_path: Option<&PathBuf>,
     operator_approved: bool,
 ) -> Result<StationPreflightReport, PreflightError> {
+    let (report, _locks) =
+        run_station_preflight_with_locks(profile, ledger_path, operator_approved)?;
+    Ok(report)
+}
+
+/// Run preflight and return both the report and the acquired device locks.
+///
+/// Callers that need to hold locks through execution (e.g. M5A) should use
+/// this function and keep the `Vec<DeviceLock>` alive until cleanup completes.
+pub fn run_station_preflight_with_locks(
+    profile: &StationProfile,
+    ledger_path: Option<&PathBuf>,
+    operator_approved: bool,
+) -> Result<(StationPreflightReport, Vec<device_lock::DeviceLock>), PreflightError> {
     let started_at = Instant::now();
 
     // Load ledger if path provided
@@ -122,7 +139,11 @@ pub fn run_station_preflight(
             lock_status,
         };
         return Err(PreflightError::DeviceBusy {
-            device_id: profile.devices.first().map(|d| d.device_id.clone()).unwrap_or_default(),
+            device_id: profile
+                .devices
+                .first()
+                .map(|d| d.device_id.clone())
+                .unwrap_or_default(),
             pid: None,
         });
     }
@@ -159,7 +180,9 @@ pub fn run_station_preflight(
         station_profile: profile.name.clone(),
         all_devices_reachable: reports.iter().all(|r| r.reachability),
         all_identities_verified: reports.iter().all(|r| r.identity_display.is_some()),
-        all_safe_states_confirmed: reports.iter().all(|r| r.safe_state.as_ref().map(|s| s.confirmed).unwrap_or(false)),
+        all_safe_states_confirmed: reports
+            .iter()
+            .all(|r| r.safe_state.as_ref().map(|s| s.confirmed).unwrap_or(false)),
         operator_approved,
         elapsed_ms: started_at.elapsed().as_millis() as u64,
         devices: reports,
@@ -189,7 +212,7 @@ pub fn run_station_preflight(
         });
     }
 
-    Ok(report)
+    Ok((report, locks))
 }
 
 fn probe_device(device: &types::DeviceConfig) -> PreflightResult<DevicePreflightReport> {

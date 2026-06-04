@@ -15,4 +15,5 @@ members = [
     "crates/odmr-oe1022d",
     "crates/odmr-mag",
     "crates/odmr-maynuo-m8812",
+    "crates/odmr-preflight",
 ]

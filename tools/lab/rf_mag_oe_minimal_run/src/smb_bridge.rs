@@ -151,6 +151,8 @@ pub struct FakeSmbTransport {
     pub freq_hz: u64,
     pub pow_dbm: f64,
     pub syst_err: String,
+    /// If set, `query` returns Err when this exact command is received.
+    pub fail_on: Option<String>,
 }
 
 impl FakeSmbTransport {
@@ -162,6 +164,7 @@ impl FakeSmbTransport {
             freq_hz: 0,
             pow_dbm: 0.0,
             syst_err: "0,No error".into(),
+            fail_on: None,
         }
     }
 
@@ -171,6 +174,22 @@ impl FakeSmbTransport {
         audit: &mut Vec<CommandAuditEntry>,
         ts: u64,
     ) -> Result<String, String> {
+        if self.fail_on.as_deref() == Some(cmd.trim()) {
+            audit.push(CommandAuditEntry {
+                seq: audit.len() as u64,
+                timestamp_unix_ms: ts,
+                device_id: "smb100a".into(),
+                command: cmd.to_string(),
+                command_class: if cmd.ends_with('?') { "query" } else { "set" }.into(),
+                allowed: true,
+                sent_to_transport: false,
+                rejection_reason: None,
+                response_preview: None,
+                transport_error: Some("injected failure".into()),
+                safety_relevant: is_safety_relevant(cmd),
+            });
+            return Err(format!("injected failure for {}", cmd));
+        }
         let response = match cmd.trim() {
             "*IDN?" => self.idn.clone(),
             "OUTP?" => (if self.outp { "1" } else { "0" }).into(),

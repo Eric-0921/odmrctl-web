@@ -17,4 +17,4 @@ pub mod fake;
 pub mod protocol;
 
 pub use fake::FakeCniLaser;
-pub use protocol::{CniFrame, MAX_POWER_MW, HEADER, CMD_SET_POWER, CMD_OUTPUT};
+pub use protocol::{CniFrame, CMD_OUTPUT, CMD_SET_POWER, HEADER, MAX_POWER_MW};

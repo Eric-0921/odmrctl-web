@@ -9,10 +9,8 @@ pub struct StationProfile {
 
 impl StationProfile {
     pub fn load(path: &str) -> Result<Self, String> {
-        let text = std::fs::read_to_string(path)
-            .map_err(|e| format!("read profile: {e}"))?;
-        serde_json::from_str(&text)
-            .map_err(|e| format!("parse profile: {e}"))
+        let text = std::fs::read_to_string(path).map_err(|e| format!("read profile: {e}"))?;
+        serde_json::from_str(&text).map_err(|e| format!("parse profile: {e}"))
     }
 }
 
@@ -44,9 +42,7 @@ pub struct StationPreflightReport {
 
 impl StationPreflightReport {
     pub fn passed(&self) -> bool {
-        self.all_devices_reachable
-            && self.all_identities_verified
-            && self.all_safe_states_confirmed
+        self.all_devices_reachable && self.all_identities_verified && self.all_safe_states_confirmed
     }
 }
 
@@ -90,4 +86,19 @@ pub struct SafeState {
     pub fm: Option<String>,
     pub magnetic_output: Option<String>,
     pub magnetic_current_ma: Option<f64>,
+}
+
+/// Classification of a probe's behavior for safety auditing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ProbeClass {
+    /// Sends only identity query (*IDN?). No state change.
+    IdentityOnly,
+    /// Queries state but never sends set commands.
+    QueryOnly,
+    /// Writes commands only to establish or verify safe/known state.
+    SafeStateProbe,
+    /// Writes bounded operational parameters under safety limits.
+    SafeWriteProbe,
+    /// Requires explicit operator approval before execution.
+    OperatorApprovedProbe,
 }

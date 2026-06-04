@@ -45,10 +45,12 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
     })?;
 
     // Re-connect for the full preflight sequence
-    let addr: SocketAddr = addr_str.parse().map_err(|e| PreflightError::PhysicalUnreachable {
-        device_id: device.device_id.clone(),
-        detail: format!("invalid address '{}': {}", addr_str, e),
-    })?;
+    let addr: SocketAddr = addr_str
+        .parse()
+        .map_err(|e| PreflightError::PhysicalUnreachable {
+            device_id: device.device_id.clone(),
+            detail: format!("invalid address '{}': {}", addr_str, e),
+        })?;
 
     let mut stream = TcpStream::connect_timeout(&addr, timeout).map_err(|e| {
         PreflightError::PhysicalUnreachable {
@@ -57,20 +59,19 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
         }
     })?;
 
-    stream.set_read_timeout(Some(timeout)).map_err(|e| {
-        PreflightError::TcpError {
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|e| PreflightError::TcpError {
             device_id: device.device_id.clone(),
             detail: format!("set read timeout: {}", e),
-        }
-    })?;
+        })?;
 
     // Error queue drain
-    let errors = drain_error_queue(&mut stream, timeout_ms).map_err(|e| {
-        PreflightError::TcpError {
+    let errors =
+        drain_error_queue(&mut stream, timeout_ms).map_err(|e| PreflightError::TcpError {
             device_id: device.device_id.clone(),
             detail: format!("error queue drain: {}", e),
-        }
-    })?;
+        })?;
 
     // Safe state verification
     let safe_state = verify_safe_state(&mut stream, timeout_ms).unwrap_or(SafeState {
