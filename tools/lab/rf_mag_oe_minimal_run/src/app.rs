@@ -27,7 +27,7 @@ pub fn run(cli: &Cli) -> Result<(), String> {
         ).map_err(|e| format!("load station profile: {e}"))?;
 
         println!("=== Station Preflight ===");
-        let preflight_report = common_preflight::run_station_preflight(&station_profile)
+        let preflight_report = common_preflight::run_station_preflight(&station_profile, None)
             .map_err(|e| format!("station preflight failed: {e}"))?;
 
         println!(

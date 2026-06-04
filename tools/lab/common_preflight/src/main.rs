@@ -25,6 +25,10 @@ struct Cli {
     /// Only run preflight, do not proceed to any experiment
     #[arg(long)]
     preflight_only: bool,
+
+    /// Path to station ledger (state persistence across runs)
+    #[arg(long)]
+    ledger_path: Option<PathBuf>,
 }
 
 fn main() {
@@ -49,7 +53,7 @@ fn main() {
     }
     println!();
 
-    let report = match run_station_preflight(&profile) {
+    let report = match run_station_preflight(&profile, cli.ledger_path.as_ref()) {
         Ok(r) => r,
         Err(e) => {
             eprintln!("ERROR: Preflight failed: {}", e);

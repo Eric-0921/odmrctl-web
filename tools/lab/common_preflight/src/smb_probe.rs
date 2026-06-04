@@ -59,15 +59,13 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
     })?;
 
     // 4. Safe state verification
-    let safe_state = verify_safe_state(&mut stream, timeout_ms).unwrap_or_else(|_e| {
-        SafeState {
-            confirmed: false,
-            rf_output: None,
-            modulation: None,
-            fm: None,
-            magnetic_output: None,
-            magnetic_current_ma: None,
-        }
+    let safe_state = verify_safe_state(&mut stream, timeout_ms).unwrap_or(SafeState {
+        confirmed: false,
+        rf_output: None,
+        modulation: None,
+        fm: None,
+        magnetic_output: None,
+        magnetic_current_ma: None,
     });
 
     Ok(DevicePreflightReport {

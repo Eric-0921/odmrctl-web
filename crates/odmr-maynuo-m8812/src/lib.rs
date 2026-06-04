@@ -13,7 +13,9 @@
 use odmr_device::{Device, DeviceStatus};
 use odmr_types::{DeviceId, DeviceKind};
 use serde::{Deserialize, Serialize};
-use serialport::{ClearBuffer, DataBits, FlowControl, Parity, SerialPort, SerialPortType, StopBits};
+use serialport::{
+    ClearBuffer, DataBits, FlowControl, Parity, SerialPort, SerialPortType, StopBits,
+};
 use std::fmt;
 use std::io::{self, Write};
 use std::time::Duration;
@@ -34,7 +36,7 @@ fn is_allowed(cmd: &str) -> bool {
             "MEAS:CURR?",
         ]
     });
-    if EXACT.iter().any(|&a| a == trimmed) {
+    if EXACT.contains(&trimmed) {
         return true;
     }
     // CURR pattern: "CURR <float>"
@@ -100,7 +102,9 @@ impl MaynuoPortMetadata {
                     usb.manufacturer.clone(),
                     usb.product.clone(),
                 ),
-                SerialPortType::BluetoothPort => (Some("bluetooth".into()), None, None, None, None, None),
+                SerialPortType::BluetoothPort => {
+                    (Some("bluetooth".into()), None, None, None, None, None)
+                }
                 SerialPortType::PciPort => (Some("pci".into()), None, None, None, None, None),
                 SerialPortType::Unknown => (Some("unknown".into()), None, None, None, None, None),
             };
@@ -138,7 +142,10 @@ impl fmt::Display for MaynuoProbeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             MaynuoProbeError::UnsupportedCommand { command } => {
-                write!(f, "unsupported command for Maynuo identity probe: {command}")
+                write!(
+                    f,
+                    "unsupported command for Maynuo identity probe: {command}"
+                )
             }
             MaynuoProbeError::EnumerateFailed(message) => {
                 write!(f, "failed to enumerate serial ports: {message}")
@@ -162,7 +169,9 @@ impl fmt::Display for MaynuoProbeError {
                 write!(f, "read {port_path}: {message}")
             }
             MaynuoProbeError::Timeout { port_path } => write!(f, "read timeout on {port_path}"),
-            MaynuoProbeError::EmptyResponse { port_path } => write!(f, "empty response on {port_path}"),
+            MaynuoProbeError::EmptyResponse { port_path } => {
+                write!(f, "empty response on {port_path}")
+            }
             MaynuoProbeError::NonAsciiResponse { port_path } => {
                 write!(f, "response on {port_path} is not valid ASCII")
             }
@@ -188,7 +197,10 @@ impl MaynuoM8812Transport {
     pub fn enumerate_ports() -> Result<Vec<MaynuoPortMetadata>, MaynuoProbeError> {
         let ports = serialport::available_ports()
             .map_err(|e| MaynuoProbeError::EnumerateFailed(e.to_string()))?;
-        Ok(ports.iter().map(MaynuoPortMetadata::from_port_info).collect())
+        Ok(ports
+            .iter()
+            .map(MaynuoPortMetadata::from_port_info)
+            .collect())
     }
 
     pub fn open(
@@ -203,12 +215,10 @@ impl MaynuoM8812Transport {
             .flow_control(FlowControl::None)
             .timeout(Duration::from_millis(config.read_timeout_ms))
             .dtr_on_open(config.dtr);
-        let port = builder
-            .open()
-            .map_err(|e| MaynuoProbeError::OpenFailed {
-                port_path: port_path.into(),
-                message: e.to_string(),
-            })?;
+        let port = builder.open().map_err(|e| MaynuoProbeError::OpenFailed {
+            port_path: port_path.into(),
+            message: e.to_string(),
+        })?;
         Ok(Self {
             device_id,
             port_path: port_path.into(),
@@ -240,10 +250,12 @@ impl MaynuoM8812Transport {
     /// Send `MEAS:CURR?` and parse the response as amperes (A).
     pub fn query_meas_current(&mut self) -> Result<f64, MaynuoProbeError> {
         let response = self.query_response_line("MEAS:CURR?")?;
-        response.parse::<f64>().map_err(|_| MaynuoProbeError::ParseFloat {
-            port_path: self.port_path.clone(),
-            raw: response,
-        })
+        response
+            .parse::<f64>()
+            .map_err(|_| MaynuoProbeError::ParseFloat {
+                port_path: self.port_path.clone(),
+                raw: response,
+            })
     }
 
     // ---- set (fire-and-forget) methods ----
@@ -294,10 +306,12 @@ impl MaynuoM8812Transport {
                 port_path: self.port_path.clone(),
                 message: e.to_string(),
             })?;
-        self.port.flush().map_err(|e| MaynuoProbeError::FlushFailed {
-            port_path: self.port_path.clone(),
-            message: e.to_string(),
-        })?;
+        self.port
+            .flush()
+            .map_err(|e| MaynuoProbeError::FlushFailed {
+                port_path: self.port_path.clone(),
+                message: e.to_string(),
+            })?;
         Ok(())
     }
 
@@ -320,10 +334,12 @@ impl MaynuoM8812Transport {
                 port_path: self.port_path.clone(),
                 message: e.to_string(),
             })?;
-        self.port.flush().map_err(|e| MaynuoProbeError::FlushFailed {
-            port_path: self.port_path.clone(),
-            message: e.to_string(),
-        })?;
+        self.port
+            .flush()
+            .map_err(|e| MaynuoProbeError::FlushFailed {
+                port_path: self.port_path.clone(),
+                message: e.to_string(),
+            })?;
         read_ascii_line(self.port.as_mut(), &self.port_path)
     }
 }
@@ -342,10 +358,7 @@ impl Device for MaynuoM8812Transport {
     }
 }
 
-fn read_ascii_line(
-    port: &mut dyn SerialPort,
-    port_path: &str,
-) -> Result<String, MaynuoProbeError> {
+fn read_ascii_line(port: &mut dyn SerialPort, port_path: &str) -> Result<String, MaynuoProbeError> {
     let mut buf = Vec::new();
     let mut byte = [0u8; 1];
     loop {
@@ -436,31 +449,82 @@ mod tests {
     }
 
     impl SerialPort for FakePort {
-        fn name(&self) -> Option<String> { None }
-        fn baud_rate(&self) -> serialport::Result<u32> { Ok(9600) }
-        fn data_bits(&self) -> serialport::Result<DataBits> { Ok(DataBits::Eight) }
-        fn flow_control(&self) -> serialport::Result<FlowControl> { Ok(FlowControl::None) }
-        fn parity(&self) -> serialport::Result<Parity> { Ok(Parity::None) }
-        fn stop_bits(&self) -> serialport::Result<StopBits> { Ok(StopBits::One) }
-        fn timeout(&self) -> Duration { self.timeout }
-        fn set_baud_rate(&mut self, _: u32) -> serialport::Result<()> { Ok(()) }
-        fn set_data_bits(&mut self, _: DataBits) -> serialport::Result<()> { Ok(()) }
-        fn set_flow_control(&mut self, _: FlowControl) -> serialport::Result<()> { Ok(()) }
-        fn set_parity(&mut self, _: Parity) -> serialport::Result<()> { Ok(()) }
-        fn set_stop_bits(&mut self, _: StopBits) -> serialport::Result<()> { Ok(()) }
-        fn set_timeout(&mut self, timeout: Duration) -> serialport::Result<()> { self.timeout = timeout; Ok(()) }
-        fn write_request_to_send(&mut self, _: bool) -> serialport::Result<()> { Ok(()) }
-        fn write_data_terminal_ready(&mut self, _: bool) -> serialport::Result<()> { Ok(()) }
-        fn read_clear_to_send(&mut self) -> serialport::Result<bool> { Ok(true) }
-        fn read_data_set_ready(&mut self) -> serialport::Result<bool> { Ok(true) }
-        fn read_ring_indicator(&mut self) -> serialport::Result<bool> { Ok(false) }
-        fn read_carrier_detect(&mut self) -> serialport::Result<bool> { Ok(true) }
-        fn bytes_to_read(&self) -> serialport::Result<u32> { Ok(self.reads.len() as u32) }
-        fn bytes_to_write(&self) -> serialport::Result<u32> { Ok(0) }
-        fn clear(&self, _: ClearBuffer) -> serialport::Result<()> { Ok(()) }
-        fn try_clone(&self) -> serialport::Result<Box<dyn SerialPort>> { Ok(Box::new(FakePort::default())) }
-        fn set_break(&self) -> serialport::Result<()> { Ok(()) }
-        fn clear_break(&self) -> serialport::Result<()> { Ok(()) }
+        fn name(&self) -> Option<String> {
+            None
+        }
+        fn baud_rate(&self) -> serialport::Result<u32> {
+            Ok(9600)
+        }
+        fn data_bits(&self) -> serialport::Result<DataBits> {
+            Ok(DataBits::Eight)
+        }
+        fn flow_control(&self) -> serialport::Result<FlowControl> {
+            Ok(FlowControl::None)
+        }
+        fn parity(&self) -> serialport::Result<Parity> {
+            Ok(Parity::None)
+        }
+        fn stop_bits(&self) -> serialport::Result<StopBits> {
+            Ok(StopBits::One)
+        }
+        fn timeout(&self) -> Duration {
+            self.timeout
+        }
+        fn set_baud_rate(&mut self, _: u32) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn set_data_bits(&mut self, _: DataBits) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn set_flow_control(&mut self, _: FlowControl) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn set_parity(&mut self, _: Parity) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn set_stop_bits(&mut self, _: StopBits) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn set_timeout(&mut self, timeout: Duration) -> serialport::Result<()> {
+            self.timeout = timeout;
+            Ok(())
+        }
+        fn write_request_to_send(&mut self, _: bool) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn write_data_terminal_ready(&mut self, _: bool) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn read_clear_to_send(&mut self) -> serialport::Result<bool> {
+            Ok(true)
+        }
+        fn read_data_set_ready(&mut self) -> serialport::Result<bool> {
+            Ok(true)
+        }
+        fn read_ring_indicator(&mut self) -> serialport::Result<bool> {
+            Ok(false)
+        }
+        fn read_carrier_detect(&mut self) -> serialport::Result<bool> {
+            Ok(true)
+        }
+        fn bytes_to_read(&self) -> serialport::Result<u32> {
+            Ok(self.reads.len() as u32)
+        }
+        fn bytes_to_write(&self) -> serialport::Result<u32> {
+            Ok(0)
+        }
+        fn clear(&self, _: ClearBuffer) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn try_clone(&self) -> serialport::Result<Box<dyn SerialPort>> {
+            Ok(Box::new(FakePort::default()))
+        }
+        fn set_break(&self) -> serialport::Result<()> {
+            Ok(())
+        }
+        fn clear_break(&self) -> serialport::Result<()> {
+            Ok(())
+        }
     }
 
     #[test]

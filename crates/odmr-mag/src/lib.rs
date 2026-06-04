@@ -1357,6 +1357,7 @@ pub fn format_current_command_from_ma(current_ma: f64) -> Result<String, MagErro
 // Maynuo plan builders
 // ---------------------------------------------------------------------------
 
+#[allow(clippy::too_many_arguments)]
 fn cmd_entry(
     seq: u32,
     command_type: &str,
