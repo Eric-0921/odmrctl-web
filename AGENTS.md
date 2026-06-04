@@ -7,7 +7,7 @@
 
 **odmrctl-web** 是 ODMR（Optically Detected Magnetic Resonance）自动化采集平台，面向 NV 色心 ODMR 实验。核心能力包括：设备编排、recipe 执行、高频采集、数据落盘与离线分析。
 
-当前阶段：**GUI-M0 Mock Viewer 已完成，M2 硬件 bring-up 待进行。**
+当前阶段：**GUI-M0 Mock Viewer 已完成；M2 硬件 bring-up 已完成 Phase 1 并进入 M3 受控双设备联调；磁场控制线处于 Mag-M1 mock-only 状态。**
 
 - **Rust 后端**：设备编排、recipe 编译与安全检查、执行引擎、高频采集、raw-first 数据落盘。
 - **前端**：Tauri v2 + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
@@ -17,7 +17,7 @@
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 后端核心 | Rust (Edition 2021) | 12 crate 的 Cargo workspace |
+| 后端核心 | Rust (Edition 2021) | 13 crate 的 Cargo workspace |
 | 桌面 GUI | Tauri v2 | 跨平台 Webview 桌面壳 |
 | 前端框架 | React 18 + TypeScript 5 | Vite 5 构建，React Router v6 路由 |
 | 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist=true`、`strict-peer-dependencies=false`、`auto-install-peers=true` |
@@ -29,7 +29,7 @@
 | 路径 | 内容 | 何时查阅 |
 |------|------|----------|
 | `docs/prd/` | 13 份产品需求文档（`00`~`12`，总纲 + 子模块） | 理解功能边界与业务意图 |
-| `docs/adr/` | 6 份架构决策记录（`ADR-001`~`ADR-006`） | 理解技术选型的原因 |
+| `docs/adr/` | 8 份架构决策记录（`ADR-001`~`ADR-008`） | 理解技术选型的原因 |
 | `docs/architecture/ARCHITECTURE.md` | 分层模型、crate 职责、依赖方向 | 写代码前的入口 |
 | `docs/decisions/` | 进行中的设计决策 | 开发中遇到选择时写这里 |
 | `crates/` | Rust workspace 各 crate | 每个 crate 的 `README.md` 定义其边界 |
@@ -38,7 +38,7 @@
 | `schemas/` | 9 份 JSON Schema（recipe、resolved_recipe、safety 等） | 验证 recipe 输入 |
 | `examples/` | 示例 recipe 与设备指令 JSON | 参考用法 |
 | `tests/` | 集成测试 fixture + golden 数据（预留） | mock-first 开发 |
-| `tools/` | Lab bring-up 工具（M2 阶段） | 硬件发现、只读快照、命令验证 |
+| `tools/` | Lab bring-up 工具（M2–M3 阶段） | 硬件发现、只读快照、受控微测试、双设备 sweep / recipe-shaped run |
 | `reverse_application/` | 旧系统逆向工程产物（C# 反编译、日志、协议分析） | 参考遗留系统行为 |
 
 ## 架构硬约束
@@ -60,7 +60,7 @@ Layer 5: GUI              apps/desktop/     (Tauri/Web)
 Layer 4: Application API  Tauri commands    (apps/desktop/src-tauri/)
 Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness
 Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device
+Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device  odmr-mag
 Layer 0: Types            odmr-types
 ```
 
@@ -72,6 +72,7 @@ Layer 0: Types            odmr-types
 | `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` | 活跃 |
 | `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
 | `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+| `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划的 mock 状态机 | `odmr-device`, `odmr-types` | 活跃（Mag-M1 mock-only） |
 | `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
 | `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开、SHA-256 哈希 | `odmr-types`, `serde`, `serde_json`, `sha2`, `hex` | 活跃 |
 | `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
@@ -116,6 +117,13 @@ pnpm tauri build      # 发布构建
 - 开发服务器固定端口 `1420`（`strictPort: true`）
 - 前端构建输出目录为 `../dist`
 - `bundle.targets = "all"`，输出平台原生安装包
+
+### 近期里程碑状态
+
+- **GUI-M0**：已完成并保持 mock-only 边界。
+- **M2**：已完成硬件发现、只读快照、OE1022D 实采、RALL 捕获、桥接与 shadow run。
+- **M3**：已进入 SMB100A 受控 RF / FM/MOD 微测试、双设备软件步进 sweep、extended sweep、recipe-shaped run。
+- **Mag-M1**：磁场控制线目前仍为 mock-only，不输出真实电流，不打开真实串口。
 
 ## 测试策略
 
@@ -226,6 +234,11 @@ git config core.hooksPath .githooks
 5. **集成测试 fixture**：放 `tests/fixtures/`，golden 数据放 `tests/golden/`。
 6. **recipe 示例**：放 `examples/`，schema 变更同步更新 `schemas/`。
 7. **提交前**：运行 `bash scripts/check-consistency.sh` 与 `cargo test --workspace`。
+
+## 最近实现经验
+
+- `tools/lab/smb100a_fm_mod_microtest` 早期曾出现单文件 `main.rs` 约 3000 行的实现，后续已拆分为 `app`、`cli`、`types`、`timeline`、`artifacts`、`safety`、`transport`、`sequence`、`shutdown`、`tests` 等模块，`main.rs` 缩减为薄入口。
+- 后续新增 lab 工具优先复用已模块化的 transport / safety / artifacts / timeline 结构，避免再次回到超长 `main.rs`。
 
 ## 部署说明
 

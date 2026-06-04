@@ -267,7 +267,7 @@ Mag-M1 does not weaken ADR-008:
 | `MaynuoAxisRunner` | In-memory state machine runner |
 | `ZeroLockAxisGuiPayload` | Display-only GUI payload |
 | `match_axes_by_idn()` | SN-based discovery matching |
-| `extract_sn_from_idn()` | Parse SN from *IDN? response |
+| `extract_sn_from_idn()` | Parse SN from *IDN? response (replaced by `parse_maynuo_idn()` in M1.1) |
 | `build_output_on_zero_mode_plan()` | Output-on plan |
 | `build_measure_zero_current_plan()` | Zero measurement plan |
 | `build_lock_zero_event()` | Lock-zero event |
@@ -290,7 +290,7 @@ Mag-M1 does not weaken ADR-008:
 
 ## Test Coverage
 
-130 tests in `odmr-mag`:
+138 tests in `odmr-mag`:
 - SN matching (complete, unknown, duplicate, missing)
 - State machine transitions (valid paths and invalid)
 - Zero measurement and lock-zero workflow
@@ -302,3 +302,31 @@ Mag-M1 does not weaken ADR-008:
 - Serialization round-trips (state, runner)
 - All plans not executable
 - Existing M0/M0.5/M0.6 tests preserved
+
+## Mag-M1.1 Hardening Patch
+
+A narrow correctness patch applied before Mag-M2A hardware discovery.
+
+### Fixes Applied
+
+| Fix | Detail |
+|-----|--------|
+| **Strict IDN parser** | Added `MaynuoIdn` struct + `parse_maynuo_idn()`. Validates manufacturer, model, non-empty SN. Rejects malformed responses with `MagError::MalformedIdn` instead of silently matching empty strings. |
+| **Exact SN matching** | `match_axes_by_idn()` now uses exact `serial_number` equality via `expected_sn_from_idn()`. No substring `contains()` — empty or partial SNs cannot match. |
+| **Event timeline deduplication** | Removed `emit()` helper. Each state transition now creates exactly 1 `MaynuoAxisStateEvent` with `from_state` = old state, `to_state` = new state. No more duplicate events or `from == to` artifacts. |
+| **Readback sign preservation** | `readback_recur_current_ma()` no longer clamps negative recur with `.max(0.0)`. When `measured_total < zero` with `lock_zero = true`, recur is negative — preserving directional field information. |
+| **Verified normal shutdown consistency** | `build_10ma_microtest_plan()` now uses `CURR 0 → OUTP 0 → SYST:LOC` (verified normal). Previously used emergency order (`OUTP 0 → CURR 0 → SYST:LOC`) despite claiming `shutdown_mode = verified_normal`. |
+
+### Types Added in M1.1
+
+| Type | Purpose |
+|------|---------|
+| `MaynuoIdn` | Structured parsed *IDN? response: manufacturer, model, serial_number, firmware |
+| `parse_maynuo_idn()` | Strict IDN parser returning `Result<MaynuoIdn, MagError>` |
+| `expected_sn_from_idn()` | Helper to extract SN from expected_idn strings |
+
+### Error Variant Added in M1.1
+
+| Variant | When |
+|---------|------|
+| `MalformedIdn { idn, reason }` | IDN string fails structural or semantic validation |

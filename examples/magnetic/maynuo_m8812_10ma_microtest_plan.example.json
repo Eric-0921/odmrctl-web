@@ -3,7 +3,7 @@
   "kind": "maynuo_command_plan",
   "id": "maynuo_10ma_microtest_plan",
   "name": "Maynuo M8812 10 mA Micro-Test Plan",
-  "description": "Future Mag-M3 candidate: low-current single-axis micro-test. Target axis is selectable; default is X. This plan is NOT executable in Mag-M0.5. Shutdown uses verified_normal sequence: OUTP 0 → CURR 0 → SYST:LOC.",
+  "description": "Future Mag-M3 candidate: low-current single-axis micro-test. Target axis is selectable; default is X. This plan is NOT executable in Mag-M0.5. Shutdown uses verified_normal sequence: CURR 0 → OUTP 0 → SYST:LOC.",
   "axis_id": "mag_x",
   "profile_id": "maynuo_m8812_lab_xyz",
   "executable": false,
@@ -73,21 +73,21 @@
     },
     {
       "seq": 7,
-      "command_type": "set_output",
-      "scpi": "OUTP 0",
-      "expects_response": false,
-      "expected_response_shape": "none",
-      "event_name": "mag_output_disabled",
-      "blocking": false,
-      "delay_ms": 50
-    },
-    {
-      "seq": 8,
       "command_type": "set_current",
       "scpi": "CURR 0.00000",
       "expects_response": false,
       "expected_response_shape": "none",
       "event_name": "mag_current_zeroed",
+      "blocking": false,
+      "delay_ms": 50
+    },
+    {
+      "seq": 8,
+      "command_type": "set_output",
+      "scpi": "OUTP 0",
+      "expects_response": false,
+      "expected_response_shape": "none",
+      "event_name": "mag_output_disabled",
       "blocking": false,
       "delay_ms": 50
     },

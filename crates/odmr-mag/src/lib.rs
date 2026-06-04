@@ -84,6 +84,8 @@ pub enum MagError {
     TotalCurrentOverLimit { axis_id: String, total_ma: f64, limit_ma: f64 },
     /// Output enabled before safe init.
     OutputBeforeInit { axis_id: String },
+    /// Malformed *IDN? response.
+    MalformedIdn { idn: String, reason: String },
 }
 
 impl fmt::Display for MagError {
@@ -170,6 +172,9 @@ impl fmt::Display for MagError {
             }
             MagError::OutputBeforeInit { axis_id } => {
                 write!(f, "output enabled on {axis_id} before safe init")
+            }
+            MagError::MalformedIdn { idn, reason } => {
+                write!(f, "malformed *IDN? response: {reason}: {idn}")
             }
         }
     }
@@ -1390,7 +1395,7 @@ pub fn build_query_current_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
 
 /// Build a 10 mA micro-test command plan for a single axis.
 ///
-/// Uses verified normal shutdown: OUTP 0 → CURR 0 → SYST:LOC.
+/// Uses verified normal shutdown: CURR 0 → OUTP 0 → SYST:LOC.
 /// This is the only low-current micro-test example permitted in Mag-M0.5.
 pub fn build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoCommandPlan, MagError> {
     let test_current_ma = 10.0;
@@ -1413,9 +1418,9 @@ pub fn build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoComma
         cmd_entry(4, "set_current", &format!("CURR {test_current_a:.5}"), false, "none", "mag_current_set", false, Some(50), None),
         cmd_entry(5, "set_output", "OUTP 1", false, "none", "mag_output_enabled", false, Some(200), None),
         cmd_entry(6, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_measured", true, None, Some(300)),
-        // Verified normal shutdown: OUTP 0 → CURR 0 → SYST:LOC
-        cmd_entry(7, "set_output", "OUTP 0", false, "none", "mag_output_disabled", false, Some(50), None),
-        cmd_entry(8, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed", false, Some(50), None),
+        // Verified normal shutdown: CURR 0 → OUTP 0 → SYST:LOC
+        cmd_entry(7, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed", false, Some(50), None),
+        cmd_entry(8, "set_output", "OUTP 0", false, "none", "mag_output_disabled", false, Some(50), None),
         cmd_entry(9, "set_local", "SYST:LOC", false, "none", "mag_local_mode_set", false, Some(50), None),
     ];
 
@@ -1569,59 +1574,124 @@ pub struct MaynuoAxisStateEvent {
 }
 
 // ---------------------------------------------------------------------------
-// SN-based discovery matching (Mag-M1)
+// IDN parsing and SN-based discovery matching (Mag-M1.1)
 // ---------------------------------------------------------------------------
 
-/// Match observed *IDN? responses to logical axes by SN.
+/// Parsed *IDN? response from a Maynuo M8812.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MaynuoIdn {
+    pub manufacturer: String,
+    pub model: String,
+    pub serial_number: String,
+    pub firmware: Option<String>,
+}
+
+/// Parse an *IDN? response string into a structured MaynuoIdn.
+///
+/// Expected format: `MAYNUO,M8812,<SN>,<FW>`
+/// Requires manufacturer contains MAYNUO, model == M8812, non-empty SN.
+pub fn parse_maynuo_idn(idn: &str) -> Result<MaynuoIdn, MagError> {
+    let reject = |reason: String| {
+        Err::<MaynuoIdn, MagError>(MagError::MalformedIdn { idn: idn.into(), reason })
+    };
+
+    if idn.is_empty() {
+        return reject("empty response".to_string());
+    }
+    let fields: Vec<&str> = idn.split(',').collect();
+    if fields.len() < 3 {
+        return reject(format!("expected >=3 comma fields, got {}", fields.len()));
+    }
+    let manufacturer = fields[0].trim().to_string();
+    let model = fields[1].trim().to_string();
+    let serial_number = fields[2].trim().to_string();
+    let firmware = fields.get(3).map(|s| s.trim().to_string());
+
+    if !manufacturer.to_uppercase().contains("MAYNUO") {
+        return reject(format!("not a Maynuo device: manufacturer={manufacturer}"));
+    }
+    if model != "M8812" {
+        return reject(format!("not an M8812: model={model}"));
+    }
+    if serial_number.is_empty() {
+        return reject("empty serial number field".to_string());
+    }
+    Ok(MaynuoIdn { manufacturer, model, serial_number, firmware })
+}
+
+/// Extract the expected serial number from an expected_idn string.
+///
+/// Parses the expected_idn and returns just the serial number (third field).
+pub fn expected_sn_from_idn(expected_idn: &str) -> Result<String, MagError> {
+    parse_maynuo_idn(expected_idn).map(|p| p.serial_number)
+}
+
+/// Match observed *IDN? responses to logical axes by exact SN equality.
+///
+/// Rejects: unknown SN, malformed IDN, empty SN, duplicate observed SN,
+/// duplicate mapping to same axis, missing required axes.
 pub fn match_axes_by_idn(
     profile: &MaynuoAxesProfile,
     observed_idns: &[String],
 ) -> Result<std::collections::BTreeMap<String, String>, MagError> {
     let mut matched = std::collections::BTreeMap::new();
+    let mut seen_sn: std::collections::BTreeMap<String, String> = std::collections::BTreeMap::new();
+
     for idn in observed_idns {
-        let sn = extract_sn_from_idn(idn);
+        let parsed = parse_maynuo_idn(idn)?;
+        let sn = &parsed.serial_number;
+
+        // Reject duplicate observed SN
+        if let Some(prev_idn) = seen_sn.get(sn) {
+            return Err(MagError::DuplicateSerialNumber {
+                sn: sn.clone(),
+                axis_a: prev_idn.clone(),
+                axis_b: "(duplicate observed)".into(),
+            });
+        }
+        seen_sn.insert(sn.clone(), idn.clone());
+
+        // Find axis whose expected_idn contains exactly this SN
         let candidates: Vec<&MaynuoAxisProfile> = [
             &profile.axes.x,
             &profile.axes.y,
             &profile.axes.z,
         ]
         .iter()
-        .filter(|a| a.expected_idn.contains(sn))
+        .filter(|a| {
+            expected_sn_from_idn(&a.expected_idn)
+                .map(|esn| &esn == sn)
+                .unwrap_or(false)
+        })
         .copied()
         .collect();
 
         if candidates.is_empty() {
-            return Err(MagError::UnknownSerialNumber { sn: sn.into() });
+            return Err(MagError::UnknownSerialNumber { sn: sn.clone() });
         }
         if candidates.len() > 1 {
             return Err(MagError::DuplicateSerialNumber {
-                sn: sn.into(),
+                sn: sn.clone(),
                 axis_a: candidates[0].axis_id.clone(),
                 axis_b: candidates[1].axis_id.clone(),
             });
         }
-        if matched.contains_key(&candidates[0].axis_id) {
+        let axis_id = &candidates[0].axis_id;
+        if matched.contains_key(axis_id) {
             return Err(MagError::DuplicateSerialNumber {
-                sn: sn.into(),
-                axis_a: candidates[0].axis_id.clone(),
-                axis_b: candidates[0].axis_id.clone(),
+                sn: sn.clone(),
+                axis_a: axis_id.clone(),
+                axis_b: axis_id.clone(),
             });
         }
-        matched.insert(candidates[0].axis_id.clone(), idn.clone());
+        matched.insert(axis_id.clone(), idn.clone());
     }
     for axis_id in ["mag_x", "mag_y", "mag_z"] {
         if !matched.contains_key(axis_id) {
-            return Err(MagError::AxisNotDiscovered {
-                axis_id: axis_id.into(),
-            });
+            return Err(MagError::AxisNotDiscovered { axis_id: axis_id.into() });
         }
     }
     Ok(matched)
-}
-
-/// Extract the SN (third field) from an *IDN? response.
-pub fn extract_sn_from_idn(idn: &str) -> &str {
-    idn.split(',').nth(2).unwrap_or("")
 }
 
 // ---------------------------------------------------------------------------
@@ -1663,32 +1733,17 @@ impl MaynuoAxisRunner {
         }
     }
 
-    fn emit(&mut self, event_type: &str, detail: Option<String>) {
-        self.seq += 1;
-        self.events.push(MaynuoAxisStateEvent {
-            seq: self.seq,
-            timestamp: "2026-06-01T00:00:00Z".into(),
-            axis_id: self.axis_id.clone(),
-            from_state: self.state.state_name().into(),
-            to_state: String::new(),
-            event_type: event_type.into(),
-            detail,
-        });
-    }
-
     fn transition_to(&mut self, to: MaynuoAxisState, event_type: &str, detail: Option<String>) -> Result<(), MagError> {
-        let to_name = to.state_name();
-        if let Some(last) = self.events.last_mut() {
-            last.to_state = to_name.to_string();
-        }
+        let from_name = self.state.state_name().to_string();
+        let to_name = to.state_name().to_string();
         self.state = to;
         self.seq += 1;
         self.events.push(MaynuoAxisStateEvent {
             seq: self.seq,
             timestamp: "2026-06-01T00:00:00Z".into(),
             axis_id: self.axis_id.clone(),
-            from_state: self.events.last().map_or("".into(), |e| e.to_state.clone()),
-            to_state: to_name.into(),
+            from_state: from_name,
+            to_state: to_name,
             event_type: event_type.into(),
             detail,
         });
@@ -1699,10 +1754,11 @@ impl MaynuoAxisRunner {
         if !matches!(self.state, MaynuoAxisState::Unknown) {
             return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "Discovered".into(), reason: "already discovered".into() });
         }
-        if !self.profile.expected_idn.contains(extract_sn_from_idn(idn)) {
-            return Err(MagError::UnknownSerialNumber { sn: idn.into() });
+        let parsed = parse_maynuo_idn(idn)?;
+        let expected_sn = expected_sn_from_idn(&self.profile.expected_idn)?;
+        if parsed.serial_number != expected_sn {
+            return Err(MagError::UnknownSerialNumber { sn: parsed.serial_number });
         }
-        self.emit("mag_axis_discovered", Some(format!("idn={idn}")));
         self.transition_to(MaynuoAxisState::Discovered { idn: idn.into() }, "mag_axis_discovered", Some(format!("idn={idn}")))
     }
 
@@ -1711,7 +1767,6 @@ impl MaynuoAxisRunner {
             MaynuoAxisState::Discovered { idn } => idn.clone(),
             _ => return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "AxisMapped".into(), reason: "must be Discovered first".into() }),
         };
-        self.emit("mag_axis_mapped", Some(format!("axis_id={}", self.axis_id)));
         self.transition_to(MaynuoAxisState::AxisMapped { axis_id: self.axis_id.clone(), idn }, "mag_axis_mapped", Some(format!("axis_id={}", self.axis_id)))
     }
 
@@ -1724,7 +1779,6 @@ impl MaynuoAxisRunner {
         if my_id != self.axis_id {
             return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "InitializedOutputOff".into(), reason: "axis_id mismatch".into() });
         }
-        self.emit("mag_init_complete", None);
         self.transition_to(MaynuoAxisState::InitializedOutputOff { axis_id: self.axis_id.clone(), idn }, "mag_init_complete", None)
     }
 
@@ -1734,7 +1788,6 @@ impl MaynuoAxisRunner {
             _ => return Err(MagError::OutputBeforeInit { axis_id: self.axis_id.clone() }),
         };
         self.output = true;
-        self.emit("mag_output_on_zero", None);
         self.transition_to(MaynuoAxisState::OutputOnZeroMode { axis_id: self.axis_id.clone(), idn }, "mag_output_on_zero", None)
     }
 
@@ -1748,7 +1801,6 @@ impl MaynuoAxisRunner {
         };
         self.zero_current_ma = Some(measured_ma);
         self.measured_total_current_ma = Some(measured_ma);
-        self.emit("mag_zero_measured", Some(format!("zero={measured_ma:.3} mA")));
         self.transition_to(MaynuoAxisState::ZeroMeasured { axis_id: self.axis_id.clone(), idn, zero_current_ma: measured_ma }, "mag_zero_measured", Some(format!("zero={measured_ma:.3} mA")))
     }
 
@@ -1761,7 +1813,6 @@ impl MaynuoAxisRunner {
         };
         self.lock_zero = true;
         self.zero_current_ma = Some(zero_ma);
-        self.emit("mag_lock_zero_enabled", Some(format!("zero={zero_ma:.3} mA")));
         self.transition_to(MaynuoAxisState::ZeroLocked { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma }, "mag_lock_zero_enabled", Some(format!("zero={zero_ma:.3} mA")))
     }
 
@@ -1787,8 +1838,7 @@ impl MaynuoAxisRunner {
         self.recur_current_ma = Some(recur_ma);
         self.recur_field_nt = Some(target_field_nt);
         self.total_current_ma = Some(total_ma);
-        self.emit("mag_recur_setpoint_planned", Some(format!("field={target_field_nt:.2} nT, recur={recur_ma:.5} mA, total={total_ma:.5} mA")));
-        self.transition_to(MaynuoAxisState::RecurSetpointPlanned { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma, recur_current_ma: recur_ma, recur_field_nt: target_field_nt }, "mag_recur_setpoint_planned", Some(format!("field={target_field_nt:.2} nT, recur={recur_ma:.5} mA")))
+        self.transition_to(MaynuoAxisState::RecurSetpointPlanned { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma, recur_current_ma: recur_ma, recur_field_nt: target_field_nt }, "mag_recur_setpoint_planned", Some(format!("field={target_field_nt:.2} nT, recur={recur_ma:.5} mA, total={total_ma:.5} mA")))
     }
 
     pub fn apply_recur_setpoint_applied_mock(&mut self) -> Result<(), MagError> {
@@ -1802,19 +1852,16 @@ impl MaynuoAxisRunner {
         };
         self.total_current_ma = Some(total_ma);
         let cmd = format_current_command_from_ma(total_ma)?;
-        self.emit("mag_recur_setpoint_applied", Some(format!("cmd={cmd}, total={total_ma:.5} mA")));
         self.transition_to(MaynuoAxisState::RecurSetpointAppliedMock { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma, recur_current_ma: recur_ma, recur_field_nt: recur_field, total_current_ma: total_ma }, "mag_recur_setpoint_applied", Some(format!("cmd={cmd}, total={total_ma:.5} mA")))
     }
 
     pub fn apply_shutdown_normal(&mut self) -> Result<(), MagError> {
         self.output = false;
-        self.emit("mag_shutdown_normal", None);
         self.transition_to(MaynuoAxisState::ShutdownNormal { axis_id: self.axis_id.clone() }, "mag_shutdown_normal", None)
     }
 
     pub fn apply_shutdown_emergency(&mut self) -> Result<(), MagError> {
         self.output = false;
-        self.emit("mag_shutdown_emergency", None);
         self.transition_to(MaynuoAxisState::ShutdownEmergency { axis_id: self.axis_id.clone() }, "mag_shutdown_emergency", None)
     }
 
@@ -1826,7 +1873,7 @@ impl MaynuoAxisRunner {
         }
         if self.lock_zero {
             let zero = self.zero_current_ma.ok_or(MagError::LockZeroBeforeMeasurement { axis_id: self.axis_id.clone() })?;
-            Ok((measured_total_ma - zero).max(0.0))
+            Ok(measured_total_ma - zero)
         } else {
             Ok(0.0)
         }
@@ -2972,8 +3019,8 @@ mod tests {
         assert_eq!(plan.commands[4].scpi, "OUTP 1");
         assert_eq!(plan.commands[5].scpi, "MEAS:CURR?");
         assert!(plan.commands[5].expects_response);
-        assert_eq!(plan.commands[6].scpi, "OUTP 0");
-        assert_eq!(plan.commands[7].scpi, "CURR 0.00000");
+        assert_eq!(plan.commands[6].scpi, "CURR 0.00000");
+        assert_eq!(plan.commands[7].scpi, "OUTP 0");
         assert_eq!(plan.commands[8].scpi, "SYST:LOC");
         // Shutdown mode is verified_normal
         assert_eq!(plan.shutdown_mode.as_deref(), Some("verified_normal"));
@@ -3395,10 +3442,10 @@ mod tests {
         // Shutdown mode must be set
         assert_eq!(plan.shutdown_mode.as_deref(), Some("verified_normal"));
 
-        // Shutdown sequence: OUTP 0 → CURR 0 → SYST:LOC
+        // Shutdown sequence: CURR 0 → OUTP 0 → SYST:LOC (verified normal)
         let shutdown = &plan.commands[6..];
-        assert_eq!(shutdown[0].scpi, "OUTP 0");
-        assert_eq!(shutdown[1].scpi, "CURR 0.00000");
+        assert_eq!(shutdown[0].scpi, "CURR 0.00000");
+        assert_eq!(shutdown[1].scpi, "OUTP 0");
         assert_eq!(shutdown[2].scpi, "SYST:LOC");
     }
 
@@ -3473,11 +3520,52 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[test]
-    fn extract_sn_from_idn_standard() {
-        assert_eq!(
-            extract_sn_from_idn("MAYNUO,M8812,080020960220402020,V2.7"),
-            "080020960220402020"
-        );
+    fn parse_maynuo_idn_standard() {
+        let p = parse_maynuo_idn("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        assert_eq!(p.manufacturer, "MAYNUO");
+        assert_eq!(p.model, "M8812");
+        assert_eq!(p.serial_number, "080020960220402020");
+        assert_eq!(p.firmware.as_deref(), Some("V2.7"));
+    }
+
+    #[test]
+    fn parse_maynuo_idn_rejects_empty() {
+        assert!(matches!(parse_maynuo_idn(""), Err(MagError::MalformedIdn { .. })));
+    }
+
+    #[test]
+    fn parse_maynuo_idn_rejects_fewer_than_3_fields() {
+        assert!(matches!(parse_maynuo_idn("MAYNUO,M8812"), Err(MagError::MalformedIdn { .. })));
+    }
+
+    #[test]
+    fn parse_maynuo_idn_rejects_wrong_manufacturer() {
+        assert!(matches!(
+            parse_maynuo_idn("OTHER,M8812,SN123,V2.7"),
+            Err(MagError::MalformedIdn { .. })
+        ));
+    }
+
+    #[test]
+    fn parse_maynuo_idn_rejects_wrong_model() {
+        assert!(matches!(
+            parse_maynuo_idn("MAYNUO,M9999,SN123,V2.7"),
+            Err(MagError::MalformedIdn { .. })
+        ));
+    }
+
+    #[test]
+    fn parse_maynuo_idn_rejects_empty_sn() {
+        assert!(matches!(
+            parse_maynuo_idn("MAYNUO,M8812,,V2.7"),
+            Err(MagError::MalformedIdn { .. })
+        ));
+    }
+
+    #[test]
+    fn expected_sn_from_idn_extracts_sn() {
+        let sn = expected_sn_from_idn("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        assert_eq!(sn, "080020960220402020");
     }
 
     #[test]
@@ -3850,7 +3938,7 @@ mod tests {
         r.apply_recur_setpoint_planned_from_field(1000.0).unwrap();
         r.apply_recur_setpoint_applied_mock().unwrap();
 
-        assert!(r.events.len() >= 16, "Expected at least 16 events, got {}", r.events.len());
+        assert!(r.events.len() >= 8, "Expected at least 8 events, got {}", r.events.len());
         // Verify key events are present
         let event_types: Vec<&str> = r.events.iter().map(|e| e.event_type.as_str()).collect();
         assert!(event_types.contains(&"mag_axis_discovered"));
@@ -3876,6 +3964,29 @@ mod tests {
         let r = example_runner();
         let result = r.readback_recur_current_ma(-1.0);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn readback_negative_recur_current_preserved() {
+        let mut r = example_runner();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_axis_mapped().unwrap();
+        r.apply_initialized_output_off().unwrap();
+        r.apply_output_on_zero_mode().unwrap();
+        r.apply_zero_measured(100.0).unwrap(); // zero = 100 mA
+        r.apply_lock_zero().unwrap();
+        // measured total = 90 mA → recur = -10 mA (negative means less than zero offset)
+        let (recur_ma, recur_nt) = r.readback(90.0).unwrap();
+        assert!((recur_ma - (-10.0)).abs() < 0.01);
+        assert!(recur_nt < 0.0);
+    }
+
+    #[test]
+    fn match_axes_rejects_malformed_idn() {
+        let profile = example_maynuo_axes_profile();
+        let observed = vec!["MAYNUO,M8812".to_string()]; // only 2 fields
+        let result = match_axes_by_idn(&profile, &observed);
+        assert!(matches!(result.unwrap_err(), MagError::MalformedIdn { .. }));
     }
 
     // -----------------------------------------------------------------------

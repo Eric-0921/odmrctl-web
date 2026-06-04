@@ -11,7 +11,7 @@ Layer 5: GUI              apps/desktop/     (Tauri/Web)
 Layer 4: Application API  Tauri commands    (apps/desktop/src-tauri/)
 Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness
 Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device
+Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device  odmr-mag
 Layer 0: Types            odmr-types
 ```
 
@@ -40,6 +40,11 @@ Layer 0: Types            odmr-types
 - 拥有：OE1022D 串口协议、RALL? 采集帧解析、锁相参数设置
 - 依赖：odmr-device, odmr-types
 - 被：odmr-executor（高频采集链路）
+
+**`odmr-mag`** — 三轴磁场控制规划与协议边界模块。
+- 拥有：Maynuo M8812 协议数据模型、线圈矩阵/电流换算、命令计划、零点锁定工作流、mock 状态机
+- 依赖：odmr-device, odmr-types
+- 当前状态：Mag-M1 mock-only；不打开真实串口，不输出真实电流
 
 ### Layer 2 — 领域逻辑
 
@@ -131,3 +136,8 @@ Recipe 执行链路:
 - 各 PRD 详情: `docs/prd/0*_prd_v0.2.md`
 - 技术选型原因: `docs/adr/ADR-*.md`
 - 进行中的设计决策: `docs/decisions/`
+
+## 实现备注
+
+- `tools/lab/` 下的 M3 SMB100A 工具已经从单文件原型向模块化实现迁移。
+- 其中 `smb100a_fm_mod_microtest` 曾出现约 3000 行 `main.rs` 的阶段性实现，随后拆分为独立模块，保留 `main.rs` 作为薄入口。这一经验可视为后续 lab bring-up 工具的默认实现约束。

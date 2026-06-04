@@ -18,6 +18,8 @@ Layer 0: Types             odmr-types
 Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_command_verify/
 ```
 
+当前状态：**GUI-M0 mock viewer 已稳定；M2 bring-up 已完成 Phase 1；主线已进入 M3 受控 SMB100A/OE1022D 双设备联调；`odmr-mag` 处于 Mag-M1 mock-only。**
+
 ## 核心理念
 
 | 原则 | 含义 |
@@ -62,6 +64,12 @@ Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_co
 | **其他** | | |
 | 执行器影子运行 | `tools/lab/executor_shadow_run/` | 执行器影子运行（不接触硬件）|
 
+最近新增的 M3 工具还包括：
+
+- `tools/lab/smb100a_oe1022d_step_sweep/` — SMB100A/OE1022D 软件步进 sweep
+- `tools/lab/smb100a_oe1022d_extended_sweep/` — repeat / statistics / quarantine 扩展 sweep
+- `tools/lab/recipe_two_device_run/` — recipe-shaped 双设备运行
+
 > ⚠️ **ADR-004 约束**：所有 lab 工具均为只读或 human-in-the-loop 模式；AI 禁止直接控制硬件输出。
 
 ## 开发入口
@@ -77,6 +85,11 @@ Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_co
 bash scripts/check-consistency.sh
 git config core.hooksPath .githooks   # 启用 pre-commit
 ```
+
+## 开发策略备注
+
+- 近期实机联调采用 `mock-first -> query-only -> operator-approved micro-test -> dual-device sweep -> recipe-shaped run` 的渐进策略。
+- `smb100a_fm_mod_microtest` 曾一度把大量流程、CLI、传输、安全和产物逻辑堆在单个 `main.rs` 中，后续已模块化拆分，`main.rs` 仅保留薄入口。后续 lab 工具默认沿用这种模块边界。
 
 ## GUI-M0 Mock Viewer
 

@@ -2,7 +2,7 @@
   "schema_version": "0.2.0",
   "kind": "run_manifest",
   "run_id": "basic_odmr_mock_run",
-  "created_at_unix_ms": 1780131182613,
+  "created_at_unix_ms": 1780553291697,
   "artifact_paths": {
     "manifest": "manifest.json",
     "station_snapshot": "metadata/station_snapshot.json",
