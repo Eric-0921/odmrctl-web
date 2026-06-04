@@ -19,6 +19,48 @@ pub fn run(cli: &Cli) -> Result<(), String> {
     let started_at = chrono_like_now();
     let run_id = format!("mag_m5a_{}", started_at.replace(|c: char| !c.is_alphanumeric(), "_"));
 
+    // ---- Station preflight (if --station-profile provided) ----
+    // Preflight is read-only; it runs BEFORE operator approval
+    if let Some(ref profile_path) = cli.station_profile {
+        let station_profile = common_preflight::StationProfile::load(
+            profile_path.to_str().unwrap_or("")
+        ).map_err(|e| format!("load station profile: {e}"))?;
+
+        println!("=== Station Preflight ===");
+        let preflight_report = common_preflight::run_station_preflight(&station_profile)
+            .map_err(|e| format!("station preflight failed: {e}"))?;
+
+        println!(
+            "Preflight: reachable={}, identities={}, safe_states={}",
+            preflight_report.all_devices_reachable,
+            preflight_report.all_identities_verified,
+            preflight_report.all_safe_states_confirmed
+        );
+
+        if !preflight_report.passed() {
+            return Err(format!(
+                "Station preflight FAILED. See report for details."
+            ));
+        }
+
+        // Write preflight artifacts to out_dir
+        let preflight_dir = cli.out_dir.join("preflight");
+        let _ = fs::create_dir_all(&preflight_dir);
+        let _ = common_preflight::station_report::write_json(
+            &preflight_report,
+            &preflight_dir.join("station_preflight_report.json")
+        );
+        let _ = common_preflight::station_report::write_markdown(
+            &preflight_report,
+            &preflight_dir.join("station_preflight_report.md")
+        );
+
+        if cli.preflight_only {
+            println!("--preflight-only: exiting after preflight.");
+            return Ok(());
+        }
+    }
+
     // ---- Operator approval ----
     if !cli.dry_run && !cli.operator_approve {
         return Err(
@@ -710,6 +752,8 @@ fn make_default_cli() -> Cli {
         out_dir: std::path::PathBuf::from("out/rf_mag_oe_minimal_run"),
         operator_approve: false,
         operator_note: None,
+        station_profile: None,
+        preflight_only: false,
         dry_run: false,
     }
 }

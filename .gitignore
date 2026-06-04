@@ -40,3 +40,10 @@ runs/
 screenshots/
 screenshot_verify.py
 out/
+
+# R&S VISA driver examples (not part of workspace)
+examples/Driver_Csharp_Examples/
+examples/RsInstrument_VB.NET_Hello_World_Example/
+
+# Preflight output directories
+/preflight/

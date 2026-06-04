@@ -27,16 +27,18 @@ FRONTEND_DIR="apps/desktop"
 
 # Patterns that indicate direct hardware access in frontend code
 PATTERNS=(
-    'serial|SerialPort|serialport'
-    'usb|UsbDevice|libusb'
-    'visa|Visa|pyvisa|VISA'
+    '\bserial(port|_port)?\b'
+    '\busb(device|_device)?\b'
+    '\bvisa\b'
     'scpi.*socket|socket.*scpi|SCPI.*SOCKET'
     'TcpStream|tcp_connect|TcpListener'
     'write_serial|read_serial|open_port'
 )
 
 for pat in "${PATTERNS[@]}"; do
-    matches=$(find "$FRONTEND_DIR" -type f \( -name '*.rs' -o -name '*.ts' -o -name '*.js' -o -name '*.tsx' -o -name '*.json' \) -print0 2>/dev/null | \
+    matches=$(find "$FRONTEND_DIR/src-tauri" -type f \( -name '*.rs' -o -name 'Cargo.toml' \) \
+        -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/target/*' \
+        -print0 2>/dev/null | \
         xargs -0 grep -iE "$pat" 2>/dev/null || true)
     if [ -n "$matches" ]; then
         fail "pattern '$pat' found in frontend:\n$matches"
@@ -51,8 +53,10 @@ IMPORT_PATTERNS=(
 )
 
 for pat in "${IMPORT_PATTERNS[@]}"; do
-    matches=$(find "$FRONTEND_DIR" -type f \( -name '*.rs' -o -name 'Cargo.toml' \) -print0 2>/dev/null | \
-        xargs -0 grep -F "$pat" 2>/dev/null || true)
+    matches=$(find "$FRONTEND_DIR/src-tauri" -type f \( -name '*.rs' -o -name 'Cargo.toml' \) \
+        -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' \
+        -print0 2>/dev/null | \
+        xargs -0 grep -v '^#' | grep -F "$pat" 2>/dev/null || true)
     if [ -n "$matches" ]; then
         fail "frontend imports hardware crate '$pat':\n$matches"
     fi

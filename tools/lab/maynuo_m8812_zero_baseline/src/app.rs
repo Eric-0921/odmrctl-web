@@ -359,18 +359,7 @@ fn attempt_cleanup(
 ) {
     let mut all_ok = true;
 
-    match transport.send_set_output(false) {
-        Ok(()) => {
-            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, None);
-        }
-        Err(e) => {
-            all_ok = false;
-            let err = e.to_string();
-            baseline.errors.push(format!("shutdown OUTP 0: {err}"));
-            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, Some(err));
-        }
-    }
-
+    // CURR 0 before OUTP 0: ramp current down before disabling output
     match transport.send_set_current(0.0) {
         Ok(()) => {
             push_audit(audit_seq, audit, &baseline.axis_id, "CURR 0.00000", "set_current", false, None, None);
@@ -380,6 +369,18 @@ fn attempt_cleanup(
             let err = e.to_string();
             baseline.errors.push(format!("shutdown CURR 0: {err}"));
             push_audit(audit_seq, audit, &baseline.axis_id, "CURR 0.00000", "set_current", false, None, Some(err));
+        }
+    }
+
+    match transport.send_set_output(false) {
+        Ok(()) => {
+            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, None);
+        }
+        Err(e) => {
+            all_ok = false;
+            let err = e.to_string();
+            baseline.errors.push(format!("shutdown OUTP 0: {err}"));
+            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, Some(err));
         }
     }
 

@@ -1,0 +1,9 @@
+[package]
+name = "visa_probe"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+visa-rs = { version = "0.7.0-alpha.1", default-features = false }
+
+[workspace]

@@ -76,6 +76,13 @@ pub struct Cli {
     #[arg(long)]
     pub operator_note: Option<String>,
 
+    // ---- Preflight ----
+    #[arg(long)]
+    pub station_profile: Option<PathBuf>,
+
+    #[arg(long)]
+    pub preflight_only: bool,
+
     // ---- Dry-run ----
     #[arg(long)]
     pub dry_run: bool,

@@ -408,6 +408,8 @@ fn test_single_axis_only_no_simultaneous_output() {
         out_dir: PathBuf::from("out/test"),
         operator_approve: true,
         operator_note: None,
+        station_profile: None,
+        preflight_only: false,
         dry_run: true,
     };
 

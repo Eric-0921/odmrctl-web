@@ -438,6 +438,20 @@ fn process_axis(
     push_audit(&mut seq, &mut audit, &result.axis_id, "OUTP 0", "set_output", false, None, None, false);
     result.output_final_off = true;
 
+    // Wait for current to decay, then verify
+    std::thread::sleep(std::time::Duration::from_millis(500));
+    match transport.query_meas_current() {
+        Ok(current_a) => {
+            let current_ma = current_a * 1000.0;
+            result.current_final_zero = current_ma.abs() < 1.0;
+            push_audit(&mut seq, &mut audit, &result.axis_id, "MEAS:CURR?", "query_current", true, Some(format!("{:.6}", current_a)), None, false);
+        }
+        Err(e) => {
+            result.errors.push(format!("cleanup MEAS:CURR? failed: {e}"));
+            push_audit(&mut seq, &mut audit, &result.axis_id, "MEAS:CURR?", "query_current", true, None, Some(e.to_string()), false);
+        }
+    }
+
     // SYST:LOC
     if let Err(e) = transport.send_set_local() {
         result.errors.push(format!("cleanup SYST:LOC: {e}"));
