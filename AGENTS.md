@@ -165,7 +165,9 @@ pnpm tauri build      # 发布构建
 
 ### Coding Agent 设备连接/测试提示（必读）
 
-> 本条专门针对 AI coding agent，防止以"硬件不可用"为由跳过可完成的软件层工作。
+> 本条专门针对 AI coding agent。
+
+#### 规则 1：区分"纯软件工作"和"需要硬件的工作"
 
 **以下工作不需要真实硬件，用 mock/harness 完成即为标准流程：**
 
@@ -190,6 +192,60 @@ pnpm tauri build      # 发布构建
 - **Mock-first 是设计意图，不是临时 workaround。** `odmr-harness` 中的 `FakeDevice` 实现与真实设备驱动共享同一 `Device` trait，通过 harness 测试即视为有效验证。
 - **Layer 2（domain）和 Layer 3（runtime）的新功能，不应以"硬件 unavailable"为由 block。** 这些层只操作数据结构（`Recipe`、`ResolvedRecipe`、`SafetyReport`），不直接访问硬件。
 - **只有 Layer 1（driver）和 `tools/lab/` 的端到端工具才需要真实硬件。** 且这些工具的测试也先在 `FakeTransport` / `FakeDevice` 上跑通，再预约 lab 时间做真实验证。
+
+#### 规则 2：需要硬件时必须走标准化 preflight，禁止自己瞎连接
+
+如果你的任务涉及真实设备（SMB100A、OE1022D、Maynuo、CNI Laser），**必须按以下顺序执行**，禁止跳过步骤或自行发明连接逻辑：
+
+**Step 1 — 读现有审计文档（必读，不要猜）**
+- `docs/lab-bringup/device_connection_initialization_audit.md` — 设备连接审计根因、状态机、cleanup 标准
+- `docs/lab-bringup/p6_m5a_audit_b_device_connection_contract.md` — 各设备 probe 分类、auto-discovery 风险
+- `docs/lab-bringup/cni_laser_preflight_plan.md` — 激光器 off-only 安全边界
+- `crates/odmr-preflight/README.md` — 已提取的共享 preflight crate API
+
+**Step 2 — 使用 common_preflight 做统一设备预检**
+```bash
+cd tools/lab/common_preflight
+cargo run -- --station-profile <path> --preflight-only
+```
+或调用 `odmr-preflight` crate 的 API：
+```rust
+use odmr_preflight::{run_station_preflight, StationProfile};
+let profile = StationProfile::load("station.json")?;
+let report = run_station_preflight(&profile, Some(&ledger_path), true)?;
+```
+
+**Step 3 — 检查 preflight report**
+Preflight 会生成 `station_preflight_report.json`，必须确认：
+- `all_devices_reachable: true`
+- `all_identities_verified: true`
+- `all_safe_states_confirmed: true`
+- 各设备的 `error_queue` 为空
+- SMB100A: `rf_output: off`, `modulation: off`, `fm: off`
+- Maynuo: `output_on: false`, `current_ma` 在 tolerance 内
+
+**Step 4 — 设备锁持有期间才能执行真实 run**
+```rust
+let (report, locks) = run_station_preflight_with_locks(&profile, ...)?;
+// locks 持有期间，其他进程无法占用同一设备
+// run 结束后 locks drop，设备释放
+```
+
+**Step 5 — cleanup 后必须验证**
+Maynuo cleanup 标准顺序：
+```text
+CURR 0 → OUTP 0 → wait 500ms → MEAS:CURR? → verify → SYST:LOC
+```
+SMB cleanup：必须发送 `OUTP OFF`，无论正常完成还是异常退出。
+
+**禁止行为（已造成过问题）：**
+- ❌ 自己写 TCP socket 直接连 SMB100A 而不走 preflight
+- ❌ 自己枚举 `/dev/cu.*` 猜测哪个是 OE1022D / Maynuo
+- ❌ 跳过 `*IDN?` 身份确认直接发配置命令
+- ❌ 在 preflight 失败时继续执行实验步骤
+- ❌ Maynuo cleanup 后直接 `SYST:LOC` 不等待电流衰减
+- ❌ 用 `*RST` 重置 OE1022D（会清空数据 buffer）
+- ❌ 激光器不经过 off-only preflight 直接并入 RF/Mag/OE run
 
 ## 代码风格指南
 
