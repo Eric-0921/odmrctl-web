@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { AnalysisData } from "../types/analysis";
+import { formatVoltage, pickVoltageUnit } from "../utils/formatVoltage";
 
 type LoadState =
   | { tag: "empty" }
@@ -153,10 +154,15 @@ export default function AnalysisViewerPage() {
   const as_ = data.analysis_summary;
   const ro = data.run_overlay_summary;
 
+  // Pick a unified display unit for all voltage values in this analysis
+  const allBxValues = ro.frequencies.map((f) => f.b_x_mean_mv);
+  const allByValues = ro.frequencies.map((f) => f.b_y_mean_mv);
+  const displayUnit = pickVoltageUnit([...allBxValues, ...allByValues]);
+
   const chartData = ro.frequencies.map((f) => ({
     freq_ghz: f.frequency_hz / 1e9,
-    "B-X mean (mV)": f.b_x_mean_mv,
-    "B-Y mean (mV)": f.b_y_mean_mv,
+    bxMean: f.b_x_mean_mv,
+    byMean: f.b_y_mean_mv,
   }));
 
   return (
@@ -242,7 +248,7 @@ export default function AnalysisViewerPage() {
               tick={{ fontSize: 11, fill: "var(--color-text-muted)" }}
             />
             <YAxis
-              label={{ value: "Signal (mV)", angle: -90, position: "insideLeft", offset: 8, style: { fill: "var(--color-text-muted)", fontSize: 12 } }}
+              label={{ value: `Signal (${displayUnit})`, angle: -90, position: "insideLeft", offset: 8, style: { fill: "var(--color-text-muted)", fontSize: 12 } }}
               tick={{ fontSize: 11, fill: "var(--color-text-muted)" }}
             />
             <Tooltip
@@ -252,12 +258,15 @@ export default function AnalysisViewerPage() {
                 borderRadius: "var(--radius-sm)",
                 fontSize: "var(--font-size-sm)",
               }}
-              formatter={(value) => ((Number(value) * 1000).toFixed(4) + " µV")}
+              formatter={(value, name) => [
+                formatVoltage(Number(value), { unit: displayUnit, digits: 4 }),
+                String(name),
+              ]}
               labelFormatter={(label) => `${Number(label).toFixed(4)} GHz`}
             />
             <Legend wrapperStyle={{ fontSize: "var(--font-size-sm)" }} />
-            <Line type="monotone" dataKey="B-X mean (mV)" stroke="var(--color-primary)" dot={{ r: 2 }} strokeWidth={2} />
-            <Line type="monotone" dataKey="B-Y mean (mV)" stroke="var(--color-accent)" dot={{ r: 2 }} strokeWidth={2} />
+            <Line type="monotone" dataKey="bxMean" name="B-X mean" stroke="var(--color-primary)" dot={{ r: 2 }} strokeWidth={2} />
+            <Line type="monotone" dataKey="byMean" name="B-Y mean" stroke="var(--color-accent)" dot={{ r: 2 }} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -272,10 +281,10 @@ export default function AnalysisViewerPage() {
           <thead>
             <tr>
               <th>Freq (GHz)</th>
-              <th>B-X Mean (mV)</th>
-              <th>B-X Std (mV)</th>
-              <th>B-Y Mean (mV)</th>
-              <th>B-Y Std (mV)</th>
+              <th>B-X Mean ({displayUnit})</th>
+              <th>B-X Std ({displayUnit})</th>
+              <th>B-Y Mean ({displayUnit})</th>
+              <th>B-Y Std ({displayUnit})</th>
               <th>Points</th>
               <th>Frames</th>
             </tr>
@@ -284,10 +293,10 @@ export default function AnalysisViewerPage() {
             {ro.frequencies.map((f) => (
               <tr key={f.frequency_hz}>
                 <td>{ghz(f.frequency_hz)}</td>
-                <td>{(f.b_x_mean_mv * 1000).toFixed(3)}</td>
-                <td>{(f.b_x_std_mv * 1000).toFixed(3)}</td>
-                <td>{(f.b_y_mean_mv * 1000).toFixed(3)}</td>
-                <td>{(f.b_y_std_mv * 1000).toFixed(3)}</td>
+                <td>{formatVoltage(f.b_x_mean_mv, { unit: displayUnit, digits: 3 })}</td>
+                <td>{formatVoltage(f.b_x_std_mv, { unit: displayUnit, digits: 3 })}</td>
+                <td>{formatVoltage(f.b_y_mean_mv, { unit: displayUnit, digits: 3 })}</td>
+                <td>{formatVoltage(f.b_y_std_mv, { unit: displayUnit, digits: 3 })}</td>
                 <td>{f.point_count}</td>
                 <td>{f.total_frames_used}</td>
               </tr>
@@ -311,7 +320,7 @@ export default function AnalysisViewerPage() {
               <tr key={rid}>
                 <td style={{ fontSize: "var(--font-size-xs)" }}>{rid}</td>
                 <td style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", maxWidth: 320, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {as_.oe1022d_display_idn_by_run[rid] || "—"}
+                  {as_.oe1022d_display_idn_by_run[rid] ?? "—"}
                 </td>
               </tr>
             ))}
@@ -323,15 +332,15 @@ export default function AnalysisViewerPage() {
       <h2 style={sectionTitle}>Analysis Summary</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "var(--space-2)", marginBottom: "var(--space-4)" }}>
         {[
-          ["Frequency Range", `${ghz(as_.source_run_ids.length > 0 ? ro.frequencies[0]?.frequency_hz ?? 0 : 0)} – ${ghz(ro.frequencies[ro.frequencies.length - 1]?.frequency_hz ?? 0)} GHz`],
+          ["Frequency Range", ro.frequencies.length > 0 ? `${ghz(ro.frequencies[0].frequency_hz)} – ${ghz(ro.frequencies[ro.frequencies.length - 1].frequency_hz)} GHz` : "N/A"],
           ["Frequency Points", String(as_.frequency_count)],
           ["Total Frames Used", String(as_.frames_used)],
           ["Frames Parse Failed", String(as_.frames_parse_failed)],
           ["Parse Failure Rate", as_.parse_failure_rate.toFixed(4)],
-          ["B-X Contrast (mV)", as_.contrast_estimate_b_x_mv != null ? (as_.contrast_estimate_b_x_mv * 1000).toFixed(3) : "N/A"],
-          ["B-Y Contrast (mV)", as_.contrast_estimate_b_y_mv != null ? (as_.contrast_estimate_b_y_mv * 1000).toFixed(3) : "N/A"],
+          ["B-X Contrast", as_.contrast_estimate_b_x_mv != null ? formatVoltage(as_.contrast_estimate_b_x_mv, { unit: displayUnit, digits: 3 }) : "N/A"],
+          ["B-Y Contrast", as_.contrast_estimate_b_y_mv != null ? formatVoltage(as_.contrast_estimate_b_y_mv, { unit: displayUnit, digits: 3 }) : "N/A"],
           ["Quality Grade", qf.passed ? "PASSED" : "FAILED"],
-          ["ODMR Dip Claimed", "false"],
+          ["ODMR Dip Claimed", as_.odmr_dip_detected ? "YES" : "NO"],
         ].map(([label, value]) => (
           <div key={label as string} style={cardStyle}>
             <div style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>{label as string}</div>

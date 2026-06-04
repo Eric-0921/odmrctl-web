@@ -10,9 +10,11 @@ export interface SpectrumPoint {
   b_x_mean_v: number;
   b_x_mean_mv: number;
   b_x_std_v: number;
+  b_x_std_mv: number;
   b_y_mean_v: number;
   b_y_mean_mv: number;
   b_y_std_v: number;
+  b_y_std_mv: number;
   frames_used: number;
   frames_parse_failed: number;
   step_passed: boolean;

@@ -1,7 +1,8 @@
 // Prevents additional console window on Windows in release mode.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
@@ -21,7 +22,7 @@ fn app_metadata() -> serde_json::Value {
 // M4.0 analysis data types — must match frontend types/analysis.ts exactly
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct SpectrumPoint {
     run_id: String,
     step_id: String,
@@ -40,7 +41,7 @@ struct SpectrumPoint {
     quality_flags: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct FrequencyGroup {
     frequency_hz: f64,
     point_count: i64,
@@ -65,7 +66,7 @@ struct FrequencyGroup {
     b_y_max_mv: f64,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct RunOverlaySummaryData {
     schema_version: String,
     kind: String,
@@ -74,7 +75,7 @@ struct RunOverlaySummaryData {
     frequencies: Vec<FrequencyGroup>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct AnalysisSummaryData {
     schema_version: String,
     kind: String,
@@ -95,17 +96,18 @@ struct AnalysisSummaryData {
     contrast_estimate_b_x_mv: Option<f64>,
     contrast_estimate_b_y_v: Option<f64>,
     contrast_estimate_b_y_mv: Option<f64>,
-    oe1022d_display_idn_by_run: serde_json::Value,
+    oe1022d_display_idn_by_run: HashMap<String, String>,
     generated_at: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct QualityFlagsData {
     schema_version: String,
     kind: String,
     passed: bool,
     missing_artifact: bool,
-    missing_artifact_details: serde_json::Value,
+    #[serde(default)]
+    missing_artifact_details: HashMap<String, Vec<String>>,
     failed_run: bool,
     failed_run_ids: Vec<String>,
     parse_failures: bool,
@@ -115,22 +117,24 @@ struct QualityFlagsData {
     unsafe_final_state: bool,
     unsafe_final_state_run_ids: Vec<String>,
     csv_present: bool,
-    csv_present_details: serde_json::Value,
+    #[serde(default)]
+    csv_present_details: HashMap<String, Vec<String>>,
     magnetic_command_present: bool,
-    magnetic_command_details: serde_json::Value,
+    #[serde(default)]
+    magnetic_command_details: HashMap<String, i64>,
     frequency_grid_mismatch: bool,
     empty_signal_series: bool,
     generated_at: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct ExportManifestFile {
     relative_path: String,
     sha256: String,
     size_bytes: i64,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct ExportManifestData {
     schema_version: String,
     kind: String,
@@ -139,7 +143,7 @@ struct ExportManifestData {
     files: Vec<ExportManifestFile>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct AnalysisData {
     spectrum_points: Vec<SpectrumPoint>,
     run_overlay_summary: RunOverlaySummaryData,

@@ -166,6 +166,8 @@ def build_spectrum_points(runs: list[dict]) -> list[dict]:
                 "b_y_mean_mv": b_y * MV_PER_V if b_y is not None else None,
                 "b_x_std_v": b_x_std,
                 "b_y_std_v": b_y_std,
+                "b_x_std_mv": b_x_std * MV_PER_V if b_x_std is not None else None,
+                "b_y_std_mv": b_y_std * MV_PER_V if b_y_std is not None else None,
                 "frames_used": row.get("frames_parsed", row.get("frames_captured", 0)),
                 "frames_parse_failed": row.get("frames_parse_failed", 0),
                 "step_passed": row.get("step_passed", False),
@@ -334,9 +336,9 @@ def build_summary(runs: list[dict], points: list[dict], overlay: dict, flags: di
         "no_csv": not flags["csv_present"],
         "no_magnetic": not flags["magnetic_command_present"],
         "parse_failure_rate": parse_failure_rate,
-        "contrast_estimate_b_x": b_x_contrast,
+        "contrast_estimate_b_x_v": b_x_contrast,
         "contrast_estimate_b_x_mv": b_x_contrast * MV_PER_V if b_x_contrast is not None else None,
-        "contrast_estimate_b_y": b_y_contrast,
+        "contrast_estimate_b_y_v": b_y_contrast,
         "contrast_estimate_b_y_mv": b_y_contrast * MV_PER_V if b_y_contrast is not None else None,
         "physical_odmr_response_required": False,
         "odmr_dip_detected": False,
@@ -372,8 +374,8 @@ def write_summary_markdown(path: Path, summary: dict, overlay: dict, flags: dict
         f"- Frames used: {summary['frames_used']}",
         f"- Parse failures: {summary['frames_parse_failed']}",
         f"- Parse failure rate: {summary['parse_failure_rate']:.6f}",
-        f"- B-X contrast estimate: {fmt_optional(summary['contrast_estimate_b_x'], ' V')} ({fmt_optional(summary['contrast_estimate_b_x_mv'], ' mV')})",
-        f"- B-Y contrast estimate: {fmt_optional(summary['contrast_estimate_b_y'], ' V')} ({fmt_optional(summary['contrast_estimate_b_y_mv'], ' mV')})",
+        f"- B-X contrast estimate: {fmt_optional(summary['contrast_estimate_b_x_v'], ' V')} ({fmt_optional(summary['contrast_estimate_b_x_mv'], ' mV')})",
+        f"- B-Y contrast estimate: {fmt_optional(summary['contrast_estimate_b_y_v'], ' V')} ({fmt_optional(summary['contrast_estimate_b_y_mv'], ' mV')})",
         f"- ODMR dip detected: {summary['odmr_dip_detected']}",
         "",
         "## Boundary Checks",
@@ -501,8 +503,8 @@ def write_lab_report(path: Path, result: dict):
         f"- Frames used: {summary['frames_used']} (expected 330)",
         f"- Parse failures: {summary['frames_parse_failed']}",
         f"- Parse failure rate: {summary['parse_failure_rate']:.6f}",
-        f"- B-X contrast estimate: {summary['contrast_estimate_b_x']:.12g} V / {summary['contrast_estimate_b_x_mv']:.12g} mV",
-        f"- B-Y contrast estimate: {summary['contrast_estimate_b_y']:.12g} V / {summary['contrast_estimate_b_y_mv']:.12g} mV",
+        f"- B-X contrast estimate: {summary['contrast_estimate_b_x_v']:.12g} V / {summary['contrast_estimate_b_x_mv']:.12g} mV",
+        f"- B-Y contrast estimate: {summary['contrast_estimate_b_y_v']:.12g} V / {summary['contrast_estimate_b_y_mv']:.12g} mV",
         f"- ODMR dip detected: {summary['odmr_dip_detected']} (M3.6 does not infer resonance)",
         "",
         "## Boundary Checks",
@@ -594,7 +596,7 @@ def self_test():
         assert result["overlay"]["frequency_count"] == 2
         assert result["summary"]["frames_used"] == 20
         assert not result["flags"]["frequency_grid_mismatch"]
-        assert result["summary"]["contrast_estimate_b_x"] is not None
+        assert result["summary"]["contrast_estimate_b_x_v"] is not None
 
         missing = root / "missing_case"
         missing.mkdir()
