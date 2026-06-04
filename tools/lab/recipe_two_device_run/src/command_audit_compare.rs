@@ -25,28 +25,9 @@ pub fn compare_plan_vs_audit(
         .collect();
 
     // Check forbidden commands in actual
-    const FORBIDDEN_PATTERNS: &[&str] = &[
-        "FREQ:MODE SWE",
-        "FREQ:STAR",
-        "FREQ:STOP",
-        "SWE",
-        "SWE:STEP",
-        "SWE:DWEL",
-        "LIST",
-        "TRIG",
-        "INIT",
-        "LFO ON",
-        "LFO OFF",
-        "AM:STAT ON",
-        "PM:STAT ON",
-        "PULM:STAT ON",
-        "*RST",
-        "*CLS",
-    ];
-
     for entry in actual {
         let cmd_upper = entry.command.to_ascii_uppercase();
-        for pat in FORBIDDEN_PATTERNS {
+        for pat in crate::constants::SMB_FORBIDDEN_PATTERNS {
             if cmd_upper.contains(pat) && entry.sent_to_transport {
                 forbidden.push(format!(
                     "command='{}' matches forbidden pattern '{}'",

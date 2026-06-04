@@ -14,7 +14,7 @@ pub fn run_real(
     resolved: &M3_4ResolvedRecipe,
     plan_entries: &[CommandPlanEntry],
     run_dir: &odmr_logging::RunDirectory,
-) -> Result<M3_4RunResult, String> {
+) -> Result<(M3_4RunResult, Vec<M3_4CommandAuditEntry>), String> {
     let mut audit: Vec<M3_4CommandAuditEntry> = Vec::new();
     let mut step_results: Vec<RfStepSummaryEntry> = Vec::new();
     let mut errors: Vec<String> = Vec::new();
@@ -333,31 +333,34 @@ pub fn run_real(
         && comparison.passed
         && step_results.iter().all(|s| s.step_passed);
 
-    Ok(M3_4RunResult {
-        schema_version: "0.2.0".into(),
-        kind: "two_device_run_result".into(),
-        run_id: cli.run_id.clone(),
-        mode: "real".into(),
-        recipe_id: recipe.id.clone(),
-        resolved_recipe_id: resolved.id.clone(),
-        passed,
-        steps_completed: step_results.len() as u64,
-        total_steps: resolved.total_steps,
-        frames_requested: total_requested,
-        frames_captured: total_captured,
-        frames_parsed: total_parsed,
-        frames_parse_failed: total_failed,
-        parse_failure_rate,
-        final_rf_off,
-        final_mod_off,
-        final_fm_off,
-        final_syst_err_clean: syst_err_clean,
-        command_audit_comparison_passed: comparison.passed,
-        no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
-        emergency_shutdown_triggered: emergency,
-        alignment_count: alignment_entries.len() as u64,
-        notes: errors,
-    })
+    Ok((
+        M3_4RunResult {
+            schema_version: "0.2.0".into(),
+            kind: "two_device_run_result".into(),
+            run_id: cli.run_id.clone(),
+            mode: "real".into(),
+            recipe_id: recipe.id.clone(),
+            resolved_recipe_id: resolved.id.clone(),
+            passed,
+            steps_completed: step_results.len() as u64,
+            total_steps: resolved.total_steps,
+            frames_requested: total_requested,
+            frames_captured: total_captured,
+            frames_parsed: total_parsed,
+            frames_parse_failed: total_failed,
+            parse_failure_rate,
+            final_rf_off,
+            final_mod_off,
+            final_fm_off,
+            final_syst_err_clean: syst_err_clean,
+            command_audit_comparison_passed: comparison.passed,
+            no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
+            emergency_shutdown_triggered: emergency,
+            alignment_count: alignment_entries.len() as u64,
+            notes: errors,
+        },
+        audit,
+    ))
 }
 
 fn compute_stats(vectors: &[Vec<f64>]) -> (Option<f64>, Option<f64>) {

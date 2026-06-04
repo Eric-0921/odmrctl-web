@@ -15,7 +15,7 @@ pub struct Cli {
     /// Path to recipe JSON file
     #[arg(
         long,
-        default_value = "examples/recipes/m3_4_two_device_sweep.recipe.json"
+        default_value = "examples/recipes/m3_4/m3_4_two_device_sweep.recipe.json"
     )]
     pub recipe: String,
 

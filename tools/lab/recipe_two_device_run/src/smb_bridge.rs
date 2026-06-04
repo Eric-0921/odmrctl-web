@@ -1,7 +1,7 @@
 //! SMB100A TCP transport bridge for M3.4 real mode.
 
 use crate::types::M3_4CommandAuditEntry;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::time::Duration;
 
@@ -27,6 +27,9 @@ impl SmbTransport {
         )
         .map_err(|e| format!("SMB connect {}:{}: {}", host, port, e))?;
         stream
+            .set_nonblocking(false)
+            .map_err(|e| format!("set blocking: {}", e))?;
+        stream
             .set_read_timeout(Some(timeout))
             .map_err(|e| format!("set read timeout: {}", e))?;
         stream
@@ -46,24 +49,34 @@ impl SmbTransport {
     }
 
     pub fn read_response(&mut self) -> Result<String, String> {
-        let mut reader = BufReader::new(&self.stream);
-        let mut line = String::new();
-        reader
-            .read_line(&mut line)
-            .map_err(|e| format!("read: {}", e))?;
-        Ok(line.trim().to_string())
+        let mut buf = [0u8; 1];
+        let mut line = Vec::new();
+        loop {
+            let n = self
+                .stream
+                .read(&mut buf)
+                .map_err(|e| format!("read: {}", e))?;
+            if n == 0 {
+                break;
+            }
+            if buf[0] == b'\n' {
+                break;
+            }
+            line.push(buf[0]);
+        }
+        let s = String::from_utf8_lossy(&line).trim().to_string();
+        Ok(s)
     }
 
     fn drain(&mut self) {
-        while self
+        let _ = self
             .stream
-            .set_read_timeout(Some(Duration::from_millis(10)))
-            .is_ok()
-        {
-            let mut reader = BufReader::new(&self.stream);
-            let mut line = String::new();
-            if reader.read_line(&mut line).is_err() || line.trim().is_empty() {
-                break;
+            .set_read_timeout(Some(Duration::from_millis(10)));
+        let mut buf = [0u8; 256];
+        loop {
+            match self.stream.read(&mut buf) {
+                Ok(0) | Err(_) => break,
+                Ok(_) => continue,
             }
         }
         let _ = self.stream.set_read_timeout(Some(self.timeout));
@@ -97,8 +110,15 @@ impl SmbTransport {
 
         self.send_raw(cmd)?;
         std::thread::sleep(self.query_delay);
-        let response = self.read_response()?;
-        self.drain();
+        let is_query = cmd.trim().ends_with('?');
+        let response = if is_query {
+            self.read_response()?
+        } else {
+            "ACK".into()
+        };
+        if is_query {
+            self.drain();
+        }
 
         audit.push(M3_4CommandAuditEntry {
             timestamp_unix_ms: ts,
@@ -158,25 +178,7 @@ const SMB_SET_ALLOWLIST: &[&str] = &[
     "LFO:VOLT ",
 ];
 
-const SMB_FORBIDDEN: &[&str] = &[
-    "FREQ:MODE ",
-    "FREQ:STAR ",
-    "FREQ:STOP ",
-    "SWE",
-    "SWE:STEP",
-    "SWE:DWEL",
-    "LIST",
-    "TRIG",
-    "INIT",
-    "LFO ",
-    "LFO ON",
-    "LFO OFF",
-    "AM:STAT ",
-    "PM:STAT ",
-    "PULM:STAT ",
-    "*RST",
-    "RST ",
-];
+// Forbidden patterns now in crate::constants::SMB_FORBIDDEN_PATTERNS
 
 fn validate_smb_command(cmd: &str) -> Result<(), String> {
     let trimmed = cmd.trim();
@@ -187,7 +189,7 @@ fn validate_smb_command(cmd: &str) -> Result<(), String> {
         ));
     }
     let upper = trimmed.to_ascii_uppercase();
-    for pat in SMB_FORBIDDEN {
+    for pat in crate::constants::SMB_FORBIDDEN_PATTERNS {
         if upper.contains(pat) {
             return Err(format!(
                 "SMB command '{}' matches forbidden pattern '{}'",

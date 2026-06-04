@@ -132,7 +132,7 @@ pub fn run_app(cli: &Cli) -> Result<(), String> {
         .map_err(|e| format!("write safety boundary: {}", e))?;
 
     // Dispatch to mode-specific logic
-    let run_result = match mode {
+    let (run_result, audit) = match mode {
         "harness-fake" => run_harness_fake(cli, &recipe, &resolved, &plan_entries, &run_dir)?,
         "replay" => run_replay(cli, &recipe, &resolved, &plan_entries, &run_dir)?,
         "real" => crate::real_run::run_real(cli, &recipe, &resolved, &plan_entries, &run_dir)?,
@@ -145,26 +145,7 @@ pub fn run_app(cli: &Cli) -> Result<(), String> {
         .map_err(|e| format!("write result: {}", e))?;
 
     // Write audit report
-    let audit_report = AuditReport {
-        schema_version: "0.2.0".into(),
-        kind: "audit_report".into(),
-        run_id: cli.run_id.clone(),
-        passed: run_result.passed,
-        total_commands: 0, // Filled by mode runners
-        allowed_commands: 0,
-        blocked_commands: 0,
-        forbidden_commands_sent: if run_result.no_forbidden_commands_sent {
-            0
-        } else {
-            1
-        },
-        smb_set_count: 0,
-        smb_query_count: 0,
-        oe_command_count: 0,
-        no_internal_sweep_commands: true,
-        no_magnetic_commands: true,
-        notes: run_result.notes.clone(),
-    };
+    let audit_report = build_audit_report(&audit, &run_result, &cli.run_id);
     run_dir
         .write_json_artifact("audit_report.json", &audit_report)
         .map_err(|e| format!("write audit report: {}", e))?;
@@ -237,7 +218,7 @@ fn run_harness_fake(
     resolved: &M3_4ResolvedRecipe,
     plan_entries: &[CommandPlanEntry],
     run_dir: &odmr_logging::RunDirectory,
-) -> Result<M3_4RunResult, String> {
+) -> Result<(M3_4RunResult, Vec<M3_4CommandAuditEntry>), String> {
     use crate::harness::{
         create_fake_oe1022d, create_fake_smb100a, fake_smb_query, fake_smb_set, fake_smb_snapshot,
         generate_deterministic_rall_frame, inject_parse_failures,
@@ -677,31 +658,34 @@ fn run_harness_fake(
 
     let passed = comparison.passed && errors.is_empty();
 
-    Ok(M3_4RunResult {
-        schema_version: "0.2.0".into(),
-        kind: "two_device_run_result".into(),
-        run_id: cli.run_id.clone(),
-        mode: "harness-fake".into(),
-        recipe_id: recipe.id.clone(),
-        resolved_recipe_id: resolved.id.clone(),
-        passed,
-        steps_completed: step_results.len() as u64,
-        total_steps: resolved.total_steps,
-        frames_requested: total_requested,
-        frames_captured: total_captured,
-        frames_parsed: total_parsed,
-        frames_parse_failed: total_failed,
-        parse_failure_rate,
-        final_rf_off: true,
-        final_mod_off: true,
-        final_fm_off: true,
-        final_syst_err_clean: true,
-        command_audit_comparison_passed: comparison.passed,
-        no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
-        emergency_shutdown_triggered: false,
-        alignment_count: alignment_entries.len() as u64,
-        notes: errors,
-    })
+    Ok((
+        M3_4RunResult {
+            schema_version: "0.2.0".into(),
+            kind: "two_device_run_result".into(),
+            run_id: cli.run_id.clone(),
+            mode: "harness-fake".into(),
+            recipe_id: recipe.id.clone(),
+            resolved_recipe_id: resolved.id.clone(),
+            passed,
+            steps_completed: step_results.len() as u64,
+            total_steps: resolved.total_steps,
+            frames_requested: total_requested,
+            frames_captured: total_captured,
+            frames_parsed: total_parsed,
+            frames_parse_failed: total_failed,
+            parse_failure_rate,
+            final_rf_off: true,
+            final_mod_off: true,
+            final_fm_off: true,
+            final_syst_err_clean: true,
+            command_audit_comparison_passed: comparison.passed,
+            no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
+            emergency_shutdown_triggered: false,
+            alignment_count: alignment_entries.len() as u64,
+            notes: errors,
+        },
+        audit,
+    ))
 }
 
 fn run_replay(
@@ -710,7 +694,7 @@ fn run_replay(
     resolved: &M3_4ResolvedRecipe,
     plan_entries: &[CommandPlanEntry],
     run_dir: &odmr_logging::RunDirectory,
-) -> Result<M3_4RunResult, String> {
+) -> Result<(M3_4RunResult, Vec<M3_4CommandAuditEntry>), String> {
     let replay_run = cli
         .replay_run
         .as_ref()
@@ -782,31 +766,74 @@ fn run_replay(
 
     let passed = comparison.passed;
 
-    Ok(M3_4RunResult {
+    Ok((
+        M3_4RunResult {
+            schema_version: "0.2.0".into(),
+            kind: "two_device_run_result".into(),
+            run_id: cli.run_id.clone(),
+            mode: "replay".into(),
+            recipe_id: recipe.id.clone(),
+            resolved_recipe_id: resolved.id.clone(),
+            passed,
+            steps_completed: step_summaries.len() as u64,
+            total_steps: resolved.total_steps,
+            frames_requested: frames.len() as u64,
+            frames_captured: stability.frames_captured,
+            frames_parsed: stability.frames_parsed,
+            frames_parse_failed: stability.frames_parse_failed,
+            parse_failure_rate: stability.parse_failure_rate,
+            final_rf_off: stability.final_rf_off,
+            final_mod_off: stability.final_mod_off,
+            final_fm_off: stability.final_fm_off,
+            final_syst_err_clean: stability.final_syst_err_clean,
+            command_audit_comparison_passed: comparison.passed,
+            no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
+            emergency_shutdown_triggered: false,
+            alignment_count: frames.len() as u64,
+            notes: comparison.notes.clone(),
+        },
+        source_audit,
+    ))
+}
+
+fn build_audit_report(
+    audit: &[M3_4CommandAuditEntry],
+    run_result: &M3_4RunResult,
+    run_id: &str,
+) -> AuditReport {
+    let total = audit.len() as u64;
+    let allowed = audit.iter().filter(|e| e.allowed).count() as u64;
+    let blocked = total - allowed;
+    let smb_set = audit
+        .iter()
+        .filter(|e| e.device_id == "smb100a" && e.command_class == "set")
+        .count() as u64;
+    let smb_query = audit
+        .iter()
+        .filter(|e| e.device_id == "smb100a" && e.command_class == "query")
+        .count() as u64;
+    let oe_cmds = audit.iter().filter(|e| e.device_id == "oe1022d").count() as u64;
+
+    AuditReport {
         schema_version: "0.2.0".into(),
-        kind: "two_device_run_result".into(),
-        run_id: cli.run_id.clone(),
-        mode: "replay".into(),
-        recipe_id: recipe.id.clone(),
-        resolved_recipe_id: resolved.id.clone(),
-        passed,
-        steps_completed: step_summaries.len() as u64,
-        total_steps: resolved.total_steps,
-        frames_requested: frames.len() as u64,
-        frames_captured: stability.frames_captured,
-        frames_parsed: stability.frames_parsed,
-        frames_parse_failed: stability.frames_parse_failed,
-        parse_failure_rate: stability.parse_failure_rate,
-        final_rf_off: stability.final_rf_off,
-        final_mod_off: stability.final_mod_off,
-        final_fm_off: stability.final_fm_off,
-        final_syst_err_clean: stability.final_syst_err_clean,
-        command_audit_comparison_passed: comparison.passed,
-        no_forbidden_commands_sent: comparison.forbidden_actual_commands.is_empty(),
-        emergency_shutdown_triggered: false,
-        alignment_count: frames.len() as u64,
-        notes: comparison.notes.clone(),
-    })
+        kind: "audit_report".into(),
+        run_id: run_id.into(),
+        passed: run_result.passed,
+        total_commands: total,
+        allowed_commands: allowed,
+        blocked_commands: blocked,
+        forbidden_commands_sent: if run_result.no_forbidden_commands_sent {
+            0
+        } else {
+            1
+        },
+        smb_set_count: smb_set,
+        smb_query_count: smb_query,
+        oe_command_count: oe_cmds,
+        no_internal_sweep_commands: true,
+        no_magnetic_commands: true,
+        notes: run_result.notes.clone(),
+    }
 }
 
 fn compute_stats(vectors: &[Vec<f64>]) -> (Option<f64>, Option<f64>) {

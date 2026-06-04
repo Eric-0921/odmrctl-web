@@ -5,6 +5,7 @@ mod artifacts;
 mod cli;
 mod command_audit_compare;
 mod command_plan;
+mod constants;
 mod dry_run;
 mod harness;
 mod oe_bridge;
