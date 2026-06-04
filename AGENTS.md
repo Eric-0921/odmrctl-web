@@ -197,7 +197,8 @@ pnpm tauri build      # 发布构建
 
 如果你的任务涉及真实设备（SMB100A、OE1022D、Maynuo、CNI Laser），**必须按以下顺序执行**，禁止跳过步骤或自行发明连接逻辑：
 
-**Step 1 — 读现有审计文档（必读，不要猜）**
+**Step 1 — 读现有流程文档和审计（必读，不要猜）**
+- `docs/lab-bringup/preflight_checklist_template.md` — **核心执行模板**：Phase A (passive preflight) → Phase B (operator approval) → Phase C (armed execution) → emergency procedures → post-run verification
 - `docs/lab-bringup/device_connection_initialization_audit.md` — 设备连接审计根因、状态机、cleanup 标准
 - `docs/lab-bringup/p6_m5a_audit_b_device_connection_contract.md` — 各设备 probe 分类、auto-discovery 风险
 - `docs/lab-bringup/cni_laser_preflight_plan.md` — 激光器 off-only 安全边界
