@@ -26,11 +26,11 @@ export default function MockOnlyBanner() {
     >
       {bannerCollapsed ? (
         <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 600 }}>
-          GUI-M0 MOCK VIEWER
+          M4.0 READ-ONLY VIEWER
         </span>
       ) : (
         <span>
-          GUI-M0 MOCK VIEWER — No hardware access. No executor connection. Real
+          M4.0 READ-ONLY VIEWER — No hardware access. No executor connection. Real
           controls disabled.
         </span>
       )}

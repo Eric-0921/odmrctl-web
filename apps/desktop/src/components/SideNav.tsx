@@ -8,6 +8,7 @@ const navItems = [
   { path: "/safety", label: "Safety" },
   { path: "/events", label: "Events" },
   { path: "/raw-data", label: "Raw Data Preview" },
+  { path: "/analysis-viewer", label: "Analysis Viewer" },
   { path: "/about", label: "About / Boundaries" },
 ];
 
