@@ -19,6 +19,7 @@ ODMR 实验室联调工具集，覆盖 M2（硬件发现）和 M3（SMB100A/OE10
 | 11 | OE1022D 运行审计 | `oe1022d_run_audit/` | 采集 | M2 |
 | 12 | OE1022D-SMB 桥接 | `oe1022d_smb_fake_bridge/` `oe1022d_smb_query_bridge/` | 桥接 | M2 |
 | 13 | 执行器影子运行 | `executor_shadow_run/` | 模拟 | M2 |
+| 14 | 迈牛 M8812 身份探针 | `maynuo_m8812_identity_probe/` | 查询 | Mag-M2A+ |
 
 ## 2. 跨工具重复代码
 
@@ -97,3 +98,12 @@ ODMR 实验室联调工具集，覆盖 M2（硬件发现）和 M3（SMB100A/OE10
 - AI 禁止直接控制硬件输出
 - SCPI 命令只通过硬编码 allowlist，默认拒绝一切未列入的命令
 - 所有提交前需通过 `scripts/check-consistency.sh` 和 `cargo clippy --workspace`
+
+### maynuo_m8812_identity_probe 安全说明
+
+- **阶段**: Mag-M2A+，identity-only
+- **允许的 SCPI 命令**: 仅 `*IDN?`（硬编码，不可配置）
+- **禁止的命令**: `SYST:REM`, `SYST:LOC`, `VOLT`, `CURR`, `OUTP`, `MEAS:CURR?`
+- **执行模式**: 串行枚举 → 打开端口 → `*IDN?` → 解析 → 匹配 → 关闭端口
+- **不执行任何状态变更**: 不进入 remote mode，不设电压/电流，不使能输出
+- **轴绑定**: 仅通过 `*IDN?` 响应中的 SN 字段精确匹配；不使用端口路径作为标识

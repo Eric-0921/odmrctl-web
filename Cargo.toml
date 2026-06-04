@@ -14,4 +14,5 @@ members = [
     "crates/odmr-smb100a",
     "crates/odmr-oe1022d",
     "crates/odmr-mag",
+    "crates/odmr-maynuo-m8812",
 ]

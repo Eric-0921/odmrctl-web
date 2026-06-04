@@ -12,13 +12,13 @@ Layer 5: GUI               apps/desktop/
 Layer 4: Application API   Tauri commands
 Layer 3: Runtime           odmr-executor  odmr-logging  odmr-replay  odmr-harness
 Layer 2: Domain            odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers           odmr-smb100a  odmr-oe1022d  odmr-device  odmr-mag
+Layer 1: Drivers           odmr-smb100a  odmr-oe1022d  odmr-mag  odmr-maynuo-m8812  odmr-device
 Layer 0: Types             odmr-types
 
 Lab Bringup Tools          tools/discover/  tools/lab/snapshot/  tools/manual_command_verify/
 ```
 
-当前状态：**GUI-M0 mock viewer 已稳定；M2 bring-up 已完成 Phase 1；主线已进入 M3 受控 SMB100A/OE1022D 双设备联调；`odmr-mag` 处于 Mag-M1 mock-only。**
+当前状态：**GUI-M0 mock viewer 已稳定；M2 bring-up 已完成 Phase 1；主线已进入 M3 受控 SMB100A/OE1022D 双设备联调；`odmr-mag` Mag-M1.1 complete (mock-only)；`odmr-maynuo-m8812` Mag-M2A+ identity-only probe (real serial, only *IDN?)；next: Mag-M2B。**
 
 ## 核心理念
 

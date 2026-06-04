@@ -1,0 +1,16 @@
+[package]
+name = "odmr-maynuo-m8812"
+version = "0.1.0"
+edition = "2021"
+authors = ["ODMR Automation Team"]
+license = "MIT OR Apache-2.0"
+description = "Identity-only serial transport for Maynuo M8812 magnetic-axis discovery"
+
+[dependencies]
+odmr-device = { path = "../odmr-device" }
+odmr-types = { path = "../odmr-types" }
+serialport = "4"
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+tempfile = "3"

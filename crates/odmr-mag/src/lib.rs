@@ -69,11 +69,20 @@ pub enum MagError {
     /// Safety policy violation (generic).
     SafetyViolation { message: String },
     /// Invalid state machine transition.
-    InvalidStateTransition { axis_id: String, from: String, to: String, reason: String },
+    InvalidStateTransition {
+        axis_id: String,
+        from: String,
+        to: String,
+        reason: String,
+    },
     /// SN did not match any known axis.
     UnknownSerialNumber { sn: String },
     /// Same SN matched multiple axes.
-    DuplicateSerialNumber { sn: String, axis_a: String, axis_b: String },
+    DuplicateSerialNumber {
+        sn: String,
+        axis_a: String,
+        axis_b: String,
+    },
     /// Required axis not discovered.
     AxisNotDiscovered { axis_id: String },
     /// Lock-zero requested before zero measurement.
@@ -81,7 +90,11 @@ pub enum MagError {
     /// Recur setpoint requested before lock-zero.
     RecurBeforeLockZero { axis_id: String },
     /// Total current exceeds hardware max.
-    TotalCurrentOverLimit { axis_id: String, total_ma: f64, limit_ma: f64 },
+    TotalCurrentOverLimit {
+        axis_id: String,
+        total_ma: f64,
+        limit_ma: f64,
+    },
     /// Output enabled before safe init.
     OutputBeforeInit { axis_id: String },
     /// Malformed *IDN? response.
@@ -151,8 +164,16 @@ impl fmt::Display for MagError {
             MagError::SafetyViolation { message } => {
                 write!(f, "safety violation: {message}")
             }
-            MagError::InvalidStateTransition { axis_id, from, to, reason } => {
-                write!(f, "invalid state transition for {axis_id}: {from} -> {to}: {reason}")
+            MagError::InvalidStateTransition {
+                axis_id,
+                from,
+                to,
+                reason,
+            } => {
+                write!(
+                    f,
+                    "invalid state transition for {axis_id}: {from} -> {to}: {reason}"
+                )
             }
             MagError::UnknownSerialNumber { sn } => write!(f, "unknown serial number: {sn}"),
             MagError::DuplicateSerialNumber { sn, axis_a, axis_b } => {
@@ -162,13 +183,26 @@ impl fmt::Display for MagError {
                 write!(f, "axis {axis_id} was not discovered")
             }
             MagError::LockZeroBeforeMeasurement { axis_id } => {
-                write!(f, "lock-zero requested for {axis_id} before zero current measurement")
+                write!(
+                    f,
+                    "lock-zero requested for {axis_id} before zero current measurement"
+                )
             }
             MagError::RecurBeforeLockZero { axis_id } => {
-                write!(f, "recurrent setpoint requested for {axis_id} before lock-zero")
+                write!(
+                    f,
+                    "recurrent setpoint requested for {axis_id} before lock-zero"
+                )
             }
-            MagError::TotalCurrentOverLimit { axis_id, total_ma, limit_ma } => {
-                write!(f, "total current {total_ma:.3} mA exceeds limit {limit_ma:.3} mA on {axis_id}")
+            MagError::TotalCurrentOverLimit {
+                axis_id,
+                total_ma,
+                limit_ma,
+            } => {
+                write!(
+                    f,
+                    "total current {total_ma:.3} mA exceeds limit {limit_ma:.3} mA on {axis_id}"
+                )
             }
             MagError::OutputBeforeInit { axis_id } => {
                 write!(f, "output enabled on {axis_id} before safe init")
@@ -1146,7 +1180,11 @@ impl MaynuoAxesProfile {
         let abs_gains = [kx.abs(), ky.abs(), kz.abs()];
         let max_gain = abs_gains.iter().copied().fold(f64::NEG_INFINITY, f64::max);
         let min_gain = abs_gains.iter().copied().fold(f64::INFINITY, f64::min);
-        let condition_number = if min_gain > 0.0 { max_gain / min_gain } else { f64::INFINITY };
+        let condition_number = if min_gain > 0.0 {
+            max_gain / min_gain
+        } else {
+            f64::INFINITY
+        };
 
         Ok(CoilMatrix {
             m: [[kx, 0.0, 0.0], [0.0, ky, 0.0], [0.0, 0.0, kz]],
@@ -1346,14 +1384,94 @@ fn cmd_entry(
 /// Build a safe initialization command plan for a single axis.
 pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
     let entries = vec![
-        cmd_entry(1, "identify", "*IDN?", true, "MAYNUO,M8812,<SN>,V2.7", "mag_idn_queried", true, None, Some(300)),
-        cmd_entry(2, "set_remote", "SYST:REM", false, "none", "mag_remote_mode_set", false, Some(50), None),
-        cmd_entry(3, "set_voltage", &format!("VOLT {}", axis.voltage_v), false, "none", "mag_voltage_set", false, Some(50), None),
-        cmd_entry(4, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed", false, Some(50), None),
-        cmd_entry(5, "set_output", "OUTP 0", false, "none", "mag_output_disabled", false, Some(50), None),
-        cmd_entry(6, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_queried", true, None, Some(300)),
-        cmd_entry(7, "set_output", "OUTP 0", false, "none", "mag_output_confirmed_off", false, Some(50), None),
-        cmd_entry(8, "set_local", "SYST:LOC", false, "none", "mag_local_mode_set", false, Some(50), None),
+        cmd_entry(
+            1,
+            "identify",
+            "*IDN?",
+            true,
+            "MAYNUO,M8812,<SN>,V2.7",
+            "mag_idn_queried",
+            true,
+            None,
+            Some(300),
+        ),
+        cmd_entry(
+            2,
+            "set_remote",
+            "SYST:REM",
+            false,
+            "none",
+            "mag_remote_mode_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            3,
+            "set_voltage",
+            &format!("VOLT {}", axis.voltage_v),
+            false,
+            "none",
+            "mag_voltage_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            4,
+            "set_current",
+            "CURR 0.00000",
+            false,
+            "none",
+            "mag_current_zeroed",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            5,
+            "set_output",
+            "OUTP 0",
+            false,
+            "none",
+            "mag_output_disabled",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            6,
+            "query_current",
+            "MEAS:CURR?",
+            true,
+            "float_ampere",
+            "mag_current_queried",
+            true,
+            None,
+            Some(300),
+        ),
+        cmd_entry(
+            7,
+            "set_output",
+            "OUTP 0",
+            false,
+            "none",
+            "mag_output_confirmed_off",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            8,
+            "set_local",
+            "SYST:LOC",
+            false,
+            "none",
+            "mag_local_mode_set",
+            false,
+            Some(50),
+            None,
+        ),
     ];
 
     MaynuoCommandPlan {
@@ -1387,9 +1505,17 @@ pub fn build_query_current_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
         executable_reason: "Mag-M0.5 mock-only: requires Mag-M2 backend for real execution".into(),
         shutdown_mode: None,
         expected_duration_ms: Some(300),
-        commands: vec![
-            cmd_entry(1, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_queried", true, None, Some(300)),
-        ],
+        commands: vec![cmd_entry(
+            1,
+            "query_current",
+            "MEAS:CURR?",
+            true,
+            "float_ampere",
+            "mag_current_queried",
+            true,
+            None,
+            Some(300),
+        )],
     }
 }
 
@@ -1412,16 +1538,106 @@ pub fn build_10ma_microtest_plan(axis: &MaynuoAxisProfile) -> Result<MaynuoComma
     let test_current_a = test_current_ma / 1000.0;
 
     let entries = vec![
-        cmd_entry(1, "identify", "*IDN?", true, "MAYNUO,M8812,<SN>,V2.7", "mag_idn_queried", true, None, Some(300)),
-        cmd_entry(2, "set_remote", "SYST:REM", false, "none", "mag_remote_mode_set", false, Some(50), None),
-        cmd_entry(3, "set_voltage", &format!("VOLT {}", axis.voltage_v), false, "none", "mag_voltage_set", false, Some(50), None),
-        cmd_entry(4, "set_current", &format!("CURR {test_current_a:.5}"), false, "none", "mag_current_set", false, Some(50), None),
-        cmd_entry(5, "set_output", "OUTP 1", false, "none", "mag_output_enabled", false, Some(200), None),
-        cmd_entry(6, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_measured", true, None, Some(300)),
+        cmd_entry(
+            1,
+            "identify",
+            "*IDN?",
+            true,
+            "MAYNUO,M8812,<SN>,V2.7",
+            "mag_idn_queried",
+            true,
+            None,
+            Some(300),
+        ),
+        cmd_entry(
+            2,
+            "set_remote",
+            "SYST:REM",
+            false,
+            "none",
+            "mag_remote_mode_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            3,
+            "set_voltage",
+            &format!("VOLT {}", axis.voltage_v),
+            false,
+            "none",
+            "mag_voltage_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            4,
+            "set_current",
+            &format!("CURR {test_current_a:.5}"),
+            false,
+            "none",
+            "mag_current_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            5,
+            "set_output",
+            "OUTP 1",
+            false,
+            "none",
+            "mag_output_enabled",
+            false,
+            Some(200),
+            None,
+        ),
+        cmd_entry(
+            6,
+            "query_current",
+            "MEAS:CURR?",
+            true,
+            "float_ampere",
+            "mag_current_measured",
+            true,
+            None,
+            Some(300),
+        ),
         // Verified normal shutdown: CURR 0 → OUTP 0 → SYST:LOC
-        cmd_entry(7, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed", false, Some(50), None),
-        cmd_entry(8, "set_output", "OUTP 0", false, "none", "mag_output_disabled", false, Some(50), None),
-        cmd_entry(9, "set_local", "SYST:LOC", false, "none", "mag_local_mode_set", false, Some(50), None),
+        cmd_entry(
+            7,
+            "set_current",
+            "CURR 0.00000",
+            false,
+            "none",
+            "mag_current_zeroed",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            8,
+            "set_output",
+            "OUTP 0",
+            false,
+            "none",
+            "mag_output_disabled",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            9,
+            "set_local",
+            "SYST:LOC",
+            false,
+            "none",
+            "mag_local_mode_set",
+            false,
+            Some(50),
+            None,
+        ),
     ];
 
     Ok(MaynuoCommandPlan {
@@ -1452,7 +1668,10 @@ pub fn build_verified_normal_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCo
         kind: "maynuo_command_plan".into(),
         id: format!("maynuo_normal_shutdown_{}", axis.axis_id),
         name: "Maynuo M8812 Verified Normal Shutdown Plan".into(),
-        description: Some("Disconnect sequence confirmed by verify_protocol.py: CURR 0 → OUTP 0 → SYST:LOC".into()),
+        description: Some(
+            "Disconnect sequence confirmed by verify_protocol.py: CURR 0 → OUTP 0 → SYST:LOC"
+                .into(),
+        ),
         axis_id: axis.axis_id.clone(),
         profile_id: "maynuo_m8812_lab_xyz".into(),
         executable: false,
@@ -1460,9 +1679,39 @@ pub fn build_verified_normal_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCo
         shutdown_mode: Some("verified_normal".into()),
         expected_duration_ms: Some(150),
         commands: vec![
-            cmd_entry(1, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed", false, Some(50), None),
-            cmd_entry(2, "set_output", "OUTP 0", false, "none", "mag_output_disabled", false, Some(50), None),
-            cmd_entry(3, "set_local", "SYST:LOC", false, "none", "mag_local_mode_set", false, Some(50), None),
+            cmd_entry(
+                1,
+                "set_current",
+                "CURR 0.00000",
+                false,
+                "none",
+                "mag_current_zeroed",
+                false,
+                Some(50),
+                None,
+            ),
+            cmd_entry(
+                2,
+                "set_output",
+                "OUTP 0",
+                false,
+                "none",
+                "mag_output_disabled",
+                false,
+                Some(50),
+                None,
+            ),
+            cmd_entry(
+                3,
+                "set_local",
+                "SYST:LOC",
+                false,
+                "none",
+                "mag_local_mode_set",
+                false,
+                Some(50),
+                None,
+            ),
         ],
     }
 }
@@ -1477,17 +1726,50 @@ pub fn build_emergency_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandP
         kind: "maynuo_command_plan".into(),
         id: format!("maynuo_emergency_shutdown_{}", axis.axis_id),
         name: "Maynuo M8812 Emergency Shutdown Plan".into(),
-        description: Some("Emergency sequence: OUTP 0 first for maximum safety, then CURR 0 and SYST:LOC".into()),
+        description: Some(
+            "Emergency sequence: OUTP 0 first for maximum safety, then CURR 0 and SYST:LOC".into(),
+        ),
         axis_id: axis.axis_id.clone(),
         profile_id: "maynuo_m8812_lab_xyz".into(),
         executable: false,
-        executable_reason: "Mag-M0.5 mock-only: requires Mag-M2B backend with emergency authority".into(),
+        executable_reason: "Mag-M0.5 mock-only: requires Mag-M2B backend with emergency authority"
+            .into(),
         shutdown_mode: Some("emergency".into()),
         expected_duration_ms: Some(150),
         commands: vec![
-            cmd_entry(1, "set_output", "OUTP 0", false, "none", "mag_output_disabled_emergency", false, Some(0), None),
-            cmd_entry(2, "set_current", "CURR 0.00000", false, "none", "mag_current_zeroed_emergency", false, Some(50), None),
-            cmd_entry(3, "set_local", "SYST:LOC", false, "none", "mag_local_mode_set", false, Some(50), None),
+            cmd_entry(
+                1,
+                "set_output",
+                "OUTP 0",
+                false,
+                "none",
+                "mag_output_disabled_emergency",
+                false,
+                Some(0),
+                None,
+            ),
+            cmd_entry(
+                2,
+                "set_current",
+                "CURR 0.00000",
+                false,
+                "none",
+                "mag_current_zeroed_emergency",
+                false,
+                Some(50),
+                None,
+            ),
+            cmd_entry(
+                3,
+                "set_local",
+                "SYST:LOC",
+                false,
+                "none",
+                "mag_local_mode_set",
+                false,
+                Some(50),
+                None,
+            ),
         ],
     }
 }
@@ -1502,17 +1784,56 @@ pub fn build_emergency_shutdown_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandP
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum MaynuoAxisState {
     Unknown,
-    Discovered { idn: String },
-    AxisMapped { axis_id: String, idn: String },
-    InitializedOutputOff { axis_id: String, idn: String },
-    OutputOnZeroMode { axis_id: String, idn: String },
-    ZeroMeasured { axis_id: String, idn: String, zero_current_ma: f64 },
-    ZeroLocked { axis_id: String, idn: String, zero_current_ma: f64 },
-    RecurSetpointPlanned { axis_id: String, idn: String, zero_current_ma: f64, recur_current_ma: f64, recur_field_nt: f64 },
-    RecurSetpointAppliedMock { axis_id: String, idn: String, zero_current_ma: f64, recur_current_ma: f64, recur_field_nt: f64, total_current_ma: f64 },
-    ShutdownNormal { axis_id: String },
-    ShutdownEmergency { axis_id: String },
-    Fault { axis_id: String, reason: String },
+    Discovered {
+        idn: String,
+    },
+    AxisMapped {
+        axis_id: String,
+        idn: String,
+    },
+    InitializedOutputOff {
+        axis_id: String,
+        idn: String,
+    },
+    OutputOnZeroMode {
+        axis_id: String,
+        idn: String,
+    },
+    ZeroMeasured {
+        axis_id: String,
+        idn: String,
+        zero_current_ma: f64,
+    },
+    ZeroLocked {
+        axis_id: String,
+        idn: String,
+        zero_current_ma: f64,
+    },
+    RecurSetpointPlanned {
+        axis_id: String,
+        idn: String,
+        zero_current_ma: f64,
+        recur_current_ma: f64,
+        recur_field_nt: f64,
+    },
+    RecurSetpointAppliedMock {
+        axis_id: String,
+        idn: String,
+        zero_current_ma: f64,
+        recur_current_ma: f64,
+        recur_field_nt: f64,
+        total_current_ma: f64,
+    },
+    ShutdownNormal {
+        axis_id: String,
+    },
+    ShutdownEmergency {
+        axis_id: String,
+    },
+    Fault {
+        axis_id: String,
+        reason: String,
+    },
 }
 
 impl MaynuoAxisState {
@@ -1592,7 +1913,10 @@ pub struct MaynuoIdn {
 /// Requires manufacturer contains MAYNUO, model == M8812, non-empty SN.
 pub fn parse_maynuo_idn(idn: &str) -> Result<MaynuoIdn, MagError> {
     let reject = |reason: String| {
-        Err::<MaynuoIdn, MagError>(MagError::MalformedIdn { idn: idn.into(), reason })
+        Err::<MaynuoIdn, MagError>(MagError::MalformedIdn {
+            idn: idn.into(),
+            reason,
+        })
     };
 
     if idn.is_empty() {
@@ -1616,7 +1940,12 @@ pub fn parse_maynuo_idn(idn: &str) -> Result<MaynuoIdn, MagError> {
     if serial_number.is_empty() {
         return reject("empty serial number field".to_string());
     }
-    Ok(MaynuoIdn { manufacturer, model, serial_number, firmware })
+    Ok(MaynuoIdn {
+        manufacturer,
+        model,
+        serial_number,
+        firmware,
+    })
 }
 
 /// Extract the expected serial number from an expected_idn string.
@@ -1652,19 +1981,16 @@ pub fn match_axes_by_idn(
         seen_sn.insert(sn.clone(), idn.clone());
 
         // Find axis whose expected_idn contains exactly this SN
-        let candidates: Vec<&MaynuoAxisProfile> = [
-            &profile.axes.x,
-            &profile.axes.y,
-            &profile.axes.z,
-        ]
-        .iter()
-        .filter(|a| {
-            expected_sn_from_idn(&a.expected_idn)
-                .map(|esn| &esn == sn)
-                .unwrap_or(false)
-        })
-        .copied()
-        .collect();
+        let candidates: Vec<&MaynuoAxisProfile> =
+            [&profile.axes.x, &profile.axes.y, &profile.axes.z]
+                .iter()
+                .filter(|a| {
+                    expected_sn_from_idn(&a.expected_idn)
+                        .map(|esn| &esn == sn)
+                        .unwrap_or(false)
+                })
+                .copied()
+                .collect();
 
         if candidates.is_empty() {
             return Err(MagError::UnknownSerialNumber { sn: sn.clone() });
@@ -1688,7 +2014,9 @@ pub fn match_axes_by_idn(
     }
     for axis_id in ["mag_x", "mag_y", "mag_z"] {
         if !matched.contains_key(axis_id) {
-            return Err(MagError::AxisNotDiscovered { axis_id: axis_id.into() });
+            return Err(MagError::AxisNotDiscovered {
+                axis_id: axis_id.into(),
+            });
         }
     }
     Ok(matched)
@@ -1733,7 +2061,12 @@ impl MaynuoAxisRunner {
         }
     }
 
-    fn transition_to(&mut self, to: MaynuoAxisState, event_type: &str, detail: Option<String>) -> Result<(), MagError> {
+    fn transition_to(
+        &mut self,
+        to: MaynuoAxisState,
+        event_type: &str,
+        detail: Option<String>,
+    ) -> Result<(), MagError> {
         let from_name = self.state.state_name().to_string();
         let to_name = to.state_name().to_string();
         self.state = to;
@@ -1752,127 +2085,314 @@ impl MaynuoAxisRunner {
 
     pub fn apply_discovered(&mut self, idn: &str) -> Result<(), MagError> {
         if !matches!(self.state, MaynuoAxisState::Unknown) {
-            return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "Discovered".into(), reason: "already discovered".into() });
+            return Err(MagError::InvalidStateTransition {
+                axis_id: self.axis_id.clone(),
+                from: self.state.state_name().into(),
+                to: "Discovered".into(),
+                reason: "already discovered".into(),
+            });
         }
         let parsed = parse_maynuo_idn(idn)?;
         let expected_sn = expected_sn_from_idn(&self.profile.expected_idn)?;
         if parsed.serial_number != expected_sn {
-            return Err(MagError::UnknownSerialNumber { sn: parsed.serial_number });
+            return Err(MagError::UnknownSerialNumber {
+                sn: parsed.serial_number,
+            });
         }
-        self.transition_to(MaynuoAxisState::Discovered { idn: idn.into() }, "mag_axis_discovered", Some(format!("idn={idn}")))
+        self.transition_to(
+            MaynuoAxisState::Discovered { idn: idn.into() },
+            "mag_axis_discovered",
+            Some(format!("idn={idn}")),
+        )
     }
 
     pub fn apply_axis_mapped(&mut self) -> Result<(), MagError> {
         let idn = match &self.state {
             MaynuoAxisState::Discovered { idn } => idn.clone(),
-            _ => return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "AxisMapped".into(), reason: "must be Discovered first".into() }),
+            _ => {
+                return Err(MagError::InvalidStateTransition {
+                    axis_id: self.axis_id.clone(),
+                    from: self.state.state_name().into(),
+                    to: "AxisMapped".into(),
+                    reason: "must be Discovered first".into(),
+                })
+            }
         };
-        self.transition_to(MaynuoAxisState::AxisMapped { axis_id: self.axis_id.clone(), idn }, "mag_axis_mapped", Some(format!("axis_id={}", self.axis_id)))
+        self.transition_to(
+            MaynuoAxisState::AxisMapped {
+                axis_id: self.axis_id.clone(),
+                idn,
+            },
+            "mag_axis_mapped",
+            Some(format!("axis_id={}", self.axis_id)),
+        )
     }
 
     pub fn apply_initialized_output_off(&mut self) -> Result<(), MagError> {
         let (my_id, idn) = match &self.state {
             MaynuoAxisState::AxisMapped { axis_id, idn } => (axis_id.clone(), idn.clone()),
-            MaynuoAxisState::InitializedOutputOff { axis_id, idn, .. } => (axis_id.clone(), idn.clone()),
-            _ => return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "InitializedOutputOff".into(), reason: "must be AxisMapped first".into() }),
+            MaynuoAxisState::InitializedOutputOff { axis_id, idn, .. } => {
+                (axis_id.clone(), idn.clone())
+            }
+            _ => {
+                return Err(MagError::InvalidStateTransition {
+                    axis_id: self.axis_id.clone(),
+                    from: self.state.state_name().into(),
+                    to: "InitializedOutputOff".into(),
+                    reason: "must be AxisMapped first".into(),
+                })
+            }
         };
         if my_id != self.axis_id {
-            return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "InitializedOutputOff".into(), reason: "axis_id mismatch".into() });
+            return Err(MagError::InvalidStateTransition {
+                axis_id: self.axis_id.clone(),
+                from: self.state.state_name().into(),
+                to: "InitializedOutputOff".into(),
+                reason: "axis_id mismatch".into(),
+            });
         }
-        self.transition_to(MaynuoAxisState::InitializedOutputOff { axis_id: self.axis_id.clone(), idn }, "mag_init_complete", None)
+        self.transition_to(
+            MaynuoAxisState::InitializedOutputOff {
+                axis_id: self.axis_id.clone(),
+                idn,
+            },
+            "mag_init_complete",
+            None,
+        )
     }
 
     pub fn apply_output_on_zero_mode(&mut self) -> Result<(), MagError> {
         let idn = match &self.state {
-            MaynuoAxisState::InitializedOutputOff { axis_id, idn } if axis_id == &self.axis_id => idn.clone(),
-            _ => return Err(MagError::OutputBeforeInit { axis_id: self.axis_id.clone() }),
+            MaynuoAxisState::InitializedOutputOff { axis_id, idn } if axis_id == &self.axis_id => {
+                idn.clone()
+            }
+            _ => {
+                return Err(MagError::OutputBeforeInit {
+                    axis_id: self.axis_id.clone(),
+                })
+            }
         };
         self.output = true;
-        self.transition_to(MaynuoAxisState::OutputOnZeroMode { axis_id: self.axis_id.clone(), idn }, "mag_output_on_zero", None)
+        self.transition_to(
+            MaynuoAxisState::OutputOnZeroMode {
+                axis_id: self.axis_id.clone(),
+                idn,
+            },
+            "mag_output_on_zero",
+            None,
+        )
     }
 
     pub fn apply_zero_measured(&mut self, measured_ma: f64) -> Result<(), MagError> {
         if !measured_ma.is_finite() || measured_ma < 0.0 {
-            return Err(MagError::NonFiniteValue { field: "zero_current_ma".into(), value: measured_ma });
+            return Err(MagError::NonFiniteValue {
+                field: "zero_current_ma".into(),
+                value: measured_ma,
+            });
         }
         let idn = match &self.state {
-            MaynuoAxisState::OutputOnZeroMode { axis_id, idn } if axis_id == &self.axis_id => idn.clone(),
-            _ => return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "ZeroMeasured".into(), reason: "must be OutputOnZeroMode first".into() }),
+            MaynuoAxisState::OutputOnZeroMode { axis_id, idn } if axis_id == &self.axis_id => {
+                idn.clone()
+            }
+            _ => {
+                return Err(MagError::InvalidStateTransition {
+                    axis_id: self.axis_id.clone(),
+                    from: self.state.state_name().into(),
+                    to: "ZeroMeasured".into(),
+                    reason: "must be OutputOnZeroMode first".into(),
+                })
+            }
         };
         self.zero_current_ma = Some(measured_ma);
         self.measured_total_current_ma = Some(measured_ma);
-        self.transition_to(MaynuoAxisState::ZeroMeasured { axis_id: self.axis_id.clone(), idn, zero_current_ma: measured_ma }, "mag_zero_measured", Some(format!("zero={measured_ma:.3} mA")))
+        self.transition_to(
+            MaynuoAxisState::ZeroMeasured {
+                axis_id: self.axis_id.clone(),
+                idn,
+                zero_current_ma: measured_ma,
+            },
+            "mag_zero_measured",
+            Some(format!("zero={measured_ma:.3} mA")),
+        )
     }
 
     pub fn apply_lock_zero(&mut self) -> Result<(), MagError> {
         let (idn, zero_ma) = match &self.state {
-            MaynuoAxisState::ZeroMeasured { axis_id, idn, zero_current_ma }
-            | MaynuoAxisState::ZeroLocked { axis_id, idn, zero_current_ma }
-                if axis_id == &self.axis_id => (idn.clone(), *zero_current_ma),
-            _ => return Err(MagError::LockZeroBeforeMeasurement { axis_id: self.axis_id.clone() }),
+            MaynuoAxisState::ZeroMeasured {
+                axis_id,
+                idn,
+                zero_current_ma,
+            }
+            | MaynuoAxisState::ZeroLocked {
+                axis_id,
+                idn,
+                zero_current_ma,
+            } if axis_id == &self.axis_id => (idn.clone(), *zero_current_ma),
+            _ => {
+                return Err(MagError::LockZeroBeforeMeasurement {
+                    axis_id: self.axis_id.clone(),
+                })
+            }
         };
         self.lock_zero = true;
         self.zero_current_ma = Some(zero_ma);
-        self.transition_to(MaynuoAxisState::ZeroLocked { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma }, "mag_lock_zero_enabled", Some(format!("zero={zero_ma:.3} mA")))
+        self.transition_to(
+            MaynuoAxisState::ZeroLocked {
+                axis_id: self.axis_id.clone(),
+                idn,
+                zero_current_ma: zero_ma,
+            },
+            "mag_lock_zero_enabled",
+            Some(format!("zero={zero_ma:.3} mA")),
+        )
     }
 
-    pub fn apply_recur_setpoint_planned_from_field(&mut self, target_field_nt: f64) -> Result<(), MagError> {
+    pub fn apply_recur_setpoint_planned_from_field(
+        &mut self,
+        target_field_nt: f64,
+    ) -> Result<(), MagError> {
         let (idn, zero_ma) = match &self.state {
-            MaynuoAxisState::ZeroLocked { axis_id, idn, zero_current_ma }
-            | MaynuoAxisState::RecurSetpointPlanned { axis_id, idn, zero_current_ma, .. }
-            | MaynuoAxisState::RecurSetpointAppliedMock { axis_id, idn, zero_current_ma, .. }
-                if axis_id == &self.axis_id => (idn.clone(), *zero_current_ma),
-            _ => return Err(MagError::RecurBeforeLockZero { axis_id: self.axis_id.clone() }),
+            MaynuoAxisState::ZeroLocked {
+                axis_id,
+                idn,
+                zero_current_ma,
+            }
+            | MaynuoAxisState::RecurSetpointPlanned {
+                axis_id,
+                idn,
+                zero_current_ma,
+                ..
+            }
+            | MaynuoAxisState::RecurSetpointAppliedMock {
+                axis_id,
+                idn,
+                zero_current_ma,
+                ..
+            } if axis_id == &self.axis_id => (idn.clone(), *zero_current_ma),
+            _ => {
+                return Err(MagError::RecurBeforeLockZero {
+                    axis_id: self.axis_id.clone(),
+                })
+            }
         };
         if !target_field_nt.is_finite() {
-            return Err(MagError::NonFiniteValue { field: "target_field_nt".into(), value: target_field_nt });
+            return Err(MagError::NonFiniteValue {
+                field: "target_field_nt".into(),
+                value: target_field_nt,
+            });
         }
         let recur_ma = nt_to_ma(target_field_nt, self.profile.coil_constant_nt_per_ma);
         let total_ma = zero_ma + recur_ma;
         if total_ma < 0.0 {
-            return Err(MagError::SafetyViolation { message: format!("negative total current {total_ma:.5} mA on {}", self.axis_id) });
+            return Err(MagError::SafetyViolation {
+                message: format!(
+                    "negative total current {total_ma:.5} mA on {}",
+                    self.axis_id
+                ),
+            });
         }
         if total_ma > self.profile.max_current_ma {
-            return Err(MagError::TotalCurrentOverLimit { axis_id: self.axis_id.clone(), total_ma, limit_ma: self.profile.max_current_ma });
+            return Err(MagError::TotalCurrentOverLimit {
+                axis_id: self.axis_id.clone(),
+                total_ma,
+                limit_ma: self.profile.max_current_ma,
+            });
         }
         self.recur_current_ma = Some(recur_ma);
         self.recur_field_nt = Some(target_field_nt);
         self.total_current_ma = Some(total_ma);
-        self.transition_to(MaynuoAxisState::RecurSetpointPlanned { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma, recur_current_ma: recur_ma, recur_field_nt: target_field_nt }, "mag_recur_setpoint_planned", Some(format!("field={target_field_nt:.2} nT, recur={recur_ma:.5} mA, total={total_ma:.5} mA")))
+        self.transition_to(
+            MaynuoAxisState::RecurSetpointPlanned {
+                axis_id: self.axis_id.clone(),
+                idn,
+                zero_current_ma: zero_ma,
+                recur_current_ma: recur_ma,
+                recur_field_nt: target_field_nt,
+            },
+            "mag_recur_setpoint_planned",
+            Some(format!(
+                "field={target_field_nt:.2} nT, recur={recur_ma:.5} mA, total={total_ma:.5} mA"
+            )),
+        )
     }
 
     pub fn apply_recur_setpoint_applied_mock(&mut self) -> Result<(), MagError> {
         let (idn, zero_ma, recur_ma, recur_field, total_ma) = match &self.state {
-            MaynuoAxisState::RecurSetpointPlanned { axis_id, idn, zero_current_ma, recur_current_ma, recur_field_nt }
-                if axis_id == &self.axis_id =>
-            {
-                (idn.clone(), *zero_current_ma, *recur_current_ma, *recur_field_nt, zero_current_ma + recur_current_ma)
+            MaynuoAxisState::RecurSetpointPlanned {
+                axis_id,
+                idn,
+                zero_current_ma,
+                recur_current_ma,
+                recur_field_nt,
+            } if axis_id == &self.axis_id => (
+                idn.clone(),
+                *zero_current_ma,
+                *recur_current_ma,
+                *recur_field_nt,
+                zero_current_ma + recur_current_ma,
+            ),
+            _ => {
+                return Err(MagError::InvalidStateTransition {
+                    axis_id: self.axis_id.clone(),
+                    from: self.state.state_name().into(),
+                    to: "RecurSetpointAppliedMock".into(),
+                    reason: "must be RecurSetpointPlanned first".into(),
+                })
             }
-            _ => return Err(MagError::InvalidStateTransition { axis_id: self.axis_id.clone(), from: self.state.state_name().into(), to: "RecurSetpointAppliedMock".into(), reason: "must be RecurSetpointPlanned first".into() }),
         };
         self.total_current_ma = Some(total_ma);
         let cmd = format_current_command_from_ma(total_ma)?;
-        self.transition_to(MaynuoAxisState::RecurSetpointAppliedMock { axis_id: self.axis_id.clone(), idn, zero_current_ma: zero_ma, recur_current_ma: recur_ma, recur_field_nt: recur_field, total_current_ma: total_ma }, "mag_recur_setpoint_applied", Some(format!("cmd={cmd}, total={total_ma:.5} mA")))
+        self.transition_to(
+            MaynuoAxisState::RecurSetpointAppliedMock {
+                axis_id: self.axis_id.clone(),
+                idn,
+                zero_current_ma: zero_ma,
+                recur_current_ma: recur_ma,
+                recur_field_nt: recur_field,
+                total_current_ma: total_ma,
+            },
+            "mag_recur_setpoint_applied",
+            Some(format!("cmd={cmd}, total={total_ma:.5} mA")),
+        )
     }
 
     pub fn apply_shutdown_normal(&mut self) -> Result<(), MagError> {
         self.output = false;
-        self.transition_to(MaynuoAxisState::ShutdownNormal { axis_id: self.axis_id.clone() }, "mag_shutdown_normal", None)
+        self.transition_to(
+            MaynuoAxisState::ShutdownNormal {
+                axis_id: self.axis_id.clone(),
+            },
+            "mag_shutdown_normal",
+            None,
+        )
     }
 
     pub fn apply_shutdown_emergency(&mut self) -> Result<(), MagError> {
         self.output = false;
-        self.transition_to(MaynuoAxisState::ShutdownEmergency { axis_id: self.axis_id.clone() }, "mag_shutdown_emergency", None)
+        self.transition_to(
+            MaynuoAxisState::ShutdownEmergency {
+                axis_id: self.axis_id.clone(),
+            },
+            "mag_shutdown_emergency",
+            None,
+        )
     }
 
     // ---- Readback ----
 
     pub fn readback_recur_current_ma(&self, measured_total_ma: f64) -> Result<f64, MagError> {
         if !measured_total_ma.is_finite() || measured_total_ma < 0.0 {
-            return Err(MagError::NonFiniteValue { field: "measured_total_ma".into(), value: measured_total_ma });
+            return Err(MagError::NonFiniteValue {
+                field: "measured_total_ma".into(),
+                value: measured_total_ma,
+            });
         }
         if self.lock_zero {
-            let zero = self.zero_current_ma.ok_or(MagError::LockZeroBeforeMeasurement { axis_id: self.axis_id.clone() })?;
+            let zero = self
+                .zero_current_ma
+                .ok_or(MagError::LockZeroBeforeMeasurement {
+                    axis_id: self.axis_id.clone(),
+                })?;
             Ok(measured_total_ma - zero)
         } else {
             Ok(0.0)
@@ -1890,7 +2410,8 @@ impl MaynuoAxisRunner {
     }
 
     pub fn current_command_preview(&self) -> Option<String> {
-        self.total_current_ma.and_then(|ma| format_current_command_from_ma(ma).ok())
+        self.total_current_ma
+            .and_then(|ma| format_current_command_from_ma(ma).ok())
     }
 }
 
@@ -1912,7 +2433,17 @@ pub fn build_output_on_zero_mode_plan(axis: &MaynuoAxisProfile) -> MaynuoCommand
         executable_reason: "Mag-M1 mock-only: requires Mag-M2B backend".into(),
         shutdown_mode: None,
         expected_duration_ms: Some(100),
-        commands: vec![cmd_entry(1, "set_output", "OUTP 1", false, "none", "mag_output_enabled", false, Some(100), None)],
+        commands: vec![cmd_entry(
+            1,
+            "set_output",
+            "OUTP 1",
+            false,
+            "none",
+            "mag_output_enabled",
+            false,
+            Some(100),
+            None,
+        )],
     }
 }
 
@@ -1930,7 +2461,17 @@ pub fn build_measure_zero_current_plan(axis: &MaynuoAxisProfile) -> MaynuoComman
         executable_reason: "Mag-M1 mock-only: requires Mag-M2B backend".into(),
         shutdown_mode: None,
         expected_duration_ms: Some(300),
-        commands: vec![cmd_entry(1, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_queried", true, None, Some(300))],
+        commands: vec![cmd_entry(
+            1,
+            "query_current",
+            "MEAS:CURR?",
+            true,
+            "float_ampere",
+            "mag_current_queried",
+            true,
+            None,
+            Some(300),
+        )],
     }
 }
 
@@ -1941,7 +2482,9 @@ pub fn build_lock_zero_event(axis: &MaynuoAxisProfile, zero_current_ma: f64) -> 
         kind: "maynuo_command_plan".into(),
         id: format!("maynuo_lock_zero_{}", axis.axis_id),
         name: "Maynuo M8812 Lock Zero Event".into(),
-        description: Some(format!("Lock-zero enabled with zero_current_ma={zero_current_ma:.3}")),
+        description: Some(format!(
+            "Lock-zero enabled with zero_current_ma={zero_current_ma:.3}"
+        )),
         axis_id: axis.axis_id.clone(),
         profile_id: "maynuo_m8812_lab_xyz".into(),
         executable: false,
@@ -1953,17 +2496,30 @@ pub fn build_lock_zero_event(axis: &MaynuoAxisProfile, zero_current_ma: f64) -> 
 }
 
 /// Build a recurrent-field setpoint command plan.
-pub fn build_recur_field_setpoint_plan(axis: &MaynuoAxisProfile, target_field_nt: f64, zero_current_ma: f64) -> Result<MaynuoCommandPlan, MagError> {
+pub fn build_recur_field_setpoint_plan(
+    axis: &MaynuoAxisProfile,
+    target_field_nt: f64,
+    zero_current_ma: f64,
+) -> Result<MaynuoCommandPlan, MagError> {
     let recur_ma = nt_to_ma(target_field_nt, axis.coil_constant_nt_per_ma);
     let total_ma = zero_current_ma + recur_ma;
     if !target_field_nt.is_finite() {
-        return Err(MagError::NonFiniteValue { field: "target_field_nt".into(), value: target_field_nt });
+        return Err(MagError::NonFiniteValue {
+            field: "target_field_nt".into(),
+            value: target_field_nt,
+        });
     }
     if total_ma < 0.0 {
-        return Err(MagError::SafetyViolation { message: format!("negative total current {total_ma:.5} mA") });
+        return Err(MagError::SafetyViolation {
+            message: format!("negative total current {total_ma:.5} mA"),
+        });
     }
     if total_ma > axis.max_current_ma {
-        return Err(MagError::TotalCurrentOverLimit { axis_id: axis.axis_id.clone(), total_ma, limit_ma: axis.max_current_ma });
+        return Err(MagError::TotalCurrentOverLimit {
+            axis_id: axis.axis_id.clone(),
+            total_ma,
+            limit_ma: axis.max_current_ma,
+        });
     }
     let total_a = total_ma / 1000.0;
     Ok(MaynuoCommandPlan {
@@ -1983,16 +2539,29 @@ pub fn build_recur_field_setpoint_plan(axis: &MaynuoAxisProfile, target_field_nt
 }
 
 /// Build a recurrent-current setpoint command plan.
-pub fn build_recur_current_setpoint_plan(axis: &MaynuoAxisProfile, recur_current_ma: f64, zero_current_ma: f64) -> Result<MaynuoCommandPlan, MagError> {
+pub fn build_recur_current_setpoint_plan(
+    axis: &MaynuoAxisProfile,
+    recur_current_ma: f64,
+    zero_current_ma: f64,
+) -> Result<MaynuoCommandPlan, MagError> {
     let total_ma = zero_current_ma + recur_current_ma;
     if !recur_current_ma.is_finite() {
-        return Err(MagError::NonFiniteValue { field: "recur_current_ma".into(), value: recur_current_ma });
+        return Err(MagError::NonFiniteValue {
+            field: "recur_current_ma".into(),
+            value: recur_current_ma,
+        });
     }
     if total_ma < 0.0 {
-        return Err(MagError::SafetyViolation { message: format!("negative total current {total_ma:.5} mA") });
+        return Err(MagError::SafetyViolation {
+            message: format!("negative total current {total_ma:.5} mA"),
+        });
     }
     if total_ma > axis.max_current_ma {
-        return Err(MagError::TotalCurrentOverLimit { axis_id: axis.axis_id.clone(), total_ma, limit_ma: axis.max_current_ma });
+        return Err(MagError::TotalCurrentOverLimit {
+            axis_id: axis.axis_id.clone(),
+            total_ma,
+            limit_ma: axis.max_current_ma,
+        });
     }
     let total_a = total_ma / 1000.0;
     Ok(MaynuoCommandPlan {
@@ -2012,7 +2581,12 @@ pub fn build_recur_current_setpoint_plan(axis: &MaynuoAxisProfile, recur_current
 }
 
 /// Build a readback query plan with expected reconstruction.
-pub fn build_readback_recur_state_plan(axis: &MaynuoAxisProfile, _measured_total_current_ma: f64, _zero_current_ma: f64, _lock_zero: bool) -> Result<MaynuoCommandPlan, MagError> {
+pub fn build_readback_recur_state_plan(
+    axis: &MaynuoAxisProfile,
+    _measured_total_current_ma: f64,
+    _zero_current_ma: f64,
+    _lock_zero: bool,
+) -> Result<MaynuoCommandPlan, MagError> {
     Ok(MaynuoCommandPlan {
         schema_version: "0.2.0".into(),
         kind: "maynuo_command_plan".into(),
@@ -2025,7 +2599,17 @@ pub fn build_readback_recur_state_plan(axis: &MaynuoAxisProfile, _measured_total
         executable_reason: "Mag-M1 mock-only: requires Mag-M3 backend".into(),
         shutdown_mode: None,
         expected_duration_ms: Some(300),
-        commands: vec![cmd_entry(1, "query_current", "MEAS:CURR?", true, "float_ampere", "mag_current_queried_for_readback", true, None, Some(300))],
+        commands: vec![cmd_entry(
+            1,
+            "query_current",
+            "MEAS:CURR?",
+            true,
+            "float_ampere",
+            "mag_current_queried_for_readback",
+            true,
+            None,
+            Some(300),
+        )],
     })
 }
 
@@ -3103,7 +3687,10 @@ mod tests {
         assert_eq!(plan.id, back.id);
         assert_eq!(plan.commands.len(), back.commands.len());
         assert_eq!(plan.commands[0].scpi, back.commands[0].scpi);
-        assert_eq!(plan.commands[0].expects_response, back.commands[0].expects_response);
+        assert_eq!(
+            plan.commands[0].expects_response,
+            back.commands[0].expects_response
+        );
         assert_eq!(plan.shutdown_mode, back.shutdown_mode);
     }
 
@@ -3260,7 +3847,11 @@ mod tests {
         assert!(!MaynuoCommand::SetRemote.expects_response());
         assert!(!MaynuoCommand::SetLocal.expects_response());
         assert!(!MaynuoCommand::SetVoltage { voltage_v: 75 }.expects_response());
-        assert!(!MaynuoCommand::SetCurrent { current_a: 0.01, current_ma: 10.0 }.expects_response());
+        assert!(!MaynuoCommand::SetCurrent {
+            current_a: 0.01,
+            current_ma: 10.0
+        }
+        .expects_response());
         assert!(!MaynuoCommand::SetOutput { on: true }.expects_response());
         assert!(!MaynuoCommand::SetOutput { on: false }.expects_response());
     }
@@ -3275,15 +3866,34 @@ mod tests {
     fn set_commands_expected_response_shape_is_none() {
         assert_eq!(MaynuoCommand::SetRemote.expected_response_shape(), "none");
         assert_eq!(MaynuoCommand::SetLocal.expected_response_shape(), "none");
-        assert_eq!(MaynuoCommand::SetVoltage { voltage_v: 75 }.expected_response_shape(), "none");
-        assert_eq!(MaynuoCommand::SetCurrent { current_a: 0.01, current_ma: 10.0 }.expected_response_shape(), "none");
-        assert_eq!(MaynuoCommand::SetOutput { on: true }.expected_response_shape(), "none");
+        assert_eq!(
+            MaynuoCommand::SetVoltage { voltage_v: 75 }.expected_response_shape(),
+            "none"
+        );
+        assert_eq!(
+            MaynuoCommand::SetCurrent {
+                current_a: 0.01,
+                current_ma: 10.0
+            }
+            .expected_response_shape(),
+            "none"
+        );
+        assert_eq!(
+            MaynuoCommand::SetOutput { on: true }.expected_response_shape(),
+            "none"
+        );
     }
 
     #[test]
     fn query_commands_expected_response_shape_is_not_none() {
-        assert_eq!(MaynuoCommand::Identify.expected_response_shape(), "MAYNUO,M8812,<SN>,V2.7");
-        assert_eq!(MaynuoCommand::QueryCurrent.expected_response_shape(), "float_ampere");
+        assert_eq!(
+            MaynuoCommand::Identify.expected_response_shape(),
+            "MAYNUO,M8812,<SN>,V2.7"
+        );
+        assert_eq!(
+            MaynuoCommand::QueryCurrent.expected_response_shape(),
+            "float_ampere"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -3296,7 +3906,10 @@ mod tests {
         profile.axes.x.gain_t_per_a = f64::NAN;
         let result = profile.try_to_coil_matrix();
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::NonFiniteValue { .. }
+        ));
     }
 
     #[test]
@@ -3313,7 +3926,10 @@ mod tests {
         profile.axes.z.gain_t_per_a = 0.0;
         let result = profile.try_to_coil_matrix();
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), MagError::CalibrationMissing { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::CalibrationMissing { .. }
+        ));
     }
 
     #[test]
@@ -3342,11 +3958,23 @@ mod tests {
         // Port paths are documented as hints only
         let json = serde_json::to_string(&profile).unwrap();
         // The JSON uses last_known_port_name, not port_name (the old name)
-        assert!(json.contains("last_known_port_name"), "JSON should use last_known_port_name");
+        assert!(
+            json.contains("last_known_port_name"),
+            "JSON should use last_known_port_name"
+        );
         // SN mapping is present as the stable identity
-        assert!(json.contains("080020960220402020"), "X-axis SN must be present");
-        assert!(json.contains("080020960220402022"), "Y-axis SN must be present");
-        assert!(json.contains("080020960220402003"), "Z-axis SN must be present");
+        assert!(
+            json.contains("080020960220402020"),
+            "X-axis SN must be present"
+        );
+        assert!(
+            json.contains("080020960220402022"),
+            "Y-axis SN must be present"
+        );
+        assert!(
+            json.contains("080020960220402003"),
+            "Z-axis SN must be present"
+        );
         // expected_idn is the stable binding key
         for axis in [&profile.axes.x, &profile.axes.y, &profile.axes.z] {
             assert!(!axis.last_known_port_name.is_empty());
@@ -3390,7 +4018,10 @@ mod tests {
         // Re-serialize preserves verification
         let roundtrip_json = serde_json::to_string_pretty(&profile).unwrap();
         let back: MaynuoAxesProfile = serde_json::from_str(&roundtrip_json).unwrap();
-        assert_eq!(back.verification.as_ref().unwrap().method, "power_cycle_identification");
+        assert_eq!(
+            back.verification.as_ref().unwrap().method,
+            "power_cycle_identification"
+        );
         assert_eq!(back.verification.as_ref().unwrap().result, v.result);
     }
 
@@ -3474,12 +4105,16 @@ mod tests {
 
         // No executable flag set
         let forbidden = v["backend_api_contract"]["forbidden_patterns"]
-            .as_array().unwrap();
+            .as_array()
+            .unwrap();
         assert!(!forbidden.is_empty());
 
         // Backend commands available must be a subset with none enabling hardware
-        let cmds = v["backend_api_contract"]["tauri_commands"].as_array().unwrap();
-        let real_control_cmds: Vec<_> = cmds.iter()
+        let cmds = v["backend_api_contract"]["tauri_commands"]
+            .as_array()
+            .unwrap();
+        let real_control_cmds: Vec<_> = cmds
+            .iter()
             .filter(|c| c["available"].as_bool() == Some(true))
             .collect();
         // In M0.5, only magnetic_get_mock_state is available
@@ -3508,7 +4143,8 @@ mod tests {
         // Verify the forbidden_patterns section exists (it documents what
         // React MUST NOT do — it is not itself executable).
         let forbidden = v["backend_api_contract"]["forbidden_patterns"]
-            .as_array().unwrap();
+            .as_array()
+            .unwrap();
         assert!(forbidden.len() >= 6);
 
         // The contract describes display-only payloads; it contains no
@@ -3530,12 +4166,18 @@ mod tests {
 
     #[test]
     fn parse_maynuo_idn_rejects_empty() {
-        assert!(matches!(parse_maynuo_idn(""), Err(MagError::MalformedIdn { .. })));
+        assert!(matches!(
+            parse_maynuo_idn(""),
+            Err(MagError::MalformedIdn { .. })
+        ));
     }
 
     #[test]
     fn parse_maynuo_idn_rejects_fewer_than_3_fields() {
-        assert!(matches!(parse_maynuo_idn("MAYNUO,M8812"), Err(MagError::MalformedIdn { .. })));
+        assert!(matches!(
+            parse_maynuo_idn("MAYNUO,M8812"),
+            Err(MagError::MalformedIdn { .. })
+        ));
     }
 
     #[test]
@@ -3577,9 +4219,18 @@ mod tests {
             "MAYNUO,M8812,080020960220402003,V2.7".to_string(),
         ];
         let matched = match_axes_by_idn(&profile, &observed).unwrap();
-        assert_eq!(matched.get("mag_x").unwrap(), "MAYNUO,M8812,080020960220402020,V2.7");
-        assert_eq!(matched.get("mag_y").unwrap(), "MAYNUO,M8812,080020960220402022,V2.7");
-        assert_eq!(matched.get("mag_z").unwrap(), "MAYNUO,M8812,080020960220402003,V2.7");
+        assert_eq!(
+            matched.get("mag_x").unwrap(),
+            "MAYNUO,M8812,080020960220402020,V2.7"
+        );
+        assert_eq!(
+            matched.get("mag_y").unwrap(),
+            "MAYNUO,M8812,080020960220402022,V2.7"
+        );
+        assert_eq!(
+            matched.get("mag_z").unwrap(),
+            "MAYNUO,M8812,080020960220402003,V2.7"
+        );
     }
 
     #[test]
@@ -3587,7 +4238,10 @@ mod tests {
         let profile = example_maynuo_axes_profile();
         let observed = vec!["MAYNUO,M8812,090000000000000099,V2.7".to_string()];
         let result = match_axes_by_idn(&profile, &observed);
-        assert!(matches!(result.unwrap_err(), MagError::UnknownSerialNumber { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::UnknownSerialNumber { .. }
+        ));
     }
 
     #[test]
@@ -3606,7 +4260,10 @@ mod tests {
         let profile = example_maynuo_axes_profile();
         let observed = vec!["MAYNUO,M8812,080020960220402020,V2.7".to_string()];
         let result = match_axes_by_idn(&profile, &observed);
-        assert!(matches!(result.unwrap_err(), MagError::AxisNotDiscovered { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::AxisNotDiscovered { .. }
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -3629,13 +4286,17 @@ mod tests {
     fn state_machine_wrong_sn_rejected() {
         let mut r = example_runner();
         let result = r.apply_discovered("MAYNUO,M8812,090000000000000099,V2.7");
-        assert!(matches!(result.unwrap_err(), MagError::UnknownSerialNumber { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::UnknownSerialNumber { .. }
+        ));
     }
 
     #[test]
     fn state_machine_discovered_to_mapped() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         assert!(matches!(r.state, MaynuoAxisState::AxisMapped { .. }));
     }
@@ -3643,16 +4304,21 @@ mod tests {
     #[test]
     fn state_machine_mapped_to_init() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
-        assert!(matches!(r.state, MaynuoAxisState::InitializedOutputOff { .. }));
+        assert!(matches!(
+            r.state,
+            MaynuoAxisState::InitializedOutputOff { .. }
+        ));
     }
 
     #[test]
     fn state_machine_init_to_output_on_zero() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3665,25 +4331,32 @@ mod tests {
         let mut r = example_runner();
         // Try to turn output on without safe init
         let result = r.apply_output_on_zero_mode();
-        assert!(matches!(result.unwrap_err(), MagError::OutputBeforeInit { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::OutputBeforeInit { .. }
+        ));
     }
 
     #[test]
     fn state_machine_zero_measured() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
         r.apply_zero_measured(0.15).unwrap();
-        assert!(matches!(r.state, MaynuoAxisState::ZeroMeasured { zero_current_ma, .. } if (zero_current_ma - 0.15).abs() < 0.001));
+        assert!(
+            matches!(r.state, MaynuoAxisState::ZeroMeasured { zero_current_ma, .. } if (zero_current_ma - 0.15).abs() < 0.001)
+        );
         assert!((r.zero_current_ma.unwrap() - 0.15).abs() < 0.001);
     }
 
     #[test]
     fn zero_measured_nan_rejected() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3694,19 +4367,24 @@ mod tests {
     #[test]
     fn lock_zero_before_measurement_rejected() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
         // Skip zero measurement, try lock-zero
         let result = r.apply_lock_zero();
-        assert!(matches!(result.unwrap_err(), MagError::LockZeroBeforeMeasurement { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::LockZeroBeforeMeasurement { .. }
+        ));
     }
 
     #[test]
     fn state_machine_zero_locked() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3720,20 +4398,25 @@ mod tests {
     #[test]
     fn recur_before_lock_zero_rejected() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
         r.apply_zero_measured(0.10).unwrap();
         // No lock_zero — try recur field
         let result = r.apply_recur_setpoint_planned_from_field(1000.0);
-        assert!(matches!(result.unwrap_err(), MagError::RecurBeforeLockZero { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::RecurBeforeLockZero { .. }
+        ));
     }
 
     #[test]
     fn field_1000_nt_on_x() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3758,7 +4441,8 @@ mod tests {
         profile.sn_tail = "2022".into();
 
         let mut r = MaynuoAxisRunner::new(profile);
-        r.apply_discovered("MAYNUO,M8812,080020960220402022,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402022,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3779,7 +4463,8 @@ mod tests {
         profile.sn_tail = "2003".into();
 
         let mut r = MaynuoAxisRunner::new(profile);
-        r.apply_discovered("MAYNUO,M8812,080020960220402003,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402003,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3794,7 +4479,8 @@ mod tests {
     #[test]
     fn total_current_equals_zero_plus_recur() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3811,7 +4497,8 @@ mod tests {
     #[test]
     fn command_preview_uses_curr_format() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3821,7 +4508,10 @@ mod tests {
         r.apply_recur_setpoint_applied_mock().unwrap();
 
         let preview = r.current_command_preview().unwrap();
-        assert!(preview.starts_with("CURR "), "Expected CURR command, got {preview}");
+        assert!(
+            preview.starts_with("CURR "),
+            "Expected CURR command, got {preview}"
+        );
         // Should be 5 decimal places
         let parts: Vec<&str> = preview.split_whitespace().collect();
         assert_eq!(parts.len(), 2);
@@ -3832,7 +4522,8 @@ mod tests {
     #[test]
     fn readback_reconstructs_recur_current() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3851,7 +4542,8 @@ mod tests {
     #[test]
     fn readback_without_lock_zero_returns_zero_recur() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3865,7 +4557,8 @@ mod tests {
     #[test]
     fn total_current_over_limit_rejected() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3873,20 +4566,27 @@ mod tests {
         r.apply_lock_zero().unwrap();
         // Target field that would push total > 5000 mA
         let result = r.apply_recur_setpoint_planned_from_field(100_000.0);
-        assert!(matches!(result.unwrap_err(), MagError::TotalCurrentOverLimit { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::TotalCurrentOverLimit { .. }
+        ));
     }
 
     #[test]
     fn nan_field_rejected() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
         r.apply_zero_measured(0.0).unwrap();
         r.apply_lock_zero().unwrap();
         let result = r.apply_recur_setpoint_planned_from_field(f64::NAN);
-        assert!(matches!(result.unwrap_err(), MagError::NonFiniteValue { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            MagError::NonFiniteValue { .. }
+        ));
     }
 
     #[test]
@@ -3900,7 +4600,8 @@ mod tests {
     #[test]
     fn normal_shutdown_from_output_on_zero() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3912,7 +4613,8 @@ mod tests {
     #[test]
     fn setpoint_applied_mock_rejected_before_planned() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3929,7 +4631,8 @@ mod tests {
     #[test]
     fn full_workflow_events_recorded() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -3938,7 +4641,11 @@ mod tests {
         r.apply_recur_setpoint_planned_from_field(1000.0).unwrap();
         r.apply_recur_setpoint_applied_mock().unwrap();
 
-        assert!(r.events.len() >= 8, "Expected at least 8 events, got {}", r.events.len());
+        assert!(
+            r.events.len() >= 8,
+            "Expected at least 8 events, got {}",
+            r.events.len()
+        );
         // Verify key events are present
         let event_types: Vec<&str> = r.events.iter().map(|e| e.event_type.as_str()).collect();
         assert!(event_types.contains(&"mag_axis_discovered"));
@@ -3969,7 +4676,8 @@ mod tests {
     #[test]
     fn readback_negative_recur_current_preserved() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         r.apply_initialized_output_off().unwrap();
         r.apply_output_on_zero_mode().unwrap();
@@ -4071,7 +4779,11 @@ mod tests {
             build_readback_recur_state_plan(&axis, 10.0, 0.0, true).unwrap(),
         ];
         for plan in &plans {
-            assert!(!plan.executable, "Plan {} should not be executable", plan.id);
+            assert!(
+                !plan.executable,
+                "Plan {} should not be executable",
+                plan.id
+            );
         }
     }
 
@@ -4094,7 +4806,8 @@ mod tests {
     #[test]
     fn axis_runner_serde_roundtrip() {
         let mut r = example_runner();
-        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7").unwrap();
+        r.apply_discovered("MAYNUO,M8812,080020960220402020,V2.7")
+            .unwrap();
         r.apply_axis_mapped().unwrap();
         let json = serde_json::to_string(&r).unwrap();
         let back: MaynuoAxisRunner = serde_json::from_str(&json).unwrap();
