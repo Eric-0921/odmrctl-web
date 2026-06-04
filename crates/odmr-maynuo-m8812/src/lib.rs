@@ -20,20 +20,28 @@ use std::time::Duration;
 
 use std::sync::LazyLock;
 
-fn is_m2b_allowed(cmd: &str) -> bool {
-    static ALLOWED: LazyLock<Vec<&str>> = LazyLock::new(|| {
+fn is_allowed(cmd: &str) -> bool {
+    let trimmed = cmd.trim();
+    // Exact-match set commands and queries
+    static EXACT: LazyLock<Vec<&str>> = LazyLock::new(|| {
         vec![
             "*IDN?",
             "SYST:REM",
             "SYST:LOC",
             "VOLT 75",
-            "CURR 0.00000",
             "OUTP 0",
             "OUTP 1",
             "MEAS:CURR?",
         ]
     });
-    ALLOWED.iter().any(|&a| a == cmd.trim())
+    if EXACT.iter().any(|&a| a == trimmed) {
+        return true;
+    }
+    // CURR pattern: "CURR <float>"
+    if let Some(val) = trimmed.strip_prefix("CURR ") {
+        return val.parse::<f64>().is_ok();
+    }
+    false
 }
 
 /// Serial configuration for Maynuo M8812 identity probing.
@@ -269,7 +277,7 @@ impl MaynuoM8812Transport {
 
     /// Write a command without waiting for a response (for set commands).
     fn write_command(&mut self, command: &str) -> Result<(), MaynuoProbeError> {
-        if !is_m2b_allowed(command) {
+        if !is_allowed(command) {
             return Err(MaynuoProbeError::UnsupportedCommand {
                 command: command.into(),
             });
@@ -295,7 +303,7 @@ impl MaynuoM8812Transport {
 
     /// Write a command and read back a response line (for query commands).
     fn query_response_line(&mut self, command: &str) -> Result<String, MaynuoProbeError> {
-        if !is_m2b_allowed(command) {
+        if !is_allowed(command) {
             return Err(MaynuoProbeError::UnsupportedCommand {
                 command: command.into(),
             });
@@ -490,7 +498,7 @@ mod tests {
     }
 
     #[test]
-    fn query_idn_rejects_any_other_command() {
+    fn write_command_rejects_unknown_command() {
         let port = FakePort::default();
         let mut transport = MaynuoM8812Transport {
             device_id: DeviceId::new("mag_x"),
@@ -499,7 +507,7 @@ mod tests {
             port: Box::new(port),
             status: DeviceStatus::default(),
         };
-        let err = transport.write_command("CURR 0.00001").unwrap_err();
+        let err = transport.write_command("MEAS:VOLT?").unwrap_err();
         assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
     }
 
@@ -531,7 +539,7 @@ mod tests {
     }
 
     #[test]
-    fn write_command_rejects_nonzero_curr() {
+    fn write_command_allows_nonzero_curr() {
         let port = FakePort::default();
         let mut transport = MaynuoM8812Transport {
             device_id: DeviceId::new("mag_x"),
@@ -540,7 +548,21 @@ mod tests {
             port: Box::new(port),
             status: DeviceStatus::default(),
         };
-        let err = transport.write_command("CURR 0.00001").unwrap_err();
+        // CURR 0.01000 = 10 mA — should be allowed by pattern match
+        assert!(transport.write_command("CURR 0.01000").is_ok());
+    }
+
+    #[test]
+    fn write_command_rejects_malformed_curr() {
+        let port = FakePort::default();
+        let mut transport = MaynuoM8812Transport {
+            device_id: DeviceId::new("mag_x"),
+            port_path: "fake".into(),
+            config: MaynuoSerialPortConfig::default(),
+            port: Box::new(port),
+            status: DeviceStatus::default(),
+        };
+        let err = transport.write_command("CURR abc").unwrap_err();
         assert!(matches!(err, MaynuoProbeError::UnsupportedCommand { .. }));
     }
 

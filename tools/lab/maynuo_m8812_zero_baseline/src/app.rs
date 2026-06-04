@@ -359,23 +359,41 @@ fn attempt_cleanup(
 ) {
     let mut all_ok = true;
 
-    if let Err(e) = transport.send_set_output(false) {
-        all_ok = false;
-        baseline.errors.push(format!("shutdown OUTP 0: {e}"));
+    match transport.send_set_output(false) {
+        Ok(()) => {
+            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, None);
+        }
+        Err(e) => {
+            all_ok = false;
+            let err = e.to_string();
+            baseline.errors.push(format!("shutdown OUTP 0: {err}"));
+            push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, Some(err));
+        }
     }
-    push_audit(audit_seq, audit, &baseline.axis_id, "OUTP 0", "set_output", false, None, None);
 
-    if let Err(e) = transport.send_set_current(0.0) {
-        all_ok = false;
-        baseline.errors.push(format!("shutdown CURR 0: {e}"));
+    match transport.send_set_current(0.0) {
+        Ok(()) => {
+            push_audit(audit_seq, audit, &baseline.axis_id, "CURR 0.00000", "set_current", false, None, None);
+        }
+        Err(e) => {
+            all_ok = false;
+            let err = e.to_string();
+            baseline.errors.push(format!("shutdown CURR 0: {err}"));
+            push_audit(audit_seq, audit, &baseline.axis_id, "CURR 0.00000", "set_current", false, None, Some(err));
+        }
     }
-    push_audit(audit_seq, audit, &baseline.axis_id, "CURR 0.00000", "set_current", false, None, None);
 
-    if let Err(e) = transport.send_set_local() {
-        all_ok = false;
-        baseline.errors.push(format!("shutdown SYST:LOC: {e}"));
+    match transport.send_set_local() {
+        Ok(()) => {
+            push_audit(audit_seq, audit, &baseline.axis_id, "SYST:LOC", "set_local", false, None, None);
+        }
+        Err(e) => {
+            all_ok = false;
+            let err = e.to_string();
+            baseline.errors.push(format!("shutdown SYST:LOC: {err}"));
+            push_audit(audit_seq, audit, &baseline.axis_id, "SYST:LOC", "set_local", false, None, Some(err));
+        }
     }
-    push_audit(audit_seq, audit, &baseline.axis_id, "SYST:LOC", "set_local", false, None, None);
 
     baseline.shutdown_succeeded = all_ok;
 }
@@ -514,11 +532,14 @@ fn push_audit(
 }
 
 fn compute_audit_invariants(audit: &[CommandAuditEntry], axes: &[AxisZeroBaseline]) -> AuditInvariants {
+    use crate::types::PerAxisInvariants;
+    use std::collections::BTreeMap;
+
     let nonzero = audit.iter().any(|e| e.nonzero_current_attempted);
 
     let outp_on = audit.iter().any(|e| e.command == "OUTP 1");
 
-    // Check OUTP 1 appears after CURR 0.00000
+    // Global OUTP-after-CURR check
     let mut curr_zero_seen = false;
     let mut outp_after_curr = false;
     for e in audit {
@@ -541,6 +562,53 @@ fn compute_audit_invariants(audit: &[CommandAuditEntry], axes: &[AxisZeroBaselin
     let final_curr_zero = audit.iter().any(|e| e.command == "CURR 0.00000");
     let final_local = audit.iter().any(|e| e.command == "SYST:LOC");
 
+    // Per-axis invariants
+    let mut per_axis: BTreeMap<String, PerAxisInvariants> = BTreeMap::new();
+    for axis in axes {
+        let axis_audit: Vec<&CommandAuditEntry> = audit
+            .iter()
+            .filter(|e| e.axis_id == axis.axis_id)
+            .collect();
+
+        let pa_outp_on = axis_audit.iter().any(|e| e.command == "OUTP 1");
+
+        let mut pa_curr_zero_seen = false;
+        let mut pa_outp_after_curr = false;
+        for e in &axis_audit {
+            if e.command == "CURR 0.00000" {
+                pa_curr_zero_seen = true;
+            }
+            if e.command == "OUTP 1" && pa_curr_zero_seen {
+                pa_outp_after_curr = true;
+            }
+        }
+
+        let pa_meas_count = axis_audit
+            .iter()
+            .filter(|e| e.command == "MEAS:CURR?")
+            .count() as u32;
+
+        let pa_readback = !axis.zero_readback_samples_ma.is_empty();
+        let pa_lock = axis.lock_zero_applied;
+        let pa_outp_off = axis_audit.iter().any(|e| e.command == "OUTP 0");
+        let pa_curr_zero = axis_audit.iter().any(|e| e.command == "CURR 0.00000");
+        let pa_local = axis_audit.iter().any(|e| e.command == "SYST:LOC");
+
+        let mut pa = PerAxisInvariants {
+            outp_on_sent: pa_outp_on,
+            outp_on_only_after_curr_zero: pa_outp_after_curr,
+            measured_current_queries_sent: pa_meas_count,
+            zero_readback_current_ma_recorded: pa_readback,
+            lock_zero_event_recorded: pa_lock,
+            final_output_off: pa_outp_off,
+            final_current_zero_command_sent: pa_curr_zero,
+            final_local_mode_requested: pa_local,
+            all_pass: false,
+        };
+        pa.all_pass = pa.check();
+        per_axis.insert(axis.axis_id.clone(), pa);
+    }
+
     AuditInvariants {
         nonzero_current_sent: nonzero,
         outp_on_sent: outp_on,
@@ -554,6 +622,7 @@ fn compute_audit_invariants(audit: &[CommandAuditEntry], axes: &[AxisZeroBaselin
         final_output_off: final_outp_off,
         final_current_zero_command_sent: final_curr_zero,
         final_local_mode_requested: final_local,
+        per_axis,
     }
 }
 

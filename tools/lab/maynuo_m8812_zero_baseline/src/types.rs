@@ -1,6 +1,7 @@
 //! Artifact types for Mag-M2B zero-baseline probe.
 
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 /// Per-axis zero-baseline measurement result.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -77,6 +78,35 @@ pub struct AuditInvariants {
     pub final_output_off: bool,
     pub final_current_zero_command_sent: bool,
     pub final_local_mode_requested: bool,
+    /// Per-axis invariant breakdown. Each processed axis must pass all checks.
+    pub per_axis: BTreeMap<String, PerAxisInvariants>,
+}
+
+/// Per-axis audit invariant check.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PerAxisInvariants {
+    pub outp_on_sent: bool,
+    pub outp_on_only_after_curr_zero: bool,
+    pub measured_current_queries_sent: u32,
+    pub zero_readback_current_ma_recorded: bool,
+    pub lock_zero_event_recorded: bool,
+    pub final_output_off: bool,
+    pub final_current_zero_command_sent: bool,
+    pub final_local_mode_requested: bool,
+    pub all_pass: bool,
+}
+
+impl PerAxisInvariants {
+    pub fn check(&self) -> bool {
+        self.outp_on_sent
+            && self.outp_on_only_after_curr_zero
+            && self.measured_current_queries_sent >= 1
+            && self.zero_readback_current_ma_recorded
+            && self.lock_zero_event_recorded
+            && self.final_output_off
+            && self.final_current_zero_command_sent
+            && self.final_local_mode_requested
+    }
 }
 
 impl AuditInvariants {
@@ -92,6 +122,8 @@ impl AuditInvariants {
             && self.final_output_off
             && self.final_current_zero_command_sent
             && self.final_local_mode_requested
+            && !self.per_axis.is_empty()
+            && self.per_axis.values().all(|p| p.all_pass)
     }
 }
 
