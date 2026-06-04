@@ -7,7 +7,7 @@
 
 **odmrctl-web** 是 ODMR（Optically Detected Magnetic Resonance）自动化采集平台，面向 NV 色心 ODMR 实验。核心能力包括：设备编排、recipe 执行、高频采集、数据落盘与离线分析。
 
-当前阶段：**GUI-M0 Mock Viewer 已完成；M2 硬件 bring-up 已完成 Phase 1 并进入 M3 受控双设备联调；磁场控制线处于 Mag-M1 mock-only 状态。**
+当前阶段：**GUI-M0 Mock Viewer 已完成；M4.1 recipe dry-run viewer 已完成；M5A RF + Mag + OE 最小组合实验已真实硬件验证；P6 common_preflight / StationLedger / DeviceLock 已激活；连接层进入 P6 固化阶段。**
 
 - **Rust 后端**：设备编排、recipe 编译与安全检查、执行引擎、高频采集、raw-first 数据落盘。
 - **前端**：Tauri v2 + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
@@ -17,7 +17,7 @@
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 后端核心 | Rust (Edition 2021) | 13 crate 的 Cargo workspace |
+| 后端核心 | Rust (Edition 2021) | 14 crate 的 Cargo workspace |
 | 桌面 GUI | Tauri v2 | 跨平台 Webview 桌面壳 |
 | 前端框架 | React 18 + TypeScript 5 | Vite 5 构建，React Router v6 路由 |
 | 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist=true`、`strict-peer-dependencies=false`、`auto-install-peers=true` |
@@ -60,7 +60,7 @@ Layer 5: GUI              apps/desktop/     (Tauri/Web)
 Layer 4: Application API  Tauri commands    (apps/desktop/src-tauri/)
 Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness
 Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-device  odmr-mag
+Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-maynuo-m8812  odmr-device  odmr-mag
 Layer 0: Types            odmr-types
 ```
 
@@ -72,7 +72,8 @@ Layer 0: Types            odmr-types
 | `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` | 活跃 |
 | `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
 | `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
-| `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划的 mock 状态机 | `odmr-device`, `odmr-types` | 活跃（Mag-M1 mock-only） |
+| `odmr-maynuo-m8812` | 1 | Maynuo M8812 串口 SCPI 指令封装、电流/电压/输出控制、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+| `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划 | `odmr-device`, `odmr-types` | 活跃（M5A 真实硬件已验证） |
 | `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
 | `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开、SHA-256 哈希 | `odmr-types`, `serde`, `serde_json`, `sha2`, `hex` | 活跃 |
 | `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
@@ -123,7 +124,31 @@ pnpm tauri build      # 发布构建
 - **GUI-M0**：已完成并保持 mock-only 边界。
 - **M2**：已完成硬件发现、只读快照、OE1022D 实采、RALL 捕获、桥接与 shadow run。
 - **M3**：已进入 SMB100A 受控 RF / FM/MOD 微测试、双设备软件步进 sweep、extended sweep、recipe-shaped run。
-- **Mag-M1**：磁场控制线目前仍为 mock-only，不输出真实电流，不打开真实串口。
+- **M5A**：RF + Mag + OE 最小组合实验已完成真实硬件验证；common_preflight 已统一设备预检；P6 连接层进入固化阶段。
+- **M5B**：未开始。目标为多磁轴 ODMR 采集。
+- **M4.2**：未开始。目标为 GUI run launcher（recipe 驱动的运行启动器）。
+
+### GUI 当前状态
+
+| 功能 | 状态 |
+|------|------|
+| M4.1 recipe dry-run viewer | ✅ 已完成 |
+| M5A artifact viewer 类型 + Tauri 命令 | ✅ 已完成（read-only） |
+| M5A artifact viewer 页面/路由 | ⏳ 未实现 |
+| GUI run launcher | ⏳ 未实现 |
+| 硬件控制按钮 | ❌ 不存在（架构约束） |
+
+**架构约束：** GUI 禁止直接调用 lab 工具作为 shell 子进程进行真实运行。未来的 GUI run launcher（M4.2）必须通过类型化的 Rust 运行时 API（Layer 3/4 executor）发起实验，而非直接调用 `common_preflight` 或 lab 工具。
+
+### Lab 工具分类
+
+| 分类 | 工具 | 说明 |
+|------|------|------|
+| 产品运行时候选 | `common_preflight`（稳定化后）、`rf_mag_oe_minimal_run` 概念 | 未来提取为 workspace crate |
+| 实验室联调专用 | `maynuo_m8812_identity_probe`、`zero_baseline`、`recur_microtest`、`sequential_axis_run`、`smb100a_*`、`oe1022d_*` 等 | M2–M4 单设备/单阶段工具 |
+| 诊断专用 | `visa_probe` | VISA A/B 基准测试 |
+| GUI 只读支持 | M5A artifact viewer 类型与命令 | 解析产物文件，无硬件访问 |
+| 废弃/遗留 | 无 | — |
 
 ## 测试策略
 

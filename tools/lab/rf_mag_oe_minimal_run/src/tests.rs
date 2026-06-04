@@ -32,7 +32,7 @@ fn test_happy_path_fake_transports() {
     assert!(idn.contains("MAYNUO"));
 
     // Zero baseline
-    let mut mag_audit: Vec<CommandAuditEntry> = Vec::new();
+    let _mag_audit: Vec<CommandAuditEntry> = Vec::new();
     mag.send_set_remote().unwrap();
     mag.send_set_voltage(75).unwrap();
     mag.send_set_current(0.0).unwrap();
@@ -410,6 +410,7 @@ fn test_single_axis_only_no_simultaneous_output() {
         operator_note: None,
         station_profile: None,
         preflight_only: false,
+        ledger_path: None,
         dry_run: true,
     };
 
@@ -420,7 +421,7 @@ fn test_single_axis_only_no_simultaneous_output() {
 #[test]
 fn test_maynuo_cleanup_sets_safe_state() {
     let mut mag = FakeMaynuoTransport::new("MAYNUO,M8812,SN123,V2.7");
-    let mut audit: Vec<CommandAuditEntry> = Vec::new();
+    let _audit: Vec<CommandAuditEntry> = Vec::new();
 
     mag.send_set_output(true).unwrap();
     mag.send_set_current(0.01).unwrap();
