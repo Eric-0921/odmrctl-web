@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "safety_report",
+  "id": "safety_m5b_20260531_001",
+  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan_20260531_001",
+  "decision": "allow",
+  "requires_operator_approval": true,
+  "physical_response_required": false,
+  "summary": {
+    "checked_steps": 15,
+    "checked_actions": 0,
+    "info_count": 0,
+    "warning_count": 0,
+    "error_count": 0
+  },
+  "checks": [
+    {
+      "check": "recipe_schema_valid",
+      "status": "pass",
+      "message": "system_scan_recipe schema validation passed"
+    },
+    {
+      "check": "station_ref_valid",
+      "status": "pass",
+      "message": "station_ref points to a valid station file"
+    },
+    {
+      "check": "safety_limits_not_overridden",
+      "status": "pass",
+      "message": "recipe does not contain safety limit overrides"
+    },
+    {
+      "check": "smb_power_within_limit",
+      "status": "pass",
+      "message": "RF power -30.0 dBm within station limit",
+      "value": -30.0,
+      "limit": 0.0
+    },
+    {
+      "check": "smb_internal_sweep_disabled",
+      "status": "pass",
+      "message": "no internal SMB sweep requested"
+    },
+    {
+      "check": "magnetic_current_within_limit",
+      "status": "pass",
+      "message": "magnetic field 1000.0 nT maps to current within per-axis limit"
+    },
+    {
+      "check": "magnetic_ramp_within_limit",
+      "status": "pass",
+      "message": "magnetic ramp within configured limit"
+    },
+    {
+      "check": "magnetic_calibration_available",
+      "status": "pass",
+      "message": "station calibration snapshot referenced"
+    },
+    {
+      "check": "laser_disabled_or_safe",
+      "status": "pass",
+      "message": "laser is disabled (enabled=false)"
+    },
+    {
+      "check": "oe_passive_acquisition_only",
+      "status": "pass",
+      "message": "OE1022D acquisition is passive read-only"
+    },
+    {
+      "check": "operator_approval_required",
+      "status": "pass",
+      "message": "operator approval is required by recipe safety block"
+    },
+    {
+      "check": "expected_points_below_limit",
+      "status": "pass",
+      "message": "9 points below maximum point limit"
+    },
+    {
+      "check": "expected_runtime_below_limit",
+      "status": "pass",
+      "message": "estimated 67.5 s below maximum runtime limit"
+    },
+    {
+      "check": "no_realtime_csv",
+      "status": "pass",
+      "message": "recipe does not request realtime CSV output"
+    },
+    {
+      "check": "no_gui_direct_hardware",
+      "status": "pass",
+      "message": "recipe does not request GUI direct hardware control"
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}

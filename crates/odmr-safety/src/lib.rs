@@ -4,6 +4,8 @@
 //!
 //! No hardware access. No fake devices. No executor. No GUI.
 
+pub mod system_scan;
+
 use odmr_recipe::{DeviceAction, RecipeStep, ResolvedRecipe, SafetyLimit};
 
 // ---------------------------------------------------------------------------

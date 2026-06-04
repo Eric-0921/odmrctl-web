@@ -1,8 +1,10 @@
 //! odmr-recipe — Layer 2 recipe data structures, JSON loading and validation.
 
+pub mod system_scan;
 pub mod types;
 pub mod validation;
 
+pub use system_scan::*;
 pub use types::*;
 pub use validation::*;
 

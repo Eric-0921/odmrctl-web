@@ -45,6 +45,44 @@ export interface M34Recipe {
   };
 }
 
+export interface SystemScanRecipe {
+  schema_version: string;
+  kind: string;
+  id: string;
+  description?: string;
+  station_ref: string;
+  physical_response_required: boolean;
+  devices: Record<string, { device_id: string; required: boolean; enabled?: boolean }>;
+  fixed_params: Record<string, unknown>;
+  sweeps: Array<{
+    sweep_id: string;
+    device: string;
+    type?: string;
+    axis_group?: string;
+    unit?: string;
+    axes?: Record<string, { value?: number; values?: number[] }>;
+    axis?: string;
+    values?: number[];
+  }>;
+  sweep_order: string[];
+  acquisition_policy: {
+    enabled: boolean;
+    device: string;
+    mode: string;
+    start_after: string[];
+    pre_discard_ms: number;
+    frames_per_point: number;
+    attach_device_state_snapshot: boolean;
+  };
+  safety: {
+    require_operator_approval: boolean;
+    no_internal_smb_sweep: boolean;
+    no_realtime_csv: boolean;
+    no_gui_direct_hardware: boolean;
+    laser_default_disabled: boolean;
+  };
+}
+
 export interface RecipeValidationResult {
   parseOk: boolean;
   parseError?: string;
@@ -54,6 +92,7 @@ export interface RecipeValidationResult {
   valueErrors: string[];
   warnings: string[];
   recipe: M34Recipe | null;
+  kind?: string;
 }
 
 export interface ResolvedPreview {

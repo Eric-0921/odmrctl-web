@@ -402,6 +402,29 @@ export default function RecipeViewerPage() {
         )}
       </Panel>
 
+      {/* System Scan Recipe placeholder */}
+      {validation.kind === "system_scan_recipe" && validation.parseOk && validation.shapeOk && (
+        <Panel title="System Scan Recipe">
+          <div
+            style={{
+              background: "var(--color-info-soft)",
+              borderRadius: "var(--radius-md)",
+              padding: "var(--space-4)",
+              textAlign: "center",
+            }}
+          >
+            <div style={{ fontWeight: 600, color: "var(--color-info)", marginBottom: "var(--space-2)" }}>
+              system_scan_recipe recognized
+            </div>
+            <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>
+              Full GUI preview for system-level scan recipes is not yet implemented.
+              <br />
+              Use the Rust CLI compiler to expand and preview this recipe.
+            </div>
+          </div>
+        </Panel>
+      )}
+
       {/* Only show preview panels if recipe is valid */}
       {validation.recipe && previews && (
         <>

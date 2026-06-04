@@ -47,9 +47,55 @@ export function validateRecipe(text: string): RecipeValidationResult {
 
   if (typeof r.kind !== "string") {
     shapeErrors.push("Missing or invalid 'kind' field");
-  } else if (r.kind !== "two_device_odmr_like_sweep_recipe") {
+    return {
+      parseOk: true,
+      shapeOk: false,
+      shapeErrors,
+      valueOk: false,
+      valueErrors: [],
+      warnings: [],
+      recipe: null,
+    };
+  }
+
+  // Handle system_scan_recipe as a recognized but not-yet-fully-supported kind
+  if (r.kind === "system_scan_recipe") {
+    const ssWarnings: string[] = [
+      "system_scan_recipe recognized — full GUI preview not yet implemented",
+    ];
+    if (!isObject(r.devices)) shapeErrors.push("Missing 'devices' block");
+    if (!Array.isArray(r.sweeps)) shapeErrors.push("Missing 'sweeps' array");
+    if (!Array.isArray(r.sweep_order)) shapeErrors.push("Missing 'sweep_order' array");
+    if (!isObject(r.acquisition_policy)) shapeErrors.push("Missing 'acquisition_policy' block");
+
+    if (shapeErrors.length > 0) {
+      return {
+        parseOk: true,
+        shapeOk: false,
+        shapeErrors,
+        valueOk: false,
+        valueErrors: [],
+        warnings: [],
+        recipe: null,
+        kind: r.kind,
+      };
+    }
+
+    return {
+      parseOk: true,
+      shapeOk: true,
+      shapeErrors: [],
+      valueOk: true,
+      valueErrors: [],
+      warnings: ssWarnings,
+      recipe: null,
+      kind: r.kind,
+    };
+  }
+
+  if (r.kind !== "two_device_odmr_like_sweep_recipe") {
     shapeErrors.push(
-      `kind must be 'two_device_odmr_like_sweep_recipe', got '${r.kind}'`
+      `kind must be 'two_device_odmr_like_sweep_recipe' or 'system_scan_recipe', got '${r.kind}'`
     );
   }
 
@@ -69,6 +115,7 @@ export function validateRecipe(text: string): RecipeValidationResult {
       valueErrors: [],
       warnings: [],
       recipe: null,
+      kind: r.kind,
     };
   }
 
@@ -188,6 +235,7 @@ export function validateRecipe(text: string): RecipeValidationResult {
     valueErrors,
     warnings,
     recipe,
+    kind: recipe.kind,
   };
 }
 

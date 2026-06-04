@@ -6,6 +6,7 @@ description = "Layer 3 — Static safety interlock engine. ResolvedRecipe + Safe
 license = "MIT OR Apache-2.0"
 
 [dependencies]
+odmr-compiler = { path = "../odmr-compiler" }
 odmr-recipe = { path = "../odmr-recipe" }
 odmr-types = { path = "../odmr-types" }
 serde = { version = "1.0", features = ["derive"] }

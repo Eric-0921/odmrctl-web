@@ -95,8 +95,27 @@ fn all_example_json_files_are_covered_by_tests() {
         let entry = entry.unwrap();
         let path = entry.path();
         if path.extension().and_then(|s| s.to_str()) == Some("json") {
-            load_recipe(&path)
-                .unwrap_or_else(|e| panic!("recipe example should parse: {}: {e}", path.display()));
+            // Peek at kind to decide which parser to use.
+            let contents = std::fs::read_to_string(&path).unwrap();
+            let kind: String = serde_json::from_str::<serde_json::Value>(&contents)
+                .unwrap()
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or("recipe")
+                .to_string();
+
+            match kind.as_str() {
+                "system_scan_recipe" => {
+                    odmr_recipe::parse_system_scan_recipe(&contents).unwrap_or_else(|e| {
+                        panic!("system scan recipe should parse: {}: {e}", path.display())
+                    });
+                }
+                _ => {
+                    load_recipe(&path).unwrap_or_else(|e| {
+                        panic!("recipe example should parse: {}: {e}", path.display())
+                    });
+                }
+            }
             checked += 1;
         }
     }
