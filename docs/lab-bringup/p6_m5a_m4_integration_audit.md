@@ -219,7 +219,7 @@ This is **preparation work**, not new hardware behavior. It hardens the existing
 | # | Issue | Severity | Action Taken |
 |---|-------|----------|-------------|
 | 1 | `rf_mag_oe_minimal_run` test compile error (`E0063` missing `ledger_path`) | Medium | **Fixed** in this audit |
-| 2 | `visa_probe` link failure on macOS without R&S VISA | Low | **Documented** (expected) |
+| 2 | `visa_probe` link failure (`framework 'VISA' not found`) | Low | **Fixed** — `visa-sys` defaults to `framework=VISA` on macOS but R&S installs as `RsVisa.framework`. Added `.cargo/config.toml` with `LIB_VISA_NAME="framework=RsVisa"`. |
 | 3 | AGENTS.md stale status ("Mag-M1 mock-only") | Low | **Fixed** in this audit |
 | 4 | 5 clippy warnings in `rf_mag_oe_minimal_run/src/tests.rs` | Low | **Fixed** in this audit |
 | 5 | `tauri-plugin-shell` initialized but unused | Very Low | Documented; optional cleanup |

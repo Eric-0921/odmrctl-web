@@ -69,11 +69,12 @@ Root `Cargo.toml` defines **14 workspace crates** (all under `crates/`):
 | Missing RsVisa library | 🟢 **Zero** | No VISA dependency in workspace |
 | Clean Linux without `libudev-dev` | 🟡 **Moderate** | CI handles it; developers need docs |
 | macOS (any) | 🟢 **Low** | `serialport` uses IOKit; no extra deps |
-| Building standalone `visa_probe` | 🟡 **Expected failure** | Requires R&S VISA installed; not a bug |
+| Building standalone `visa_probe` | 🟡 **Resolved** | R&S VISA installed, but `visa-sys` defaults to `framework=VISA` on macOS while R&S installs as `RsVisa.framework`. Fixed via `.cargo/config.toml` setting `LIB_VISA_NAME="framework=RsVisa"`. |
 
 ## 6. Recommendations
 
 1. **No action on VISA feature-gating** — already fully isolated.
 2. **Document `libudev-dev` requirement** more prominently for Linux developers (already in CI, add to README troubleshooting).
 3. **Do not add `visa-rs` or `rsvisa` to workspace** without explicit ADR and feature-gate.
+4. **`visa_probe` build fixed** — `.cargo/config.toml` now sets `LIB_VISA_NAME="framework=RsVisa"` automatically so macOS builds work without manual env vars.
 4. **Consider feature-gating `serialport` in `odmr-maynuo-m8812`** if the crate ever needs to compile in environments without serial support (e.g., headless servers). Not urgent today.

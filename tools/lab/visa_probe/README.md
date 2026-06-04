@@ -26,6 +26,11 @@ min/max/mean/median/p99 statistics per method.
 - R&S VISA installed at `/Library/Frameworks/RsVisa.framework` (macOS)
 - SMB100A reachable at `169.254.2.20`
 
+> **Build note:** `visa-sys` defaults to linking `framework=VISA` on macOS, but R&S VISA installs as `RsVisa.framework`. This project includes `.cargo/config.toml` that sets `LIB_VISA_NAME="framework=RsVisa"` automatically. If you build outside of this directory, set the environment variable manually:
+> ```bash
+> LIB_VISA_NAME="framework=RsVisa" cargo run
+> ```
+
 ## Safety
 
 This tool only sends read-only `*IDN?` queries. No RF output is enabled.
