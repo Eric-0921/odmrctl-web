@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "onion_dataset_recipe",
+  "id": "demo_run_001",
+  "description": "Demo onion recipe: 4 layers, B-X primary, 1kS/s.",
+  "layers": {
+    "OE1022D": {
+      "port": "auto",
+      "profile_ref": "examples/profiles/oe1022d.default.json",
+      "enabled": true
+    },
+    "SMB100A": {
+      "port": "169.254.2.20:5025",
+      "profile_ref": "examples/profiles/smb100a.default.json",
+      "enabled": true
+    },
+    "MAGNETIC": {
+      "port": "n/a",
+      "profile_ref": "examples/profiles/magnetic.default.json",
+      "enabled": true
+    },
+    "LASER": {
+      "port": "n/a",
+      "profile_ref": "examples/profiles/cni_laser.disabled.json",
+      "enabled": false
+    }
+  },
+  "acquisition": {
+    "period_ms": 100,
+    "target_frames": 1000,
+    "fields": ["BX", "BY", "BFreq"],
+    "ndjson_dir": "runs/demo_run_001"
+  },
+  "tag": {
+    "experiment_class": "odmr_spectrum_v1",
+    "comment": "First bring-up demo: B-X vs time, 1kS/s, 1000 frames."
+  }
+}

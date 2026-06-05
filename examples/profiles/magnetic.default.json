@@ -1,0 +1,7 @@
+{
+  "id": "magnetic_default",
+  "description": "Three-axis magnetic coil, B = (0, 0, 1000) nT along z.",
+  "field_vector_nt": {"x": 0.0, "y": 0.0, "z": 1000.0},
+  "coil_calibration": "default",
+  "note": "operated manually; recorded by user before run"
+}

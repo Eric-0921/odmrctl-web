@@ -1,0 +1,8 @@
+{
+  "id": "cni_laser_disabled",
+  "description": "Laser disabled for first bring-up; placeholder structure only.",
+  "power_mw": 0.0,
+  "wavelength_nm": 532.0,
+  "state": "OFF",
+  "note": "laser is operator-controlled; not driven by this project"
+}

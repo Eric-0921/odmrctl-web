@@ -1,0 +1,10 @@
+{
+  "id": "smb100a_default",
+  "description": "SMB100A at 2.882 GHz, -10 dBm, FM modulation with 500 kHz deviation.",
+  "frequency_hz": 2882000000.0,
+  "power_dbm": -10.0,
+  "output_state": "ON",
+  "modulation": "FM",
+  "fm_deviation_hz": 500000.0,
+  "note": "operated manually; recorded by user before run"
+}
