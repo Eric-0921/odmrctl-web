@@ -1,0 +1,19 @@
+[package]
+name = "oe1022d-examples"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Example binaries for the OE1022D dataset acquisition project."
+
+[[bin]]
+name = "real_5min_capture"
+path = "real_5min_capture.rs"
+
+[dependencies]
+oe1022d-acquisition = { path = "../oe1022d-acquisition" }
+oe1022d-transport = { path = "../oe1022d-transport" }
+crossbeam-channel = { workspace = true }
+parking_lot = { workspace = true }
+chrono = { workspace = true }

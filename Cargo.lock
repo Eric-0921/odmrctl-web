@@ -444,6 +444,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "oe1022d-examples"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "crossbeam-channel",
+ "oe1022d-acquisition",
+ "oe1022d-transport",
+ "parking_lot",
+]
+
+[[package]]
 name = "oe1022d-transport"
 version = "0.1.0"
 dependencies = [

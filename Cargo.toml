@@ -5,6 +5,7 @@ members = [
     "crates/oe1022d-acquisition",
     "crates/oe1022d-config-stack",
     "crates/oe1022d-chart-core",
+    "crates/oe1022d-examples",
 ]
 
 # Workspace-level lints: pedantic, deny unsafe, no_std-friendly defaults.

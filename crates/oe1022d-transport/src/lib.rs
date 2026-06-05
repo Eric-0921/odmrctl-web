@@ -43,7 +43,7 @@ pub use rall::{
     spawn_continuous_rall_loop, ContinuousRallHandle, MockFrameSource, MockRallLink,
     RallLink, RallLinkError, RallReader, RawFrameEnvelope, TransportStatus,
 };
-pub use serial::{pin_current_thread_to_core, SerialLinkError, SerialRallLink};
+pub use serial::{pin_current_thread_to_core, spawn_continuous_rall_loop_pinned, SerialLinkError, SerialRallLink};
 
 /// Marker for the C1 scaffold: lets `cargo build` produce something
 /// useful and gives a single sanity test target.
