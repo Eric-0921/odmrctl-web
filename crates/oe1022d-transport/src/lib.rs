@@ -25,6 +25,7 @@ pub mod constants;
 pub mod discover;
 pub mod guard;
 pub mod idn;
+pub mod parse;
 pub mod port;
 pub mod rall;
 pub mod serial;
@@ -33,6 +34,10 @@ pub use constants::{OE1022D_BAUD_RATE, RALL_FRAME_BYTES};
 pub use discover::{discover_oe1022d, DiscoverError, DiscoveredOe1022d};
 pub use guard::{DeviceLock, DeviceLockError};
 pub use idn::{IdnProbeError, IdnResponse, probe_idn};
+pub use parse::{
+    expand_to_samples, parse_and_expand, parse_envelope, ParseEnvelopeError, ParseReport,
+    ParsedSample, SampleField, SampleStatus,
+};
 pub use port::{enumerate_ports, PortInfo, PortKind};
 pub use rall::{
     spawn_continuous_rall_loop, ContinuousRallHandle, MockFrameSource, MockRallLink,
