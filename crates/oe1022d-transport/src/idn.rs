@@ -179,7 +179,17 @@ pub fn probe_idn(port_path: &str) -> Result<IdnResponse, IdnProbeError> {
 /// Parse a raw `*IDN?` response into structured fields.
 ///
 /// **K5 fix**: trailing NULs (from the device's fixed-length identity
-/// buffer) and trailing CR/LF are stripped before splitting on commas.
+/// buffer) and trailing CR/LF are stripped before splitting.
+///
+/// **Format variants**: OE1022D firmware has shipped at least two
+/// `*IDN?` response shapes:
+///
+/// - Old firmware: `SSI,LIA-OE1022D,D6522078,Ver6.3200831`
+///   (4 comma-separated fields)
+/// - New firmware: `SSI LIA-OE1022D,SN:D6130220,Version:Ver6.32111110`
+///   (3 comma-separated fields with labeled sub-fields)
+///
+/// We detect which variant we have and dispatch accordingly.
 pub fn parse_idn(raw: &[u8], port_path: &str) -> Result<IdnResponse, IdnProbeError> {
     // Strip trailing CR/LF and NULs, but keep the raw bytes for the
     // `raw` field so callers can persist the exact response.
@@ -201,21 +211,57 @@ pub fn parse_idn(raw: &[u8], port_path: &str) -> Result<IdnResponse, IdnProbeErr
         port: port_path.to_string(),
         source,
     })?;
+    // Find the first printable byte and start from there. The
+    // device's fixed-length identity buffer may pad the start of the
+    // payload with NULs and spaces; we want to skip them. Standard
+    // `trim_start` only strips whitespace, not NUL bytes.
+    let s = s
+        .trim_start_matches(|c: char| c == '\0' || c.is_whitespace())
+        .to_string();
     let parts: Vec<&str> = s.split(',').collect();
-    if parts.len() != 4 {
-        return Err(IdnProbeError::WrongFieldCount {
+
+    if parts.len() == 4 {
+        // Old firmware: SSI,MODEL,SN,VER
+        Ok(IdnResponse {
+            manufacturer: parts[0].trim().to_string(),
+            model: parts[1].trim().to_string(),
+            serial_number: parts[2].trim().to_string(),
+            firmware_version: parts[3].trim().to_string(),
+            raw: raw.to_vec(),
+        })
+    } else if parts.len() == 3 {
+        // New firmware: "MFG MODEL", "SN:XXX", "Version:YYY"
+        let mfg_model = parts[0].trim();
+        let sn = parts[1]
+            .trim()
+            .strip_prefix("SN:")
+            .unwrap_or(parts[1].trim())
+            .to_string();
+        let ver = parts[2]
+            .trim()
+            .strip_prefix("Version:")
+            .unwrap_or(parts[2].trim())
+            .to_string();
+        // Split "SSI LIA-OE1022D" on the first space into
+        // manufacturer / model.
+        let (manufacturer, model) = match mfg_model.find(' ') {
+            Some(idx) => (mfg_model[..idx].to_string(), mfg_model[idx + 1..].to_string()),
+            None => (mfg_model.to_string(), String::new()),
+        };
+        Ok(IdnResponse {
+            manufacturer,
+            model,
+            serial_number: sn,
+            firmware_version: ver,
+            raw: raw.to_vec(),
+        })
+    } else {
+        Err(IdnProbeError::WrongFieldCount {
             port: port_path.to_string(),
             actual: parts.len(),
             raw: raw.to_vec(),
-        });
+        })
     }
-    Ok(IdnResponse {
-        manufacturer: parts[0].trim().to_string(),
-        model: parts[1].trim().to_string(),
-        serial_number: parts[2].trim().to_string(),
-        firmware_version: parts[3].trim().to_string(),
-        raw: raw.to_vec(),
-    })
 }
 
 // ---------------------------------------------------------------------------
@@ -257,13 +303,46 @@ mod tests {
     }
 
     #[test]
-    fn parse_wrong_field_count() {
-        let raw = b"SSI,LIA-OE1022D,only_three_fields\n";
-        let err = parse_idn(raw, "test").unwrap_err();
-        match err {
-            IdnProbeError::WrongFieldCount { actual, .. } => assert_eq!(actual, 3),
-            other => panic!("expected WrongFieldCount, got {other:?}"),
-        }
+    fn parse_old_firmware_4_field_format() {
+        let raw = b"SSI,LIA-OE1022D,D6522078,Ver6.3200831\r\n";
+        let idn = parse_idn(raw, "test").unwrap();
+        assert_eq!(idn.manufacturer, "SSI");
+        assert_eq!(idn.model, "LIA-OE1022D");
+        assert_eq!(idn.serial_number, "D6522078");
+        assert_eq!(idn.firmware_version, "Ver6.3200831");
+    }
+
+    #[test]
+    fn parse_new_firmware_3_field_labeled_format() {
+        // New firmware uses "SN:" and "Version:" labels.
+        let raw = b"SSI LIA-OE1022D,SN:D6130220,Version:Ver6.32111110\r\n";
+        let idn = parse_idn(raw, "test").unwrap();
+        assert_eq!(idn.manufacturer, "SSI");
+        assert_eq!(idn.model, "LIA-OE1022D");
+        assert_eq!(idn.serial_number, "D6130220");
+        assert_eq!(idn.firmware_version, "Ver6.32111110");
+    }
+
+    #[test]
+    fn parse_new_firmware_tolerates_no_label_prefix() {
+        // If the firmware drops the SN:/Version: prefix but keeps
+        // the 3-field shape, we still extract the right values.
+        let raw = b"SSI LIA-OE1022D,D6130220,Ver6.32111110\r\n";
+        let idn = parse_idn(raw, "test").unwrap();
+        assert_eq!(idn.serial_number, "D6130220");
+        assert_eq!(idn.firmware_version, "Ver6.32111110");
+    }
+
+    #[test]
+    fn device_id_is_stable_across_firmware_versions() {
+        // Two different firmware versions of the same physical
+        // device (same SN) should produce the same device_id().
+        let raw_old = b"SSI,LIA-OE1022D,D6522078,Ver6.3200831\r\n";
+        let raw_new = b"SSI LIA-OE1022D,SN:D6522078,Version:Ver6.32111110\r\n";
+        let idn_old = parse_idn(raw_old, "/dev/cu.usbmodemA").unwrap();
+        let idn_new = parse_idn(raw_new, "/dev/cu.usbmodemB").unwrap();
+        assert_eq!(idn_old.device_id(), idn_new.device_id());
+        assert_eq!(idn_old.device_id(), "SSI:LIA-OE1022D:D6522078");
     }
 
     #[test]

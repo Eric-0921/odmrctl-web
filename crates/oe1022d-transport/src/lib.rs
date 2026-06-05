@@ -22,6 +22,7 @@
 #![warn(missing_debug_implementations)]
 
 pub mod constants;
+pub mod discover;
 pub mod guard;
 pub mod idn;
 pub mod port;
@@ -29,6 +30,7 @@ pub mod rall;
 pub mod serial;
 
 pub use constants::{OE1022D_BAUD_RATE, RALL_FRAME_BYTES};
+pub use discover::{discover_oe1022d, DiscoverError, DiscoveredOe1022d};
 pub use guard::{DeviceLock, DeviceLockError};
 pub use idn::{IdnProbeError, IdnResponse, probe_idn};
 pub use port::{enumerate_ports, PortInfo, PortKind};
