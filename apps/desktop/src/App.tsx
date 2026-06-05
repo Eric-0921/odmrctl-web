@@ -9,6 +9,7 @@ import EventsPage from "./routes/EventsPage";
 import RawDataPreviewPage from "./routes/RawDataPreviewPage";
 import AnalysisViewerPage from "./routes/AnalysisViewerPage";
 import RecipeViewerPage from "./routes/RecipeViewerPage";
+import SystemScanPage from "./routes/SystemScanPage";
 import AboutBoundariesPage from "./routes/AboutBoundariesPage";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/raw-data" element={<RawDataPreviewPage />} />
         <Route path="/analysis-viewer" element={<AnalysisViewerPage />} />
         <Route path="/recipe-viewer" element={<RecipeViewerPage />} />
+        <Route path="/system-scan" element={<SystemScanPage />} />
         <Route path="/about" element={<AboutBoundariesPage />} />
       </Routes>
     </AppShell>

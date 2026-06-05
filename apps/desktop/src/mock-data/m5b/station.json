@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "station",
+  "id": "station_nv_lab_01",
+  "name": "NV Lab ODMR Station 01",
+  "description": "Full station configuration with device profiles and safety limits.",
+  "devices": [
+    {
+      "device_id": "smb100a_main",
+      "kind": "rf_source",
+      "transport": "tcp_raw_socket",
+      "address": "169.254.2.20:5025",
+      "expected_sn": null,
+      "timeout_ms": 5000,
+      "profile_ref": "examples/device_profiles/smb100a.full.profile.json"
+    },
+    {
+      "device_id": "oe1022d_main",
+      "kind": "lock_in",
+      "transport": "serial",
+      "address": "/dev/cu.usbmodem3361358734371",
+      "expected_sn": null,
+      "timeout_ms": 5000,
+      "profile_ref": "examples/device_profiles/oe1022d.full.profile.json"
+    },
+    {
+      "device_id": "maynuo.mag_x",
+      "kind": "magnetic",
+      "transport": "serial",
+      "address": "auto",
+      "expected_sn": "2020",
+      "timeout_ms": 5000
+    },
+    {
+      "device_id": "maynuo.mag_y",
+      "kind": "magnetic",
+      "transport": "serial",
+      "address": "auto",
+      "expected_sn": "2022",
+      "timeout_ms": 5000
+    },
+    {
+      "device_id": "maynuo.mag_z",
+      "kind": "magnetic",
+      "transport": "serial",
+      "address": "auto",
+      "expected_sn": "2003",
+      "timeout_ms": 5000
+    },
+    {
+      "device_id": "cni_laser",
+      "kind": "laser",
+      "transport": "none",
+      "address": null,
+      "expected_sn": null,
+      "timeout_ms": 0,
+      "profile_ref": "examples/device_profiles/cni_laser.disabled.profile.json"
+    }
+  ],
+  "safety": {
+    "smb100a": {
+      "allowed_frequency_ranges_hz": [
+        [1000000, 3000000000]
+      ],
+      "max_power_dbm": 0.0,
+      "max_fm_deviation_hz": 10000000
+    },
+    "oe1022d": {},
+    "magnetic": {
+      "max_current_a_per_axis": {
+        "x": 0.1,
+        "y": 0.1,
+        "z": 0.1
+      },
+      "max_ramp_a_per_s": {
+        "x": 0.01,
+        "y": 0.01,
+        "z": 0.01
+      }
+    },
+    "laser": {
+      "max_power_mw": 100.0
+    }
+  }
+}

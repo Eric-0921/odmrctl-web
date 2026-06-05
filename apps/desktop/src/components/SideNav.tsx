@@ -10,6 +10,7 @@ const navItems = [
   { path: "/raw-data", label: "Raw Data Preview" },
   { path: "/analysis-viewer", label: "Analysis Viewer" },
   { path: "/recipe-viewer", label: "Recipe Viewer" },
+  { path: "/system-scan", label: "System Scan" },
   { path: "/about", label: "About / Boundaries" },
 ];
 

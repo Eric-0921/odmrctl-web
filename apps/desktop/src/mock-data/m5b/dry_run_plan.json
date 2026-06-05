@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "dry_run_plan",
+  "id": "dry_run_resolved_m5b_rf_mag_oe_system_scan",
+  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan",
+  "summary": {
+    "step_count": 15,
+    "total_points": 9,
+    "expected_frames": 45,
+    "estimated_duration_s": 11.1,
+    "required_devices": [
+      "maynuo_m8812_axes",
+      "oe1022d_main",
+      "smb100a_main"
+    ],
+    "hazard_actions": 9,
+    "outer_sweep": "mag_z_low_current_points",
+    "inner_sweep": "rf_frequency_points"
+  },
+  "phases": [
+    {
+      "phase": "setup",
+      "description": "Device preflight, RF configuration, magnetic baseline zero",
+      "steps": [
+        {
+          "step_id": "step_setup_000",
+          "description": "Station preflight and device lock acquisition"
+        },
+        {
+          "step_id": "step_setup_001",
+          "description": "Configure SMB100A RF settings"
+        },
+        {
+          "step_id": "step_setup_002",
+          "description": "Set magnetic baseline to B=[0,0,0] nT, settle 500ms"
+        }
+      ]
+    },
+    {
+      "phase": "measure",
+      "description": "Nested sweep: 3 magnetic points x 3 RF frequencies = 9 acquisition points",
+      "hazard_note": "RF output ON at each measure point",
+      "steps": [
+        {
+          "step_id": "pt_000..pt_008",
+          "description": "For each point: set magnetic vector, set RF frequency, wait settle, RF ON, acquire OE frames"
+        }
+      ]
+    },
+    {
+      "phase": "cleanup",
+      "description": "Safe shutdown: RF OFF, magnetic zero, magnetic local mode",
+      "steps": [
+        {
+          "step_id": "step_cleanup_000",
+          "description": "SMB100A RF output OFF"
+        },
+        {
+          "step_id": "step_cleanup_001",
+          "description": "Magnetic field ramp to zero, settle 500ms"
+        },
+        {
+          "step_id": "step_cleanup_002",
+          "description": "Magnetic controller to LOCAL mode"
+        }
+      ]
+    }
+  ],
+  "operator_approval_required": true
+}
