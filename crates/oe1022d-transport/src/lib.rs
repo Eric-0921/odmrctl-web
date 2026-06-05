@@ -25,11 +25,16 @@ pub mod constants;
 pub mod guard;
 pub mod idn;
 pub mod port;
+pub mod rall;
 
 pub use constants::{OE1022D_BAUD_RATE, RALL_FRAME_BYTES};
 pub use guard::{DeviceLock, DeviceLockError};
 pub use idn::{IdnProbeError, IdnResponse, probe_idn};
 pub use port::{enumerate_ports, PortInfo, PortKind};
+pub use rall::{
+    spawn_continuous_rall_loop, ContinuousRallHandle, MockFrameSource, MockRallLink,
+    RallLink, RallLinkError, RallReader, RawFrameEnvelope, TransportStatus,
+};
 
 /// Marker for the C1 scaffold: lets `cargo build` produce something
 /// useful and gives a single sanity test target.
