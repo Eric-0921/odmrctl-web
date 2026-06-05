@@ -493,6 +493,20 @@ impl ContinuousRallHandle {
             Ok(())
         }
     }
+
+    /// Internal constructor for the `serial::spawn_continuous_rall_loop_pinned`
+    /// helper, which needs to set up a thread that pins itself before
+    /// running the loop body.
+    #[allow(dead_code)]
+    pub(crate) fn from_parts(
+        join: thread::JoinHandle<()>,
+        stop: Arc<Mutex<bool>>,
+    ) -> Self {
+        Self {
+            join: Some(join),
+            stop,
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
