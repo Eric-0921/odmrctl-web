@@ -1,0 +1,23 @@
+[package]
+name = "oe1022d-transport"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "OE1022D serial transport: enumeration, IDN? probe, RALL? fixed-length reader."
+
+[dependencies]
+odmr-types = { workspace = true }
+odmr-device = { workspace = true }
+odmr-oe1022d = { workspace = true }
+serialport = { workspace = true }
+thiserror = { workspace = true }
+parking_lot = { workspace = true }
+crossbeam-channel = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

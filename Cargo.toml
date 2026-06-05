@@ -1,19 +1,36 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/odmr-types",
-    "crates/odmr-config",
-    "crates/odmr-device",
-    "crates/odmr-safety",
-    "crates/odmr-recipe",
-    "crates/odmr-compiler",
-    "crates/odmr-executor",
-    "crates/odmr-logging",
-    "crates/odmr-replay",
-    "crates/odmr-harness",
-    "crates/odmr-smb100a",
-    "crates/odmr-oe1022d",
-    "crates/odmr-mag",
-    "crates/odmr-maynuo-m8812",
-    "crates/odmr-preflight",
+    "crates/oe1022d-transport",
+    "crates/oe1022d-acquisition",
+    "crates/oe1022d-config-stack",
+    "crates/oe1022d-chart-core",
 ]
+
+# Workspace-level lints: pedantic, deny unsafe, no_std-friendly defaults.
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+publish = false
+
+# Path dependencies to the parent main repo (odmrctl-web).
+# These are read-only references; we will move crates back via PR/merge.
+[workspace.dependencies]
+odmr-types   = { path = "../odmrctl-web/crates/odmr-types" }
+odmr-device  = { path = "../odmrctl-web/crates/odmr-device" }
+odmr-oe1022d = { path = "../odmrctl-web/crates/odmr-oe1022d" }
+serialport   = "4.2"
+serde        = { version = "1", features = ["derive"] }
+serde_json   = "1"
+thiserror    = "1"
+anyhow       = "1"
+chrono       = { version = "0.4", features = ["serde"] }
+parking_lot  = "0.12"
+crossbeam-channel = "0.5"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1

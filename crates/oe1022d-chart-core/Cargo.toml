@@ -1,0 +1,20 @@
+[package]
+name = "oe1022d-chart-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Tauri command bindings and downsampling service for the live chart (Plotly frontend)."
+
+[dependencies]
+odmr-types = { workspace = true }
+oe1022d-transport = { path = "../oe1022d-transport" }
+oe1022d-acquisition = { path = "../oe1022d-acquisition" }
+oe1022d-config-stack = { path = "../oe1022d-config-stack" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+parking_lot = { workspace = true }
+crossbeam-channel = { workspace = true }
+chrono = { workspace = true }
