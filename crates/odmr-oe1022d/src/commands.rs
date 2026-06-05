@@ -316,3 +316,392 @@ pub fn query_standard_idn() -> &'static str {
 pub fn query_oe1022d_idn() -> &'static str {
     "*IDND?"
 }
+
+// ---------------------------------------------------------------------------
+// Sine Output
+// ---------------------------------------------------------------------------
+
+/// `SWVTD i,j` — set sine output mode for channel i.
+///
+/// j values: 0 = Fixed, 1 = Linear sweep, 2 = Log sweep, 3 = DC
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_mode(channel: u8, mode: u8) -> String {
+    format!("SWVTD {channel},{mode}")
+}
+
+/// `SWVTD? i` — query sine output mode.
+pub fn query_sine_out_mode(channel: u8) -> String {
+    format!("SWVTD? {channel}")
+}
+
+/// `SLVLD i,x` — set sine output level (Vrms) for channel i.
+///
+/// Range: 0.001 ≤ x ≤ 5.000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_voltage(channel: u8, vrms: f64) -> String {
+    format!("SLVLD {channel},{vrms}")
+}
+
+/// `SLVLD? i` — query sine output level.
+pub fn query_sine_out_voltage(channel: u8) -> String {
+    format!("SLVLD? {channel}")
+}
+
+/// `SVLLD i,x` — set sine output sweep start voltage (Vrms) for channel i.
+///
+/// Range: 0.001 ≤ x ≤ 5.000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_start_voltage(channel: u8, vrms: f64) -> String {
+    format!("SVLLD {channel},{vrms}")
+}
+
+/// `SVLLD? i` — query sine output sweep start voltage.
+pub fn query_sine_out_start_voltage(channel: u8) -> String {
+    format!("SVLLD? {channel}")
+}
+
+/// `SVULD i,x` — set sine output sweep stop voltage (Vrms) for channel i.
+///
+/// Range: 0.001 ≤ x ≤ 5.000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_stop_voltage(channel: u8, vrms: f64) -> String {
+    format!("SVULD {channel},{vrms}")
+}
+
+/// `SVULD? i` — query sine output sweep stop voltage.
+pub fn query_sine_out_stop_voltage(channel: u8) -> String {
+    format!("SVULD? {channel}")
+}
+
+/// `SVSLD i,x` — set sine output linear sweep step (Vrms) for channel i.
+///
+/// Range: 0.001 ≤ x ≤ 5.000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_linear_step(channel: u8, vrms: f64) -> String {
+    format!("SVSLD {channel},{vrms}")
+}
+
+/// `SVSLD? i` — query sine output linear sweep step.
+pub fn query_sine_out_linear_step(channel: u8) -> String {
+    format!("SVSLD? {channel}")
+}
+
+/// `SVSGD i,x` — set sine output log sweep step (%) for channel i.
+///
+/// Range: 0 ≤ x ≤ 100
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_log_step(channel: u8, percent: f64) -> String {
+    format!("SVSGD {channel},{percent}")
+}
+
+/// `SVSGD? i` — query sine output log sweep step.
+pub fn query_sine_out_log_step(channel: u8) -> String {
+    format!("SVSGD? {channel}")
+}
+
+/// `SVTMD i,x` — set sine output sweep step time (ms) for channel i.
+///
+/// Range: 1 ≤ x ≤ 100000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_step_time(channel: u8, ms: u32) -> String {
+    format!("SVTMD {channel},{ms}")
+}
+
+/// `SVTMD? i` — query sine output sweep step time.
+pub fn query_sine_out_step_time(channel: u8) -> String {
+    format!("SVTMD? {channel}")
+}
+
+/// `SVRMD i,j` — set sine output run mode for channel i.
+///
+/// j values: 0 = Stop, 1 = Single, 2 = Loop
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_run_mode(channel: u8, mode: u8) -> String {
+    format!("SVRMD {channel},{mode}")
+}
+
+/// `SVRMD? i` — query sine output run mode.
+pub fn query_sine_out_run_mode(channel: u8) -> String {
+    format!("SVRMD? {channel}")
+}
+
+/// `SVDCD i,x` — set sine output DC voltage (Vdc) for channel i.
+///
+/// Range: -10.000 ≤ x ≤ 10.000
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_sine_out_dc_voltage(channel: u8, vdc: f64) -> String {
+    format!("SVDCD {channel},{vdc}")
+}
+
+/// `SVDCD? i` — query sine output DC voltage.
+pub fn query_sine_out_dc_voltage(channel: u8) -> String {
+    format!("SVDCD? {channel}")
+}
+
+// ---------------------------------------------------------------------------
+// Channel Output
+// ---------------------------------------------------------------------------
+
+/// `FPOPD j,k` — set channel output source for rear-panel channel j.
+///
+/// j = 1 (CH1) or 2 (CH2)
+/// k = 0..34 (see manual §5.2.6 for full table)
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_channel_output_source(channel_j: u8, source_k: u8) -> String {
+    format!("FPOPD {channel_j},{source_k}")
+}
+
+/// `FPOPD? j` — query channel output source.
+pub fn query_channel_output_source(channel_j: u8) -> String {
+    format!("FPOPD? {channel_j}")
+}
+
+/// `OEXPD j,k{,x,l}` — set offset/expand for channel output j, parameter k.
+///
+/// j = 1 (CH1) or 2 (CH2)
+/// k = parameter type (0..19, see manual §5.2.6)
+/// x = offset percentage (-100..100)
+/// l = expand factor (1..256)
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_channel_offset_expand(
+    channel_j: u8,
+    param_k: u8,
+    offset_pct: f64,
+    expand: u16,
+) -> String {
+    format!("OEXPD {channel_j},{param_k},{offset_pct},{expand}")
+}
+
+/// `OEXPD? j,k` — query offset/expand for channel output j, parameter k.
+pub fn query_channel_offset_expand(channel_j: u8, param_k: u8) -> String {
+    format!("OEXPD? {channel_j},{param_k}")
+}
+
+/// `SPEDD j,k` — set channel output speed for rear-panel channel j.
+///
+/// j = 1 (CH1) or 2 (CH2)
+/// k = 0 (Slow, 10 Hz) or 1 (Fast, 312.5 kHz)
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_channel_output_speed(channel_j: u8, speed: u8) -> String {
+    format!("SPEDD {channel_j},{speed}")
+}
+
+/// `SPEDD? j` — query channel output speed.
+pub fn query_channel_output_speed(channel_j: u8) -> String {
+    format!("SPEDD? {channel_j}")
+}
+
+/// `CAUXD j,x` — set AUXOUT DC voltage for rear-panel channel j.
+///
+/// j = 1 (CH1) or 2 (CH2)
+/// x = voltage (-10.000..10.000)
+///
+/// Source: oe1022d_labview_channel_output_sine_output_commands.json
+pub fn set_channel_auxout_voltage(channel_j: u8, vdc: f64) -> String {
+    format!("CAUXD {channel_j},{vdc}")
+}
+
+/// `CAUXD? j` — query AUXOUT DC voltage.
+pub fn query_channel_auxout_voltage(channel_j: u8) -> String {
+    format!("CAUXD? {channel_j}")
+}
+
+// ---------------------------------------------------------------------------
+// Reference Sweep (Internal Sweep Reference)
+// ---------------------------------------------------------------------------
+
+/// `SWTPD i,j` — set internal sweep type for channel i.
+///
+/// j values: 0 = Linear, 1 = Log
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_type(channel: u8, sweep_type: u8) -> String {
+    format!("SWTPD {channel},{sweep_type}")
+}
+
+/// `SWTPD? i` — query internal sweep type.
+pub fn query_sweep_type(channel: u8) -> String {
+    format!("SWTPD? {channel}")
+}
+
+/// `SLLMD i,f` — set internal sweep start frequency (Hz) for channel i.
+///
+/// Range: 0–102 kHz, resolution 1 mHz
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_start_hz(channel: u8, hz: f64) -> String {
+    format!("SLLMD {channel},{hz}")
+}
+
+/// `SLLMD? i` — query internal sweep start frequency.
+pub fn query_sweep_start_hz(channel: u8) -> String {
+    format!("SLLMD? {channel}")
+}
+
+/// `SULMD i,f` — set internal sweep stop frequency (Hz) for channel i.
+///
+/// Range: 0–102 kHz, resolution 1 mHz
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_stop_hz(channel: u8, hz: f64) -> String {
+    format!("SULMD {channel},{hz}")
+}
+
+/// `SULMD? i` — query internal sweep stop frequency.
+pub fn query_sweep_stop_hz(channel: u8) -> String {
+    format!("SULMD? {channel}")
+}
+
+/// `SSLLD i,f` — set internal sweep linear step (Hz) for channel i.
+///
+/// Range: 0–102 kHz, resolution 1 mHz
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_linear_step_hz(channel: u8, hz: f64) -> String {
+    format!("SSLLD {channel},{hz}")
+}
+
+/// `SSLLD? i` — query internal sweep linear step.
+pub fn query_sweep_linear_step_hz(channel: u8) -> String {
+    format!("SSLLD? {channel}")
+}
+
+/// `SSLGD i,x` — set internal sweep log step (%) for channel i.
+///
+/// Range: 0–100, resolution 0.001
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_log_step_pct(channel: u8, pct: f64) -> String {
+    format!("SSLGD {channel},{pct}")
+}
+
+/// `SSLGD? i` — query internal sweep log step.
+pub fn query_sweep_log_step_pct(channel: u8) -> String {
+    format!("SSLGD? {channel}")
+}
+
+/// `STLMD i,j` — set internal sweep step time (ms) for channel i.
+///
+/// Range: 1–100000 ms
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_step_time_ms(channel: u8, ms: u32) -> String {
+    format!("STLMD {channel},{ms}")
+}
+
+/// `STLMD? i` — query internal sweep step time.
+pub fn query_sweep_step_time_ms(channel: u8) -> String {
+    format!("STLMD? {channel}")
+}
+
+/// `SWRMD i,j` — set internal sweep run mode for channel i.
+///
+/// j values: 0 = Stop, 1 = Single, 2 = Loop
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn set_sweep_run_mode(channel: u8, mode: u8) -> String {
+    format!("SWRMD {channel},{mode}")
+}
+
+/// `SWRMD? i` — query internal sweep run mode.
+pub fn query_sweep_run_mode(channel: u8) -> String {
+    format!("SWRMD? {channel}")
+}
+
+// ---------------------------------------------------------------------------
+// Auto Settings
+// ---------------------------------------------------------------------------
+
+/// `AGAND i` — auto sensitivity / auto gain for channel i.
+///
+/// Source: oe1022d_labview_input_filter_commands.json
+pub fn auto_sensitivity(channel: u8) -> String {
+    format!("AGAND {channel}")
+}
+
+/// `ARSVD i` — auto reserve for channel i.
+///
+/// Source: oe1022d_labview_input_filter_commands.json
+pub fn auto_reserve(channel: u8) -> String {
+    format!("ARSVD {channel}")
+}
+
+/// `APHSD i` — auto phase for channel i.
+///
+/// Source: oe1022d_labview_reference_signal_commands.json
+pub fn auto_phase(channel: u8) -> String {
+    format!("APHSD {channel}")
+}
+
+/// `ASCLD i` — auto scale for channel i.
+///
+/// Source: oe1022d_labview_input_filter_commands.json
+pub fn auto_scale(channel: u8) -> String {
+    format!("ASCLD {channel}")
+}
+
+// ---------------------------------------------------------------------------
+// Equation System
+// ---------------------------------------------------------------------------
+
+/// `EQCDD i,j,k,l,m` — configure equation j for channel i.
+///
+/// j = 1..4 (E1–E4)
+/// k, l, m = A, B, C coefficient selectors (0..19)
+///
+/// Source: oe1022d_labview_formula_system_commands.json
+pub fn set_equation_config(channel: u8, equation: u8, a: u8, b: u8, c: u8) -> String {
+    format!("EQCDD {channel},{equation},{a},{b},{c}")
+}
+
+/// `EQCDD? i,j` — query equation config for channel i, equation j.
+pub fn query_equation_config(channel: u8, equation: u8) -> String {
+    format!("EQCDD? {channel},{equation}")
+}
+
+/// `EQCSD i,j,x` — set equation constant Cj for channel i.
+///
+/// j = 1 (C1) or 2 (C2)
+/// x = constant value (-10.000..10.000)
+///
+/// Source: oe1022d_labview_formula_system_commands.json
+pub fn set_equation_constant(channel: u8, idx: u8, val: f64) -> String {
+    format!("EQCSD {channel},{idx},{val}")
+}
+
+/// `EQCSD? i,j` — query equation constant.
+pub fn query_equation_constant(channel: u8, idx: u8) -> String {
+    format!("EQCSD? {channel},{idx}")
+}
+
+// ---------------------------------------------------------------------------
+// Save / Recall Settings
+// ---------------------------------------------------------------------------
+
+/// `SSETD i` — save current settings to buffer i (1–4).
+///
+/// Source: oe1022d_labview_formula_system_commands.json
+pub fn save_settings(buffer: u8) -> String {
+    format!("SSETD {buffer}")
+}
+
+/// `RSETD i` — recall settings from buffer i (1–5).
+///
+/// i = 5 is factory default.
+///
+/// Source: oe1022d_labview_formula_system_commands.json
+pub fn recall_settings(buffer: u8) -> String {
+    format!("RSETD {buffer}")
+}

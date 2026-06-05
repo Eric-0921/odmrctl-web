@@ -166,6 +166,18 @@ pub fn query_lf_shape() -> &'static str {
     "LFO:SHAP?"
 }
 
+/// `LFO:SIMP LOW|HIGH|G50` — set LF output impedance.
+///
+/// Source: smb100a_fig3_lf_generator_output_settings_commands.json
+pub fn set_lf_impedance(impedance: &str) -> String {
+    format!("LFO:SIMP {impedance}")
+}
+
+/// `LFO:SIMP?` — query LF output impedance.
+pub fn query_lf_impedance() -> &'static str {
+    "LFO:SIMP?"
+}
+
 // ---------------------------------------------------------------------------
 // FM (Frequency Modulation)
 // ---------------------------------------------------------------------------
@@ -197,6 +209,18 @@ pub fn set_fm_source(source: &str) -> String {
 /// `FM:SOUR?` — query FM source.
 pub fn query_fm_source() -> &'static str {
     "FM:SOUR?"
+}
+
+/// `FM:MODE NORM|HDEV|LDEV` — set FM mode.
+///
+/// Source: smb100a_fig5_frequency_modulation_settings_commands.json
+pub fn set_fm_mode(mode: &str) -> String {
+    format!("FM:MODE {mode}")
+}
+
+/// `FM:MODE?` — query FM mode.
+pub fn query_fm_mode() -> &'static str {
+    "FM:MODE?"
 }
 
 /// `FM:DEV <val>Hz` — set FM deviation in Hz.

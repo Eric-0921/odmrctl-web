@@ -17,6 +17,8 @@ pub struct Smb100aState {
     pub lf_frequency_hz: f64,
     pub lf_voltage_v: f64,
     pub lf_shape: String,
+    pub lf_impedance: String,
+    pub fm_mode: String,
     pub freq_start_hz: f64,
     pub freq_stop_hz: f64,
     pub sweep_step_hz: f64,
@@ -39,6 +41,8 @@ impl Default for Smb100aState {
             lf_frequency_hz: 1000.0,
             lf_voltage_v: 0.0,
             lf_shape: "SINE".to_string(),
+            lf_impedance: "LOW".to_string(),
+            fm_mode: "NORM".to_string(),
             freq_start_hz: 1e9,
             freq_stop_hz: 2e9,
             sweep_step_hz: 1e6,
@@ -173,6 +177,14 @@ impl FakeSmb100a {
                 self.state.lf_shape = shape.to_ascii_uppercase();
                 Ok(DeviceResponse::Ack)
             }
+            "LFO:SIMP" => {
+                let imp = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing impedance".to_string(),
+                })?;
+                self.state.lf_impedance = imp.to_ascii_uppercase();
+                Ok(DeviceResponse::Ack)
+            }
             "FM:STAT" => {
                 let st = tail.ok_or_else(|| DeviceError::InvalidParameter {
                     cmd: cmd.to_string(),
@@ -187,6 +199,14 @@ impl FakeSmb100a {
                     reason: "missing source".to_string(),
                 })?;
                 self.state.fm_source = src.to_ascii_uppercase();
+                Ok(DeviceResponse::Ack)
+            }
+            "FM:MODE" => {
+                let mode = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing mode".to_string(),
+                })?;
+                self.state.fm_mode = mode.to_ascii_uppercase();
                 Ok(DeviceResponse::Ack)
             }
             "FM:DEV" => {
@@ -266,8 +286,10 @@ impl FakeSmb100a {
             "LFO:FREQ" => format!("{:.2}", self.state.lf_frequency_hz),
             "LFO:VOLT" => format!("{:.3}", self.state.lf_voltage_v),
             "LFO:SHAP" => self.state.lf_shape.clone(),
+            "LFO:SIMP" => self.state.lf_impedance.clone(),
             "FM:STAT" => on_off_str(self.state.fm_enabled).to_string(),
             "FM:SOUR" => self.state.fm_source.clone(),
+            "FM:MODE" => self.state.fm_mode.clone(),
             "FM:DEV" => format!("{:.0}", self.state.fm_deviation_hz),
             "FREQ:STAR" => format!("{:.0}", self.state.freq_start_hz),
             "FREQ:STOP" => format!("{:.0}", self.state.freq_stop_hz),

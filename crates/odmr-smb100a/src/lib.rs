@@ -85,6 +85,11 @@ mod tests {
     }
 
     #[test]
+    fn golden_set_lf_impedance_low() {
+        assert_eq!(set_lf_impedance("LOW"), "LFO:SIMP LOW");
+    }
+
+    #[test]
     fn golden_set_fm_deviation_4_mhz() {
         // Source: smb100a_fig5_frequency_modulation_settings_commands.json
         assert_eq!(set_fm_deviation_hz(4e6), "FM:DEV 4000000Hz");
@@ -94,6 +99,11 @@ mod tests {
     fn golden_set_fm_state_on() {
         // Source: smb100a_fig6_frequency_modulation_on_settings_commands.json
         assert_eq!(set_fm_state(true), "FM:STAT ON");
+    }
+
+    #[test]
+    fn golden_set_fm_mode_hdev() {
+        assert_eq!(set_fm_mode("HDEV"), "FM:MODE HDEV");
     }
 
     #[test]
