@@ -25,7 +25,7 @@ Mag-M0.5 is a **narrow alignment layer** between the mock-only Mag-M0 planning m
 
 1. **No obfuscation**: Standard .NET 4.8 assembly, fully readable type/method/variable names.
 2. **Standard SCPI subset**: `SYST`, `VOLT`, `CURR`, `OUTP`, `MEAS` — no custom protocol.
-3. **Simple algorithm**: `Mag(nT) = Curr(mA) × CoilConstant(nT/mA)` with 5000mA hard limit.
+3. **Simple algorithm**: `Mag(nT) = Curr(mA) × CoilConstant(nT/mA)` with 2000mA hard limit (M8812 0-2A spec).
 4. **Verified on hardware**: All three axes (X/Y/Z) respond correctly to the documented sequence.
 
 ## Device Fingerprint Verification (2026-06-01)
@@ -204,7 +204,7 @@ If zeroSetCurr + recurSetCurr > 5000 mA:
     → Send CURR 5.00000
 ```
 
-**Mag-M0.5 policy**: The 5000 mA hardware limit is documented but is **not** the default bring-up test current. The only low-current micro-test example permitted is **10 mA**.
+**Mag-M0.5 policy**: The 2000 mA hardware limit (M8812 0-2A spec) is documented but is **not** the default bring-up test current. The only low-current micro-test example permitted is **10 mA**.
 
 ## Mag-M0.6: Schema Consistency + GUI Contract Validation (2026-06-01)
 
@@ -455,7 +455,7 @@ Everything in Mag-M0.5 is still mock-only:
 | Real `OUTP 1` | Mag-M3 | Requires 10mA micro-test safety review |
 | Real `MEAS:CURR?` readback | Mag-M3 | Requires active output for meaningful data |
 | GUI enable real controls | Mag-M3 | Requires full backend + executor + safety chain |
-| Auto-limit at 5000mA | Mag-M2B | Software-side safety; hardware has its own limit |
+| Auto-limit at 2000mA | Mag-M2B | Software-side safety; hardware has its own limit |
 | LockZero / zero+recur logic | Mag-M3 | Requires real output to be meaningful |
 | Data save (CSV/txt) | Mag-M3+ | Out of scope; real-time is raw bin only (ADR-005) |
 | Cross-axis coupling calibration | Mag-M4+ | Requires field probe measurement for off-diagonal terms |
@@ -468,7 +468,7 @@ Mag-M0.5 does not weaken ADR-008:
 - `grep` for hardware keywords in `crates/odmr-mag/src/` still returns empty.
 - `MaynuoCommand` is an enum of strings, not a trait over serial ports.
 - Plan builders return data structures, not I/O futures.
-- The 5000 mA hardware limit is documented but not treated as a default test current.
+- The 2000 mA hardware limit (M8812 0-2A spec) is documented but not treated as a default test current.
 - The only executable micro-test example is 10 mA.
 
 ## Files Added in Mag-M0.5

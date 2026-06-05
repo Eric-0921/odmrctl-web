@@ -313,6 +313,46 @@ impl SystemSweepDefinition {
 }
 
 // ---------------------------------------------------------------------------
+// Device config parsing helpers
+// ---------------------------------------------------------------------------
+
+use crate::device_params::*;
+
+/// Parse SMB100A config from `fixed_params`.
+pub fn try_parse_smb100a_config(
+    fixed_params: &std::collections::HashMap<String, serde_json::Value>,
+) -> Option<Result<Smb100aConfig, crate::RecipeError>> {
+    fixed_params
+        .get("smb100a")
+        .map(Smb100aConfig::try_from_value)
+}
+
+/// Parse OE1022D config from `fixed_params`.
+pub fn try_parse_oe1022d_config(
+    fixed_params: &std::collections::HashMap<String, serde_json::Value>,
+) -> Option<Result<Oe1022dConfig, crate::RecipeError>> {
+    fixed_params
+        .get("oe1022d")
+        .map(Oe1022dConfig::try_from_value)
+}
+
+/// Parse magnetic config from `fixed_params`.
+pub fn try_parse_magnetic_config(
+    fixed_params: &std::collections::HashMap<String, serde_json::Value>,
+) -> Option<Result<MagneticConfig, crate::RecipeError>> {
+    fixed_params
+        .get("magnetic")
+        .map(MagneticConfig::try_from_value)
+}
+
+/// Parse laser config from `fixed_params`.
+pub fn try_parse_laser_config(
+    fixed_params: &std::collections::HashMap<String, serde_json::Value>,
+) -> Option<Result<LaserConfig, crate::RecipeError>> {
+    fixed_params.get("laser").map(LaserConfig::try_from_value)
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -483,5 +523,61 @@ mod tests {
         }"#;
         let err = parse_system_scan_recipe(json).unwrap_err();
         assert!(err.to_string().contains("empty values"));
+    }
+
+    #[test]
+    fn smb100a_full_config_parses() {
+        let recipe = parse_system_scan_recipe(example_recipe_json()).unwrap();
+        let smb = try_parse_smb100a_config(&recipe.fixed_params)
+            .unwrap()
+            .unwrap();
+        assert_eq!(smb.rf.frequency_hz, 2882000000.0);
+        assert_eq!(smb.rf.power_dbm, -30.0);
+        assert!(smb.fm.as_ref().unwrap().enabled);
+        assert_eq!(smb.lf.as_ref().unwrap().shape, Smb100aLfShape::Square);
+    }
+
+    #[test]
+    fn oe1022d_full_config_parses() {
+        let recipe = parse_system_scan_recipe(example_recipe_json()).unwrap();
+        let oe = try_parse_oe1022d_config(&recipe.fixed_params)
+            .unwrap()
+            .unwrap();
+        assert_eq!(oe.primary_channel, Oe1022dChannel::B);
+        assert_eq!(oe.gain.sensitivity, Oe1022dSensitivity::S100uV);
+        assert_eq!(oe.acquisition.record_fields.len(), 6);
+    }
+
+    #[test]
+    fn magnetic_full_config_parses() {
+        let recipe = parse_system_scan_recipe(example_recipe_json()).unwrap();
+        let mag = try_parse_magnetic_config(&recipe.fixed_params)
+            .unwrap()
+            .unwrap();
+        assert_eq!(mag.mode, "field_vector");
+        assert_eq!(mag.coil_matrix.matrix[0][0], 0.0001);
+        assert_eq!(mag.zero_offsets_a.x, 0.0);
+    }
+
+    #[test]
+    fn unsupported_lf_shape_is_rejected_at_parse() {
+        let raw = serde_json::json!({
+            "smb100a": { "lf": { "shape": "PULSE" } }
+        });
+        let fixed: std::collections::HashMap<String, serde_json::Value> =
+            serde_json::from_value(raw).unwrap();
+        let err = try_parse_smb100a_config(&fixed).unwrap().unwrap_err();
+        assert!(err.to_string().contains("unknown variant") || err.to_string().contains("PULSE"));
+    }
+
+    #[test]
+    fn unsupported_oe_record_field_is_rejected_at_parse() {
+        let raw = serde_json::json!({
+            "oe1022d": { "acquisition": { "record_fields": ["X", "INVALID"] } }
+        });
+        let fixed: std::collections::HashMap<String, serde_json::Value> =
+            serde_json::from_value(raw).unwrap();
+        let err = try_parse_oe1022d_config(&fixed).unwrap().unwrap_err();
+        assert!(err.to_string().contains("unknown variant") || err.to_string().contains("INVALID"));
     }
 }

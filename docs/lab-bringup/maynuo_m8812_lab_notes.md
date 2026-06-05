@@ -4,6 +4,7 @@
 **Used for**: Magnetic coil current control (X/Y/Z axes)
 **Interface**: USB-to-Serial (CDC-ACM), SCPI-like protocol
 **Date**: 2026-06-04
+**Manual Reference**: [M8812 Remote Control Reference](../equipment_manual/maynuo_dc-power-supply/m8812_remote_control_reference.md)
 
 ---
 
@@ -108,14 +109,29 @@ field_nt         = recur_actual_ma × coil_constant_nt_per_ma
 | `*IDN?` | Query | No | Response: `MAYNUO,M8812,<SN>,<FW>` |
 | `SYST:REM` | Set | No | Enter remote mode. Required before any set command. |
 | `SYST:LOC` | Set | No | Return to local mode. **Send LAST** after all verification. |
+| `SYST:ERR?` | Query | No | Read error queue: `0, 'No Error'` or `70, 'Invalid Command'` |
 | `VOLT 75` | Set | No | Set voltage limit to 75V. Do once at startup. |
+| `VOLT:PROT 75` | Set | Yes | Set over-voltage protection to 75V. Hardware safety ceiling. |
 | `CURR <A>` | Set | Yes | Set current setpoint in Amperes. `0.01` = 10 mA. |
 | `OUTP 1` | Set | Yes | Enable output. **Only after CURR 0 verified.** |
 | `OUTP 0` | Set | Yes | Disable output. |
 | `MEAS:CURR?` | Query | No | Read actual output current in Amperes. |
+| `MEAS:VOLT?` | Query | No | Read actual output voltage in Volts. |
+| `MEAS:DVM?` | Query | No | Read built-in 5½-digit voltmeter input. |
+
+### Hardware Limit Corrections (from M8812 manual)
+
+Previous code used **M8811 specs (0-5A)** as the hardware limit. Our actual device is **M8812**:
+
+| Parameter | Old (M8811) | Correct (M8812) |
+|-----------|-------------|-----------------|
+| Max current | 5000 mA (5 A) | **2000 mA (2 A)** |
+| Voltage range | 0-30 V | **0-75 V** |
+
+All `max_current_ma` values in `odmr-mag` have been corrected to **2000**.
 
 ### Forbidden Commands
-- Never send `CURR` > `max_current_ma / 1000.0` (software limit)
+- Never send `CURR` > `max_current_ma / 1000.0` (software limit, now 2.0 A)
 - Never send semicolon-separated compound commands
 - Never send `*RST` (resets device to unknown state)
 
@@ -133,7 +149,56 @@ field_nt         = recur_actual_ma × coil_constant_nt_per_ma
 
 ---
 
-## 6. Related Documents
+## 6. LIST Mode Discovery (from M8812 manual)
 
+### What We Found
+
+The M8812 manual (Chapter 6.2.5) reveals a **LIST sequential list mode** not used in our original software:
+
+- Pre-program up to **200 steps** into device memory
+- Each step sets `VOLT`/`CURR`/`WIDTH` independently
+- Execute modes: `CONT` (continuous), `STEP` (single-step), `LOOP`
+- Trigger sources: `IMM` (panel), `EXT` (TTL), `BUS` (software)
+
+### Why This Matters
+
+Current M5B-B executor sends **~4 SCPI commands per magnetic point** (`CURR` → `OUTP 1` → `MEAS:CURR?` → `OUTP 0`).
+
+For a 100-point scan:
+- **Point-by-point**: ~400 serial round-trips
+- **LIST mode**: ~100 write commands to program + 1 trigger (or auto `CONT`)
+
+### Current Stance
+
+**Not implemented in M5B-B**. Reasons:
+
+1. Current scan sizes are small (9-100 points); communication overhead is acceptable
+2. LIST mode adds significant complexity: pre-programming verification, interrupt handling (Pause/Stop/E-Stop), error recovery
+3. Three-axis coordination (X/Y/Z are independent M8812s) requires synchronized triggers, which needs TTL hardware or tight software timing
+4. Safety layer (`odmr-safety`) ramp-limit checks are designed for point-by-point current deltas
+
+### Future Path
+
+```
+M5B-B (now)    : point-by-point SCPI, proven safe
+M5B-C / Mag-M3 : executor on real hardware, still point-by-point
+Mag-M4+        : optional LIST mode as explicit recipe flag
+                 `magnetic.execution_mode: "list"`
+```
+
+If implemented, LIST should be:
+- **Explicit opt-in** (not automatic threshold-based switching)
+- Preceded by a **dry-run LIST verification** step that reads back `LIST:CURR? <n>` for every step
+- Accompanied by an **abort path** (`OUTP 0` or `ABOR`) that works even during LIST execution
+
+### Relevant Manual Section
+
+See [M8812 Remote Control Reference](../equipment_manual/maynuo_dc-power-supply/m8812_remote_control_reference.md) §6 for full LIST command syntax.
+
+---
+
+## 7. Related Documents
+
+- [M8812 Remote Control Reference](../equipment_manual/maynuo_dc-power-supply/m8812_remote_control_reference.md) — complete SCPI command set extracted from manual
 - [Cleanup Audit Matrix](cleanup_audit_matrix.md) — cross-tool cleanup comparison
 - [Device Connection Initialization Audit](device_connection_initialization_audit.md) — station-level preflight design

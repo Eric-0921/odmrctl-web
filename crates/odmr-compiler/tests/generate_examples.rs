@@ -36,3 +36,41 @@ fn generate_dry_run_plan_example() {
     println!("Wrote {}", out_path.display());
     assert_eq!(plan.summary.step_count, 201);
 }
+
+// ---------------------------------------------------------------------------
+// M5B-B system scan examples
+// ---------------------------------------------------------------------------
+
+#[test]
+fn generate_m5b_system_scan_resolved_example() {
+    let recipe_path =
+        workspace_root().join("examples/recipes/m5b_rf_mag_oe_system_scan.recipe.json");
+    let recipe = odmr_recipe::load_system_scan_recipe(&recipe_path).unwrap();
+    let resolved = odmr_compiler::system_scan::expand_system_scan_recipe(&recipe).unwrap();
+
+    let out_path =
+        workspace_root().join("examples/resolved/m5b_rf_mag_oe_system_scan.resolved.json");
+    let json = serde_json::to_string_pretty(&resolved).unwrap();
+    std::fs::write(&out_path, json).unwrap();
+
+    println!("Wrote {}", out_path.display());
+    assert_eq!(resolved.steps.len(), 15);
+}
+
+#[test]
+fn generate_m5b_system_scan_dry_run_example() {
+    let recipe_path =
+        workspace_root().join("examples/recipes/m5b_rf_mag_oe_system_scan.recipe.json");
+    let recipe = odmr_recipe::load_system_scan_recipe(&recipe_path).unwrap();
+    let resolved = odmr_compiler::system_scan::expand_system_scan_recipe(&recipe).unwrap();
+    let plan = odmr_compiler::system_scan::build_system_scan_dry_run(&recipe, &resolved);
+
+    let out_path =
+        workspace_root().join("examples/dry_run/m5b_rf_mag_oe_system_scan.dry_run_plan.json");
+    let json = serde_json::to_string_pretty(&plan).unwrap();
+    std::fs::write(&out_path, json).unwrap();
+
+    println!("Wrote {}", out_path.display());
+    assert_eq!(plan.summary.step_count, 15);
+    assert_eq!(plan.summary.total_points, 9);
+}

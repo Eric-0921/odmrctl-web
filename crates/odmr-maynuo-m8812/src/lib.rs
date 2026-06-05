@@ -6,6 +6,7 @@
 //! Mag-M2A : enumerate ports, open, `*IDN?` query
 //! Mag-M2B : `SYST:REM`, `VOLT 75`, `CURR 0.00000`,
 //!           `OUTP 0|1`, `MEAS:CURR?`, `SYST:LOC`
+//! Mag-M2C : `SYST:ERR?`, `VOLT:PROT`
 //!
 //! It does **not** implement nonzero current, zero-lock, executor, or GUI
 //! integration — those remain in odmr-mag or future milestones.
@@ -30,7 +31,9 @@ fn is_allowed(cmd: &str) -> bool {
             "*IDN?",
             "SYST:REM",
             "SYST:LOC",
+            "SYST:ERR?",
             "VOLT 75",
+            "VOLT:PROT 75",
             "OUTP 0",
             "OUTP 1",
             "MEAS:CURR?",
@@ -258,6 +261,16 @@ impl MaynuoM8812Transport {
             })
     }
 
+    /// Send `SYST:ERR?` and read the error code + message.
+    ///
+    /// Typical responses:
+    /// - `"0, 'No Error'"`
+    /// - `"50, 'Error Para Count'"`
+    /// - `"70, 'Invalid Command'"`
+    pub fn query_error(&mut self) -> Result<String, MaynuoProbeError> {
+        self.query_response_line("SYST:ERR?")
+    }
+
     // ---- set (fire-and-forget) methods ----
 
     /// Send `SYST:REM` to put the device in remote mode.
@@ -283,6 +296,14 @@ impl MaynuoM8812Transport {
     /// Send `SYST:LOC` to return the device to local mode.
     pub fn send_set_local(&mut self) -> Result<(), MaynuoProbeError> {
         self.write_command("SYST:LOC")
+    }
+
+    /// Send `VOLT:PROT {v}` to set the over-voltage protection limit.
+    ///
+    /// For M8812 the hardware max is 75 V; setting it to 75 V ensures the
+    /// supply will never output above its rated voltage.
+    pub fn send_set_voltage_protection(&mut self, voltage_v: u16) -> Result<(), MaynuoProbeError> {
+        self.write_command(&format!("VOLT:PROT {}", voltage_v))
     }
 
     // ---- internal command dispatch ----

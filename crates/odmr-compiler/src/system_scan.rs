@@ -322,20 +322,26 @@ fn make_setup_step(
     let target_state = match setup_kind {
         "rf_configure" => {
             let mut state = serde_json::Map::new();
-            if let Some(smb) = recipe.fixed_params.get("smb100a") {
-                state.insert("smb100a".into(), smb.clone());
+            // Include full SMB100A config with output disabled for setup.
+            if let Some(smb_value) = recipe.fixed_params.get("smb100a") {
+                let mut smb = smb_value.clone();
+                if let Some(obj) = smb.as_object_mut() {
+                    obj.insert("rf_output_required".into(), serde_json::json!(false));
+                }
+                state.insert("smb100a".into(), smb);
+            }
+            // Include full OE1022D config.
+            if let Some(oe) = recipe.fixed_params.get("oe1022d") {
+                state.insert("oe1022d".into(), oe.clone());
             }
             serde_json::Value::Object(state)
         }
-        "magnetic_baseline" => serde_json::json!({
-            "magnetic": {
-                "b_target_nt": [0.0, 0.0, 0.0],
-                "settle_ms": recipe.fixed_params.get("magnetic")
-                    .and_then(|v| v.get("default_settle_ms"))
-                    .and_then(|v| v.as_u64())
-                    .unwrap_or(500)
-            }
-        }),
+        "magnetic_baseline" => {
+            let mut state = serde_json::Map::new();
+            let mag = build_magnetic_target_state(recipe, &[0.0, 0.0, 0.0]);
+            state.insert("magnetic".into(), mag);
+            serde_json::Value::Object(state)
+        }
         _ => serde_json::Value::Object(serde_json::Map::new()),
     };
 
@@ -367,16 +373,23 @@ fn make_cleanup_step(
     recipe: &SystemScanRecipe,
 ) -> ResolvedSystemStep {
     let target_state = match cleanup_kind {
-        "rf_output_off" => serde_json::json!({ "smb100a": { "rf_output_required": false } }),
-        "magnetic_zero" => serde_json::json!({
-            "magnetic": {
-                "b_target_nt": [0.0, 0.0, 0.0],
-                "settle_ms": recipe.fixed_params.get("magnetic")
-                    .and_then(|v| v.get("default_settle_ms"))
-                    .and_then(|v| v.as_u64())
-                    .unwrap_or(500)
+        "rf_output_off" => {
+            let mut state = serde_json::Map::new();
+            if let Some(smb_value) = recipe.fixed_params.get("smb100a") {
+                let mut smb = smb_value.clone();
+                if let Some(obj) = smb.as_object_mut() {
+                    obj.insert("rf_output_required".into(), serde_json::json!(false));
+                }
+                state.insert("smb100a".into(), smb);
             }
-        }),
+            serde_json::Value::Object(state)
+        }
+        "magnetic_zero" => {
+            let mut state = serde_json::Map::new();
+            let mag = build_magnetic_target_state(recipe, &[0.0, 0.0, 0.0]);
+            state.insert("magnetic".into(), mag);
+            serde_json::Value::Object(state)
+        }
         "magnetic_local" => serde_json::json!({ "magnetic": { "mode": "local" } }),
         _ => serde_json::Value::Object(serde_json::Map::new()),
     };
@@ -401,6 +414,139 @@ fn make_cleanup_step(
             required_step_hash: true,
         },
     }
+}
+
+// ---------------------------------------------------------------------------
+// Coil matrix inversion & predicted current
+// ---------------------------------------------------------------------------
+
+/// Invert a 3×3 matrix. Returns `None` if the matrix is singular (det < 1e-12).
+fn invert_3x3(m: [[f64; 3]; 3]) -> Option<[[f64; 3]; 3]> {
+    let det = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+        - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+        + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+
+    if det.abs() < 1e-12 {
+        return None;
+    }
+
+    let inv_det = 1.0 / det;
+
+    Some([
+        [
+            (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * inv_det,
+            -(m[0][1] * m[2][2] - m[0][2] * m[2][1]) * inv_det,
+            (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * inv_det,
+        ],
+        [
+            -(m[1][0] * m[2][2] - m[1][2] * m[2][0]) * inv_det,
+            (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * inv_det,
+            -(m[0][0] * m[1][2] - m[0][2] * m[1][0]) * inv_det,
+        ],
+        [
+            (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * inv_det,
+            -(m[0][0] * m[2][1] - m[0][1] * m[2][0]) * inv_det,
+            (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * inv_det,
+        ],
+    ])
+}
+
+/// Compute predicted current (A) from B_target (nT), coil matrix (T/A), and zero offsets (A).
+fn compute_predicted_current(
+    b_target_nt: [f64; 3],
+    coil_matrix: [[f64; 3]; 3],
+    zero_offsets_a: [f64; 3],
+) -> Option<[f64; 3]> {
+    let inv = invert_3x3(coil_matrix)?;
+    let b_t = [
+        b_target_nt[0] / 1e9,
+        b_target_nt[1] / 1e9,
+        b_target_nt[2] / 1e9,
+    ];
+
+    Some([
+        inv[0][0] * b_t[0] + inv[0][1] * b_t[1] + inv[0][2] * b_t[2] + zero_offsets_a[0],
+        inv[1][0] * b_t[0] + inv[1][1] * b_t[1] + inv[1][2] * b_t[2] + zero_offsets_a[1],
+        inv[2][0] * b_t[0] + inv[2][1] * b_t[1] + inv[2][2] * b_t[2] + zero_offsets_a[2],
+    ])
+}
+
+/// Build magnetic target state JSON for a given B_target vector.
+fn build_magnetic_target_state(
+    recipe: &SystemScanRecipe,
+    b_target_nt: &[f64; 3],
+) -> serde_json::Value {
+    let mag_params = recipe.fixed_params.get("magnetic");
+
+    // Extract coil matrix and zero offsets.
+    let coil_matrix = mag_params
+        .and_then(|v| v.get("coil_matrix"))
+        .and_then(|v| v.get("matrix"))
+        .and_then(|v| v.as_array())
+        .map(|rows| {
+            let mut m = [[0.0; 3]; 3];
+            for (i, row) in rows.iter().enumerate().take(3) {
+                if let Some(arr) = row.as_array() {
+                    for (j, val) in arr.iter().enumerate().take(3) {
+                        m[i][j] = val.as_f64().unwrap_or(0.0);
+                    }
+                }
+            }
+            m
+        })
+        .unwrap_or([[0.0; 3]; 3]);
+
+    let zero_offsets = mag_params
+        .and_then(|v| v.get("zero_offsets_a"))
+        .map(|v| {
+            [
+                v.get("x").and_then(|x| x.as_f64()).unwrap_or(0.0),
+                v.get("y").and_then(|y| y.as_f64()).unwrap_or(0.0),
+                v.get("z").and_then(|z| z.as_f64()).unwrap_or(0.0),
+            ]
+        })
+        .unwrap_or([0.0; 3]);
+
+    let predicted_current = compute_predicted_current(*b_target_nt, coil_matrix, zero_offsets);
+
+    let settle_ms = mag_params
+        .and_then(|v| v.get("default_settle_ms"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(500);
+
+    let readback_required = mag_params
+        .and_then(|v| v.get("readback_required"))
+        .and_then(|v| v.as_bool())
+        .unwrap_or(true);
+
+    let zero_lock_required = mag_params
+        .and_then(|v| v.get("zero_lock_required"))
+        .and_then(|v| v.as_bool())
+        .unwrap_or(true);
+
+    let mut state = serde_json::Map::new();
+    state.insert("b_target_nt".into(), serde_json::json!(b_target_nt));
+    if let Some(current) = predicted_current {
+        state.insert("predicted_current_a".into(), serde_json::json!(current));
+    }
+    state.insert(
+        "zero_offsets_a".into(),
+        serde_json::json!({
+            "x": zero_offsets[0],
+            "y": zero_offsets[1],
+            "z": zero_offsets[2],
+        }),
+    );
+    state.insert("settle_ms".into(), serde_json::json!(settle_ms));
+    state.insert(
+        "readback_required".into(),
+        serde_json::json!(readback_required),
+    );
+    state.insert(
+        "zero_lock_required".into(),
+        serde_json::json!(zero_lock_required),
+    );
+    serde_json::Value::Object(state)
 }
 
 /// Expand sweeps into a cartesian product of measure steps.
@@ -492,8 +638,7 @@ fn expand_sweep_cartesian_product(
         device_state.insert("smb100a".into(), serde_json::Value::Object(smb_state));
 
         // Magnetic state.
-        let mut mag_state = serde_json::Map::new();
-        let mut b_target = vec![
+        let mut b_target = [
             fixed_magnetic
                 .get("bx_nt")
                 .and_then(|v| v.as_f64())
@@ -507,9 +652,9 @@ fn expand_sweep_cartesian_product(
                 .and_then(|v| v.as_f64())
                 .unwrap_or(0.0),
         ];
-        // Override with sweep values.
+        // Override with sweep values for any magnetic sweep.
         for (key, axis_name, value) in combo {
-            if key.starts_with("mag_z_low_current_points.") {
+            if key.contains("mag_") || axis_name.ends_with("_nt") {
                 match axis_name.as_str() {
                     "bx_nt" => b_target[0] = *value,
                     "by_nt" => b_target[1] = *value,
@@ -518,18 +663,20 @@ fn expand_sweep_cartesian_product(
                 }
             }
         }
-        mag_state.insert("b_target_nt".into(), serde_json::json!(b_target));
-        let settle_ms = recipe
-            .fixed_params
-            .get("magnetic")
-            .and_then(|v| v.get("default_settle_ms"))
-            .and_then(|v| v.as_u64())
-            .unwrap_or(500);
-        mag_state.insert("settle_ms".into(), serde_json::json!(settle_ms));
-        device_state.insert("magnetic".into(), serde_json::Value::Object(mag_state));
+        let mag_state = build_magnetic_target_state(recipe, &b_target);
+        device_state.insert("magnetic".into(), mag_state);
+
+        // OE1022D state.
+        if let Some(oe) = recipe.fixed_params.get("oe1022d") {
+            device_state.insert("oe1022d".into(), oe.clone());
+        }
 
         // Laser state.
-        device_state.insert("laser".into(), serde_json::json!({ "enabled": false }));
+        if let Some(laser) = recipe.fixed_params.get("laser") {
+            device_state.insert("laser".into(), laser.clone());
+        } else {
+            device_state.insert("laser".into(), serde_json::json!({ "enabled": false }));
+        }
 
         // Acquisition.
         let acquisition = if recipe.acquisition_policy.enabled {
@@ -738,11 +885,9 @@ mod tests {
             .find(|s| s.step_id == "pt_001")
             .unwrap();
         let smb = pt_001.target_device_state.get("smb100a").unwrap();
-        assert_eq!(
-            smb.get("frequency_hz").unwrap().as_f64(),
-            Some(2882000000.0)
-        );
-        assert_eq!(smb.get("rf_power_dbm").unwrap().as_f64(), Some(-30.0));
+        let rf = smb.get("rf").unwrap();
+        assert_eq!(rf.get("frequency_hz").unwrap().as_f64(), Some(2882000000.0));
+        assert_eq!(rf.get("power_dbm").unwrap().as_f64(), Some(-30.0));
     }
 
     #[test]
@@ -769,5 +914,101 @@ mod tests {
             .filter(|s| s.phase == "measure")
             .collect();
         assert!(measure.is_empty());
+    }
+
+    #[test]
+    fn expansion_preserves_full_smb100a_state() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        let setup_rf = resolved
+            .steps
+            .iter()
+            .find(|s| s.step_id == "step_setup_001")
+            .unwrap();
+        let smb = setup_rf.target_device_state.get("smb100a").unwrap();
+        assert!(smb.get("rf").is_some());
+        assert!(smb.get("modulation").is_some());
+        assert!(smb.get("fm").is_some());
+        assert!(smb.get("lf").is_some());
+    }
+
+    #[test]
+    fn expansion_preserves_full_oe1022d_state() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        let pt_000 = resolved
+            .steps
+            .iter()
+            .find(|s| s.step_id == "pt_000")
+            .unwrap();
+        let oe = pt_000.target_device_state.get("oe1022d").unwrap();
+        assert!(oe.get("input").is_some());
+        assert!(oe.get("gain").is_some());
+        assert!(oe.get("filter").is_some());
+        assert!(oe.get("acquisition").is_some());
+    }
+
+    #[test]
+    fn expansion_computes_magnetic_predicted_current() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        let pt_000 = resolved
+            .steps
+            .iter()
+            .find(|s| s.step_id == "pt_000")
+            .unwrap();
+        let mag = pt_000.target_device_state.get("magnetic").unwrap();
+        let current = mag.get("predicted_current_a").unwrap().as_array().unwrap();
+        assert_eq!(current.len(), 3);
+        // 1000 nT = 1e-6 T, coil constant = 1e-4 T/A => I = 1e-2 A = 0.01 A
+        assert!((current[2].as_f64().unwrap() - (-0.01)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn sweep_order_outer_inner_is_stable() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        let measure: Vec<_> = resolved
+            .steps
+            .iter()
+            .filter(|s| s.phase == "measure")
+            .collect();
+        // Outer sweep (magnetic) should change every 3 steps; inner (RF) every 1 step.
+        let bz_first: Vec<_> = measure
+            .iter()
+            .map(|s| {
+                s.sweep_coordinates.as_ref().unwrap()["mag_z_low_current_points.bz_nt"]
+                    .as_f64()
+                    .unwrap()
+            })
+            .collect();
+        assert_eq!(
+            bz_first,
+            vec![-1000.0, -1000.0, -1000.0, 0.0, 0.0, 0.0, 1000.0, 1000.0, 1000.0]
+        );
+    }
+
+    #[test]
+    fn every_measure_step_has_complete_target_device_state() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        for step in &resolved.steps {
+            if step.phase == "measure" {
+                assert!(step.target_device_state.get("smb100a").is_some());
+                assert!(step.target_device_state.get("magnetic").is_some());
+                assert!(step.target_device_state.get("oe1022d").is_some());
+                assert!(step.target_device_state.get("laser").is_some());
+            }
+        }
+    }
+
+    #[test]
+    fn resolved_json_serializes() {
+        let recipe = example_recipe();
+        let resolved = expand_system_scan_recipe(&recipe).unwrap();
+        let json = serde_json::to_string_pretty(&resolved).unwrap();
+        assert!(json.contains("resolved_m5b_rf_mag_oe_system_scan"));
+        assert!(json.contains("step_setup_000"));
+        assert!(json.contains("pt_008"));
     }
 }

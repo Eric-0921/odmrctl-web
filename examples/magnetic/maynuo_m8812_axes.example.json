@@ -25,8 +25,8 @@
       "zero_offset_ma": 0.0,
       "zero_offset_a": 0.0,
       "output_default": false,
-      "max_current_ma": 5000.0,
-      "max_current_a": 5.0,
+      "max_current_ma": 2000.0,
+      "max_current_a": 2.0,
       "voltage_v": 75
     },
     "y": {
@@ -40,8 +40,8 @@
       "zero_offset_ma": 0.0,
       "zero_offset_a": 0.0,
       "output_default": false,
-      "max_current_ma": 5000.0,
-      "max_current_a": 5.0,
+      "max_current_ma": 2000.0,
+      "max_current_a": 2.0,
       "voltage_v": 75
     },
     "z": {
@@ -55,8 +55,8 @@
       "zero_offset_ma": 0.0,
       "zero_offset_a": 0.0,
       "output_default": false,
-      "max_current_ma": 5000.0,
-      "max_current_a": 5.0,
+      "max_current_ma": 2000.0,
+      "max_current_a": 2.0,
       "voltage_v": 75
     }
   },
@@ -72,5 +72,5 @@
     "result": "X=080020960220402020, Y=080020960220402022, Z=080020960220402003",
     "note": "Port paths are dynamic per session. Only SN should be used for device binding."
   },
-  "note": "POWER_MAX_CURR = 5000 mA is the hardware limit from original software. The only permitted micro-test current in Mag-M0.5 is 10 mA."
+  "note": "POWER_MAX_CURR = 2000 mA is the M8812 hardware limit (0-2A spec, not M8811's 0-5A). The only permitted micro-test current in Mag-M0.5 is 10 mA."
 }

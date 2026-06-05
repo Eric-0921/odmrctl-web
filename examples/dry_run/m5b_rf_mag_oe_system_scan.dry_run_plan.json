@@ -1,17 +1,17 @@
 {
   "schema_version": "0.2.0",
   "kind": "dry_run_plan",
-  "id": "dry_run_m5b_20260531_001",
-  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan_20260531_001",
+  "id": "dry_run_resolved_m5b_rf_mag_oe_system_scan",
+  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan",
   "summary": {
     "step_count": 15,
     "total_points": 9,
     "expected_frames": 45,
-    "estimated_duration_s": 67.5,
+    "estimated_duration_s": 11.1,
     "required_devices": [
-      "smb100a_main",
+      "maynuo_m8812_axes",
       "oe1022d_main",
-      "maynuo_m8812_axes"
+      "smb100a_main"
     ],
     "hazard_actions": 9,
     "outer_sweep": "mag_z_low_current_points",
@@ -28,7 +28,7 @@
         },
         {
           "step_id": "step_setup_001",
-          "description": "Configure SMB100A: frequency=2.878GHz, power=-30dBm, FM ON, deviation=4MHz"
+          "description": "Configure SMB100A RF settings"
         },
         {
           "step_id": "step_setup_002",
@@ -39,11 +39,11 @@
     {
       "phase": "measure",
       "description": "Nested sweep: 3 magnetic points x 3 RF frequencies = 9 acquisition points",
+      "hazard_note": "RF output ON at each measure point",
       "steps": [
         {
           "step_id": "pt_000..pt_008",
-          "description": "For each point: set magnetic vector, set RF frequency, wait settle, RF ON, acquire 5 OE frames",
-          "hazard_note": "RF output ON at each measure point"
+          "description": "For each point: set magnetic vector, set RF frequency, wait settle, RF ON, acquire OE frames"
         }
       ]
     },
@@ -66,21 +66,5 @@
       ]
     }
   ],
-  "sweep_preview": {
-    "axes": [
-      "mag_z_low_current_points.bz_nt",
-      "rf_frequency_points.frequency_hz"
-    ],
-    "magnetic_points": [-1000.0, 0.0, 1000.0],
-    "rf_points": [2878000000, 2882000000, 2886000000],
-    "first_combined_point": {
-      "mag_z_low_current_points.bz_nt": -1000.0,
-      "rf_frequency_points.frequency_hz": 2878000000
-    },
-    "last_combined_point": {
-      "mag_z_low_current_points.bz_nt": 1000.0,
-      "rf_frequency_points.frequency_hz": 2886000000
-    }
-  },
   "operator_approval_required": true
 }

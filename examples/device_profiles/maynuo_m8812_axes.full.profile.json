@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "device_profile",
+  "device_type": "magnetic",
+  "id": "maynuo_m8812_axes",
+  "description": "Three-axis magnetic coil controller with coil matrix and zero offsets.",
+  "mode": "field_vector",
+  "basis": "lab_cartesian",
+  "field_unit": "nT",
+  "axes": {
+    "x": {
+      "device_id": "maynuo.mag_x",
+      "serial_number": "080020960220402020",
+      "enabled": true
+    },
+    "y": {
+      "device_id": "maynuo.mag_y",
+      "serial_number": "080020960220402022",
+      "enabled": true
+    },
+    "z": {
+      "device_id": "maynuo.mag_z",
+      "serial_number": "080020960220402003",
+      "enabled": true
+    }
+  },
+  "coil_matrix": {
+    "unit": "T_per_A",
+    "matrix": [
+      [0.0001, 0.0, 0.0],
+      [0.0, 0.0001, 0.0],
+      [0.0, 0.0, 0.0001]
+    ]
+  },
+  "zero_offsets_a": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "default_settle_ms": 500,
+  "readback_required": true,
+  "zero_lock_required": true
+}

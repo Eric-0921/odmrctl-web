@@ -1,8 +1,8 @@
 {
   "schema_version": "0.2.0",
   "kind": "safety_report",
-  "id": "safety_m5b_20260531_001",
-  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan_20260531_001",
+  "id": "safety_resolved_m5b_rf_mag_oe_system_scan",
+  "resolved_recipe_id": "resolved_m5b_rf_mag_oe_system_scan",
   "decision": "allow",
   "requires_operator_approval": true,
   "physical_response_required": false,
@@ -22,7 +22,7 @@
     {
       "check": "station_ref_valid",
       "status": "pass",
-      "message": "station_ref points to a valid station file"
+      "message": "station_ref is non-empty"
     },
     {
       "check": "safety_limits_not_overridden",
@@ -30,11 +30,17 @@
       "message": "recipe does not contain safety limit overrides"
     },
     {
+      "check": "rf_frequency_within_station_allowed_range",
+      "status": "pass",
+      "message": "RF frequency 2882000000 Hz within allowed range",
+      "value": 2882000000.0
+    },
+    {
       "check": "smb_power_within_limit",
       "status": "pass",
-      "message": "RF power -30.0 dBm within station limit",
+      "message": "RF power -30 dBm within station limit",
       "value": -30.0,
-      "limit": 0.0
+      "limit": -10.0
     },
     {
       "check": "smb_internal_sweep_disabled",
@@ -42,44 +48,116 @@
       "message": "no internal SMB sweep requested"
     },
     {
-      "check": "magnetic_current_within_limit",
+      "check": "rf_output_requires_operator_approval",
       "status": "pass",
-      "message": "magnetic field 1000.0 nT maps to current within per-axis limit"
+      "message": "operator approval required for RF output ON"
     },
     {
-      "check": "magnetic_ramp_within_limit",
+      "check": "modulation_requires_operator_approval",
       "status": "pass",
-      "message": "magnetic ramp within configured limit"
+      "message": "operator approval required for modulation"
     },
     {
-      "check": "magnetic_calibration_available",
+      "check": "fm_deviation_non_negative",
       "status": "pass",
-      "message": "station calibration snapshot referenced"
+      "message": "FM deviation 4000000 Hz",
+      "value": 4000000.0,
+      "limit": 0.0
     },
     {
-      "check": "laser_disabled_or_safe",
+      "check": "lf_frequency_positive",
       "status": "pass",
-      "message": "laser is disabled (enabled=false)"
+      "message": "LF frequency 500 Hz",
+      "value": 500.0,
+      "limit": 0.0
     },
     {
-      "check": "oe_passive_acquisition_only",
+      "check": "lf_voltage_non_negative",
       "status": "pass",
-      "message": "OE1022D acquisition is passive read-only"
+      "message": "LF voltage 0.137 V",
+      "value": 0.137,
+      "limit": 0.0
+    },
+    {
+      "check": "primary_channel_is_supported",
+      "status": "pass",
+      "message": "primary channel B matches station requirement B"
+    },
+    {
+      "check": "required_reference_lock_declared",
+      "status": "warn",
+      "message": "reference lock not required by station"
+    },
+    {
+      "check": "time_constant_positive",
+      "status": "pass",
+      "message": "time constant 0.1 s",
+      "value": 0.1,
+      "limit": 0.0
+    },
+    {
+      "check": "filter_slope_supported",
+      "status": "pass",
+      "message": "filter slope Db12 dB/oct supported"
+    },
+    {
+      "check": "record_fields_supported",
+      "status": "pass",
+      "message": "6 record fields supported"
+    },
+    {
+      "check": "coil_matrix_present",
+      "status": "pass",
+      "message": "coil matrix present in recipe"
+    },
+    {
+      "check": "coil_matrix_not_singular",
+      "status": "pass",
+      "message": "coil matrix is invertible (predicted current computed)"
+    },
+    {
+      "check": "b_vector_within_station_limit",
+      "status": "pass",
+      "message": "max B field 0.000001 T within limit",
+      "value": 1e-6,
+      "limit": 0.001
+    },
+    {
+      "check": "current_ramp_within_limits",
+      "status": "pass",
+      "message": "current ramp within axis limits"
+    },
+    {
+      "check": "zero_lock_required",
+      "status": "pass",
+      "message": "zero lock required by station"
+    },
+    {
+      "check": "readback_required",
+      "status": "pass",
+      "message": "readback required by station"
+    },
+    {
+      "check": "axis_serial_numbers_present",
+      "status": "pass",
+      "message": "axis serial numbers present"
+    },
+    {
+      "check": "laser_disabled",
+      "status": "pass",
+      "message": "laser is disabled"
+    },
+    {
+      "check": "laser_power_within_limit",
+      "status": "pass",
+      "message": "laser power 0 mW within limit",
+      "value": 0.0,
+      "limit": 0.0
     },
     {
       "check": "operator_approval_required",
       "status": "pass",
       "message": "operator approval is required by recipe safety block"
-    },
-    {
-      "check": "expected_points_below_limit",
-      "status": "pass",
-      "message": "9 points below maximum point limit"
-    },
-    {
-      "check": "expected_runtime_below_limit",
-      "status": "pass",
-      "message": "estimated 67.5 s below maximum runtime limit"
     },
     {
       "check": "no_realtime_csv",
@@ -90,6 +168,20 @@
       "check": "no_gui_direct_hardware",
       "status": "pass",
       "message": "recipe does not request GUI direct hardware control"
+    },
+    {
+      "check": "expected_points_below_limit",
+      "status": "pass",
+      "message": "9 points below maximum point limit",
+      "value": 9.0,
+      "limit": 100000.0
+    },
+    {
+      "check": "expected_runtime_below_limit",
+      "status": "pass",
+      "message": "estimated 11.1 s below maximum runtime limit",
+      "value": 11.1,
+      "limit": 3600.0
     }
   ],
   "warnings": [],

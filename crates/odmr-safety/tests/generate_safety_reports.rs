@@ -100,3 +100,31 @@ fn generate_invalid_over_frequency_safety_report() {
     std::fs::write(&out_path, json).unwrap();
     println!("Wrote {}", out_path.display());
 }
+
+// ---------------------------------------------------------------------------
+// M5B-B system scan safety report
+// ---------------------------------------------------------------------------
+
+#[test]
+fn generate_m5b_system_scan_safety_report() {
+    let recipe_path =
+        workspace_root().join("examples/recipes/m5b_rf_mag_oe_system_scan.recipe.json");
+    let recipe = odmr_recipe::load_system_scan_recipe(&recipe_path).unwrap();
+    let resolved = odmr_compiler::system_scan::expand_system_scan_recipe(&recipe).unwrap();
+
+    let station_safety = odmr_recipe::device_params::StationSafety::default();
+    let report = odmr_safety::system_scan::build_system_scan_safety_report(
+        &recipe,
+        &resolved,
+        &station_safety,
+    );
+
+    assert_eq!(report.decision, odmr_safety::SafetyDecision::Allow);
+    assert_eq!(report.summary.error_count, 0);
+
+    let out_path =
+        workspace_root().join("examples/safety/m5b_rf_mag_oe_system_scan.safety_report.json");
+    let json = serde_json::to_string_pretty(&report).unwrap();
+    std::fs::write(&out_path, json).unwrap();
+    println!("Wrote {}", out_path.display());
+}

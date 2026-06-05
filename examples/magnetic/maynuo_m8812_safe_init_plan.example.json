@@ -43,6 +43,16 @@
     },
     {
       "seq": 4,
+      "command_type": "set_voltage_protection",
+      "scpi": "VOLT:PROT 75",
+      "expects_response": false,
+      "expected_response_shape": "none",
+      "event_name": "mag_voltage_protection_set",
+      "blocking": false,
+      "delay_ms": 50
+    },
+    {
+      "seq": 5,
       "command_type": "set_current",
       "scpi": "CURR 0.00000",
       "expects_response": false,
@@ -52,7 +62,7 @@
       "delay_ms": 50
     },
     {
-      "seq": 5,
+      "seq": 6,
       "command_type": "set_output",
       "scpi": "OUTP 0",
       "expects_response": false,
@@ -62,7 +72,7 @@
       "delay_ms": 50
     },
     {
-      "seq": 6,
+      "seq": 7,
       "command_type": "query_current",
       "scpi": "MEAS:CURR?",
       "expects_response": true,
@@ -72,7 +82,7 @@
       "timeout_ms": 300
     },
     {
-      "seq": 7,
+      "seq": 8,
       "command_type": "set_output",
       "scpi": "OUTP 0",
       "expects_response": false,
@@ -82,7 +92,7 @@
       "delay_ms": 50
     },
     {
-      "seq": 8,
+      "seq": 9,
       "command_type": "set_local",
       "scpi": "SYST:LOC",
       "expects_response": false,

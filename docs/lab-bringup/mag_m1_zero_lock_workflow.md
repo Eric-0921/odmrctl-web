@@ -131,7 +131,7 @@ current_command = CURR {total_current_ma / 1000.0:.5}
 ### Validation
 
 - Total current must be ≥ 0 (M8812 positive-only)
-- Total current must be ≤ `max_current_ma` (5000 mA)
+- Total current must be ≤ `max_current_ma` (2000 mA, M8812 0-2A spec)
 - Field and current must be finite
 - Lock-zero must be enabled before planning recurrent field
 

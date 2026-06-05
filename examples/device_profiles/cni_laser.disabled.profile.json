@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "device_profile",
+  "device_type": "laser",
+  "id": "cni_laser_532",
+  "description": "CNI 532nm DPSS laser — disabled placeholder for system scan.",
+  "enabled": false,
+  "power_mw": 0.0,
+  "wavelength_nm": 532.0,
+  "warmup_ms": 0,
+  "settle_ms": 0,
+  "emission_required": false
+}

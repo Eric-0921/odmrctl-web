@@ -1104,9 +1104,9 @@ pub struct MaynuoAxisProfile {
     /// Zero offset in A
     pub zero_offset_a: f64,
     pub output_default: bool,
-    /// Hardware max current in mA (POWER_MAX_CURR from original software = 5000)
+    /// Hardware max current in mA (M8812 spec = 2000, not M8811's 5000)
     pub max_current_ma: f64,
-    /// Hardware max current in A
+    /// Hardware max current in A (M8812 spec = 2.0)
     pub max_current_a: f64,
     pub voltage_v: u16,
 }
@@ -1215,9 +1215,11 @@ pub enum MaynuoCommand {
     SetRemote,
     SetLocal,
     SetVoltage { voltage_v: u16 },
+    SetVoltageProtection { voltage_v: u16 },
     SetCurrent { current_a: f64, current_ma: f64 },
     SetOutput { on: bool },
     QueryCurrent,
+    QueryError,
 }
 
 impl MaynuoCommand {
@@ -1228,6 +1230,9 @@ impl MaynuoCommand {
             MaynuoCommand::SetRemote => "SYST:REM".into(),
             MaynuoCommand::SetLocal => "SYST:LOC".into(),
             MaynuoCommand::SetVoltage { voltage_v } => format!("VOLT {voltage_v}"),
+            MaynuoCommand::SetVoltageProtection { voltage_v } => {
+                format!("VOLT:PROT {voltage_v}")
+            }
             MaynuoCommand::SetCurrent { current_a, .. } => {
                 format!("CURR {current_a:.5}")
             }
@@ -1235,6 +1240,7 @@ impl MaynuoCommand {
                 format!("OUTP {}", if *on { 1 } else { 0 })
             }
             MaynuoCommand::QueryCurrent => "MEAS:CURR?".into(),
+            MaynuoCommand::QueryError => "SYST:ERR?".into(),
         }
     }
 
@@ -1243,8 +1249,13 @@ impl MaynuoCommand {
     /// Per reverse analysis (verify_protocol.py): only `*IDN?` and `MEAS:CURR?`
     /// return data.  Set commands are fire-and-forget — the M8812 does not
     /// acknowledge them.
+    ///
+    /// `SYST:ERR?` is documented in the M8812 manual and returns error codes.
     pub fn expects_response(&self) -> bool {
-        matches!(self, MaynuoCommand::Identify | MaynuoCommand::QueryCurrent)
+        matches!(
+            self,
+            MaynuoCommand::Identify | MaynuoCommand::QueryCurrent | MaynuoCommand::QueryError
+        )
     }
 
     /// Return the expected response shape (for documentation / validation).
@@ -1255,9 +1266,11 @@ impl MaynuoCommand {
             MaynuoCommand::SetRemote => "none",
             MaynuoCommand::SetLocal => "none",
             MaynuoCommand::SetVoltage { .. } => "none",
+            MaynuoCommand::SetVoltageProtection { .. } => "none",
             MaynuoCommand::SetCurrent { .. } => "none",
             MaynuoCommand::SetOutput { .. } => "none",
             MaynuoCommand::QueryCurrent => "float_ampere",
+            MaynuoCommand::QueryError => "error_code,message",
         }
     }
 }
@@ -1420,6 +1433,17 @@ pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
         ),
         cmd_entry(
             4,
+            "set_voltage_protection",
+            &format!("VOLT:PROT {}", axis.voltage_v),
+            false,
+            "none",
+            "mag_voltage_protection_set",
+            false,
+            Some(50),
+            None,
+        ),
+        cmd_entry(
+            5,
             "set_current",
             "CURR 0.00000",
             false,
@@ -1430,7 +1454,7 @@ pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
             None,
         ),
         cmd_entry(
-            5,
+            6,
             "set_output",
             "OUTP 0",
             false,
@@ -1441,7 +1465,7 @@ pub fn build_safe_init_plan(axis: &MaynuoAxisProfile) -> MaynuoCommandPlan {
             None,
         ),
         cmd_entry(
-            6,
+            7,
             "query_current",
             "MEAS:CURR?",
             true,
@@ -3364,8 +3388,8 @@ mod tests {
             zero_offset_ma: 0.0,
             zero_offset_a: 0.0,
             output_default: false,
-            max_current_ma: 5000.0,
-            max_current_a: 5.0,
+            max_current_ma: 2000.0,
+            max_current_a: 2.0,
             voltage_v: 75,
         }
     }
@@ -3397,8 +3421,8 @@ mod tests {
                     zero_offset_ma: 0.0,
                     zero_offset_a: 0.0,
                     output_default: false,
-                    max_current_ma: 5000.0,
-                    max_current_a: 5.0,
+                    max_current_ma: 2000.0,
+                    max_current_a: 2.0,
                     voltage_v: 75,
                 },
                 z: MaynuoAxisProfile {
@@ -3413,8 +3437,8 @@ mod tests {
                     zero_offset_ma: 0.0,
                     zero_offset_a: 0.0,
                     output_default: false,
-                    max_current_ma: 5000.0,
-                    max_current_a: 5.0,
+                    max_current_ma: 2000.0,
+                    max_current_a: 2.0,
                     voltage_v: 75,
                 },
             },
@@ -3430,7 +3454,7 @@ mod tests {
                 result: "X=080020960220402020, Y=080020960220402022, Z=080020960220402003".into(),
                 note: Some("Port paths are dynamic per session. Only SN should be used for device binding.".into()),
             }),
-            note: Some("POWER_MAX_CURR = 5000 mA hardware limit. Only permitted micro-test current is 10 mA.".into()),
+            note: Some("POWER_MAX_CURR = 2000 mA hardware limit (M8812 0-2A spec). Only permitted micro-test current is 10 mA.".into()),
         }
     }
 
@@ -3556,19 +3580,20 @@ mod tests {
         let axis = example_maynuo_axis_profile();
         let plan = build_safe_init_plan(&axis);
 
-        assert_eq!(plan.commands.len(), 8);
+        assert_eq!(plan.commands.len(), 9);
         assert_eq!(plan.commands[0].seq, 1);
         assert_eq!(plan.commands[0].scpi, "*IDN?");
         assert!(plan.commands[0].expects_response);
         assert_eq!(plan.commands[1].scpi, "SYST:REM");
         assert!(!plan.commands[1].expects_response);
         assert_eq!(plan.commands[2].scpi, "VOLT 75");
-        assert_eq!(plan.commands[3].scpi, "CURR 0.00000");
-        assert_eq!(plan.commands[4].scpi, "OUTP 0");
-        assert_eq!(plan.commands[5].scpi, "MEAS:CURR?");
-        assert!(plan.commands[5].expects_response);
-        assert_eq!(plan.commands[6].scpi, "OUTP 0");
-        assert_eq!(plan.commands[7].scpi, "SYST:LOC");
+        assert_eq!(plan.commands[3].scpi, "VOLT:PROT 75");
+        assert_eq!(plan.commands[4].scpi, "CURR 0.00000");
+        assert_eq!(plan.commands[5].scpi, "OUTP 0");
+        assert_eq!(plan.commands[6].scpi, "MEAS:CURR?");
+        assert!(plan.commands[6].expects_response);
+        assert_eq!(plan.commands[7].scpi, "OUTP 0");
+        assert_eq!(plan.commands[8].scpi, "SYST:LOC");
         // Set commands should not claim ACK
         for entry in &plan.commands {
             if !entry.expects_response {
@@ -4038,7 +4063,7 @@ mod tests {
         assert_eq!(plan.kind, "maynuo_command_plan");
         assert_eq!(plan.id, "maynuo_safe_init_plan");
         assert!(!plan.executable);
-        assert_eq!(plan.commands.len(), 8);
+        assert_eq!(plan.commands.len(), 9);
 
         // Query commands expect response; set commands do not
         let idn = &plan.commands[0];
@@ -4051,7 +4076,11 @@ mod tests {
         assert!(!remote.expects_response);
         assert_eq!(remote.expected_response_shape, "none");
 
-        let query = &plan.commands[5];
+        let volt_prot = &plan.commands[3];
+        assert_eq!(volt_prot.scpi, "VOLT:PROT 75");
+        assert!(!volt_prot.expects_response);
+
+        let query = &plan.commands[6];
         assert_eq!(query.scpi, "MEAS:CURR?");
         assert!(query.expects_response);
         assert_eq!(query.expected_response_shape, "float_ampere");

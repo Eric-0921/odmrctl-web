@@ -113,8 +113,8 @@
         "severity": "info",
         "field": "test_current_ma",
         "value": 10.0,
-        "limit": 5000.0,
-        "message": "Test current 10 mA is within hardware limit 5000 mA and well below typical safety policy limits."
+        "limit": 2000.0,
+        "message": "Test current 10 mA is within M8812 hardware limit 2000 mA and well below typical safety policy limits."
       }
     ]
   },

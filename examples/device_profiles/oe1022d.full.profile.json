@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.2.0",
+  "kind": "device_profile",
+  "device_type": "oe1022d",
+  "id": "oe1022d_lab_main",
+  "description": "Full OE1022D configuration profile for ODMR lock-in acquisition.",
+  "primary_channel": "B",
+  "primary_value": "X",
+  "input": {
+    "source": "SINGLE_ENDED_VOLTAGE",
+    "shield_grounding": "GROUND",
+    "coupling": "AC",
+    "notch_filter": "OFF"
+  },
+  "reference": {
+    "source": "EXTERNAL",
+    "external_trigger": "TTL_RISING_EDGE",
+    "phase_deg": 0.0,
+    "auto_phase": false
+  },
+  "gain": {
+    "dynamic_reserve": "NORMAL",
+    "sensitivity": "100uV"
+  },
+  "filter": {
+    "time_constant_s": 0.1,
+    "slope_db_oct": "12",
+    "sync_filter_enabled": false
+  },
+  "harmonic": {
+    "harmonic_1": 1,
+    "harmonic_2": 2
+  },
+  "acquisition": {
+    "frames_per_point": 5,
+    "inter_frame_delay_ms": 20,
+    "pre_discard_ms": 100,
+    "record_fields": ["X", "Y", "R", "THETA", "FREQ", "NOISE"]
+  }
+}
