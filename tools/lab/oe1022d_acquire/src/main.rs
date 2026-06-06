@@ -263,22 +263,26 @@ fn capture_frames(
             .map_err(|e| format!("write: {}", e))?;
         port.flush().map_err(|e| format!("flush: {}", e))?;
 
-        // Wait for device to prepare the 12288-byte binary frame
-        std::thread::sleep(Duration::from_millis(800));
-
         let mut frame_buf = Vec::with_capacity(RALL_FRAME_BYTES);
         let read_deadline = Instant::now() + Duration::from_millis(timeout_ms);
 
-        // Loop-read: macOS CDC driver delivers ~1020 bytes per read()
+        // Fast-poll: RALL? returns 12288 bytes at ~49ms/frame on USB CDC.
+        // macOS CDC driver delivers ~1020 bytes per read().
         while frame_buf.len() < RALL_FRAME_BYTES && Instant::now() < read_deadline {
             let mut chunk = vec![0u8; 4096];
             match port.read(&mut chunk) {
-                Ok(0) => break,
+                Ok(0) => {
+                    std::thread::sleep(Duration::from_millis(1));
+                    continue;
+                }
                 Ok(n) => {
                     chunk.truncate(n);
                     frame_buf.extend_from_slice(&chunk);
                 }
-                Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => break,
+                Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => {
+                    std::thread::sleep(Duration::from_millis(1));
+                    continue;
+                }
                 Err(e) => {
                     eprintln!(
                         "Frame {}: serial read error after {} bytes: {}",

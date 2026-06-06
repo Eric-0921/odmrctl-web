@@ -26,7 +26,6 @@ impl OeTransport {
         self.port
             .write_all(b"*IDN?\r")
             .map_err(|e| format!("OE write: {}", e))?;
-        std::thread::sleep(std::time::Duration::from_millis(200));
 
         let mut buf = [0u8; 512];
         let n = self
@@ -56,7 +55,6 @@ impl OeTransport {
         &mut self,
         audit: &mut Vec<CommandAuditEntry>,
         ts: u64,
-        frame_delay_ms: u64,
     ) -> Result<(Vec<u8>, u64), String> {
         let cmd = "RALL?";
         self.port
@@ -64,20 +62,27 @@ impl OeTransport {
             .map_err(|e| format!("OE write RALL?: {}", e))?;
 
         let start = std::time::Instant::now();
-        std::thread::sleep(std::time::Duration::from_millis(frame_delay_ms));
 
+        // Fast-poll: RALL? returns 12288 bytes at ~49ms/frame on USB CDC.
+        // macOS CDC driver delivers ~1020 bytes per read().
         let mut buf = vec![0u8; RALL_FRAME_BYTES];
         let mut total = 0usize;
         loop {
             match self.port.read(&mut buf[total..]) {
-                Ok(0) => break,
+                Ok(0) => {
+                    std::thread::sleep(std::time::Duration::from_millis(1));
+                    continue;
+                }
                 Ok(n) => {
                     total += n;
                     if total >= RALL_FRAME_BYTES {
                         break;
                     }
                 }
-                Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => break,
+                Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => {
+                    std::thread::sleep(std::time::Duration::from_millis(1));
+                    continue;
+                }
                 Err(e) => return Err(format!("OE read error: {}", e)),
             }
         }
@@ -145,7 +150,6 @@ impl FakeOeTransport {
         &mut self,
         audit: &mut Vec<CommandAuditEntry>,
         ts: u64,
-        _frame_delay_ms: u64,
     ) -> Result<(Vec<u8>, u64), String> {
         self.frame_counter += 1;
         // Generate a deterministic fake frame

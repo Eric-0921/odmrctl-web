@@ -432,6 +432,7 @@ dependencies = [
 name = "odmr-safety"
 version = "0.1.0"
 dependencies = [
+ "odmr-compiler",
  "odmr-recipe",
  "odmr-types",
  "serde",
