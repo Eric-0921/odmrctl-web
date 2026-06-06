@@ -292,6 +292,97 @@ pub fn query_output(channel: u8, param: u8) -> String {
 }
 
 // ---------------------------------------------------------------------------
+// Data Buffer Sampling (Manual §5.2.8 / §5.2.9)
+// ---------------------------------------------------------------------------
+
+/// `SRATD i,x` — set sampling step time for channel i.
+///
+/// x is expressed in seconds in the manual-derived API layer here; callers are
+/// responsible for staying within the device's supported 1 ms to 100 s range.
+pub fn set_sample_step_time_s(channel: u8, seconds: f64) -> String {
+    format!("SRATD {channel},{seconds}")
+}
+
+/// `SRATD? i` — query sampling step time for channel i.
+pub fn query_sample_step_time(channel: u8) -> String {
+    format!("SRATD? {channel}")
+}
+
+/// `SLEND i,j` — set sampling length for channel i.
+///
+/// j must not exceed 16384.
+pub fn set_sample_length(channel: u8, length: u32) -> String {
+    format!("SLEND {channel},{length}")
+}
+
+/// `SLEND? i` — query sampling length for channel i.
+pub fn query_sample_length(channel: u8) -> String {
+    format!("SLEND? {channel}")
+}
+
+/// `SSLED i,j,k` — bind buffer j on channel i to parameter k.
+///
+/// j = 1..4 (Buffer1..Buffer4)
+/// k = 0..21 (R/X/Y/theta/.../Freq per manual)
+pub fn set_sample_buffer_selector(channel: u8, buffer: u8, parameter: u8) -> String {
+    format!("SSLED {channel},{buffer},{parameter}")
+}
+
+/// `SSLED? i,j` — query buffer j selector on channel i.
+pub fn query_sample_buffer_selector(channel: u8, buffer: u8) -> String {
+    format!("SSLED? {channel},{buffer}")
+}
+
+/// `STRGD i,j` — set sampling trigger mode for channel i.
+///
+/// j values: 0 = internal, 1 = external
+pub fn set_sample_trigger_mode(channel: u8, mode: u8) -> String {
+    format!("STRGD {channel},{mode}")
+}
+
+/// `STRGD? i` — query sampling trigger mode for channel i.
+pub fn query_sample_trigger_mode(channel: u8) -> String {
+    format!("STRGD? {channel}")
+}
+
+/// `SPRMD i,j` — set sampling run mode for channel i.
+///
+/// j values: 0 = single, 1 = loop
+pub fn set_sample_run_mode(channel: u8, mode: u8) -> String {
+    format!("SPRMD {channel},{mode}")
+}
+
+/// `SPRMD? i` — query sampling run mode for channel i.
+pub fn query_sample_run_mode(channel: u8) -> String {
+    format!("SPRMD? {channel}")
+}
+
+/// `STRDD i` — start or continue sampling on channel i.
+pub fn start_sampling(channel: u8) -> String {
+    format!("STRDD {channel}")
+}
+
+/// `PAUSD i` — pause sampling on channel i.
+pub fn pause_sampling(channel: u8) -> String {
+    format!("PAUSD {channel}")
+}
+
+/// `RESTD i` — reset all buffers on channel i.
+pub fn reset_data_buffers(channel: u8) -> String {
+    format!("RESTD {channel}")
+}
+
+/// `SPTSD? i` — query the number of stored points on channel i.
+pub fn query_stored_point_count(channel: u8) -> String {
+    format!("SPTSD ? {channel}")
+}
+
+/// `TRCAD? i,j,k,l` — read l points from buffer j on channel i, starting at k.
+pub fn query_trace_data(channel: u8, buffer: u8, start: u32, length: u32) -> String {
+    format!("TRCAD ? {channel},{buffer},{start},{length}")
+}
+
+// ---------------------------------------------------------------------------
 // System
 // ---------------------------------------------------------------------------
 

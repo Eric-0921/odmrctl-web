@@ -8,3 +8,4 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 odmr-types = { path = "../odmr-types" }
 odmr-device = { path = "../odmr-device" }
+serialport = "4.9.0"

@@ -1,9 +1,12 @@
-//! odmr-oe1022d — Command catalog and fake device for the SSI OE1022D DSP Lock-In Amplifier.
+//! odmr-oe1022d — Command catalog, collector, fake device and parser for the
+//! SSI OE1022D DSP Lock-In Amplifier.
 
+pub mod collector;
 pub mod commands;
 pub mod fake;
 pub mod parser;
 
+pub use collector::{CapturedFrame, CollectorConfig, CollectorStats, RallCollector};
 pub use fake::{ChannelState, FakeOe1022d};
 pub use parser::*;
 
@@ -129,6 +132,61 @@ mod tests {
     #[test]
     fn golden_output_command() {
         assert_eq!(query_output(2, 1), "OUTPD? 2,1");
+    }
+
+    #[test]
+    fn golden_sample_step_time_command() {
+        assert_eq!(set_sample_step_time_s(2, 0.001), "SRATD 2,0.001");
+    }
+
+    #[test]
+    fn golden_query_sample_step_time() {
+        assert_eq!(query_sample_step_time(2), "SRATD? 2");
+    }
+
+    #[test]
+    fn golden_sample_length_command() {
+        assert_eq!(set_sample_length(2, 16384), "SLEND 2,16384");
+    }
+
+    #[test]
+    fn golden_buffer_selector_command() {
+        assert_eq!(set_sample_buffer_selector(2, 1, 1), "SSLED 2,1,1");
+    }
+
+    #[test]
+    fn golden_trigger_mode_command() {
+        assert_eq!(set_sample_trigger_mode(2, 0), "STRGD 2,0");
+    }
+
+    #[test]
+    fn golden_run_mode_command() {
+        assert_eq!(set_sample_run_mode(2, 1), "SPRMD 2,1");
+    }
+
+    #[test]
+    fn golden_start_sampling_command() {
+        assert_eq!(start_sampling(2), "STRDD 2");
+    }
+
+    #[test]
+    fn golden_pause_sampling_command() {
+        assert_eq!(pause_sampling(2), "PAUSD 2");
+    }
+
+    #[test]
+    fn golden_reset_data_buffers_command() {
+        assert_eq!(reset_data_buffers(2), "RESTD 2");
+    }
+
+    #[test]
+    fn golden_query_stored_point_count_command() {
+        assert_eq!(query_stored_point_count(2), "SPTSD ? 2");
+    }
+
+    #[test]
+    fn golden_query_trace_data_command() {
+        assert_eq!(query_trace_data(2, 1, 0, 1024), "TRCAD ? 2,1,0,1024");
     }
 
     // --- Sine Output golden tests ------------------------------------------
