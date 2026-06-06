@@ -1,0 +1,4 @@
+{"kind":"system","severity":"info","message":"run 2026-06-05_real_5min started","t_wall_ns":1780672067676424000,"run_id":"2026-06-05_real_5min"}
+{"kind":"system","severity":"info","message":"run 2026-06-05_real_5min stopping (49650 samples, 1 events)","t_wall_ns":1780672436118220000,"run_id":"2026-06-05_real_5min"}
+{"kind":"system","severity":"info","message":"run 2026-06-05_real_5min started","t_wall_ns":1780712884289920000,"run_id":"2026-06-05_real_5min"}
+{"kind":"system","severity":"info","message":"run 2026-06-05_real_5min stopping (49800 samples, 1 events)","t_wall_ns":1780713184432506000,"run_id":"2026-06-05_real_5min"}

@@ -33,7 +33,7 @@ node_modules/
 # Data (experiment outputs)
 *.bin
 *.parquet
-runs/
+runs/*
 !/examples/runs/
 !runs/2026-06-05_real_5min/REPORT.md
 !runs/2026-06-05_real_5min/RECONNECT_REPORT.md

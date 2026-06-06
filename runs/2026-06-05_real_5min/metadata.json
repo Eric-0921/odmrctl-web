@@ -1,0 +1,10 @@
+{
+  "buffer_bytes": 8192,
+  "fields": [
+    "BX",
+    "BY",
+    "BFreq"
+  ],
+  "run_id": "2026-06-05_real_5min",
+  "started_at_unix_ns": 1780712884289927000
+}
