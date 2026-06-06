@@ -29,6 +29,7 @@ pub mod parse;
 pub mod port;
 pub mod rall;
 pub mod serial;
+pub mod streaming;
 
 pub use constants::{OE1022D_BAUD_RATE, RALL_FRAME_BYTES};
 pub use discover::{discover_oe1022d, DiscoverError, DiscoveredOe1022d};
@@ -43,7 +44,13 @@ pub use rall::{
     spawn_continuous_rall_loop, ContinuousRallHandle, MockFrameSource, MockRallLink,
     RallLink, RallLinkError, RallReader, RawFrameEnvelope, TransportStatus,
 };
-pub use serial::{pin_current_thread_to_core, spawn_continuous_rall_loop_pinned, SerialLinkError, SerialRallLink};
+pub use serial::{
+    pin_current_thread_to_core, spawn_continuous_rall_loop_pinned, SerialLinkError, SerialRallLink,
+};
+pub use streaming::{
+    spawn_mock_streaming_reader, MockStreamingLink, StreamingConfig, StreamingLink,
+    StreamingReader, StreamingSample, CycleOutcome,
+};
 
 /// Marker for the C1 scaffold: lets `cargo build` produce something
 /// useful and gives a single sanity test target.
