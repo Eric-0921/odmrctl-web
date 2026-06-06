@@ -1,0 +1,18 @@
+[package]
+name = "odmr-live-server"
+version = "0.1.0"
+edition = "2021"
+description = "OE1022D real-time trace HTTP server — streams RALL? data to chart frontend"
+license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "odmr-live-server"
+path = "src/main.rs"
+
+[dependencies]
+odmr-oe1022d = { path = "../odmr-oe1022d" }
+actix-web = "4"
+actix-cors = "0.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }

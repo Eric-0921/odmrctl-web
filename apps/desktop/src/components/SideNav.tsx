@@ -9,13 +9,13 @@ const navItems = [
   { path: "/events", label: "Events" },
   { path: "/raw-data", label: "Raw Data Preview" },
   { path: "/analysis-viewer", label: "Analysis Viewer" },
+  { path: "/live-chart", label: "Live Chart" },
   { path: "/recipe-viewer", label: "Recipe Viewer" },
   { path: "/system-scan", label: "System Scan" },
   { path: "/about", label: "About / Boundaries" },
 ];
 
 const disabledItems = [
-  { label: "Live Chart", reason: "requires backend trace stream" },
   { label: "Run Control", reason: "requires executor backend" },
   { label: "Magnetic Planner", reason: "future module" },
   { label: "Settings", reason: "future module" },

@@ -8,6 +8,7 @@ import SafetyPage from "./routes/SafetyPage";
 import EventsPage from "./routes/EventsPage";
 import RawDataPreviewPage from "./routes/RawDataPreviewPage";
 import AnalysisViewerPage from "./routes/AnalysisViewerPage";
+import LiveChartPage from "./routes/LiveChartPage";
 import RecipeViewerPage from "./routes/RecipeViewerPage";
 import SystemScanPage from "./routes/SystemScanPage";
 import AboutBoundariesPage from "./routes/AboutBoundariesPage";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/raw-data" element={<RawDataPreviewPage />} />
         <Route path="/analysis-viewer" element={<AnalysisViewerPage />} />
+        <Route path="/live-chart" element={<LiveChartPage />} />
         <Route path="/recipe-viewer" element={<RecipeViewerPage />} />
         <Route path="/system-scan" element={<SystemScanPage />} />
         <Route path="/about" element={<AboutBoundariesPage />} />
