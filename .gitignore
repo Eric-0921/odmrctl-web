@@ -36,6 +36,7 @@ node_modules/
 runs/
 !/examples/runs/
 !runs/2026-06-05_real_5min/REPORT.md
+!runs/2026-06-05_real_5min/RECONNECT_REPORT.md
 !runs/2026-06-05_real_5min/metadata.json
 !runs/2026-06-05_real_5min/events.jsonl
 
