@@ -72,6 +72,13 @@ Layer 0: Types            odmr-types
 | `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` | 活跃 |
 | `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
 | `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+> **OE1022D 硬件实测要点**（固件 V6.3211110, SN:D6130220）：
+> - **RALL?** 是唯一数据读取路径。12288 字节 f64 BE 二进制帧（20参数×50点），帧内1ms间距硬件保证。
+> - **性能**：单帧读取 12.0ms（机械上限 83.7fps），设备刷新 ~48ms，有效去重帧率 20.8fps / ~1040 pts/sec。
+> - **Pipeline 不支持**：连发多个 RALL? 只应答第一个，后续返回垃圾。
+> - **读取规范**：节拍 48ms，每帧前 `clear(Input)`，去重用 X[0] 值比较。禁止固定 sleep >5ms。
+> - **TRCAD? / TRCA? / TRCB? 不存在**。Buffer 子系统（SRATD/SLEND/SSLED 等）只能配置，不能读数据。
+> - 详见 `docs/decisions/oe1022d-rall-continuous-benchmark.md` 和 `docs/decisions/oe1022d-rall-fast-read-correction.md`
 | `odmr-maynuo-m8812` | 1 | Maynuo M8812 串口 SCPI 指令封装、电流/电压/输出控制、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
 | `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划 | `odmr-device`, `odmr-types` | 活跃（M5A 真实硬件已验证） |
 | `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
