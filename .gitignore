@@ -47,3 +47,6 @@ examples/RsInstrument_VB.NET_Hello_World_Example/
 
 # Preflight output directories
 /preflight/
+
+# OE1022D vendor software bundle (not part of workspace)
+examples/SSI Lock-in-Amplifier_260509/
