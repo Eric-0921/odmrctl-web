@@ -17,6 +17,7 @@ mod collector_test;
 mod rall_bench;
 mod rall_continuous;
 mod rall_detailed;
+mod stability_test;
 mod rate_probe;
 mod trcad_brute_force;
 mod trcad_exact_format;
@@ -144,6 +145,12 @@ struct Cli {
 
     #[arg(long, help = "Detailed RALL? frame analysis")]
     rall_detailed: bool,
+
+    #[arg(long, help = "Long-duration RALL? stability test")]
+    stability_test: bool,
+
+    #[arg(long, default_value = "1800", help = "Duration for stability test (seconds)")]
+    stability_duration_secs: u64,
 }
 
 #[derive(Debug, Serialize)]
@@ -390,6 +397,10 @@ fn main() {
     }
     if cli.rall_detailed {
         rall_detailed::run(&cli.port, cli.baud);
+        return;
+    }
+    if cli.stability_test {
+        stability_test::run(&cli.port, cli.baud, cli.stability_duration_secs);
         return;
     }
 

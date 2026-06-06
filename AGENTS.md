@@ -78,7 +78,9 @@ Layer 0: Types            odmr-types
 > - **Pipeline 不支持**：连发多个 RALL? 只应答第一个，后续返回垃圾。
 > - **读取规范**：节拍 48ms，每帧前 `clear(Input)`，去重用 X[0] 值比较。禁止固定 sleep >5ms。
 > - **TRCAD? / TRCA? / TRCB? 不存在**。Buffer 子系统（SRATD/SLEND/SSLED 等）只能配置，不能读数据。
-> - 详见 `docs/decisions/oe1022d-rall-continuous-benchmark.md` 和 `docs/decisions/oe1022d-rall-fast-read-correction.md`
+> - **稳定性与数据保留**：30 分钟连续真机验证通过（35,713 帧，1.2% dup，13.3ms 读取无漂移，零过载零解析错误）。采集阶段保留 12288B 原始二进制（.rall）不提取摘要 — 离线再按需解析任意参数/采样点。这是 ADR-005（raw-first）在 OE1022D 的落地。
+> - **RallCollector**（`collector.rs`）：Producer-Consumer 模式，独立轮询生产线程 + bounded mpsc channel(8)。48ms 节拍、X[0] 去重、fast-poll 1ms 重试。Drop 非阻塞（不 join producer）。
+> - 详见 `docs/decisions/oe1022d-rall-continuous-benchmark.md`、`docs/decisions/oe1022d-rall-stability-validation.md`
 | `odmr-maynuo-m8812` | 1 | Maynuo M8812 串口 SCPI 指令封装、电流/电压/输出控制、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
 | `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划 | `odmr-device`, `odmr-types` | 活跃（M5A 真实硬件已验证） |
 | `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
@@ -153,6 +155,7 @@ pnpm tauri build      # 发布构建
 |------|------|------|
 | 产品运行时候选 | `common_preflight`（稳定化后）、`rf_mag_oe_minimal_run` 概念 | 未来提取为 workspace crate |
 | 实验室联调专用 | `maynuo_m8812_identity_probe`、`zero_baseline`、`recur_microtest`、`sequential_axis_run`、`smb100a_*`、`oe1022d_*` 等 | M2–M4 单设备/单阶段工具 |
+| OE1022D 稳定性验证 | `oe1022d_buffer_probe --stability-test` | 30min 真机连续采集，输出 .rall 原始二进制 + .csv 元数据，已验证无泄漏 |
 | 诊断专用 | `visa_probe` | VISA A/B 基准测试 |
 | GUI 只读支持 | M5A artifact viewer 类型与命令 | 解析产物文件，无硬件访问 |
 | 废弃/遗留 | 无 | — |
