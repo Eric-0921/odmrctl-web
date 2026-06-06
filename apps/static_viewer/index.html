@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>OE1022D Dataset Viewer</title>
+<title>OE1022D Dataset Viewer — Live</title>
 <style>
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1f2328; font-size: 13px; }
   .topbar { display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: #fff; border-bottom: 1px solid #d0d7de; }
@@ -11,7 +11,7 @@
   .badge.good { background: #dafbe1; color: #1a7f37; }
   .badge.info { background: #ddf4ff; color: #0969da; }
   .badge.warn { background: #fff8c5; color: #9a6700; }
-  .badge.bad { background: #ffebe9; color: #cf222e; }
+  .badge.bad  { background: #ffebe9; color: #cf222e; }
   .main { display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 80px); gap: 1px; background: #d0d7de; }
   .sidebar { background: #fff; padding: 12px; overflow-y: auto; }
   .chart { background: #fff; padding: 12px; }
@@ -29,14 +29,16 @@
   .playbar button.primary { background: #0969da; color: #fff; border-color: #0969da; }
   .playbar input[type=range] { flex: 1; }
   .playbar .spd { font-family: ui-monospace, monospace; font-size: 11px; color: #656d76; min-width: 60px; }
+  .fps-readout { font-family: ui-monospace, monospace; font-size: 11px; color: #656d76; }
 </style>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 </head>
 <body>
 <div class="topbar">
-  <h1>OE1022D Dataset Viewer</h1>
+  <h1>OE1022D Dataset Viewer — Live SSE</h1>
   <span class="badge info" id="status-badge">Idle</span>
   <span id="file-path" style="color: #656d76; font-family: ui-monospace, monospace; font-size: 12px;"></span>
+  <span class="fps-readout" id="fps-readout">— fps</span>
 </div>
 <div class="main">
   <div class="sidebar">
@@ -44,24 +46,29 @@
     <div class="file-list" id="file-list">
       <div class="item" style="color: #656d76; cursor: default;">loading...</div>
     </div>
-    <span class="label">Status</span>
-    <div class="metric"><span>Loaded</span><span class="v" id="m-loaded">—</span></div>
-    <div class="metric"><span>Frames</span><span class="v" id="m-frames">—</span></div>
-    <div class="metric"><span>Samples</span><span class="v" id="m-samples">—</span></div>
-    <div class="metric"><span>Span (s)</span><span class="v" id="m-span">—</span></div>
-    <div class="metric"><span>File size</span><span class="v" id="m-size">—</span></div>
-    <span class="label">Playback</span>
+    <span class="label">Stream status</span>
+    <div class="metric"><span>Run</span><span class="v" id="m_run">—</span></div>
+    <div class="metric"><span>next_idx</span><span class="v" id="m_idx">—</span></div>
+    <div class="metric"><span>Speed</span><span class="v" id="m_speed">— x</span></div>
+    <div class="metric"><span>Emit interval</span><span class="v" id="m_emit">— ms</span></div>
+    <div class="metric"><span>Window</span><span class="v" id="m_window">—</span></div>
+    <div class="metric"><span>Backend FPS</span><span class="v" id="m_fps">—</span></div>
+    <span class="label">Controls</span>
     <div class="playbar">
-      <button class="primary" id="btn-play">▶ Play</button>
-      <button id="btn-pause">⏸ Pause</button>
-      <button id="btn-reset">⏮ Reset</button>
-      <input type="range" id="speed" min="0.5" max="200" step="0.5" value="50" />
-      <span class="spd"><span id="spd-val">50</span>x</span>
+      <button class="primary" id="btn-start">▶ Start</button>
+      <button id="btn-stop">⏹ Stop</button>
+      <input type="range" id="speed" min="1" max="600" step="1" value="60" />
+      <span class="spd"><span id="spd-val">60</span>x</span>
     </div>
     <div class="playbar">
       <span class="spd" style="min-width: auto;">Visible window:</span>
       <input type="range" id="window" min="100" max="5000" step="100" value="1000" />
       <span class="spd" id="win-val">1000</span>
+    </div>
+    <div class="playbar">
+      <span class="spd" style="min-width: auto;">Emit interval:</span>
+      <input type="range" id="emit_ms" min="8" max="200" step="1" value="16" />
+      <span class="spd"><span id="emit-val">16</span> ms (~<span id="emit-hz">60</span> Hz)</span>
     </div>
   </div>
   <div class="chart" id="chart"></div>
@@ -76,13 +83,11 @@ const COLOR = {
 };
 const FIELD_NAME = { BX: 'B-X (V)', BY: 'B-Y (V)', BFreq: 'B-Freq (Hz)' };
 
-let allSamples = [];
-let currentFile = null;
-let playing = false;
-let playSpeed = 50; // samples per real-time second
-let visibleWindow = 1000;
-let playIndex = 0;
-let lastFrameTs = 0;
+let evtSource = null;
+let emitTickHistory = []; // for FPS readout
+let latestByField = { BX: [], BY: [], BFreq: [] };
+let lastRenderMs = 0;
+let currentRunId = null;
 
 async function loadFileList() {
   const list = document.getElementById('file-list');
@@ -94,11 +99,11 @@ async function loadFileList() {
       list.innerHTML = '<div class="item" style="color: #656d76; cursor: default;">no runs found</div>';
       return;
     }
-    for (const r of runs) {
+    for (const run of runs) {
       const item = document.createElement('div');
       item.className = 'item';
-      item.textContent = `${r.run_id}  (${r.size_mb.toFixed(1)} MB)`;
-      item.onclick = () => loadRun(r.run_id);
+      item.textContent = `${run.run_id}  (${run.size_mb.toFixed(1)} MB)`;
+      item.onclick = () => selectRun(run.run_id);
       list.appendChild(item);
     }
   } catch (e) {
@@ -106,150 +111,134 @@ async function loadFileList() {
   }
 }
 
-async function loadRun(runId) {
-  setStatus('Loading ' + runId + '...', 'info');
-  const r = await fetch('/api/runs/' + runId + '/samples.ndjson');
-  if (!r.ok) {
-    setStatus('Load failed: HTTP ' + r.status, 'bad');
-    return;
-  }
-  const text = await r.text();
-  allSamples = [];
-  for (const line of text.split('\n')) {
-    if (!line.trim()) continue;
-    try {
-      const s = JSON.parse(line);
-      allSamples.push(s);
-    } catch (e) { /* skip malformed */ }
-  }
-  // Mark selected in file list.
+function selectRun(runId) {
+  currentRunId = runId;
   document.querySelectorAll('.file-list .item').forEach(el => {
     el.classList.toggle('selected', el.textContent.startsWith(runId));
   });
-  currentFile = runId;
   document.getElementById('file-path').textContent = '/runs/' + runId + '/samples.ndjson';
-
-  const frames = new Set(allSamples.map(s => s.frame_sequence_no)).size;
-  const span = allSamples.length > 0
-    ? ((allSamples[allSamples.length - 1].t_mono_ns - allSamples[0].t_mono_ns) / 1e9).toFixed(1)
-    : 0;
-  document.getElementById('m-loaded').textContent = runId;
-  document.getElementById('m-frames').textContent = frames;
-  document.getElementById('m-samples').textContent = allSamples.length;
-  document.getElementById('m-span').textContent = span;
-  document.getElementById('m-size').textContent = (text.length / 1024 / 1024).toFixed(2) + ' MB';
-
-  // Initialize chart layout.
-  const traces = ['BX', 'BY', 'BFreq'].map(f => ({
-    x: [],
-    y: [],
-    mode: 'lines',
-    name: FIELD_NAME[f],
-    line: { color: COLOR[f], width: 1.5 },
-    yaxis: f === 'BFreq' ? 'y2' : 'y',
-  }));
-  const layout = {
-    margin: { l: 60, r: 60, t: 20, b: 40 },
-    xaxis: { title: 'Time (s since run start)', type: 'linear' },
-    yaxis: { title: 'B-X / B-Y (V)', side: 'left' },
-    yaxis2: { title: 'B-Freq (Hz)', side: 'right', overlaying: 'y', side: 'right' },
-    showlegend: true,
-    legend: { x: 0, y: 1 },
-    paper_bgcolor: '#fff',
-    plot_bgcolor: '#fff',
-  };
-  Plotly.newPlot('chart', traces, layout, { responsive: true, displayModeBar: true });
-  playIndex = 0;
-  setStatus(`Loaded ${allSamples.length} samples in ${frames} frames (${span}s span)`, 'good');
-  // Auto-play.
-  play();
+  // Auto-start streaming.
+  startStream();
 }
 
 function setStatus(msg, kind = 'info') {
   document.getElementById('statusbar').textContent = msg;
   const badge = document.getElementById('status-badge');
-  badge.textContent = kind === 'good' ? 'Ready' : (kind === 'bad' ? 'Error' : 'Working');
+  badge.textContent = kind === 'good' ? 'Live' : (kind === 'bad' ? 'Error' : (kind === 'warn' ? 'Idle' : 'Working'));
   badge.className = 'badge ' + (kind === 'warn' ? 'warn' : (kind === 'bad' ? 'bad' : (kind === 'good' ? 'good' : 'info')));
 }
 
-function visibleSamples() {
-  if (allSamples.length === 0) return [];
-  const start = Math.max(0, allSamples.length - visibleWindow);
-  return allSamples.slice(start);
-}
-
-function redraw() {
-  if (allSamples.length === 0) return;
-  const t0 = allSamples[0].t_mono_ns;
-  const visible = visibleSamples();
-  const byField = { BX: { x: [], y: [] }, BY: { x: [], y: [] }, BFreq: { x: [], y: [] } };
-  for (const s of visible) {
-    byField[s.field].x.push((s.t_mono_ns - t0) / 1e9);
-    byField[s.field].y.push(s.value);
-  }
-  const traces = ['BX', 'BY', 'BFreq'].map(f => ({
-    x: byField[f].x,
-    y: byField[f].y,
-    mode: 'lines',
-    name: FIELD_NAME[f],
-    line: { color: COLOR[f], width: 1.5 },
-    yaxis: f === 'BFreq' ? 'y2' : 'y',
-  }));
-  Plotly.react('chart', traces, {}, { responsive: true });
-}
-
-function play() { playing = true; lastFrameTs = performance.now(); requestAnimationFrame(playTick); document.getElementById('btn-play').textContent = '▶ Playing'; }
-function pause() { playing = false; document.getElementById('btn-play').textContent = '▶ Play'; }
-function reset() { playIndex = 0; redraw(); }
-
-function playTick() {
-  if (!playing) return;
-  const now = performance.now();
-  const dt = (now - lastFrameTs) / 1000; // seconds
-  lastFrameTs = now;
-  // We advance playIndex by N samples per real-time second,
-  // mapped to playback: playSpeed samples per real second at 1x.
-  const advance = Math.max(1, Math.floor(playSpeed * dt));
-  playIndex = Math.min(allSamples.length, playIndex + advance);
-  // If we've reached the end, stop and rewind.
-  if (playIndex >= allSamples.length) {
-    pause();
+function startStream() {
+  if (!currentRunId) {
+    setStatus('Pick a run from the list first', 'warn');
     return;
   }
-  // Visible window: show the last `visibleWindow` samples up to playIndex.
-  const t0 = allSamples[0].t_mono_ns;
-  const byField = { BX: { x: [], y: [] }, BY: { x: [], y: [] }, BFreq: { x: [], y: [] } };
-  const start = Math.max(0, playIndex - visibleWindow);
-  for (let i = start; i < playIndex; i++) {
-    const s = allSamples[i];
-    byField[s.field].x.push((s.t_mono_ns - t0) / 1e9);
-    byField[s.field].y.push(s.value);
+  if (evtSource) {
+    evtSource.close();
+    evtSource = null;
   }
+  const speed = document.getElementById('speed').value;
+  const window = document.getElementById('window').value;
+  const emit_ms = document.getElementById('emit_ms').value;
+  const url = `/api/stream/${encodeURIComponent(currentRunId)}?speed=${speed}&window=${window}&emit_ms=${emit_ms}`;
+  evtSource = new EventSource(url);
+  setStatus('Connecting to ' + url, 'info');
+
+  evtSource.addEventListener('meta', (e) => {
+    const meta = JSON.parse(e.data);
+    document.getElementById('m_run').textContent = meta.run_id;
+    document.getElementById('m_idx').textContent = meta.advance_per_emit;
+    document.getElementById('m_speed').textContent = meta.speed + ' x';
+    document.getElementById('m_emit').textContent = meta.emit_ms + ' ms';
+    document.getElementById('m_window').textContent = meta.window;
+    setStatus(`Streaming ${meta.run_id} (advance ${meta.advance_per_emit} samples / ${meta.emit_ms} ms)`, 'good');
+  });
+
+  evtSource.addEventListener('chart', (e) => {
+    const payload = JSON.parse(e.data);
+    latestByField = payload.by_field;
+    document.getElementById('m_idx').textContent = payload.next_idx;
+    const tNow = performance.now();
+    if (lastRenderMs > 0) {
+      const dt = tNow - lastRenderMs;
+      if (dt > 0) {
+        emitTickHistory.push(1000 / dt);
+        if (emitTickHistory.length > 30) emitTickHistory.shift();
+      }
+    }
+    lastRenderMs = tNow;
+    requestAnimationFrame(render);
+  });
+
+  evtSource.addEventListener('eof', (e) => {
+    const payload = JSON.parse(e.data);
+    setStatus(`Stream EOF (${payload.total_samples} samples total)`, 'warn');
+    evtSource.close();
+    evtSource = null;
+  });
+
+  evtSource.onerror = (e) => {
+    setStatus('SSE error / connection lost', 'bad');
+  };
+}
+
+function render() {
+  // Build traces from the latest by_field map.
   const traces = ['BX', 'BY', 'BFreq'].map(f => ({
-    x: byField[f].x,
-    y: byField[f].y,
+    x: (latestByField[f] || []).map(p => p.t / 1e9),
+    y: (latestByField[f] || []).map(p => p.y),
     mode: 'lines',
     name: FIELD_NAME[f],
     line: { color: COLOR[f], width: 1.5 },
     yaxis: f === 'BFreq' ? 'y2' : 'y',
   }));
   Plotly.react('chart', traces, {}, { responsive: true });
-  requestAnimationFrame(playTick);
+
+  // FPS readout.
+  if (emitTickHistory.length > 0) {
+    const avg = emitTickHistory.reduce((a, b) => a + b, 0) / emitTickHistory.length;
+    document.getElementById('m_fps').textContent = avg.toFixed(1);
+    document.getElementById('fps-readout').textContent = avg.toFixed(1) + ' fps';
+  }
+}
+
+function stopStream() {
+  if (evtSource) {
+    evtSource.close();
+    evtSource = null;
+    setStatus('Stopped', 'warn');
+  }
 }
 
 // Wire up controls.
-document.getElementById('btn-play').onclick = play;
-document.getElementById('btn-pause').onclick = pause;
-document.getElementById('btn-reset').onclick = reset;
+document.getElementById('btn-start').onclick = startStream;
+document.getElementById('btn-stop').onclick = stopStream;
 document.getElementById('speed').oninput = (e) => {
-  playSpeed = parseFloat(e.target.value);
-  document.getElementById('spd-val').textContent = playSpeed;
+  document.getElementById('spd-val').textContent = e.target.value;
+  // Reconnect with the new speed.
+  if (evtSource) startStream();
 };
 document.getElementById('window').oninput = (e) => {
-  visibleWindow = parseInt(e.target.value, 10);
-  document.getElementById('win-val').textContent = visibleWindow;
-  if (!playing) redraw();
+  document.getElementById('win-val').textContent = e.target.value;
+  if (evtSource) startStream();
 };
+document.getElementById('emit_ms').oninput = (e) => {
+  document.getElementById('emit-val').textContent = e.target.value;
+  const ms = parseInt(e.target.value, 10);
+  document.getElementById('emit-hz').textContent = Math.round(1000 / ms);
+  if (evtSource) startStream();
+};
+
+// Initialize the chart layout (empty) so the page doesn't look broken.
+Plotly.newPlot('chart', [], {
+  margin: { l: 60, r: 60, t: 20, b: 40 },
+  xaxis: { title: 'Time (s since run start)' },
+  yaxis: { title: 'B-X / B-Y (V)', side: 'left' },
+  yaxis2: { title: 'B-Freq (Hz)', side: 'right', overlaying: 'y' },
+  showlegend: true,
+  legend: { x: 0, y: 1 },
+  paper_bgcolor: '#fff', plot_bgcolor: '#fff',
+}, { responsive: true });
 
 loadFileList();
 </script>
