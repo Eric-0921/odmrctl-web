@@ -191,6 +191,74 @@ export interface WorkbenchSnapshot {
   profile_addresses: Record<string, string>;
 }
 
+export interface SerialPortInfo {
+  port_name: string;
+  port_type: string;
+}
+
+export interface IdentifiedSerialDevice {
+  port: string;
+  detected_kind: string;
+  idn?: string | null;
+  serial_number?: string | null;
+  confidence: string;
+  suggested_role?: string | null;
+  status: string;
+}
+
+export interface SerialIdentifyReport {
+  ports: SerialPortInfo[];
+  devices: IdentifiedSerialDevice[];
+  warnings: string[];
+}
+
+export interface DeviceRoleRequest {
+  device_id: string;
+  kind: string;
+  expected_sn?: string | null;
+}
+
+export interface AutoBoundDevice {
+  device_id: string;
+  kind: string;
+  address?: string | null;
+  idn?: string | null;
+  serial_number?: string | null;
+  confidence: string;
+  status: string;
+}
+
+export interface AutoBindReport {
+  bound: AutoBoundDevice[];
+  blocked: string[];
+}
+
+export interface DiscoveredDevice {
+  transport: string;
+  address: string;
+  detected_kind: string;
+  idn?: string | null;
+  serial_number?: string | null;
+  model?: string | null;
+  confidence: string;
+  suggested_role?: string | null;
+  status: string;
+}
+
+export interface DeviceDiscoveryReport {
+  serial_ports: SerialPortInfo[];
+  tcp_targets: string[];
+  usb_resources: string[];
+  devices: DiscoveredDevice[];
+  warnings: string[];
+}
+
+export interface DeviceProbeRequest {
+  requested_kinds: string[];
+  smb100a_tcp_targets: string[];
+  enable_usb_probe: boolean;
+}
+
 export interface ExperimentPlanSummary {
   schema_version: string;
   kind: string;
@@ -222,6 +290,41 @@ export interface ResolvedPlanPreview {
   magnetic_points: ResolvedMagneticPoint[];
   rf_point_count: number;
   estimated_measurements: number;
+}
+
+export interface ExperimentRunReadiness {
+  kind: string;
+  ready_for_preview_execution: boolean;
+  ready_for_hardware_execution: boolean;
+  blocked_reasons: string[];
+  hardware_blocked_reasons: string[];
+  warnings: string[];
+  step_count: number;
+  rf_point_count: number;
+  estimated_measurements: number;
+  estimated_duration_s?: number | null;
+  require_zero_lock: boolean;
+  zero_baseline_present: boolean;
+  connected_devices: string[];
+  required_devices: string[];
+}
+
+export interface ExperimentPlanRunStatus {
+  kind: string;
+  run_id: string;
+  mode: string;
+  state: string;
+  started_at: string;
+  finished_at?: string | null;
+  run_directory?: string | null;
+  step_count: number;
+  rf_point_count: number;
+  estimated_measurements: number;
+  estimated_duration_s?: number | null;
+  steps_completed: number;
+  blocked_reasons: string[];
+  warnings: string[];
+  artifact_paths: Record<string, string>;
 }
 
 export interface MagneticPointProjection {

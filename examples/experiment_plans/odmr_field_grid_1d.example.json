@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "experiment_plan",
+  "id": "odmr_field_grid_1d_demo",
+  "name": "ODMR 1D magnetic line grid demo",
+  "source": "examples/experiment_plans/odmr_field_grid_1d.example.json",
+  "station_ref": "odmr_station.full.example",
+  "field_space": {
+    "mode": "grouped_grid_scan",
+    "unit": "nT",
+    "groups": [
+      {
+        "group_id": "bx_line",
+        "label_cn": "Bx 单轴线扫描",
+        "scan_kind": "line_1d",
+        "axes": ["x"],
+        "axis_ranges_nt": {
+          "x": { "start": 0, "stop": 20, "step": 10 }
+        },
+        "fixed_axes_nt": { "y": 0, "z": 0 },
+        "order": 0,
+        "enabled": true
+      },
+      {
+        "group_id": "by_line",
+        "label_cn": "By 单轴线扫描",
+        "scan_kind": "line_1d",
+        "axes": ["y"],
+        "axis_ranges_nt": {
+          "y": { "start": 0, "stop": 20, "step": 10 }
+        },
+        "fixed_axes_nt": { "x": 0, "z": 0 },
+        "order": 1,
+        "enabled": true
+      },
+      {
+        "group_id": "bz_line",
+        "label_cn": "Bz 单轴线扫描",
+        "scan_kind": "line_1d",
+        "axes": ["z"],
+        "axis_ranges_nt": {
+          "z": { "start": 0, "stop": 20, "step": 10 }
+        },
+        "fixed_axes_nt": { "x": 0, "y": 0 },
+        "order": 2,
+        "enabled": true
+      }
+    ]
+  },
+  "spectrum_template": {
+    "rf_sweep": {
+      "start_hz": 2800000000,
+      "stop_hz": 2900000000,
+      "step_hz": 1000000,
+      "dwell_ms": 300,
+      "power_dbm": -30,
+      "spacing": "LINear",
+      "shape": "SAWtooth",
+      "sweep_output_start_v": 0,
+      "sweep_output_stop_v": 3
+    },
+    "laser": {
+      "mode": "fixed_power",
+      "power_mw": 0,
+      "enabled": false,
+      "settle_ms": 100
+    },
+    "oe1022d_acquisition": {
+      "mode": "follow_rf_sweep",
+      "pre_start_ms": 100,
+      "post_stop_ms": 100,
+      "channels": {
+        "ch_a": {
+          "time_constant_s": 0.3,
+          "filter_slope_db_oct": 12,
+          "dynamic_reserve": "NORMAL",
+          "sensitivity": "100 mV/nA"
+        },
+        "ch_b": {
+          "time_constant_s": 0.3,
+          "filter_slope_db_oct": 12,
+          "dynamic_reserve": "NORMAL",
+          "sensitivity": "100 mV/nA"
+        }
+      }
+    }
+  },
+  "runtime_requirements": {
+    "require_preflight": true,
+    "require_zero_lock": true
+  }
+}

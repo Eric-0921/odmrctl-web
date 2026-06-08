@@ -1,12 +1,19 @@
 //! Experiment plan bridge commands for the Device Workbench.
 //!
-//! These commands only load, summarize, and resolve preview JSON. They do not
-//! send hardware commands and do not mutate device output state.
+//! Plan editing and run-launcher bridge commands.
+//!
+//! Loading/projecting/resolving commands do not send hardware commands and do
+//! not mutate device output state. Run-launcher commands are explicit and keep
+//! hardware execution blocked until the real raw-first collector path is wired.
 
 use crate::workbench_state::{RuntimeZeroBaseline, WorkbenchState};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use serde_json::json;
 use serde_json::Value;
 use std::collections::HashMap;
+use std::fs::{self, File};
+use std::io::Write;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ExperimentPlanSummary {
@@ -203,6 +210,47 @@ pub struct CombinationPreviewRow {
     pub oe_frames_per_point: Option<u64>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct ExperimentRunReadiness {
+    pub kind: String,
+    pub ready_for_preview_execution: bool,
+    pub ready_for_hardware_execution: bool,
+    pub blocked_reasons: Vec<String>,
+    pub hardware_blocked_reasons: Vec<String>,
+    pub warnings: Vec<String>,
+    pub step_count: usize,
+    pub rf_point_count: usize,
+    pub estimated_measurements: usize,
+    pub estimated_duration_s: Option<f64>,
+    pub require_zero_lock: bool,
+    pub zero_baseline_present: bool,
+    pub connected_devices: Vec<String>,
+    pub required_devices: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ExperimentPlanRunStatus {
+    pub kind: String,
+    pub run_id: String,
+    pub mode: String,
+    pub state: String,
+    pub started_at: String,
+    pub finished_at: Option<String>,
+    pub run_directory: Option<String>,
+    pub step_count: usize,
+    pub rf_point_count: usize,
+    pub estimated_measurements: usize,
+    pub estimated_duration_s: Option<f64>,
+    pub steps_completed: usize,
+    pub blocked_reasons: Vec<String>,
+    pub warnings: Vec<String>,
+    pub artifact_paths: HashMap<String, String>,
+}
+
+fn now_rfc3339() -> String {
+    chrono::Local::now().to_rfc3339()
+}
+
 fn str_field(json: &Value, key: &str, default_value: &str) -> String {
     json.get(key)
         .and_then(Value::as_str)
@@ -289,6 +337,70 @@ fn read_fixed_axis(fixed: Option<&Value>, axis: &str) -> f64 {
         .unwrap_or(0.0)
 }
 
+fn axis_key(index: usize) -> &'static str {
+    match index {
+        0 => "x",
+        1 => "y",
+        _ => "z",
+    }
+}
+
+fn range_values(range: &Value) -> Vec<f64> {
+    let start = range
+        .get("start")
+        .or_else(|| range.get("start_nt"))
+        .and_then(Value::as_f64)
+        .unwrap_or(0.0);
+    let stop = range
+        .get("stop")
+        .or_else(|| range.get("stop_nt"))
+        .and_then(Value::as_f64)
+        .unwrap_or(start);
+    let step = range
+        .get("step")
+        .or_else(|| range.get("step_nt"))
+        .and_then(Value::as_f64)
+        .unwrap_or(1.0)
+        .abs();
+    if step <= 0.0 {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    let mut value = start;
+    let ascending = stop >= start;
+    loop {
+        out.push(value);
+        if ascending {
+            value += step;
+            if value > stop + f64::EPSILON {
+                break;
+            }
+        } else {
+            value -= step;
+            if value < stop - f64::EPSILON {
+                break;
+            }
+        }
+    }
+    out
+}
+
+fn axis_range_values(group: &Value, axis: usize) -> Vec<f64> {
+    let key = axis_key(axis);
+    let legacy_range = group.get("range_nt").unwrap_or(&Value::Null);
+    let range = group
+        .get("axis_ranges_nt")
+        .and_then(|ranges| ranges.get(key))
+        .or_else(|| {
+            let lower_key = format!("b{key}_nt");
+            group
+                .get("axis_ranges_nt")
+                .and_then(|ranges| ranges.get(lower_key.as_str()))
+        })
+        .unwrap_or(legacy_range);
+    range_values(range)
+}
+
 fn grouped_scan_entries(field_space: &Value) -> Vec<FieldPointEntry> {
     let Some(groups) = field_space.get("groups").and_then(Value::as_array) else {
         return Vec::new();
@@ -325,52 +437,27 @@ fn grouped_scan_entries(field_space: &Value) -> Vec<FieldPointEntry> {
         if axes.is_empty() {
             continue;
         }
-        let range = group.get("range_nt").unwrap_or(&Value::Null);
-        let start = range
-            .get("start")
-            .or_else(|| range.get("start_nt"))
-            .and_then(Value::as_f64)
-            .unwrap_or(0.0);
-        let stop = range
-            .get("stop")
-            .or_else(|| range.get("stop_nt"))
-            .and_then(Value::as_f64)
-            .unwrap_or(start);
-        let step = range
-            .get("step")
-            .or_else(|| range.get("step_nt"))
-            .and_then(Value::as_f64)
-            .unwrap_or(1.0)
-            .abs();
-        if step <= 0.0 {
-            continue;
-        }
         let fixed = group.get("fixed_axes_nt");
-        let mut value = start;
-        let ascending = stop >= start;
-        loop {
-            let mut point = [
-                read_fixed_axis(fixed, "x"),
-                read_fixed_axis(fixed, "y"),
-                read_fixed_axis(fixed, "z"),
-            ];
-            for axis in &axes {
-                point[*axis] = value;
+        let mut axis_values = [
+            vec![read_fixed_axis(fixed, "x")],
+            vec![read_fixed_axis(fixed, "y")],
+            vec![read_fixed_axis(fixed, "z")],
+        ];
+        for axis in &axes {
+            let values = axis_range_values(group, *axis);
+            if values.is_empty() {
+                continue;
             }
-            out.push(FieldPointEntry {
-                point,
-                group_id: Some(group_id.clone()),
-                source: "field_space.groups".into(),
-            });
-            if ascending {
-                value += step;
-                if value > stop + f64::EPSILON {
-                    break;
-                }
-            } else {
-                value -= step;
-                if value < stop - f64::EPSILON {
-                    break;
+            axis_values[*axis] = values;
+        }
+        for bx in &axis_values[0] {
+            for by in &axis_values[1] {
+                for bz in &axis_values[2] {
+                    out.push(FieldPointEntry {
+                        point: [*bx, *by, *bz],
+                        group_id: Some(group_id.clone()),
+                        source: "field_space.groups".into(),
+                    });
                 }
             }
         }
@@ -390,7 +477,10 @@ fn magnetic_field_entries_from_plan(plan: &Value) -> Vec<FieldPointEntry> {
             .collect();
     };
 
-    if field_space.get("mode").and_then(Value::as_str) == Some("grouped_path_scan") {
+    if matches!(
+        field_space.get("mode").and_then(Value::as_str),
+        Some("grouped_grid_scan") | Some("grouped_path_scan")
+    ) {
         let out = grouped_scan_entries(field_space);
         if !out.is_empty() {
             return out;
@@ -2198,7 +2288,7 @@ fn step_rows_from_projection(
             smb100a_power_dbm: first_rf.and_then(|rf| rf.power_dbm),
             smb100a_fm_enabled: first_rf.and_then(|rf| rf.fm_enabled),
             smb100a_lf_frequency_hz: first_rf.and_then(|rf| rf.lf_frequency_hz),
-            smb100a_rf_sweep_summary: rf_sweep_summary(rf_template),
+            smb100a_rf_sweep_summary: rf_sweep_summary(&rf_template),
             smb100a_sweep_output_start_v: first_rf.and_then(|rf| rf.sweep_output_start_v),
             smb100a_sweep_output_stop_v: first_rf.and_then(|rf| rf.sweep_output_stop_v),
             laser_power_mw: laser_template.get("power_mw").and_then(Value::as_f64),
@@ -2314,6 +2404,228 @@ fn project_plan(plan: &Value) -> ExperimentPlanProjection {
         estimated_duration_s: estimate_duration_s(plan, estimated_measurements),
         warnings,
     }
+}
+
+fn current_plan_from_state(state: &WorkbenchState) -> Result<Value, String> {
+    let guard = state
+        .inner
+        .lock()
+        .map_err(|e| format!("lock poison: {e}"))?;
+    guard
+        .experiment_plan_draft
+        .clone()
+        .or_else(|| guard.experiment_plan.clone())
+        .ok_or_else(|| "No experiment plan loaded.".to_string())
+}
+
+fn plan_requires_zero_lock(plan: &Value) -> bool {
+    plan.pointer("/runtime_requirements/require_zero_lock")
+        .and_then(Value::as_bool)
+        .unwrap_or(true)
+}
+
+fn laser_enabled_in_projection(projection: &ExperimentPlanProjection) -> bool {
+    projection
+        .laser_rows
+        .iter()
+        .any(|row| row.enabled.unwrap_or(false))
+        || projection
+            .step_rows
+            .iter()
+            .any(|row| row.laser_enabled.unwrap_or(false))
+}
+
+fn experiment_run_readiness_for_plan(
+    state: &WorkbenchState,
+    plan: &Value,
+) -> ExperimentRunReadiness {
+    let projection = project_plan(plan);
+    let require_zero_lock = plan_requires_zero_lock(plan);
+    let mut required_devices = vec![
+        "smb100a_main".to_string(),
+        "oe1022d_main".to_string(),
+        "maynuo.mag_x".to_string(),
+        "maynuo.mag_y".to_string(),
+        "maynuo.mag_z".to_string(),
+    ];
+    if laser_enabled_in_projection(&projection) {
+        required_devices.push("cni_laser".to_string());
+    }
+
+    let mut connected_devices = Vec::new();
+    let mut blocked_reasons = Vec::new();
+    for device_id in &required_devices {
+        if state.is_accessible(device_id) {
+            connected_devices.push(device_id.clone());
+        } else {
+            blocked_reasons.push(format!("{device_id} is not connected or locked"));
+        }
+    }
+
+    let zero_baseline_present = state
+        .inner
+        .lock()
+        .ok()
+        .and_then(|guard| guard.runtime_zero_baseline.clone())
+        .is_some();
+    if require_zero_lock && !zero_baseline_present {
+        blocked_reasons.push("runtime zero baseline is missing".into());
+    }
+    if require_zero_lock {
+        for device_id in ["maynuo.mag_x", "maynuo.mag_y", "maynuo.mag_z"] {
+            if !state.mag_lock_zero(device_id) {
+                blocked_reasons.push(format!("{device_id} zero is not locked"));
+            }
+        }
+    }
+
+    if projection.step_row_count == 0 {
+        blocked_reasons.push("experiment plan has no spectrum steps".into());
+    }
+    if projection.estimated_measurements == 0 {
+        blocked_reasons.push("experiment plan has no RF measurements".into());
+    }
+
+    let mut warnings = projection.warnings.clone();
+    if projection.estimated_duration_s.unwrap_or(0.0) > 3600.0 {
+        warnings.push(format!(
+            "estimated run duration is {:.1} s; operator should confirm long-run conditions",
+            projection.estimated_duration_s.unwrap_or(0.0)
+        ));
+    }
+    if laser_enabled_in_projection(&projection) {
+        warnings.push("laser is enabled in the experiment template; verify optical safety before hardware run".into());
+    }
+
+    let mut hardware_blocked_reasons = blocked_reasons.clone();
+    hardware_blocked_reasons.push(
+        "hardware run loop is not enabled yet: OE1022D RALL raw-first collector and executor handoff are not wired to this plan shape".into(),
+    );
+
+    ExperimentRunReadiness {
+        kind: "experiment_plan_run_readiness".into(),
+        ready_for_preview_execution: projection.step_row_count > 0
+            && projection.estimated_measurements > 0,
+        ready_for_hardware_execution: hardware_blocked_reasons.is_empty(),
+        blocked_reasons,
+        hardware_blocked_reasons,
+        warnings,
+        step_count: projection.step_row_count,
+        rf_point_count: rf_point_count(plan),
+        estimated_measurements: projection.estimated_measurements,
+        estimated_duration_s: projection.estimated_duration_s,
+        require_zero_lock,
+        zero_baseline_present,
+        connected_devices,
+        required_devices,
+    }
+}
+
+fn run_root_dir() -> Result<PathBuf, String> {
+    let cwd = std::env::current_dir().map_err(|e| format!("current dir: {e}"))?;
+    Ok(cwd.join("target").join("odmr-runs"))
+}
+
+fn write_json_file(path: &PathBuf, value: &Value) -> Result<(), String> {
+    let file = File::create(path).map_err(|e| format!("create {}: {e}", path.display()))?;
+    serde_json::to_writer_pretty(file, value)
+        .map_err(|e| format!("write json {}: {e}", path.display()))
+}
+
+fn write_preview_run_artifacts(
+    run_id: &str,
+    plan: &Value,
+    projection: &ExperimentPlanProjection,
+    readiness: &ExperimentRunReadiness,
+) -> Result<(String, HashMap<String, String>), String> {
+    let run_dir = run_root_dir()?.join(run_id);
+    if run_dir.exists() {
+        return Err(format!(
+            "run directory already exists: {}",
+            run_dir.display()
+        ));
+    }
+    fs::create_dir_all(run_dir.join("metadata"))
+        .map_err(|e| format!("create metadata dir {}: {e}", run_dir.display()))?;
+
+    let manifest = json!({
+        "schema_version": "0.1.0",
+        "kind": "experiment_plan_preview_run_manifest",
+        "run_id": run_id,
+        "created_at": now_rfc3339(),
+        "mode": "preview",
+        "step_count": readiness.step_count,
+        "rf_point_count": readiness.rf_point_count,
+        "estimated_measurements": readiness.estimated_measurements,
+        "estimated_duration_s": readiness.estimated_duration_s,
+        "artifact_paths": {
+            "manifest": "manifest.json",
+            "experiment_plan_lock": "metadata/experiment_plan.lock.json",
+            "projection": "metadata/projection.json",
+            "readiness": "metadata/readiness.json",
+            "events": "events.jsonl"
+        }
+    });
+    write_json_file(&run_dir.join("manifest.json"), &manifest)?;
+    write_json_file(&run_dir.join("metadata/experiment_plan.lock.json"), plan)?;
+    write_json_file(
+        &run_dir.join("metadata/projection.json"),
+        &serde_json::to_value(projection).map_err(|e| format!("serialize projection: {e}"))?,
+    )?;
+    write_json_file(
+        &run_dir.join("metadata/readiness.json"),
+        &serde_json::to_value(readiness).map_err(|e| format!("serialize readiness: {e}"))?,
+    )?;
+
+    let mut events = File::create(run_dir.join("events.jsonl"))
+        .map_err(|e| format!("create events.jsonl: {e}"))?;
+    let event = |event_id: usize, event_type: &str, message: String| {
+        json!({
+            "schema_version": "0.1.0",
+            "kind": "experiment_plan_run_event",
+            "run_id": run_id,
+            "event_id": format!("evt_{event_id:06}"),
+            "timestamp": now_rfc3339(),
+            "level": "info",
+            "event_type": event_type,
+            "message": message
+        })
+    };
+    let events_to_write = [
+        event(1, "run_created", "Preview run directory created".into()),
+        event(
+            2,
+            "plan_locked",
+            format!(
+                "Locked {} spectrum steps and {} total RF measurements",
+                readiness.step_count, readiness.estimated_measurements
+            ),
+        ),
+        event(
+            3,
+            "preview_execution_completed",
+            "No hardware commands were sent; this verifies plan expansion and artifact writing only"
+                .into(),
+        ),
+    ];
+    for item in events_to_write {
+        serde_json::to_writer(&mut events, &item)
+            .map_err(|e| format!("write events.jsonl: {e}"))?;
+        events
+            .write_all(b"\n")
+            .map_err(|e| format!("flush events.jsonl: {e}"))?;
+    }
+
+    let mut artifact_paths = HashMap::new();
+    artifact_paths.insert("manifest".into(), "manifest.json".into());
+    artifact_paths.insert(
+        "experiment_plan_lock".into(),
+        "metadata/experiment_plan.lock.json".into(),
+    );
+    artifact_paths.insert("projection".into(), "metadata/projection.json".into());
+    artifact_paths.insert("readiness".into(), "metadata/readiness.json".into());
+    artifact_paths.insert("events".into(), "events.jsonl".into());
+    Ok((run_dir.to_string_lossy().to_string(), artifact_paths))
 }
 
 fn default_experiment_plan_draft() -> Value {
@@ -2474,6 +2786,185 @@ pub fn get_experiment_plan_draft(state: tauri::State<WorkbenchState>) -> Result<
             .unwrap_or_else(default_experiment_plan_draft)
     };
     Ok(plan)
+}
+
+#[tauri::command]
+pub fn get_experiment_plan_run_readiness(
+    state: tauri::State<WorkbenchState>,
+) -> Result<ExperimentRunReadiness, String> {
+    let plan = current_plan_from_state(&state)?;
+    Ok(experiment_run_readiness_for_plan(&state, &plan))
+}
+
+#[tauri::command]
+pub fn get_experiment_plan_run_status(
+    state: tauri::State<WorkbenchState>,
+) -> Result<Option<ExperimentPlanRunStatus>, String> {
+    let guard = state
+        .inner
+        .lock()
+        .map_err(|e| format!("lock poison: {e}"))?;
+    guard
+        .experiment_run_status
+        .clone()
+        .map(serde_json::from_value)
+        .transpose()
+        .map_err(|e| format!("deserialize run status: {e}"))
+}
+
+#[tauri::command]
+pub fn start_experiment_plan_run(
+    state: tauri::State<WorkbenchState>,
+    mode: String,
+    operator_confirmed: bool,
+) -> Result<ExperimentPlanRunStatus, String> {
+    let plan = current_plan_from_state(&state)?;
+    let projection = project_plan(&plan);
+    let readiness = experiment_run_readiness_for_plan(&state, &plan);
+    let run_id = format!(
+        "experiment_plan_{}_{}",
+        mode.replace(|c: char| !c.is_ascii_alphanumeric(), "_"),
+        chrono::Local::now().format("%Y%m%d_%H%M%S")
+    );
+    let started_at = now_rfc3339();
+
+    {
+        let mut guard = state
+            .inner
+            .lock()
+            .map_err(|e| format!("lock poison: {e}"))?;
+        guard.experiment_run_cancel_requested = false;
+    }
+
+    if mode == "hardware" {
+        let mut blocked = readiness.hardware_blocked_reasons.clone();
+        if !operator_confirmed {
+            blocked.push("operator confirmation is required before hardware execution".into());
+        }
+        let status = ExperimentPlanRunStatus {
+            kind: "experiment_plan_run_status".into(),
+            run_id,
+            mode,
+            state: "blocked".into(),
+            started_at,
+            finished_at: Some(now_rfc3339()),
+            run_directory: None,
+            step_count: readiness.step_count,
+            rf_point_count: readiness.rf_point_count,
+            estimated_measurements: readiness.estimated_measurements,
+            estimated_duration_s: readiness.estimated_duration_s,
+            steps_completed: 0,
+            blocked_reasons: blocked,
+            warnings: readiness.warnings,
+            artifact_paths: HashMap::new(),
+        };
+        let mut guard = state
+            .inner
+            .lock()
+            .map_err(|e| format!("lock poison: {e}"))?;
+        guard.experiment_run_status =
+            Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
+        return Ok(status);
+    }
+
+    if mode != "preview" {
+        return Err("mode must be 'preview' or 'hardware'".into());
+    }
+    if !readiness.ready_for_preview_execution {
+        let status = ExperimentPlanRunStatus {
+            kind: "experiment_plan_run_status".into(),
+            run_id,
+            mode,
+            state: "blocked".into(),
+            started_at,
+            finished_at: Some(now_rfc3339()),
+            run_directory: None,
+            step_count: readiness.step_count,
+            rf_point_count: readiness.rf_point_count,
+            estimated_measurements: readiness.estimated_measurements,
+            estimated_duration_s: readiness.estimated_duration_s,
+            steps_completed: 0,
+            blocked_reasons: readiness.blocked_reasons,
+            warnings: readiness.warnings,
+            artifact_paths: HashMap::new(),
+        };
+        let mut guard = state
+            .inner
+            .lock()
+            .map_err(|e| format!("lock poison: {e}"))?;
+        guard.experiment_run_status =
+            Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
+        return Ok(status);
+    }
+
+    let (run_directory, artifact_paths) =
+        write_preview_run_artifacts(&run_id, &plan, &projection, &readiness)?;
+    let status = ExperimentPlanRunStatus {
+        kind: "experiment_plan_run_status".into(),
+        run_id,
+        mode,
+        state: "completed".into(),
+        started_at,
+        finished_at: Some(now_rfc3339()),
+        run_directory: Some(run_directory),
+        step_count: readiness.step_count,
+        rf_point_count: readiness.rf_point_count,
+        estimated_measurements: readiness.estimated_measurements,
+        estimated_duration_s: readiness.estimated_duration_s,
+        steps_completed: readiness.step_count,
+        blocked_reasons: Vec::new(),
+        warnings: readiness.warnings,
+        artifact_paths,
+    };
+    let mut guard = state
+        .inner
+        .lock()
+        .map_err(|e| format!("lock poison: {e}"))?;
+    guard.experiment_run_status =
+        Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
+    Ok(status)
+}
+
+#[tauri::command]
+pub fn stop_experiment_plan_run(
+    state: tauri::State<WorkbenchState>,
+) -> Result<ExperimentPlanRunStatus, String> {
+    let mut guard = state
+        .inner
+        .lock()
+        .map_err(|e| format!("lock poison: {e}"))?;
+    guard.experiment_run_cancel_requested = true;
+
+    let mut status = guard
+        .experiment_run_status
+        .clone()
+        .map(serde_json::from_value::<ExperimentPlanRunStatus>)
+        .transpose()
+        .map_err(|e| format!("deserialize run status: {e}"))?
+        .unwrap_or_else(|| ExperimentPlanRunStatus {
+            kind: "experiment_plan_run_status".into(),
+            run_id: "none".into(),
+            mode: "preview".into(),
+            state: "idle".into(),
+            started_at: now_rfc3339(),
+            finished_at: None,
+            run_directory: None,
+            step_count: 0,
+            rf_point_count: 0,
+            estimated_measurements: 0,
+            estimated_duration_s: None,
+            steps_completed: 0,
+            blocked_reasons: Vec::new(),
+            warnings: Vec::new(),
+            artifact_paths: HashMap::new(),
+        });
+    if status.state == "running" {
+        status.state = "stop_requested".into();
+        status.finished_at = Some(now_rfc3339());
+    }
+    guard.experiment_run_status =
+        Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
+    Ok(status)
 }
 
 #[tauri::command]
@@ -2697,4 +3188,161 @@ pub fn resolve_plan_with_current_zero(
         rf_point_count: rf_count,
         estimated_measurements: points.len() * rf_count,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use std::path::PathBuf;
+
+    fn points(field_space: Value) -> Vec<[f64; 3]> {
+        grouped_scan_entries(&field_space)
+            .into_iter()
+            .map(|entry| entry.point)
+            .collect()
+    }
+
+    fn load_example_plan(file_name: &str) -> Value {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../..")
+            .join("examples/experiment_plans")
+            .join(file_name);
+        let text = std::fs::read_to_string(&path)
+            .unwrap_or_else(|err| panic!("read {}: {err}", path.display()));
+        serde_json::from_str(&text).unwrap_or_else(|err| panic!("parse {}: {err}", path.display()))
+    }
+
+    #[test]
+    fn grouped_grid_line_scans_one_axis_only() {
+        let pts = points(json!({
+            "mode": "grouped_grid_scan",
+            "groups": [{
+                "group_id": "bx_line",
+                "axes": ["x"],
+                "axis_ranges_nt": { "x": { "start": 0, "stop": 20, "step": 10 } },
+                "fixed_axes_nt": { "y": 0, "z": 0 },
+                "enabled": true
+            }]
+        }));
+        assert_eq!(
+            pts,
+            vec![[0.0, 0.0, 0.0], [10.0, 0.0, 0.0], [20.0, 0.0, 0.0]]
+        );
+    }
+
+    #[test]
+    fn grouped_grid_plane_uses_cartesian_product() {
+        let pts = points(json!({
+            "mode": "grouped_grid_scan",
+            "groups": [{
+                "group_id": "bx_by_plane",
+                "axes": ["x", "y"],
+                "axis_ranges_nt": {
+                    "x": { "start": 0, "stop": 20, "step": 10 },
+                    "y": { "start": 0, "stop": 20, "step": 10 }
+                },
+                "fixed_axes_nt": { "z": 0 },
+                "enabled": true
+            }]
+        }));
+        assert_eq!(pts.len(), 9);
+        assert!(pts.contains(&[10.0, 0.0, 0.0]));
+        assert!(pts.contains(&[0.0, 10.0, 0.0]));
+        assert!(pts.contains(&[10.0, 10.0, 0.0]));
+    }
+
+    #[test]
+    fn grouped_grid_volume_uses_bz_as_inner_loop() {
+        let pts = points(json!({
+            "mode": "grouped_grid_scan",
+            "groups": [{
+                "group_id": "volume",
+                "axes": ["x", "y", "z"],
+                "axis_ranges_nt": {
+                    "x": { "start": 0, "stop": 20, "step": 10 },
+                    "y": { "start": 0, "stop": 20, "step": 10 },
+                    "z": { "start": 0, "stop": 20, "step": 10 }
+                },
+                "enabled": true
+            }]
+        }));
+        assert_eq!(pts.len(), 27);
+        assert_eq!(
+            &pts[..4],
+            &[
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 10.0],
+                [0.0, 0.0, 20.0],
+                [0.0, 10.0, 0.0]
+            ]
+        );
+        assert!(pts.contains(&[10.0, 0.0, 0.0]));
+        assert!(pts.contains(&[0.0, 10.0, 0.0]));
+        assert!(pts.contains(&[0.0, 0.0, 10.0]));
+        assert!(pts.contains(&[10.0, 10.0, 10.0]));
+    }
+
+    #[test]
+    fn legacy_grouped_path_range_imports_as_grid() {
+        let pts = points(json!({
+            "mode": "grouped_path_scan",
+            "groups": [{
+                "group_id": "xy_legacy",
+                "axes": ["x", "y"],
+                "range_nt": { "start": 0, "stop": 20, "step": 10 },
+                "fixed_axes_nt": { "z": 0 },
+                "enabled": true
+            }]
+        }));
+        assert_eq!(pts.len(), 9);
+        assert!(pts.contains(&[10.0, 0.0, 0.0]));
+        assert!(pts.contains(&[0.0, 10.0, 0.0]));
+        assert!(pts.contains(&[10.0, 10.0, 0.0]));
+    }
+
+    #[test]
+    fn importable_grid_examples_project_expected_step_counts() {
+        let cases = [
+            ("odmr_field_grid_1d.example.json", 9),
+            ("odmr_field_grid_2d.example.json", 27),
+            ("odmr_field_grid_3d.example.json", 27),
+        ];
+        for (file_name, expected_count) in cases {
+            let plan = load_example_plan(file_name);
+            let projection = project_plan(&plan);
+            assert_eq!(projection.step_row_count, expected_count, "{file_name}");
+        }
+    }
+
+    #[test]
+    fn importable_grid_examples_are_not_diagonal_scans() {
+        let two_d = load_example_plan("odmr_field_grid_2d.example.json");
+        let two_d_points = points(two_d["field_space"].clone());
+        assert!(two_d_points.contains(&[10.0, 0.0, 0.0]));
+        assert!(two_d_points.contains(&[0.0, 10.0, 0.0]));
+        assert!(two_d_points.contains(&[10.0, 10.0, 0.0]));
+
+        let three_d = load_example_plan("odmr_field_grid_3d.example.json");
+        let three_d_points = points(three_d["field_space"].clone());
+        assert!(three_d_points.contains(&[10.0, 0.0, 0.0]));
+        assert!(three_d_points.contains(&[0.0, 10.0, 0.0]));
+        assert!(three_d_points.contains(&[0.0, 0.0, 10.0]));
+        assert!(three_d_points.contains(&[10.0, 10.0, 10.0]));
+    }
+
+    #[test]
+    fn run_readiness_allows_preview_but_blocks_hardware_executor_gap() {
+        let plan = load_example_plan("odmr_field_grid_1d.example.json");
+        let state = WorkbenchState::default();
+        let readiness = experiment_run_readiness_for_plan(&state, &plan);
+
+        assert!(readiness.ready_for_preview_execution);
+        assert!(!readiness.ready_for_hardware_execution);
+        assert_eq!(readiness.step_count, 9);
+        assert!(readiness
+            .hardware_blocked_reasons
+            .iter()
+            .any(|reason| reason.contains("RALL raw-first collector")));
+    }
 }

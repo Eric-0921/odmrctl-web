@@ -10,6 +10,10 @@ import type {
   RuntimeZeroBaseline,
   WorkbenchSnapshot,
   StationPreflightReport,
+  DeviceDiscoveryReport,
+  DeviceProbeRequest,
+  AutoBindReport,
+  DeviceRoleRequest,
 } from "../types/deviceWorkbench";
 
 // ---------------------------------------------------------------------------
@@ -306,6 +310,10 @@ export default function DevicesPage() {
   const [targetB, setTargetB] = useState({ x: "0", y: "0", z: "0" });
   const [magPackage, setMagPackage] = useState<MagneticXyzPackageStatus | null>(null);
   const [paraImportDraft, setParaImportDraft] = useState<unknown>(null);
+  const [discoveryReport, setDiscoveryReport] = useState<DeviceDiscoveryReport | null>(null);
+  const [autoBindReport, setAutoBindReport] = useState<AutoBindReport | null>(null);
+  const [smbTcpTargets, setSmbTcpTargets] = useState("169.254.2.20:5025\n192.168.1.20:5025\n192.168.0.20:5025");
+  const [discoveryBusy, setDiscoveryBusy] = useState<"discover" | "bind" | "connect" | null>(null);
 
   // Init addresses from defaults
   useEffect(() => {
@@ -420,6 +428,77 @@ export default function DevicesPage() {
     }
   };
 
+  const discoverAllDevices = async () => {
+    if (discoveryBusy) return;
+    setDiscoveryBusy("discover");
+    try {
+      const request: DeviceProbeRequest = {
+        requested_kinds: ["smb100a", "rf_source", "oe1022d", "magnetic", "laser"],
+        smb100a_tcp_targets: [
+          addresses["smb100a_main"],
+          ...smbTcpTargets.split(/\s+/).map((target) => target.trim()).filter(Boolean),
+        ].filter(Boolean),
+        enable_usb_probe: false,
+      };
+      const report: DeviceDiscoveryReport = await invoke("discover_devices", {
+        request,
+      });
+      setDiscoveryReport(report);
+    } catch (e) {
+      alert(String(e));
+    } finally {
+      setDiscoveryBusy(null);
+    }
+  };
+
+  const autoBindDevices = async () => {
+    if (discoveryBusy) return;
+    setDiscoveryBusy("bind");
+    try {
+      const requestedRoles: DeviceRoleRequest[] = [
+        { device_id: "smb100a_main", kind: "rf_source" },
+        { device_id: "oe1022d_main", kind: "oe1022d" },
+        { device_id: "maynuo.mag_x", kind: "magnetic", expected_sn: "2020" },
+        { device_id: "maynuo.mag_y", kind: "magnetic", expected_sn: "2022" },
+        { device_id: "maynuo.mag_z", kind: "magnetic", expected_sn: "2003" },
+        { device_id: "cni_laser", kind: "laser" },
+      ];
+      const report: AutoBindReport = await invoke("auto_bind_discovered_devices", {
+        requestedRoles,
+        discovery: discoveryReport,
+      });
+      setAutoBindReport(report);
+      const nextAddresses: Record<string, string> = {};
+      for (const item of report.bound) {
+        if (item.address) nextAddresses[item.device_id] = item.address;
+      }
+      setAddresses((prev) => ({ ...prev, ...nextAddresses }));
+      const nextIdentities: Record<string, string> = {};
+      for (const item of report.bound) {
+        if (item.idn) nextIdentities[item.device_id] = item.idn;
+      }
+      setIdentities((prev) => ({ ...prev, ...nextIdentities }));
+      triggerRefresh();
+    } catch (e) {
+      alert(String(e));
+    } finally {
+      setDiscoveryBusy(null);
+    }
+  };
+
+  const connectBoundDevices = async () => {
+    if (discoveryBusy) return;
+    setDiscoveryBusy("connect");
+    try {
+      await invoke("connect_bound_devices");
+      triggerRefresh();
+    } catch (e) {
+      alert(String(e));
+    } finally {
+      setDiscoveryBusy(null);
+    }
+  };
+
   const magAggregate = async <T,>(name: string, args?: Record<string, unknown>) => {
     try {
       const result = await invoke<T>(name, args);
@@ -522,7 +601,20 @@ export default function DevicesPage() {
       <WorkbenchTabs activeTab={activeTab} onChange={setActiveTab} />
 
       {activeTab === "station" && (
-        <StationWorkbenchSummary snapshot={snapshot} connected={connected} addresses={addresses} identities={identities} />
+        <StationWorkbenchSummary
+          snapshot={snapshot}
+          connected={connected}
+          addresses={addresses}
+          identities={identities}
+          discoveryReport={discoveryReport}
+          autoBindReport={autoBindReport}
+          smbTcpTargets={smbTcpTargets}
+          busy={discoveryBusy}
+          onSmbTcpTargetsChange={setSmbTcpTargets}
+          onDiscover={discoverAllDevices}
+          onAutoBind={autoBindDevices}
+          onConnectBound={connectBoundDevices}
+        />
       )}
 
       {activeTab === "smb100a" && (
@@ -673,11 +765,27 @@ function StationWorkbenchSummary({
   connected,
   addresses,
   identities,
+  discoveryReport,
+  autoBindReport,
+  smbTcpTargets,
+  busy,
+  onSmbTcpTargetsChange,
+  onDiscover,
+  onAutoBind,
+  onConnectBound,
 }: {
   snapshot: WorkbenchSnapshot | null;
   connected: Set<string>;
   addresses: Record<string, string>;
   identities: Record<string, string>;
+  discoveryReport: DeviceDiscoveryReport | null;
+  autoBindReport: AutoBindReport | null;
+  smbTcpTargets: string;
+  busy: "discover" | "bind" | "connect" | null;
+  onSmbTcpTargetsChange: (value: string) => void;
+  onDiscover: () => void;
+  onAutoBind: () => void;
+  onConnectBound: () => void;
 }) {
   return (
     <div style={{ display: "grid", gap: "var(--space-4)" }}>
@@ -688,6 +796,101 @@ function StationWorkbenchSummary({
           <div><strong>Preflight:</strong> {snapshot?.preflight_passed ? <span style={stateBadge("ok")}>PASS</span> : <span style={stateBadge("off")}>未通过</span>}</div>
           <div><strong>Locks:</strong> {snapshot?.locks_held.length ?? 0}</div>
           <div><strong>连接设备:</strong> {connected.size}</div>
+        </div>
+      </div>
+      <div style={cardStyle}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "var(--space-3)", marginBottom: "var(--space-3)" }}>
+          <div>
+            <h2 style={{ fontSize: "var(--font-size-lg)", marginBottom: "var(--space-1)" }}>设备发现与自动绑定</h2>
+            <div style={smallMuted}>先扫描串口与 SMB100A TCP 候选，再按 probe profile 自动绑定角色；只发送只读 IDN，不开 RF、不改设备输出。</div>
+          </div>
+          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "end" }}>
+            <button onClick={onDiscover} disabled={busy !== null} style={busy ? btnDisabled : btnSecondary}>
+              {busy === "discover" ? "扫描中…" : "扫描所有设备"}
+            </button>
+            <button onClick={onAutoBind} disabled={busy !== null} style={busy ? btnDisabled : btnPrimary}>
+              {busy === "bind" ? "绑定中…" : "自动绑定识别设备"}
+            </button>
+            <button onClick={onConnectBound} disabled={busy !== null} style={busy ? btnDisabled : btnSecondary}>
+              {busy === "connect" ? "连接中…" : "连接已绑定设备"}
+            </button>
+          </div>
+        </div>
+        {busy && (
+          <div style={{ color: "var(--color-primary)", fontSize: "var(--font-size-xs)", marginBottom: "var(--space-2)" }}>
+            正在执行 {busy === "discover" ? "设备发现" : busy === "bind" ? "自动绑定" : "连接已绑定设备"}，请等待当前操作完成。
+          </div>
+        )}
+        <label style={{ display: "grid", gap: 6, marginBottom: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
+          <strong>SMB100A TCP 候选地址（每行一个 host:port）</strong>
+          <textarea
+            value={smbTcpTargets}
+            onChange={(e) => onSmbTcpTargetsChange(e.target.value)}
+            rows={3}
+            style={{ ...inputStyle, width: "100%", resize: "vertical", fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace' }}
+          />
+          <span style={smallMuted}>当前 SMB100A 地址输入框也会作为候选；未识别时仍可手动填写 TCP 地址后连接。</span>
+        </label>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "var(--space-3)", marginBottom: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
+          <div><strong>串口端口:</strong> {discoveryReport?.serial_ports.length ?? 0}</div>
+          <div><strong>TCP 候选:</strong> {discoveryReport?.tcp_targets.length ?? 0}</div>
+          <div><strong>识别设备:</strong> {discoveryReport?.devices.length ?? 0}</div>
+          <div><strong>已绑定:</strong> {autoBindReport?.bound.length ?? 0}</div>
+          <div><strong>阻塞:</strong> {autoBindReport?.blocked.length ?? 0}</div>
+        </div>
+        {autoBindReport && autoBindReport.blocked.length > 0 && (
+          <div style={{ color: "var(--color-danger)", fontSize: "var(--font-size-xs)", marginBottom: "var(--space-2)" }}>
+            {autoBindReport.blocked.join(" · ")}
+          </div>
+        )}
+        {discoveryReport && !discoveryReport.devices.some((device) => device.suggested_role === "smb100a_main") && (
+          <div style={{ color: "#c2410c", fontSize: "var(--font-size-xs)", marginBottom: "var(--space-2)" }}>
+            未识别到 SMB100A；可继续使用手动 TCP 地址连接。
+          </div>
+        )}
+        {discoveryReport && discoveryReport.warnings.length > 0 && (
+          <div style={{ ...smallMuted, marginBottom: "var(--space-2)" }}>
+            Warnings: {discoveryReport.warnings.slice(0, 6).join(" · ")}
+          </div>
+        )}
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--font-size-xs)", minWidth: 1100 }}>
+            <thead>
+              <tr style={{ color: "var(--color-text-muted)", textAlign: "left", borderBottom: "1px solid var(--color-border)" }}>
+                <th style={{ padding: 8 }}>transport</th>
+                <th style={{ padding: 8 }}>address</th>
+                <th style={{ padding: 8 }}>detected_kind</th>
+                <th style={{ padding: 8 }}>model</th>
+                <th style={{ padding: 8 }}>idn</th>
+                <th style={{ padding: 8 }}>serial_number</th>
+                <th style={{ padding: 8 }}>confidence</th>
+                <th style={{ padding: 8 }}>suggested_role</th>
+                <th style={{ padding: 8 }}>status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(discoveryReport?.devices ?? []).map((device) => (
+                <tr key={`${device.transport}.${device.address}.${device.detected_kind}.${device.suggested_role ?? ""}`}>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.transport}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.address}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.detected_kind}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.model ?? "—"}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)", maxWidth: 360, overflowWrap: "anywhere" }}>{device.idn ?? "—"}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.serial_number ?? "—"}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>
+                    <span style={stateBadge(device.confidence === "high" ? "ok" : device.confidence === "medium" ? "warning" : "off")}>{device.confidence}</span>
+                  </td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.suggested_role ?? "—"}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.status}</td>
+                </tr>
+              ))}
+              {!discoveryReport && (
+                <tr>
+                  <td colSpan={9} style={{ padding: 8, color: "var(--color-text-muted)" }}>尚未扫描。</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
       <div style={{ ...cardStyle, overflowX: "auto" }}>

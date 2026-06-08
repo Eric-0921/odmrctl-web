@@ -52,6 +52,8 @@ pub struct WorkbenchStateInner {
     // --- Per-device dynamic connection (no station.json required) ---
     /// Device addresses provided directly via Devices page connect.
     pub dynamic_addresses: HashMap<String, String>,
+    /// Device addresses inferred by serial auto-identification but not yet connected.
+    pub auto_bound_addresses: HashMap<String, String>,
     /// Devices that passed single-device identity check.
     pub single_device_connected: HashSet<String>,
 
@@ -76,6 +78,11 @@ pub struct WorkbenchStateInner {
     pub device_preset_drafts: HashMap<String, serde_json::Value>,
     /// Selected default package id per device for GUI continuity.
     pub selected_default_packages: HashMap<String, String>,
+    /// Last experiment-plan run launcher status. Stored as JSON to keep the
+    /// session state independent from the experiment-plan command module.
+    pub experiment_run_status: Option<serde_json::Value>,
+    /// Cooperative stop flag for the current experiment-plan run launcher.
+    pub experiment_run_cancel_requested: bool,
 }
 
 /// Tauri-managed state wrapper.
@@ -132,7 +139,11 @@ impl WorkbenchState {
         if let Some(addr) = guard.dynamic_addresses.get(device_id) {
             return Some(addr.clone());
         }
-        // 2. Profile address
+        // 2. Auto-bound address from serial identification
+        if let Some(addr) = guard.auto_bound_addresses.get(device_id) {
+            return Some(addr.clone());
+        }
+        // 3. Profile address
         let profile = guard.profile.as_ref()?;
         profile
             .devices

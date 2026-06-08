@@ -5,6 +5,9 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
   plugins: [react()],
+  // Tauri loads production assets from a custom local protocol, so emitted JS/CSS
+  // must be relative to index.html instead of rooted at /.
+  base: "./",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

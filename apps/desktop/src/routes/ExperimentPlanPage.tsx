@@ -13,6 +13,8 @@ import {
 import type {
   DeviceDefaultPackage,
   ExperimentPlanProjection,
+  ExperimentPlanRunStatus,
+  ExperimentRunReadiness,
   ExperimentPlanSummary,
   ResolvedPlanPreview,
 } from "../types/deviceWorkbench";
@@ -98,6 +100,7 @@ type EditorTab = "packages" | "scan" | "field" | "smb100a" | "oe1022d" | "laser"
 type FrequencyUnit = "Hz" | "kHz" | "MHz" | "GHz";
 type VoltageUnit = "V" | "mV";
 type MagneticAxis = "x" | "y" | "z";
+type MagneticScanKind = "line_1d" | "plane_2d" | "volume_3d" | "custom_grid";
 type PlanRecord = Record<string, unknown>;
 
 interface StepDraftRow {
@@ -135,11 +138,10 @@ interface StepDraftRow {
 interface MagneticScanGroupDraft {
   groupId: string;
   labelCn: string;
+  scanKind: MagneticScanKind;
   axes: MagneticAxis[];
   enabled: boolean;
-  startNt: string;
-  stopNt: string;
-  stepNt: string;
+  axisRanges: Record<MagneticAxis, AxisRangeDraft>;
   fixedXNt: string;
   fixedYNt: string;
   fixedZNt: string;
@@ -158,6 +160,12 @@ interface MagneticScanGroupDraft {
   chBFilterSlope: string;
   chBDynamicReserve: string;
   chBSensitivity: string;
+}
+
+interface AxisRangeDraft {
+  startNt: string;
+  stopNt: string;
+  stepNt: string;
 }
 
 const defaultRow = (id = "spectrum_0000"): StepDraftRow => ({
@@ -192,23 +200,26 @@ const defaultRow = (id = "spectrum_0000"): StepDraftRow => ({
 });
 
 const defaultScanGroups = (): MagneticScanGroupDraft[] => {
-  const specs: Array<[string, string, MagneticAxis[]]> = [
-    ["x", "X 单轴", ["x"]],
-    ["y", "Y 单轴", ["y"]],
-    ["z", "Z 单轴", ["z"]],
-    ["xy", "XY 双轴", ["x", "y"]],
-    ["yz", "YZ 双轴", ["y", "z"]],
-    ["xz", "XZ 双轴", ["x", "z"]],
-    ["xyz", "XYZ 三轴", ["x", "y", "z"]],
+  const specs: Array<[string, string, MagneticScanKind, MagneticAxis[]]> = [
+    ["bx_line", "Bx 单轴", "line_1d", ["x"]],
+    ["by_line", "By 单轴", "line_1d", ["y"]],
+    ["bz_line", "Bz 单轴", "line_1d", ["z"]],
+    ["bx_by_plane", "Bx-By 二维网格", "plane_2d", ["x", "y"]],
+    ["by_bz_plane", "By-Bz 二维网格", "plane_2d", ["y", "z"]],
+    ["bx_bz_plane", "Bx-Bz 二维网格", "plane_2d", ["x", "z"]],
+    ["bx_by_bz_volume", "Bx-By-Bz 三维网格", "volume_3d", ["x", "y", "z"]],
   ];
-  return specs.map(([groupId, labelCn, axes], index) => ({
+  return specs.map(([groupId, labelCn, scanKind, axes], index) => ({
     groupId,
     labelCn,
+    scanKind,
     axes,
     enabled: index === 0,
-    startNt: "0",
-    stopNt: "1000",
-    stepNt: "10",
+    axisRanges: {
+      x: { startNt: "0", stopNt: "1000", stepNt: "10" },
+      y: { startNt: "0", stopNt: "1000", stepNt: "10" },
+      z: { startNt: "0", stopNt: "1000", stepNt: "10" },
+    },
     fixedXNt: "0",
     fixedYNt: "0",
     fixedZNt: "0",
@@ -228,6 +239,29 @@ const defaultScanGroups = (): MagneticScanGroupDraft[] => {
     chBDynamicReserve: "",
     chBSensitivity: "",
   }));
+};
+
+const customScanGroup = (index: number): MagneticScanGroupDraft => ({
+  ...defaultScanGroups()[0],
+  groupId: `custom_grid_${index.toString().padStart(2, "0")}`,
+  labelCn: "自定义网格组",
+  scanKind: "custom_grid",
+  axes: ["x", "y"],
+  enabled: true,
+  order: index,
+});
+
+const scanKindLabel = (kind: MagneticScanKind) => {
+  switch (kind) {
+    case "line_1d":
+      return "单轴 line";
+    case "plane_2d":
+      return "二维网格 plane";
+    case "volume_3d":
+      return "三维网格 volume";
+    default:
+      return "自定义 grid";
+  }
 };
 
 const hzFactor: Record<FrequencyUnit, number> = { Hz: 1, kHz: 1e3, MHz: 1e6, GHz: 1e9 };
@@ -293,6 +327,14 @@ const badge = (state: "ok" | "warning" | "blocked" | "off" | "on"): React.CSSPro
   };
 };
 
+const runStateBadge = (state: string): "ok" | "warning" | "blocked" | "off" | "on" => {
+  if (state === "completed") return "ok";
+  if (state === "running") return "on";
+  if (state === "blocked" || state === "failed") return "blocked";
+  if (state === "stop_requested") return "warning";
+  return "off";
+};
+
 const parseNumber = (value: string, fallback = 0) => {
   const parsed = Number.parseFloat(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -329,6 +371,9 @@ export default function ExperimentPlanPage() {
   const [draftJson, setDraftJson] = useState<unknown>(null);
   const [planDraft, setPlanDraft] = useState<PlanRecord | null>(null);
   const [selectedPackages, setSelectedPackages] = useState<Record<string, string>>({});
+  const [runReadiness, setRunReadiness] = useState<ExperimentRunReadiness | null>(null);
+  const [runStatus, setRunStatus] = useState<ExperimentPlanRunStatus | null>(null);
+  const [runBusy, setRunBusy] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<EditorTab>("packages");
   const [stepRows, setStepRows] = useState<StepDraftRow[]>([defaultRow()]);
   const [scanGroups, setScanGroups] = useState<MagneticScanGroupDraft[]>(defaultScanGroups);
@@ -351,6 +396,43 @@ export default function ExperimentPlanPage() {
     if (projected) setProjection(projected);
   };
 
+  const refreshRunStatus = async () => {
+    const status = await run(() => invoke<ExperimentPlanRunStatus | null>("get_experiment_plan_run_status"));
+    if (status) setRunStatus(status);
+  };
+
+  const checkRunReadiness = async () => {
+    setRunBusy("readiness");
+    const readiness = await run(() => invoke<ExperimentRunReadiness>("get_experiment_plan_run_readiness"));
+    if (readiness) setRunReadiness(readiness);
+    setRunBusy(null);
+  };
+
+  const startPreviewRun = async () => {
+    setRunBusy("preview");
+    const status = await run(() => invoke<ExperimentPlanRunStatus>("start_experiment_plan_run", { mode: "preview", operatorConfirmed: true }));
+    if (status) setRunStatus(status);
+    const readiness = await run(() => invoke<ExperimentRunReadiness>("get_experiment_plan_run_readiness"));
+    if (readiness) setRunReadiness(readiness);
+    setRunBusy(null);
+  };
+
+  const requestHardwareRun = async () => {
+    setRunBusy("hardware");
+    const status = await run(() => invoke<ExperimentPlanRunStatus>("start_experiment_plan_run", { mode: "hardware", operatorConfirmed: false }));
+    if (status) setRunStatus(status);
+    const readiness = await run(() => invoke<ExperimentRunReadiness>("get_experiment_plan_run_readiness"));
+    if (readiness) setRunReadiness(readiness);
+    setRunBusy(null);
+  };
+
+  const stopRun = async () => {
+    setRunBusy("stop");
+    const status = await run(() => invoke<ExperimentPlanRunStatus>("stop_experiment_plan_run"));
+    if (status) setRunStatus(status);
+    setRunBusy(null);
+  };
+
   useEffect(() => {
     let cancelled = false;
     const loadSession = async () => {
@@ -365,6 +447,7 @@ export default function ExperimentPlanPage() {
       }
       if (selected) setSelectedPackages(selected);
       await refreshProjection();
+      await refreshRunStatus();
     };
     void loadSession();
     return () => {
@@ -489,6 +572,16 @@ export default function ExperimentPlanPage() {
         {error && <div style={{ marginTop: "var(--space-3)", color: "var(--color-danger)", fontSize: "var(--font-size-sm)" }}>{error}</div>}
       </div>
 
+      <RunLauncherPanel
+        readiness={runReadiness}
+        status={runStatus}
+        busy={runBusy}
+        onCheck={checkRunReadiness}
+        onPreview={startPreviewRun}
+        onHardware={requestHardwareRun}
+        onStop={stopRun}
+      />
+
       <div style={{ display: "grid", gridTemplateColumns: "320px minmax(0, 1fr)", gap: "var(--space-4)", alignItems: "start" }}>
         <PlanSummaryCard summary={summary} resolved={resolved} projection={projection} />
         <div style={{ display: "grid", gap: "var(--space-4)", minWidth: 0 }}>
@@ -536,6 +629,76 @@ export default function ExperimentPlanPage() {
           <DeviceParameterTables projection={projection} resolved={resolved} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function RunLauncherPanel({
+  readiness,
+  status,
+  busy,
+  onCheck,
+  onPreview,
+  onHardware,
+  onStop,
+}: {
+  readiness: ExperimentRunReadiness | null;
+  status: ExperimentPlanRunStatus | null;
+  busy: string | null;
+  onCheck: () => void;
+  onPreview: () => void;
+  onHardware: () => void;
+  onStop: () => void;
+}) {
+  const previewReady = readiness?.ready_for_preview_execution ?? false;
+  const hardwareReady = readiness?.ready_for_hardware_execution ?? false;
+  const blocking = readiness?.hardware_blocked_reasons ?? status?.blocked_reasons ?? [];
+  return (
+    <div style={{ ...cardStyle, marginBottom: "var(--space-4)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)", alignItems: "start", flexWrap: "wrap" }}>
+        <div>
+          <h2 style={{ fontSize: "var(--font-size-lg)", marginBottom: "var(--space-1)" }}>执行控制</h2>
+          <p style={{ margin: 0, color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)" }}>
+            预览执行只锁定当前 JSON、生成 projection/run artifact，不发送硬件命令；真实硬件执行必须等待 RALL raw-first collector 与 executor handoff 接好。
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "end" }}>
+          <button onClick={onCheck} disabled={busy != null} style={btnSecondary}>{busy === "readiness" ? "检查中..." : "执行前检查"}</button>
+          <button onClick={onPreview} disabled={busy != null || (readiness != null && !previewReady)} style={btnPrimary}>{busy === "preview" ? "执行中..." : "启动预览执行"}</button>
+          <button onClick={onHardware} disabled={busy != null} style={btnDanger}>{busy === "hardware" ? "请求中..." : "请求真实硬件执行"}</button>
+          <button onClick={onStop} disabled={busy != null} style={btnSecondary}>{busy === "stop" ? "停止中..." : "停止/标记停止"}</button>
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-3)", marginTop: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
+        <div><strong>预览执行:</strong> <span style={badge(previewReady ? "ok" : "off")}>{previewReady ? "可启动" : "未检查/阻塞"}</span></div>
+        <div><strong>真实硬件执行:</strong> <span style={badge(hardwareReady ? "ok" : "blocked")}>{hardwareReady ? "可启动" : "阻塞"}</span></div>
+        <div><strong>Step:</strong> {readiness?.step_count ?? status?.step_count ?? "—"}</div>
+        <div><strong>RF 点/谱线:</strong> {readiness?.rf_point_count ?? status?.rf_point_count ?? "—"}</div>
+        <div><strong>总测量点:</strong> {readiness?.estimated_measurements ?? status?.estimated_measurements ?? "—"}</div>
+        <div><strong>估算耗时:</strong> {readiness?.estimated_duration_s != null ? `${readiness.estimated_duration_s.toFixed(1)} s` : status?.estimated_duration_s != null ? `${status.estimated_duration_s.toFixed(1)} s` : "—"}</div>
+      </div>
+      {readiness && (
+        <div style={{ marginTop: "var(--space-3)", fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>
+          <strong>已连接/锁定:</strong> {readiness.connected_devices.length > 0 ? readiness.connected_devices.join(", ") : "无"} · <strong>需要设备:</strong> {readiness.required_devices.join(", ")}
+        </div>
+      )}
+      {status && (
+        <div style={{ marginTop: "var(--space-3)", paddingTop: "var(--space-3)", borderTop: "1px solid var(--color-border)", fontSize: "var(--font-size-xs)" }}>
+          <div><strong>最近执行:</strong> {status.run_id} · <span style={badge(runStateBadge(status.state))}>{status.state}</span> · {status.mode}</div>
+          <div><strong>完成 Step:</strong> {status.steps_completed}/{status.step_count}</div>
+          {status.run_directory && <div><strong>产物目录:</strong> <code>{status.run_directory}</code></div>}
+        </div>
+      )}
+      {readiness?.warnings.length ? (
+        <div style={{ marginTop: "var(--space-3)", color: "var(--color-warning)", fontSize: "var(--font-size-xs)" }}>
+          {readiness.warnings.join(" · ")}
+        </div>
+      ) : null}
+      {blocking.length > 0 && (
+        <div style={{ marginTop: "var(--space-3)", color: "var(--color-danger)", fontSize: "var(--font-size-xs)" }}>
+          {blocking.join(" · ")}
+        </div>
+      )}
     </div>
   );
 }
@@ -655,13 +818,21 @@ function MagneticScanGenerator({
   const patchGroup = (groupId: string, patch: Partial<MagneticScanGroupDraft>) => {
     setGroups((current) => current.map((group) => group.groupId === groupId ? { ...group, ...patch } : group));
   };
+  const patchAxisRange = (group: MagneticScanGroupDraft, axis: MagneticAxis, patch: Partial<AxisRangeDraft>) => {
+    patchGroup(group.groupId, {
+      axisRanges: {
+        ...group.axisRanges,
+        [axis]: { ...group.axisRanges[axis], ...patch },
+      },
+    });
+  };
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "var(--space-3)", marginBottom: "var(--space-3)" }}>
         <div>
           <h2 style={{ fontSize: "var(--font-size-lg)", marginBottom: "var(--space-1)" }}>磁场扫描生成器</h2>
           <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)" }}>
-            外层变量是磁场；每个扫描点生成一条 ODMR 谱线 Step。RF sweep 内部频点不会变成 Step。
+            外层变量是磁场；单轴是 line，二维/三维是笛卡尔积网格，全组合生成 ODMR 谱线 Step。RF sweep 内部频点不会变成 Step。
           </p>
           <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", marginTop: "var(--space-2)" }}>
             <span style={badge(enabledCount > 0 ? "on" : "off")}>启用组 {enabledCount}</span>
@@ -670,6 +841,10 @@ function MagneticScanGenerator({
           </div>
         </div>
         <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "end" }}>
+          <button onClick={() => setGroups(defaultScanGroups().filter((group) => group.scanKind === "line_1d"))} style={btnSecondary}>单轴扫描</button>
+          <button onClick={() => setGroups(defaultScanGroups().filter((group) => group.scanKind === "plane_2d"))} style={btnSecondary}>二维平面网格</button>
+          <button onClick={() => setGroups(defaultScanGroups().filter((group) => group.scanKind === "volume_3d"))} style={btnSecondary}>三维体网格</button>
+          <button onClick={() => setGroups((current) => [...current, customScanGroup(current.length)])} style={btnSecondary}>自定义网格组</button>
           <button onClick={onPreview} style={btnSecondary}>生成 Step 预览</button>
           <button onClick={onApply} style={btnPrimary}>应用扫描到 JSON 草稿</button>
         </div>
@@ -681,10 +856,10 @@ function MagneticScanGenerator({
               <th style={thStyle}>启用</th>
               <th style={thStyle}>组</th>
               <th style={thStyle}>轴集合</th>
-              <th style={thStyle}>start nT</th>
-              <th style={thStyle}>stop nT</th>
-              <th style={thStyle}>step nT</th>
-              <th style={thStyle}>固定 X/Y/Z nT</th>
+              <th style={thStyle}>Bx range / fixed</th>
+              <th style={thStyle}>By range / fixed</th>
+              <th style={thStyle}>Bz range / fixed</th>
+              <th style={thStyle}>点数公式</th>
               <th style={thStyle}>顺序</th>
               <th style={thStyle}>点数</th>
               <th style={thStyle}>组级覆盖</th>
@@ -696,19 +871,13 @@ function MagneticScanGenerator({
                 <td style={tdStyle}><input type="checkbox" checked={group.enabled} onChange={(event) => patchGroup(group.groupId, { enabled: event.target.checked })} /></td>
                 <td style={tdStyle}>
                   <input value={group.labelCn} onChange={(event) => patchGroup(group.groupId, { labelCn: event.target.value })} style={{ ...inputStyle, minWidth: 110 }} />
-                  <div style={{ color: "var(--color-text-muted)", marginTop: 4 }}>{group.groupId}</div>
+                  <div style={{ color: "var(--color-text-muted)", marginTop: 4 }}>{group.groupId} · {scanKindLabel(group.scanKind)}</div>
                 </td>
-                <td style={tdStyle}>{group.axes.map((axis) => axis.toUpperCase()).join("")}</td>
-                <td style={tdStyle}><input value={group.startNt} onChange={(event) => patchGroup(group.groupId, { startNt: event.target.value })} style={{ ...inputStyle, minWidth: 90 }} /></td>
-                <td style={tdStyle}><input value={group.stopNt} onChange={(event) => patchGroup(group.groupId, { stopNt: event.target.value })} style={{ ...inputStyle, minWidth: 90 }} /></td>
-                <td style={tdStyle}><input value={group.stepNt} onChange={(event) => patchGroup(group.groupId, { stepNt: event.target.value })} style={{ ...inputStyle, minWidth: 90 }} /></td>
-                <td style={tdStyle}>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 70px)", gap: 4 }}>
-                    <input value={group.fixedXNt} onChange={(event) => patchGroup(group.groupId, { fixedXNt: event.target.value })} style={inputStyle} />
-                    <input value={group.fixedYNt} onChange={(event) => patchGroup(group.groupId, { fixedYNt: event.target.value })} style={inputStyle} />
-                    <input value={group.fixedZNt} onChange={(event) => patchGroup(group.groupId, { fixedZNt: event.target.value })} style={inputStyle} />
-                  </div>
-                </td>
+                <td style={tdStyle}>{group.axes.map((axis) => axis.toUpperCase()).join(" × ")}</td>
+                <AxisRangeCell group={group} axis="x" onRange={(patch) => patchAxisRange(group, "x", patch)} onFixed={(value) => patchGroup(group.groupId, { fixedXNt: value })} />
+                <AxisRangeCell group={group} axis="y" onRange={(patch) => patchAxisRange(group, "y", patch)} onFixed={(value) => patchGroup(group.groupId, { fixedYNt: value })} />
+                <AxisRangeCell group={group} axis="z" onRange={(patch) => patchAxisRange(group, "z", patch)} onFixed={(value) => patchGroup(group.groupId, { fixedZNt: value })} />
+                <td style={tdStyle}>{groupPointFormula(group)}</td>
                 <td style={tdStyle}><input value={String(group.order)} onChange={(event) => patchGroup(group.groupId, { order: Math.trunc(parseNumber(event.target.value, group.order)) })} style={{ ...inputStyle, minWidth: 70 }} /></td>
                 <td style={tdStyle}>{groupPointCount(group)}</td>
                 <td style={tdStyle}>
@@ -746,6 +915,42 @@ function MagneticScanGenerator({
         ))}
       </div>
     </div>
+  );
+}
+
+function AxisRangeCell({
+  group,
+  axis,
+  onRange,
+  onFixed,
+}: {
+  group: MagneticScanGroupDraft;
+  axis: MagneticAxis;
+  onRange: (patch: Partial<AxisRangeDraft>) => void;
+  onFixed: (value: string) => void;
+}) {
+  const active = group.axes.includes(axis);
+  const range = group.axisRanges[axis];
+  const fixed = axis === "x" ? group.fixedXNt : axis === "y" ? group.fixedYNt : group.fixedZNt;
+  if (!active) {
+    return (
+      <td style={tdStyle}>
+        <label style={{ display: "grid", gap: 4 }}>
+          固定 {axis.toUpperCase()} nT
+          <input value={fixed} onChange={(event) => onFixed(event.target.value)} style={{ ...inputStyle, minWidth: 90 }} />
+        </label>
+      </td>
+    );
+  }
+  return (
+    <td style={tdStyle}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 76px)", gap: 4 }}>
+        <input title={`${axis} start`} value={range.startNt} onChange={(event) => onRange({ startNt: event.target.value })} style={inputStyle} />
+        <input title={`${axis} stop`} value={range.stopNt} onChange={(event) => onRange({ stopNt: event.target.value })} style={inputStyle} />
+        <input title={`${axis} step`} value={range.stepNt} onChange={(event) => onRange({ stepNt: event.target.value })} style={inputStyle} />
+      </div>
+      <div style={{ marginTop: 4, color: "var(--color-text-muted)" }}>start / stop / step nT</div>
+    </td>
   );
 }
 
@@ -1234,52 +1439,56 @@ function rfFromRow(row: StepDraftRow) {
 
 function groupPointCount(group: MagneticScanGroupDraft) {
   if (!group.enabled) return 0;
-  const start = parseNumber(group.startNt, 0);
-  const stop = parseNumber(group.stopNt, start);
-  const step = Math.abs(parseNumber(group.stepNt, 0));
-  if (step <= 0) return 0;
-  return Math.floor(Math.abs(stop - start) / step) + 1;
+  return group.axes.reduce((product, axis) => product * axisValues(group, axis).length, 1);
 }
 
-function pointFromGroup(group: MagneticScanGroupDraft, value: number): [number, number, number] {
-  const point: [number, number, number] = [
-    parseNumber(group.fixedXNt),
-    parseNumber(group.fixedYNt),
-    parseNumber(group.fixedZNt),
-  ];
-  if (group.axes.includes("x")) point[0] = value;
-  if (group.axes.includes("y")) point[1] = value;
-  if (group.axes.includes("z")) point[2] = value;
-  return point;
+function groupPointFormula(group: MagneticScanGroupDraft) {
+  const terms = group.axes.map((axis) => `${axis.toUpperCase()}=${axisValues(group, axis).length}`);
+  return terms.length > 0 ? `${terms.join(" × ")} = ${groupPointCount(group)}` : "0";
+}
+
+function axisValues(group: MagneticScanGroupDraft, axis: MagneticAxis) {
+  const range = group.axisRanges[axis];
+  const start = parseNumber(range.startNt, 0);
+  const stop = parseNumber(range.stopNt, start);
+  const step = Math.abs(parseNumber(range.stepNt, 0));
+  if (step <= 0) return [];
+  const values: number[] = [];
+  const ascending = stop >= start;
+  let value = start;
+  while (true) {
+    values.push(value);
+    value = ascending ? value + step : value - step;
+    if (ascending ? value > stop + Number.EPSILON : value < stop - Number.EPSILON) break;
+  }
+  return values;
 }
 
 function rowsFromScanGroups(groups: MagneticScanGroupDraft[], template: StepDraftRow, limit = 200): StepDraftRow[] {
   const out: StepDraftRow[] = [];
   const ordered = [...groups].filter((group) => group.enabled).sort((a, b) => a.order - b.order);
   for (const group of ordered) {
-    const start = parseNumber(group.startNt, 0);
-    const stop = parseNumber(group.stopNt, start);
-    const step = Math.abs(parseNumber(group.stepNt, 0));
-    if (step <= 0) continue;
-    const ascending = stop >= start;
-    let value = start;
     let localIndex = 0;
-    while (out.length < limit) {
-      const [bx, by, bz] = pointFromGroup(group, value);
-      out.push({
-        ...template,
-        id: `${group.groupId}_${String(localIndex).padStart(6, "0")}`,
-        groupId: group.groupId,
-        bxNt: String(bx),
-        byNt: String(by),
-        bzNt: String(bz),
-        ...rowPatchFromGroupOverride(group),
-      });
-      localIndex += 1;
-      value = ascending ? value + step : value - step;
-      if (ascending ? value > stop + Number.EPSILON : value < stop - Number.EPSILON) break;
+    const xs = group.axes.includes("x") ? axisValues(group, "x") : [parseNumber(group.fixedXNt)];
+    const ys = group.axes.includes("y") ? axisValues(group, "y") : [parseNumber(group.fixedYNt)];
+    const zs = group.axes.includes("z") ? axisValues(group, "z") : [parseNumber(group.fixedZNt)];
+    for (const bx of xs) {
+      for (const by of ys) {
+        for (const bz of zs) {
+          if (out.length >= limit) return out;
+          out.push({
+            ...template,
+            id: `${group.groupId}_${String(localIndex).padStart(6, "0")}`,
+            groupId: group.groupId,
+            bxNt: String(bx),
+            byNt: String(by),
+            bzNt: String(bz),
+            ...rowPatchFromGroupOverride(group),
+          });
+          localIndex += 1;
+        }
+      }
     }
-    if (out.length >= limit) break;
   }
   return out;
 }
@@ -1305,16 +1514,29 @@ function rowPatchFromGroupOverride(group: MagneticScanGroupDraft): Partial<StepD
 
 function fieldSpaceFromScanGroups(groups: MagneticScanGroupDraft[]) {
   return {
-    mode: "grouped_path_scan",
+    mode: "grouped_grid_scan",
     unit: "nT",
     groups: groups.map((group) => ({
       group_id: group.groupId,
       label_cn: group.labelCn,
+      scan_kind: group.scanKind,
       axes: group.axes,
-      range_nt: {
-        start: parseNumber(group.startNt, 0),
-        stop: parseNumber(group.stopNt, 0),
-        step: Math.abs(parseNumber(group.stepNt, 1)),
+      axis_ranges_nt: {
+        x: {
+          start: parseNumber(group.axisRanges.x.startNt, 0),
+          stop: parseNumber(group.axisRanges.x.stopNt, 0),
+          step: Math.abs(parseNumber(group.axisRanges.x.stepNt, 1)),
+        },
+        y: {
+          start: parseNumber(group.axisRanges.y.startNt, 0),
+          stop: parseNumber(group.axisRanges.y.stopNt, 0),
+          step: Math.abs(parseNumber(group.axisRanges.y.stepNt, 1)),
+        },
+        z: {
+          start: parseNumber(group.axisRanges.z.startNt, 0),
+          stop: parseNumber(group.axisRanges.z.stopNt, 0),
+          step: Math.abs(parseNumber(group.axisRanges.z.stepNt, 1)),
+        },
       },
       fixed_axes_nt: {
         x: parseNumber(group.fixedXNt, 0),
@@ -1472,7 +1694,8 @@ function rowDiffersForOe(row: StepDraftRow, first: StepDraftRow) {
 
 function rowsFromDraft(plan: PlanRecord) {
   const scanGroups = scanGroupsFromDraft(plan);
-  const grouped = asRecord(plan.field_space).mode === "grouped_path_scan";
+  const mode = asRecord(plan.field_space).mode;
+  const grouped = mode === "grouped_grid_scan" || mode === "grouped_path_scan";
   const template = asRecord(plan.spectrum_template);
   const rf = asRecord(template.rf_sweep ?? template.rf);
   const laser = asRecord(template.laser);
@@ -1500,7 +1723,7 @@ function rowsFromDraft(plan: PlanRecord) {
 function scanGroupsFromDraft(plan: PlanRecord): MagneticScanGroupDraft[] {
   const defaults = defaultScanGroups();
   const fieldSpace = asRecord(plan.field_space);
-  if (fieldSpace.mode !== "grouped_path_scan") return defaults;
+  if (fieldSpace.mode !== "grouped_grid_scan" && fieldSpace.mode !== "grouped_path_scan") return defaults;
   const groups = getArray(fieldSpace, "groups");
   if (groups.length === 0) return defaults;
   const overrides = asRecord(plan.group_overrides);
@@ -1508,6 +1731,7 @@ function scanGroupsFromDraft(plan: PlanRecord): MagneticScanGroupDraft[] {
     const group = asRecord(value);
     const groupId = String(group.group_id ?? defaults[index]?.groupId ?? `group_${index}`);
     const range = asRecord(group.range_nt);
+    const axisRanges = asRecord(group.axis_ranges_nt);
     const fixed = asRecord(group.fixed_axes_nt);
     const axesRaw = Array.isArray(group.axes) ? group.axes : [];
     const axes = axesRaw.filter((axis): axis is MagneticAxis => axis === "x" || axis === "y" || axis === "z");
@@ -1521,11 +1745,14 @@ function scanGroupsFromDraft(plan: PlanRecord): MagneticScanGroupDraft[] {
     return {
       groupId,
       labelCn: String(group.label_cn ?? defaults[index]?.labelCn ?? groupId),
+      scanKind: readScanKind(group.scan_kind, axes.length),
       axes: axes.length > 0 ? axes : defaults[index]?.axes ?? ["x"],
       enabled: Boolean(group.enabled ?? true),
-      startNt: String(range.start ?? range.start_nt ?? "0"),
-      stopNt: String(range.stop ?? range.stop_nt ?? "0"),
-      stepNt: String(range.step ?? range.step_nt ?? "1"),
+      axisRanges: {
+        x: readAxisRangeDraft(axisRanges.x, range),
+        y: readAxisRangeDraft(axisRanges.y, range),
+        z: readAxisRangeDraft(axisRanges.z, range),
+      },
       fixedXNt: String(fixed.x ?? fixed.bx_nt ?? "0"),
       fixedYNt: String(fixed.y ?? fixed.by_nt ?? "0"),
       fixedZNt: String(fixed.z ?? fixed.bz_nt ?? "0"),
@@ -1546,6 +1773,25 @@ function scanGroupsFromDraft(plan: PlanRecord): MagneticScanGroupDraft[] {
       chBSensitivity: String(chB.sensitivity ?? ""),
     };
   });
+}
+
+function readScanKind(value: unknown, axisCount: number): MagneticScanKind {
+  if (value === "line_1d" || value === "plane_2d" || value === "volume_3d" || value === "custom_grid") {
+    return value;
+  }
+  if (axisCount === 1) return "line_1d";
+  if (axisCount === 2) return "plane_2d";
+  if (axisCount === 3) return "volume_3d";
+  return "custom_grid";
+}
+
+function readAxisRangeDraft(value: unknown, fallback: PlanRecord): AxisRangeDraft {
+  const range = asRecord(value);
+  return {
+    startNt: String(range.start ?? range.start_nt ?? fallback.start ?? fallback.start_nt ?? "0"),
+    stopNt: String(range.stop ?? range.stop_nt ?? fallback.stop ?? fallback.stop_nt ?? "0"),
+    stepNt: String(range.step ?? range.step_nt ?? fallback.step ?? fallback.step_nt ?? "1"),
+  };
 }
 
 function rowFromPlanParts(point: number[], rf: PlanRecord, laser: PlanRecord, oe: PlanRecord, id: string): StepDraftRow {
