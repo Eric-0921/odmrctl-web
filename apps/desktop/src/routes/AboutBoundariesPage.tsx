@@ -83,9 +83,9 @@ export default function AboutBoundariesPage() {
             Forbidden in M0
           </h3>
           <ul style={{ fontSize: "var(--font-size-sm)", lineHeight: 1.8, paddingLeft: "var(--space-5)", color: "var(--color-text)" }}>
-            <li>serial / USB / VISA / TCP socket access</li>
-            <li>SCPI sending</li>
-            <li>executor calls</li>
+            <li>direct serial / USB / VISA / TCP socket access from frontend TS</li>
+            <li>raw SCPI sending from frontend</li>
+            <li>executor calls from frontend</li>
             <li>hardware polling</li>
             <li>raw data parsing</li>
             <li>run data writing</li>

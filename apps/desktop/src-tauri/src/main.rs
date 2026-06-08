@@ -1,6 +1,11 @@
 // Prevents additional console window on Windows in release mode.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod experiment_plan;
+mod panels;
+mod station;
+mod workbench_state;
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -11,11 +16,11 @@ use tauri::Manager;
 #[tauri::command]
 fn app_metadata() -> serde_json::Value {
     serde_json::json!({
-        "name": "ODMR GUI-M0 Mock Viewer",
+        "name": "ODMR Device Workbench",
         "version": "0.1.0",
-        "phase": "M4.0 read-only analysis viewer",
-        "mode": "READ ONLY",
-        "boundary_note": "No hardware access. No executor connection. Real controls disabled."
+        "phase": "M5C-A",
+        "mode": "DEVICE WORKBENCH",
+        "boundary_note": "Typed hardware access via Tauri commands only. No raw SCPI from frontend."
     })
 }
 
@@ -480,7 +485,8 @@ fn read_m5a_run_directory(path: String) -> Result<M5aRunData, String> {
     let preflight: Option<StationPreflightReportData> = {
         let p = base.join("preflight").join("station_preflight_report.json");
         if p.exists() {
-            let text = fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
+            let text =
+                fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
             match serde_json::from_str(&text) {
                 Ok(v) => Some(v),
                 Err(e) => {
@@ -497,7 +503,8 @@ fn read_m5a_run_directory(path: String) -> Result<M5aRunData, String> {
     let combined_run_report: Option<CombinedRunReportData> = {
         let p = base.join("combined_run_report.json");
         if p.exists() {
-            let text = fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
+            let text =
+                fs::read_to_string(&p).map_err(|e| format!("read {}: {}", p.display(), e))?;
             match serde_json::from_str(&text) {
                 Ok(v) => Some(v),
                 Err(e) => {
@@ -511,7 +518,10 @@ fn read_m5a_run_directory(path: String) -> Result<M5aRunData, String> {
     };
 
     // --- Helper: read JSONL ---
-    fn read_jsonl<T: serde::de::DeserializeOwned>(path: &Path, warnings: &mut Vec<String>) -> Vec<T> {
+    fn read_jsonl<T: serde::de::DeserializeOwned>(
+        path: &Path,
+        warnings: &mut Vec<String>,
+    ) -> Vec<T> {
         if !path.exists() {
             return Vec::new();
         }
@@ -525,13 +535,11 @@ fn read_m5a_run_directory(path: String) -> Result<M5aRunData, String> {
         text.lines()
             .filter(|l| !l.trim().is_empty())
             .enumerate()
-            .filter_map(|(i, line)| {
-                match serde_json::from_str::<T>(line) {
-                    Ok(v) => Some(v),
-                    Err(e) => {
-                        warnings.push(format!("parse {} line {}: {}", path.display(), i + 1, e));
-                        None
-                    }
+            .filter_map(|(i, line)| match serde_json::from_str::<T>(line) {
+                Ok(v) => Some(v),
+                Err(e) => {
+                    warnings.push(format!("parse {} line {}: {}", path.display(), i + 1, e));
+                    None
                 }
             })
             .collect()
@@ -577,9 +585,59 @@ fn main() {
             read_recipe_file,
             pick_recipe_file,
             read_m5a_run_directory,
-            pick_m5a_run_directory
+            pick_m5a_run_directory,
+            station::load_station_profile,
+            station::load_example_station_profile,
+            station::run_station_preflight_cmd,
+            station::release_all_locks,
+            station::connect_single_device,
+            station::disconnect_single_device,
+            station::get_workbench_state,
+            experiment_plan::load_experiment_plan,
+            experiment_plan::set_experiment_plan_draft,
+            experiment_plan::get_experiment_plan_draft,
+            experiment_plan::get_device_preset_drafts,
+            experiment_plan::set_device_preset_draft,
+            experiment_plan::get_selected_default_packages,
+            experiment_plan::set_selected_default_package,
+            experiment_plan::capture_current_setup_as_preset_draft,
+            experiment_plan::capture_current_setup_as_plan_draft,
+            experiment_plan::project_experiment_plan,
+            experiment_plan::resolve_plan_with_current_zero,
+            panels::smb100a::smb100a_get_status,
+            panels::smb100a::smb100a_set_frequency,
+            panels::smb100a::smb100a_set_power,
+            panels::smb100a::smb100a_set_output,
+            panels::smb100a::smb100a_set_fm,
+            panels::smb100a::smb100a_set_lf,
+            panels::smb100a::smb100a_apply_safe_config,
+            panels::oe1022d::oe1022d_get_status,
+            panels::oe1022d::oe1022d_set_filter,
+            panels::oe1022d::oe1022d_set_reference,
+            panels::oe1022d::oe1022d_apply_default_config,
+            panels::oe1022d::oe1022d_auto_phase,
+            panels::magnetic::magnetic_get_status,
+            panels::magnetic::magnetic_get_xyz_package_status,
+            panels::magnetic::import_magnetic_para_xml,
+            panels::magnetic::magnetic_init_axis,
+            panels::magnetic::magnetic_set_zero_bias,
+            panels::magnetic::magnetic_set_recur_current,
+            panels::magnetic::magnetic_set_recur_mag,
+            panels::magnetic::magnetic_toggle_output,
+            panels::magnetic::magnetic_toggle_lock_zero,
+            panels::magnetic::magnetic_safe_cleanup,
+            panels::magnetic::magnetic_init_all,
+            panels::magnetic::magnetic_measure_zero_all,
+            panels::magnetic::magnetic_lock_zero_all,
+            panels::magnetic::magnetic_apply_vector_field,
+            panels::magnetic::magnetic_cleanup_all,
+            panels::laser::laser_get_status,
+            panels::laser::laser_set_power,
+            panels::laser::laser_set_enabled,
+            panels::laser::laser_emergency_off,
         ])
         .setup(|app| {
+            app.manage(workbench_state::WorkbenchState::default());
             let _window = app.get_webview_window("main").unwrap();
             Ok(())
         })

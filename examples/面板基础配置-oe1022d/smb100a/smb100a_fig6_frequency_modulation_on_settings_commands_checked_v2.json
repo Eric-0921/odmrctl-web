@@ -1,0 +1,182 @@
+{
+  "_meta": {
+    "instrument": "R&S SMB100A RF and Microwave Signal Generator",
+    "figure_label": "fig6",
+    "panel_name_cn": "图6 Frequency Modulation 实际激活(已开启)状态",
+    "version": "checked_v2",
+    "version_note_cn": "v2 在原 fig6 JSON 基础上,基于 PDF 9-14 页末尾的 FM 实测状态细化各字段实测值;并整合 fig5 的下拉选项(High Deviation/Normal/Low Noise、Int/Ext/Int+Ext、Hz/kHz/MHz、Sine/Square/Sawtooth)。",
+    "source_files": {
+      "original_json": "examples/面板基础配置-oe1022d/smb100a/smb100a_fig6_frequency_modulation_on_settings_commands.json",
+      "pdf_pages_relevant_to_fig6": [9, 13, 14]
+    },
+    "source_manual": "SMB100A Operating Manual"
+  },
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图6 Frequency Modulation 已开启状态设置指令",
+  "assumptions": [
+    "图6 是 FM 实际激活后的截图,各字段显示与 fig5 一致,但 MOD ON 标头 + FM State=On 是核心差异。",
+    "实测状态: RF ON、MOD ON、2.8565 GHz、6.00 dBm、ALC-Auto,FM 各项已就绪。"
+  ],
+  "figure6_snapshot": {
+    "description_cn": "原 JSON 记录的 fig6 实测截图状态。",
+    "header_state": {"RF": "ON", "MOD": "ON", "Freq": "2.882 GHz", "Level": "-15.00 dBm", "ALC": "AUTO"},
+    "fields": {
+      "State": "On",
+      "FM Source": "Int",
+      "FM Mode": "High Deviation",
+      "FM Deviation": "3.500 000 00 MHz",
+      "LF Gen Freq": "500.00 Hz",
+      "LF Gen Shape": "Square"
+    }
+  },
+  "pdf_screenshot_observed_values_from_pdf": {
+    "description_cn": "PDF 9-14 页末段对 fig6 状态视图的实测。",
+    "pdf_pages_relevant_to_fig6": [9, 13, 14],
+    "header_state_observed": {
+      "RF": "RF ON",
+      "MOD": "MOD ON",
+      "Freq": "2.856 500 000 00 GHz",
+      "Level": "6.00 dBm",
+      "ALC": "ALC-Auto"
+    },
+    "fields_observed": {
+      "State": "On",
+      "FM Source": "Int",
+      "FM Mode": "High Deviation",
+      "FM Deviation": "3.500 000 00 MHz",
+      "LF Gen Freq": "500.00 Hz",
+      "LF Gen Shape": "Square"
+    },
+    "v6_specific_note": "图6 的下半部分明确显示 LF Gen Shape 区域:可选项为 Sine/Square/Sawtooth,与 fig5 共用同一字段。"
+  },
+  "frequency_modulation_parameters": [
+    {
+      "display_name_cn": "FM 调制开关",
+      "display_name_en": "FM State",
+      "field": "State",
+      "scpi_long": "SOURce:FM:STATe",
+      "scpi_short": "FM:STAT",
+      "allowed_values": ["ON", "OFF"],
+      "safe_value": "ON",
+      "query_syntax": "FM:STAT?",
+      "pdf_observed": {"value": "On", "pdf_page": 9, "evidence": "FM State=On 是图6 与图5 状态的关键差异"}
+    },
+    {
+      "display_name_cn": "FM 调制源",
+      "display_name_en": "FM Source",
+      "field": "FM Source",
+      "scpi_long": "SOURce:FM:SOURce",
+      "scpi_short": "FM:SOUR",
+      "allowed_values": ["INTernal", "EXTernal", "INT,EXT"],
+      "safe_value": "INT",
+      "query_syntax": "FM:SOUR?",
+      "pdf_observed": {"value": "Int", "pdf_page": 10}
+    },
+    {
+      "display_name_cn": "FM 调制模式",
+      "display_name_en": "FM Mode",
+      "field": "FM Mode",
+      "scpi_long": "SOURce:FM:MODE",
+      "scpi_short": "FM:MODE",
+      "allowed_values": ["HDEViation", "NORMal", "LNOise"],
+      "safe_value": "HDEV",
+      "query_syntax": "FM:MODE?",
+      "pdf_observed": {"value": "High Deviation", "pdf_page": 11}
+    },
+    {
+      "display_name_cn": "FM 偏差",
+      "display_name_en": "FM Deviation",
+      "field": "FM Deviation",
+      "scpi_long": "SOURce:FM:DEViation",
+      "scpi_short": "FM:DEV",
+      "unit": "Hz",
+      "allowed_unit_options": ["Hz", "kHz", "MHz"],
+      "safe_value": 3.5E6,
+      "query_syntax": "FM:DEV?",
+      "pdf_observed": {"value": "3.500 000 00 MHz", "pdf_page": 12}
+    },
+    {
+      "display_name_cn": "LF 发生器频率",
+      "display_name_en": "LF Generator Frequency",
+      "field": "LF Gen Freq",
+      "scpi_long": "SOURce:LFOutput:FREQuency",
+      "scpi_short": "LFO:FREQ",
+      "unit": "Hz",
+      "safe_value": 500.0,
+      "query_syntax": "LFO:FREQ?",
+      "pdf_observed": {"value": "500.00 Hz", "pdf_page": 9}
+    },
+    {
+      "display_name_cn": "LF 发生器波形",
+      "display_name_en": "LF Generator Shape",
+      "field": "LF Gen Shape",
+      "scpi_long": "SOURce:LFOutput:SHAPe",
+      "scpi_short": "LFO:SHAP",
+      "allowed_values": ["SINE", "SQUare", "SAWtooth"],
+      "safe_value": "SQU",
+      "query_syntax": "LFO:SHAP?",
+      "pdf_observed": {"value": "Square", "pdf_page": 13}
+    }
+  ],
+  "parameters_in_same_dialog_but_not_visible_or_not_active_in_figure6": [
+    {"field": "FM Coupling", "scpi": "FM:COUP", "notes_cn": "AC/DC 耦合"},
+    {"field": "FM Pre-emphasis", "scpi": "FM:PRE", "notes_cn": "预加重"},
+    {"field": "FM Sensitivity", "scpi": "FM:SENS", "notes_cn": "FM 灵敏度,Ext 源时有效"},
+    {"field": "LF Output State", "scpi": "LFO:STAT", "notes_cn": "LF 输出开关,FM 用内部 LF 时必须 On"},
+    {"field": "LF Output Voltage", "scpi": "LFO:VOLT", "notes_cn": "FM 用外部 LF 时控制外部源电平"}
+  ],
+  "safe_scpi_sequence_to_reproduce_figure6": [
+    {"step": 1, "command": "FREQ 2.882E9", "comment_cn": "原 fig6 待机频率"},
+    {"step": 2, "command": "POW -15.0", "comment_cn": ""},
+    {"step": 3, "command": "LFO:STAT ON", "comment_cn": "打开 LF 发生器"},
+    {"step": 4, "command": "LFO:FREQ 500", "comment_cn": "LF 频率 500 Hz"},
+    {"step": 5, "command": "LFO:SHAP SQU", "comment_cn": "LF 波形 Square"},
+    {"step": 6, "command": "FM:STAT ON", "comment_cn": "打开 FM 调制"},
+    {"step": 7, "command": "FM:SOUR INT", "comment_cn": "FM 源 = 内部 LF 发生器"},
+    {"step": 8, "command": "FM:DEV 3.5E6", "comment_cn": "FM 偏差 3.5 MHz"},
+    {"step": 9, "command": "FM:MODE HDEV", "comment_cn": "FM 模式 = High Deviation"},
+    {"step": 10, "command": "OUTP ON", "comment_cn": "RF 实际输出"},
+    {"step": 11, "command": "MOD:STAT ON", "comment_cn": "全局调制 ON"}
+  ],
+  "commands_only_minimal_for_figure6_fm_dialog": [
+    {"command": "FM:STAT ON", "comment_cn": "FM 开"},
+    {"command": "FM:SOUR INT", "comment_cn": "FM 源"},
+    {"command": "FM:DEV 3.5E6", "comment_cn": "FM 偏差"},
+    {"command": "FM:MODE HDEV", "comment_cn": "FM 模式"}
+  ],
+  "query_sequence_to_verify_figure6": [
+    {"query": "FM:STAT?", "expected_cn": "1=On"},
+    {"query": "FM:SOUR?", "expected_cn": "INT"},
+    {"query": "FM:MODE?", "expected_cn": "HDEV"},
+    {"query": "FM:DEV?", "expected_cn": "3.500000000E+006"},
+    {"query": "LFO:FREQ?", "expected_cn": "500.0"},
+    {"query": "LFO:SHAP?", "expected_cn": "SQU"},
+    {"query": "MOD:STAT?", "expected_cn": "2 表示 FM 已激活"}
+  ],
+  "important_notes": [
+    "图6 与图5 的字段几乎相同,主要差异是 FM State 真正为 On(以蓝色高亮条指示),且顶部 MOD ON 标头已激活。",
+    "当 FM:STAT ON 后,若 FM:SOUR=INT,内部 LF 发生器会提供调制信号,LFO:STAT 也通常为 ON。",
+    "ODMR 实验关键 SCPI 序列:freq → pow → LFO 设置 → FM:STAT ON → MOD:STAT ON → OUTP ON。",
+    "fig5/6 v2 全部基于 PDF 9-14 页合并整理,涵盖所有下拉选项;原 fig5/6 JSON 中是占位符或部分选项,v2 给出了完整 enum。"
+  ],
+  "optional_sequence_for_actual_measurement_not_matching_figure6": {
+    "description_cn": "用户实测状态(对应 PDF)所需的 SCPI 序列。",
+    "commands": [
+      "FREQ 2.8565E9",
+      "POW 6.00",
+      "POW:ALC:AUTO ON",
+      "LFO:STAT ON",
+      "LFO:VOLT 0.137",
+      "LFO:FREQ 500",
+      "LFO:SHAP SQU",
+      "LFO:IMP LOW",
+      "FM:STAT ON",
+      "FM:SOUR INT",
+      "FM:DEV 3.5E6",
+      "FM:MODE HDEV",
+      "OUTP ON",
+      "MOD:STAT ON"
+    ]
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "_meta": {
+    "instrument": "R&S SMB100A RF and Microwave Signal Generator",
+    "figure_label": "fig8",
+    "panel_name_cn": "图8 RF Frequency Sweep 对话框 (新界面)",
+    "version": "checked_v2",
+    "version_note_cn": "v2 全新生成的 fig8 JSON,基于 PDF 第 16-18 页 (RF Frequency Sweep 界面)。此界面在原 fig1-fig6 中未出现,需要新增 SCPI 映射。",
+    "source_files": {
+      "pdf_pages_relevant_to_fig8": [16, 17, 18]
+    },
+    "source_manual": "SMB100A Operating Manual"
+  },
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图8 RF Frequency Sweep 对话框设置指令",
+  "assumptions": [
+    "图8 是主框图中「RF」或「RF Sweep / List」子菜单打开的 RF Frequency Sweep 对话框(用户消息确认)。",
+    "此对话框控制 RF 输出频率扫描,与 fig7 的 LF 扫频不同。",
+    "Mode 选项: Auto / Single / Step / Extern Single / Extern Step / Extern Start/Stop(用户消息确认完整列表)。",
+    "Spacing 选项: Linear / Logarithmic(用户消息:除 Linear 外还有 Logarithmic)。",
+    "Shape 选项: Sawtooth / Triangle(用户消息:除 Sawtooth 外还有 Triangle)。"
+  ],
+  "figure8_snapshot": {
+    "description_cn": "PDF 第 16-18 页 RF Frequency Sweep 对话框实测显示。",
+    "header_state_across_pages": {"RF": "RF ON", "MOD": "MOD ON", "Freq": "2.856 500 000 00 GHz", "Level": "6.00 dBm", "ALC": "ALC-Auto"},
+    "pages_16_to_18_visible_fields": {
+      "Span": "80 000 000 000 MHz (与 fig7 一致,实际 80 MHz)",
+      "Current Freq": "2 830 000 000 00 GHz",
+      "Spacing": "Linear (可选 Logarithmic)",
+      "Shape": "Sawtooth (可选 Triangle)",
+      "Step Lin": "500 000 000 kHz(实际 500 kHz,单位字段滚动后可见)",
+      "Dwell Time": "500 0 ms",
+      "Use LF connector to output sweep voltage On": "复选框可勾选,使用 LF 输出口输出扫频电压",
+      "Output Voltage Start Freq": "0 mV",
+      "Output Voltage Stop Freq": "3 000 V"
+    }
+  },
+  "pdf_screenshot_observed_values_from_pdf": {
+    "description_cn": "PDF 第 16-18 页对 fig8 状态的实测。",
+    "pdf_pages_relevant_to_fig8": [16, 17, 18],
+    "page_16_observations": {
+      "header_state": {"RF": "RF ON", "MOD": "MOD ON", "Freq": "2.856 500 000 00 GHz", "Level": "6.00 dBm", "ALC": "ALC-Auto"},
+      "visible_fields": {
+        "Span": "80 000 000 000 MHz",
+        "Current Freq": "2 830 000 000 00 GHz",
+        "Spacing": "Linear",
+        "Shape": "Sawtooth",
+        "Step Lin": "500 000 000 kHz",
+        "Dwell Time": "500 0 ms"
+      },
+      "dialog_title_observed": "RF Frequency Sweep"
+    },
+    "page_17_observations": {
+      "header_state": {"RF": "RF ON", "MOD": "MOD ON"},
+      "visible_fields_continued": {
+        "Step Lin": "500 000 000 kHz",
+        "Dwell Time": "500 0 ms"
+      }
+    },
+    "page_18_observations": {
+      "header_state": {"RF": "RF ON", "MOD": "MOD ON"},
+      "visible_fields_continued": {
+        "Use LF connector to output sweep voltage": "On 复选框",
+        "Output Voltage Start Freq": "0 mV",
+        "Output Voltage Stop Freq": "3 000 V"
+      }
+    }
+  },
+  "rf_frequency_sweep_parameters": [
+    {
+      "display_name_cn": "扫频宽度",
+      "display_name_en": "RF Sweep Span",
+      "field": "Span",
+      "scpi_long": "FREQ:SPAN",
+      "scpi_short": "FREQ:SPAN",
+      "unit": "Hz",
+      "safe_value": 80E6,
+      "query_syntax": "FREQ:SPAN?",
+      "pdf_observed": {"value": "80 000 000 000 MHz(显示), 80 MHz(实际)", "pdf_page": 16, "notes_cn": "PDF 显示的 'MHz' 应该是 kHz 或 Hz 滚动后显示;按 Start/Current 推算 = 80 MHz"}
+    },
+    {
+      "display_name_cn": "当前频率",
+      "display_name_en": "Current Frequency",
+      "field": "Current Freq",
+      "scpi_long": "FREQ:CENTer?",
+      "scpi_short": "FREQ:CENT?",
+      "unit": "Hz",
+      "query_syntax": "FREQ?",
+      "pdf_observed": {"value": "2.830 000 000 00 GHz", "pdf_page": 16, "notes_cn": "与 fig7 Start Freq 一致;实际为扫频区间内的某一频率值"}
+    },
+    {
+      "display_name_cn": "扫频步进间距模式",
+      "display_name_en": "Spacing Mode",
+      "field": "Spacing",
+      "scpi_long": "SWEep:SPACing",
+      "scpi_short": "SWE:SPAC",
+      "allowed_values": ["LINear", "LOGarithmic"],
+      "safe_value": "LIN",
+      "query_syntax": "SWE:SPAC?",
+      "pdf_observed": {"value": "Linear", "pdf_page": 16, "evidence": "用户消息:除 Linear 外还有 Logarithmic"}
+    },
+    {
+      "display_name_cn": "扫频形状",
+      "display_name_en": "Sweep Shape",
+      "field": "Shape",
+      "scpi_long": "SWEep:SHAPe",
+      "scpi_short": "SWE:SHAP",
+      "allowed_values": ["SAWtooth", "TRIangle"],
+      "safe_value": "SAW",
+      "query_syntax": "SWE:SHAP?",
+      "pdf_observed": {"value": "Sawtooth", "pdf_page": 16, "evidence": "用户消息:除 Sawtooth 外还有 Triangle"}
+    },
+    {
+      "display_name_cn": "线性步进值",
+      "display_name_en": "Step Linear",
+      "field": "Step Lin",
+      "scpi_long": "SWEep:STEP:LINear",
+      "scpi_short": "SWE:STEP",
+      "unit": "Hz",
+      "safe_value": 500E3,
+      "query_syntax": "SWE:STEP?",
+      "pdf_observed": {"value": "500 000 000 kHz(显示), 500 kHz(实际)", "pdf_page": 16, "notes_cn": "kHz 字段滚动;按 500 kHz 推算 = 500000 Hz"}
+    },
+    {
+      "display_name_cn": "驻留时间",
+      "display_name_en": "Dwell Time",
+      "field": "Dwell Time",
+      "scpi_long": "SWEep:DWELl",
+      "scpi_short": "SWE:DWEL",
+      "unit": "s",
+      "safe_value": 0.5,
+      "query_syntax": "SWE:DWEL?",
+      "pdf_observed": {"value": "500 0 ms", "pdf_page": 16, "notes_cn": "500 ms = 0.5 s"}
+    },
+    {
+      "display_name_cn": "使用 LF 输出扫频电压",
+      "display_name_en": "Use LF Connector for Sweep Voltage",
+      "field": "Use LF connector to output sweep voltage",
+      "scpi_long": "SWEep:OUTPut:STATe",
+      "scpi_short": "SWE:OUTP",
+      "allowed_values": ["ON", "OFF"],
+      "safe_value": "OFF",
+      "query_syntax": "SWE:OUTP?",
+      "pdf_observed": {"value": "On 复选框,未勾选", "pdf_page": 18, "notes_cn": "如勾选则 LF connector 输出口输出扫频电压"}
+    },
+    {
+      "display_name_cn": "扫频起始输出电压",
+      "display_name_en": "Sweep Output Start Voltage",
+      "field": "Output Voltage Start Freq",
+      "scpi_long": "SWEep:OUTPut:VOLTage:STARt",
+      "scpi_short": "SWE:OUTP:VOLT:STAR",
+      "unit": "V",
+      "allowed_unit_options": ["mV", "V"],
+      "safe_value": 0.0,
+      "query_syntax": "SWE:OUTP:VOLT:STAR?",
+      "pdf_observed": {"value": "0 mV", "pdf_page": 18}
+    },
+    {
+      "display_name_cn": "扫频截止输出电压",
+      "display_name_en": "Sweep Output Stop Voltage",
+      "field": "Output Voltage Stop Freq",
+      "scpi_long": "SWEep:OUTPut:VOLTage:STOP",
+      "scpi_short": "SWE:OUTP:VOLT:STOP",
+      "unit": "V",
+      "allowed_unit_options": ["mV", "V"],
+      "safe_value": 3.0,
+      "query_syntax": "SWE:OUTP:VOLT:STOP?",
+      "pdf_observed": {"value": "3 000 V", "pdf_page": 18, "notes_cn": "3.000 V,单位字段显示为 V"}
+    }
+  ],
+  "parameters_in_same_dialog_but_not_visible_in_figure8": [
+    {"field": "Mode", "scpi": "SWE:MODE", "notes_cn": "Auto/Single/Step/Extern Single/Extern Step/Extern Start/Stop"},
+    {"field": "Start Freq", "scpi": "FREQ:STAR", "notes_cn": "RF 扫频起始频率,本图未显示具体值"},
+    {"field": "Stop Freq", "scpi": "FREQ:STOP", "notes_cn": "RF 扫频截止频率,本图未显示具体值"},
+    {"field": "Step Log", "scpi": "SWE:STEP:LOG", "notes_cn": "对数步进比例,Spacing=Log 时使用"},
+    {"field": "Trigger Source", "scpi": "TRIG:SWE:SOUR", "notes_cn": "扫频触发源"},
+    {"field": "Spacing Linear/Log 单位", "scpi": "FREQ:STAR/STOP/STEP 单位选择", "notes_cn": "kHz/MHz/Hz"}
+  ],
+  "safe_scpi_sequence_to_reproduce_figure8": [
+    {"step": 1, "command": "SWE:SPAC LIN", "comment_cn": "Linear 间距"},
+    {"step": 2, "command": "SWE:SHAP SAW", "comment_cn": "Sawtooth 形状"},
+    {"step": 3, "command": "SWE:STEP 500E3", "comment_cn": "步进 500 kHz"},
+    {"step": 4, "command": "SWE:DWEL 0.5", "comment_cn": "驻留 0.5 s"},
+    {"step": 5, "command": "FREQ:SPAN 80E6", "comment_cn": "扫频宽度 80 MHz"},
+    {"step": 6, "command": "SWE:OUTP:VOLT:STAR 0", "comment_cn": "起始电压 0 mV"},
+    {"step": 7, "command": "SWE:OUTP:VOLT:STOP 3.0", "comment_cn": "截止电压 3 V"},
+    {"step": 8, "command": "SWE:OUTP OFF", "comment_cn": "未勾选 LF 输出扫频电压"},
+    {"step": 9, "command": "SWE:STAT ON", "comment_cn": "启动扫频(根据需要)"}
+  ],
+  "validation_queries": [
+    {"query": "FREQ:SPAN?", "expected_cn": "8.00000000000E+007 (80 MHz)"},
+    {"query": "SWE:SPAC?", "expected_cn": "LIN 或 LOG"},
+    {"query": "SWE:SHAP?", "expected_cn": "SAW 或 TRI"},
+    {"query": "SWE:STEP?", "expected_cn": "5.00000000000E+005 (500 kHz)"},
+    {"query": "SWE:DWEL?", "expected_cn": "0.5 (s)"},
+    {"query": "SWE:OUTP?", "expected_cn": "0/1"},
+    {"query": "SWE:OUTP:VOLT:STAR?", "expected_cn": "0 (V)"},
+    {"query": "SWE:OUTP:VOLT:STOP?", "expected_cn": "3.0 (V)"}
+  ],
+  "important_notes": [
+    "图8 是新增的 fig,原 fig1-fig6 JSON 未覆盖。",
+    "用户消息确认:Mode 完整选项为 Auto / Single / Step / Extern Single / Extern Step / Extern Start/Stop(6 个)。",
+    "用户消息确认:Spacing 还有 Logarithmic 选项;Shape 还有 Triangle 选项。",
+    "Step Lin 的 500.000 000 kHz 单位字段在 PDF 中被滚动条遮挡,实际应为 500 kHz。",
+    "Span 80 000 000 000 MHz 实际应为 80 MHz(单位错位显示)。",
+    "Use LF connector 复选框启用时,LF 输出端口可输出与 RF 扫频同步的扫频电压(Output Voltage Start/Stop Freq 字段控制)。",
+    "User 实测 fig8 是 RF Frequency Sweep 状态,Span 80 MHz 是从 2.83 GHz 扫到 2.91 GHz 的 RF 扫频,与 fig7 的 LF 扫频并行存在但概念不同。"
+  ]
+}

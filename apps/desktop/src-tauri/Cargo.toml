@@ -3,7 +3,7 @@
 [package]
 name = "odmr-gui-m0"
 version = "0.1.0"
-description = "ODMR Automation GUI-M0 Mock Viewer"
+description = "ODMR Device Workbench M5C-A"
 authors = ["ODMR Automation Project"]
 edition = "2021"
 
@@ -16,13 +16,14 @@ tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+serialport = "4.9"
+chrono = "0.4"
 
-# NOTE: GUI-M0 deliberately does NOT depend on any workspace hardware crates.
-# The following crates are FORBIDDEN in this Cargo.toml:
-# - odmr-executor
-# - odmr-smb100a
-# - odmr-oe1022d
-# - odmr-device
-# - odmr-compiler
-# - odmr-safety
-# - odmr-logging
+# M5C-A: Device Workbench V1 — typed hardware access via preflight and drivers.
+# All device interaction goes through Tauri commands; frontend never sends raw SCPI.
+odmr-types = { path = "../../../crates/odmr-types" }
+odmr-preflight = { path = "../../../crates/odmr-preflight" }
+odmr-smb100a = { path = "../../../crates/odmr-smb100a" }
+odmr-oe1022d = { path = "../../../crates/odmr-oe1022d" }
+odmr-maynuo-m8812 = { path = "../../../crates/odmr-maynuo-m8812" }
+cni_laser_fake_driver = { path = "../../../tools/lab/cni_laser_fake_driver" }

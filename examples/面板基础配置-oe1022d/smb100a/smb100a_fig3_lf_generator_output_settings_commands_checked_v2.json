@@ -1,0 +1,193 @@
+{
+  "_meta": {
+    "instrument": "R&S SMB100A RF and Microwave Signal Generator",
+    "figure_label": "fig3",
+    "panel_name_cn": "图3 LF Generator / Output 对话框",
+    "version": "checked_v2",
+    "version_note_cn": "v2 保留原 fig3 JSON 结构,基于 PDF 1-6 页细化每个字段的所有可见可选项与实测值。原 JSON 描述为「占位符/typical」,v2 替换为 PDF 中可观察到的具体值与备选项,标注 page 证据。",
+    "source_files": {
+      "original_json": "examples/面板基础配置-oe1022d/smb100a/smb100a_fig3_lf_generator_output_settings_commands.json",
+      "pdf_pages_relevant_to_fig3": [1, 2, 3, 4, 5, 6]
+    },
+    "source_manual": "SMB100A Operating Manual"
+  },
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图3 LF Generator / Output 对话框设置指令",
+  "assumptions": [
+    "图3 是「Modulation Generator > LF Generator / Output」对话框,用于配置 LF 波形发生器。",
+    "SMB100A 内部 LF 发生器对应 SCPI 子系统 LFO:(LF Output),与 SOURce:LF:* 等价;短命令使用 LFO,长命令使用 SOURce:LF:。",
+    "PDF 中每个字段的下拉展开截图展示了全部可选项(作为参考)。"
+  ],
+  "figure3_snapshot": {
+    "description_cn": "原 JSON 记录的 fig3 占位符视图。",
+    "header_state": {"RF": "OFF", "MOD": "OFF", "Freq": "2.882 GHz", "Level": "-15.00 dBm", "ALC": "AUTO"},
+    "fields": {
+      "LF Output State": "Off",
+      "LF Output Voltage": "137 mV",
+      "LF Gen Freq": "500.00 Hz",
+      "LF Gen Shape": "Square",
+      "Source Impedance": "Low"
+    }
+  },
+  "pdf_screenshot_observed_values_from_pdf": {
+    "description_cn": "PDF 1-6 页中 fig3 对话框各字段的实测值和下拉可选项,按页面分组。",
+    "common_header_state_across_pages_1_to_6": {
+      "RF": "RF ON",
+      "MOD": "MOD ON",
+      "Freq": "2.856 500 000 00 GHz",
+      "Level": "6.00 dBm",
+      "ALC": "ALC-Auto",
+      "note_cn": "PDF 1-6 页顶部状态完全相同,均为 RF ON、MOD ON、2.8565 GHz、6.00 dBm,ALC-Auto。"
+    },
+    "page_1": {
+      "description": "fig3 对话框初始打开状态",
+      "fields": {
+        "LF Output State": "Off",
+        "LF Output Voltage": "137 mV",
+        "LF Gen Freq": "500.00 Hz",
+        "LF Gen Shape": "Square",
+        "Source Impedance": "Low"
+      }
+    },
+    "page_2": {
+      "description": "LF Output State 切换为 On(高亮蓝条选中)",
+      "fields": {
+        "LF Output State": "On",
+        "LF Output Voltage": "137 mV",
+        "LF Gen Freq": "500.00 Hz",
+        "LF Gen Shape": "Square",
+        "Source Impedance": "Low"
+      },
+      "top_state": {"RF": "RF ON", "MOD": "MOD ON"}
+    },
+    "page_3": {
+      "description": "LF Gen Shape 下拉菜单展开,显示全部波形选项",
+      "fields": {
+        "LF Output State": "On",
+        "LF Output Voltage": "137 mV",
+        "LF Gen Freq": "500.00 Hz",
+        "LF Gen Shape": {"value": "Square", "dropdown_options": ["Sine", "Square", "Sawtooth"]}
+      }
+    },
+    "page_4": {
+      "description": "LF Gen Freq 数值编辑中(高亮 600.000 与 500.000 切换)",
+      "fields": {
+        "LF Gen Freq": {"current_visible": "600.00 Hz", "highlighted_value_being_entered": "500", "unit_options": ["Hz", "kHz", "MHz"]},
+        "LF Gen Shape": "Square"
+      }
+    },
+    "page_5": {
+      "description": "LF Gen Freq 单位下拉展开",
+      "fields": {
+        "LF Gen Freq": {"value": "500.00 Hz", "unit_options": ["Hz", "kHz", "MHz"]}
+      }
+    },
+    "page_6": {
+      "description": "LF Output Voltage 单位下拉展开",
+      "fields": {
+        "LF Output Voltage": {"value": "137 mV", "unit_options": ["mV", "V"]},
+        "LF Gen Freq": "500.00 Hz",
+        "LF Gen Shape": "Square"
+      }
+    }
+  },
+  "lf_generator_output_parameters": [
+    {
+      "display_name_cn": "LF 输出开关",
+      "display_name_en": "LF Output State",
+      "field": "LF Output State",
+      "scpi_long": "SOURce:LFOutput:STATe",
+      "scpi_short": "LFO:STAT",
+      "allowed_values": ["ON", "OFF"],
+      "safe_value": "ON",
+      "query_syntax": "LFO:STAT?",
+      "pdf_observed": {"value": "ON", "pdf_page": 2, "evidence": "高亮蓝条选中 On"}
+    },
+    {
+      "display_name_cn": "LF 输出电压",
+      "display_name_en": "LF Output Voltage",
+      "field": "LF Output Voltage",
+      "scpi_long": "SOURce:LFOutput:VOLTage",
+      "scpi_short": "LFO:VOLT",
+      "unit": "V",
+      "allowed_unit_options": ["mV", "V"],
+      "range_cn": "由机器选件决定,通常 1 mV~4 V(50Ω 负载)",
+      "safe_value": 0.137,
+      "query_syntax": "LFO:VOLT?",
+      "pdf_observed": {"value": "137 mV", "pdf_page": 1, "evidence": "对话框显示 LF Output Voltage = 137 mV"}
+    },
+    {
+      "display_name_cn": "LF 发生器频率",
+      "display_name_en": "LF Generator Frequency",
+      "field": "LF Gen Freq",
+      "scpi_long": "SOURce:LFOutput:FREQuency",
+      "scpi_short": "LFO:FREQ",
+      "unit": "Hz",
+      "allowed_unit_options": ["Hz", "kHz", "MHz"],
+      "range_cn": "由机器选件决定,通常 0.1 Hz ~ 10 MHz(或 1 MHz)",
+      "safe_value": 500.0,
+      "query_syntax": "LFO:FREQ?",
+      "pdf_observed": {"value": "500.00 Hz", "pdf_page": 1, "evidence": "LF Gen Freq 500.00 Hz"}
+    },
+    {
+      "display_name_cn": "LF 波形",
+      "display_name_en": "LF Generator Shape",
+      "field": "LF Gen Shape",
+      "scpi_long": "SOURce:LFOutput:SHAPe",
+      "scpi_short": "LFO:SHAP",
+      "allowed_values": ["SINE", "SQUare", "SAWtooth"],
+      "safe_value": "SQU",
+      "query_syntax": "LFO:SHAP?",
+      "pdf_observed": {"value": "Square", "pdf_page": 3, "evidence": "LF Gen Shape 下拉展示 Sine/Square/Sawtooth 三选项,选 Square"}
+    },
+    {
+      "display_name_cn": "源阻抗",
+      "display_name_en": "Source Impedance",
+      "field": "Source Impedance",
+      "scpi_long": "SOURce:LFOutput:IMPedance",
+      "scpi_short": "LFO:IMP",
+      "allowed_values": ["LOW", "G600"],
+      "allowed_values_description": "Low 50Ω / 600Ω(用户消息:「有 600Ω 选项」)",
+      "safe_value": "LOW",
+      "query_syntax": "LFO:IMP?",
+      "pdf_observed": {"value": "Low", "pdf_page": 1, "evidence": "Source Impedance 设为 Low;PDF 第 3/4 页对应下拉选项展示"}
+    }
+  ],
+  "safe_scpi_sequence_to_reproduce_pdf_state": [
+    {"step": 1, "command": "FREQ 2.8565E9", "comment_cn": "对应 PDF 中实际频率 2.856 500 000 00 GHz"},
+    {"step": 2, "command": "POW 6.00", "comment_cn": "对应电平 6.00 dBm"},
+    {"step": 3, "command": "POW:ALC:AUTO ON", "comment_cn": "ALC-Auto"},
+    {"step": 4, "command": "LFO:STAT ON", "comment_cn": "打开 LF Output"},
+    {"step": 5, "command": "LFO:VOLT 0.137", "comment_cn": "LF Output Voltage = 137 mV"},
+    {"step": 6, "command": "LFO:FREQ 500", "comment_cn": "LF Gen Freq = 500.00 Hz"},
+    {"step": 7, "command": "LFO:SHAP SQU", "comment_cn": "LF Gen Shape = Square"},
+    {"step": 8, "command": "LFO:IMP LOW", "comment_cn": "Source Impedance = Low(50Ω)"},
+    {"step": 9, "command": "OUTP ON", "comment_cn": "RF 实际打开(图2 截图时尚未打开,实测是 ON)"},
+    {"step": 10, "command": "MOD:STAT ON", "comment_cn": "全局调制实际打开"}
+  ],
+  "safe_scpi_sequence_to_reproduce_figure3_view_only": [
+    {"step": 1, "command": "FREQ 2.882E9", "comment_cn": "标头 2.882 GHz"},
+    {"step": 2, "command": "POW -15.0", "comment_cn": "电平 -15 dBm"},
+    {"step": 3, "command": "OUTP OFF", "comment_cn": "RF OFF,MOD OFF(图1 状态)"},
+    {"step": 4, "command": "MOD:STAT OFF", "comment_cn": ""},
+    {"step": 5, "command": "LFO:STAT OFF", "comment_cn": "fig3 截图状态: LF Output State = Off"},
+    {"step": 6, "command": "LFO:VOLT 0.137", "comment_cn": ""},
+    {"step": 7, "command": "LFO:FREQ 500", "comment_cn": ""},
+    {"step": 8, "command": "LFO:SHAP SQU", "comment_cn": ""},
+    {"step": 9, "command": "LFO:IMP LOW", "comment_cn": ""}
+  ],
+  "validation_queries": [
+    {"query": "LFO:STAT?", "expected_cn": "0=Off, 1=On"},
+    {"query": "LFO:VOLT?", "expected_cn": "0.137(V)"},
+    {"query": "LFO:FREQ?", "expected_cn": "500(Hz)"},
+    {"query": "LFO:SHAP?", "expected_cn": "SQU(显示 Square)"},
+    {"query": "LFO:IMP?", "expected_cn": "LOW / G600"}
+  ],
+  "important_notes": [
+    "LFO 是 SOURce:LFOutput 路径的短缩写;若使用 SOURce:LFOutput:STATe ON 形式更长但更清晰。",
+    "PDF 1-6 页展示了对 LF Gen Freq 单位、LF Gen Shape、LF Output Voltage 单位、Source Impedance 选项的逐步下拉展开;本 v2 把所有观察到的可选项列入 allowed_values/allowed_unit_options。",
+    "用户消息:「4是lf generator/ouput -source impedance的low/600欧姆选项菜单」——Source Impedance 的可选项为 LOW / G600(50Ω 或 600Ω)。",
+    "LF Output State = On 时,MOD 顶标会随之变为 MOD ON;但 RF 是否实际打开由 OUTP 单独决定。"
+  ]
+}

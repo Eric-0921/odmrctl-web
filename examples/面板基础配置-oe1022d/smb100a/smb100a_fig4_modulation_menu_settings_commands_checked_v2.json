@@ -1,0 +1,126 @@
+{
+  "_meta": {
+    "instrument": "R&S SMB100A RF and Microwave Signal Generator",
+    "figure_label": "fig4",
+    "panel_name_cn": "图4 Modulation 子菜单",
+    "version": "checked_v2",
+    "version_note_cn": "v2 保留原 fig4 JSON 结构,基于 PDF 第 8 页(打开 Modulation 子菜单)补充实际显示的菜单项,标注 AM/FM/PM 三个选项的对应 SCPI 子系统。",
+    "source_files": {
+      "original_json": "examples/面板基础配置-oe1022d/smb100a/smb100a_fig4_modulation_menu_settings_commands.json",
+      "pdf_pages_relevant_to_fig4": [8]
+    },
+    "source_manual": "SMB100A Operating Manual"
+  },
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图4 Modulation 子菜单设置指令",
+  "assumptions": [
+    "图4 是主框图中「Modulation」功能框的 config... 弹出的子菜单,含 3 种调制模式选项。",
+    "子菜单项本身无 SCPI 命令;选择后进入对应调制模式的对话框(fig5 = FM,fig8 = AM,fig 未展示 = PM)。"
+  ],
+  "figure4_snapshot": {
+    "description_cn": "原 JSON 记录的 fig4 子菜单视图。",
+    "header_state": {
+      "RF": "OFF",
+      "MOD": "OFF",
+      "Freq": "2.882 GHz",
+      "Level": "-15.00 dBm",
+      "ALC": "AUTO"
+    },
+    "menu_tree_visible": {
+      "menu_title": "Modulation",
+      "visible_entries": ["Amplitude Modulation...", "Frequency Modulation...", "Phase Modulation..."],
+      "highlighted_entry": "Frequency Modulation"
+    }
+  },
+  "pdf_screenshot_observed_values_from_pdf": {
+    "description_cn": "PDF 实际界面中 fig4 子菜单对应的实测显示。",
+    "pdf_pages_relevant_to_fig4": [8],
+    "header_state_at_p8": {
+      "RF": "RF ON",
+      "MOD": "MOD ON",
+      "Freq": "2.856 500 000 00 GHz",
+      "Level": "6.00 dBm",
+      "ALC": "ALC-Auto"
+    },
+    "menu_tree_observed": {
+      "menu_title": "Modulation",
+      "visible_entries": [
+        "Amplitude Modulation...",
+        "Frequency Modulation...",
+        "Phase Modulation..."
+      ],
+      "highlighted_entry": "Frequency Modulation"
+    }
+  },
+  "modulation_menu_entries": [
+    {
+      "entry_en": "Amplitude Modulation...",
+      "scpi_subsystem_long": "SOURce:AM",
+      "scpi_subsystem_short": "AM",
+      "scpi_top_level_for_am_state": "OUTP:STAT:AM",
+      "pdf_observed": true
+    },
+    {
+      "entry_en": "Frequency Modulation...",
+      "scpi_subsystem_long": "SOURce:FM",
+      "scpi_subsystem_short": "FM",
+      "scpi_top_level_for_fm_state": "OUTP:STAT:FM",
+      "pdf_observed": true,
+      "notes_cn": "fig5/fig6 是该子菜单展开后的对话框"
+    },
+    {
+      "entry_en": "Phase Modulation...",
+      "scpi_subsystem_long": "SOURce:PM",
+      "scpi_subsystem_short": "PM",
+      "scpi_top_level_for_pm_state": "OUTP:STAT:PM",
+      "pdf_observed": true
+    }
+  ],
+  "visible_header_parameters": [
+    {"display": "RF", "value_in_fig": "OFF→ON(after mod gen on)", "scpi": "OUTP?"},
+    {"display": "MOD", "value_in_fig": "OFF→ON(after at least one AM/FM/PM enabled)", "scpi": "MOD:STAT?"},
+    {"display": "Freq", "value_in_fig": "2.882→2.8565 GHz", "scpi": "FREQ?"},
+    {"display": "Level", "value_in_fig": "-15.00 dBm→6.00 dBm", "scpi": "POW?"},
+    {"display": "ALC", "value_in_fig": "AUTO", "scpi": "POW:ALC?"}
+  ],
+  "get_to_menu_note": {
+    "how_to_open": [
+      "1. 机器处于主功能框图界面。",
+      "2. 在主框图界面中找到「Modulation」功能框(图位置:中部偏右,显示 Modulation 文字,带 On 复选框和 config... 标签)。",
+      "3. 选中 config... 标签,弹出 fig4 子菜单。",
+      "4. 选择某个子菜单项可进入对应调制模式的对话框(fig5 = FM, AM/PM 类似)。"
+    ]
+  },
+  "safe_scpi_sequence_to_match_visible_state_before_opening_menu": [
+    {"step": 1, "command": "FREQ 2.882E9", "comment_cn": "复现 fig4 原 JSON 的待机状态(2.882 GHz)"},
+    {"step": 2, "command": "POW -15.0", "comment_cn": ""},
+    {"step": 3, "command": "OUTP OFF", "comment_cn": ""},
+    {"step": 4, "command": "MOD:STAT OFF", "comment_cn": ""},
+    {"step": 5, "command": "AM:STAT OFF;FM:STAT OFF;PM:STAT OFF", "comment_cn": "确保所有调制关闭(可额外安全检查)"},
+    {"step": 6, "command": "MOD:STAT?", "comment_cn": "查询以确保菜单正确显示"}
+  ],
+  "minimal_remote_script_to_match_figure4_header_and_blocks": [
+    {"step": 1, "command": "FREQ 2.882E9", "comment_cn": "频率标头"},
+    {"step": 2, "command": "POW -15.0", "comment_cn": "电平标头"},
+    {"step": 3, "command": "POW:ALC:AUTO ON", "comment_cn": "ALC-Auto"},
+    {"step": 4, "command": "OUTP OFF", "comment_cn": "RF 关闭,符合 RF OFF 标头"},
+    {"step": 5, "command": "MOD:STAT OFF", "comment_cn": "关闭所有调制,符合 MOD OFF 标头"},
+    {"step": 6, "command": "AM:STAT OFF;FM:STAT OFF;PM:STAT OFF", "comment_cn": "单独关闭每个调制子项"}
+  ],
+  "query_commands_to_verify_visible_state": [
+    {"query": "OUTP?", "expected_cn": "0 表示 RF OFF,1 表示 RF ON"},
+    {"query": "MOD:STAT?", "expected_cn": "0/1/2/3 之一(组合编码)"},
+    {"query": "FREQ?", "expected_cn": "标头显示的频率值"},
+    {"query": "POW?", "expected_cn": "电平值(负数为 dBm)"},
+    {"query": "AM:STAT?", "expected_cn": "0/1 AM 状态"},
+    {"query": "FM:STAT?", "expected_cn": "0/1 FM 状态"},
+    {"query": "PM:STAT?", "expected_cn": "0/1 PM 状态"}
+  ],
+  "remote_control_notes_for_figure4": [
+    "图4 的核心是 Modulation 子菜单,菜单项无独立 SCPI,选中后跳转 fig5/FM、AM、PM 对话框。",
+    "图4 PDF 中实际状态: RF ON、MOD ON、2.8565 GHz、6.00 dBm、ALC-Auto;与 fig4 原 JSON 截图状态不同。",
+    "PDF p.8 中 Modulation 主框图仍可见但 On 复选框未勾选——这意味着 MOD ON 是通过 AM/FM/PM 任意一个被启用而触发的,但 Modulation 顶层(同时启用所有 AM+FM+PM 的开关)未勾选。",
+    "图4 v2 重点:在 PDF 实测状态中,AM/FM/PM 至少有一项已被启用(进入 fig5/6 时 FM 启用),这就是 MOD ON 显示的原因。"
+  ]
+}

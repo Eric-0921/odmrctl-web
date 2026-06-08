@@ -26,17 +26,16 @@ export default function MockOnlyBanner() {
     >
       {bannerCollapsed ? (
         <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 600 }}>
-          M4.1 DRY-RUN VIEWER
+          M4.1 预览模式
         </span>
       ) : (
         <span>
-          M4.1 DRY-RUN VIEWER — No hardware access. No executor connection. Real
-          controls disabled.
+          M4.1 预览模式 - 前端不直接访问硬件；真实控制必须通过 Tauri typed commands。
         </span>
       )}
       <button
         onClick={toggleBanner}
-        title={bannerCollapsed ? "Expand banner" : "Collapse banner"}
+        title={bannerCollapsed ? "展开提示" : "收起提示"}
         style={{
           background: "transparent",
           border: "1px solid var(--color-primary)",
@@ -49,7 +48,7 @@ export default function MockOnlyBanner() {
           flexShrink: 0,
         }}
         aria-expanded={!bannerCollapsed}
-        aria-label={bannerCollapsed ? "Expand mock mode banner" : "Collapse mock mode banner"}
+        aria-label={bannerCollapsed ? "展开 mock 模式提示" : "收起 mock 模式提示"}
       >
         {bannerCollapsed ? "▲" : "▼"}
       </button>

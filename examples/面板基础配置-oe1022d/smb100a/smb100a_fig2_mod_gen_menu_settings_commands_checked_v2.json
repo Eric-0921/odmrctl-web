@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "instrument": "R&S SMB100A RF and Microwave Signal Generator",
+    "figure_label": "fig2",
+    "panel_name_cn": "图2 Mod Gen 主菜单(Modulation Generator Menu)",
+    "version": "checked_v2",
+    "version_note_cn": "v2 保留原 JSON 结构,增加 pdf_screenshot_observed_values_from_pdf 字段(来自 PDF 第 7、14 页),新增 units_and_options 字段记录 PDF 中观察到的所有可选项,新增 get_to_menu_note 描述打开菜单的物理步骤。",
+    "source_files": {
+      "original_json": "examples/面板基础配置-oe1022d/smb100a/smb100a_fig2_mod_gen_menu_settings_commands.json",
+      "pdf_pages_relevant_to_fig2": [7, 14]
+    },
+    "source_manual": "SMB100A Operating Manual"
+  },
+  "schema_version": "1.0",
+  "language": "zh-CN",
+  "title": "SMB100A 图2 Mod Gen 菜单参数设置指令",
+  "assumptions": [
+    "图2指点击功能框图中「Modulation Generator」的 config… 子菜单后,显示其弹出菜单(2 个子项)。",
+    "图2 本身是菜单项展示,SCPI 不直接对应菜单显示;SCPI 命令用于设置菜单项下的具体参数(详见 fig3)。",
+    "主框图界面的 RF/MOD/LF 状态在图1 顶部有显示,在图2 打开时仍可见。"
+  ],
+  "figure2_snapshot": {
+    "description_cn": "原 JSON 记录的 fig2 截图状态。",
+    "screen_header": {
+      "frequency": {"value": 2.882, "unit": "GHz", "display": "2.882 000 000 000 GHz"},
+      "rf_output_state": {"value": "OFF", "display": "RF OFF"},
+      "modulation_global_state": {"value": "OFF", "display": "MOD OFF"},
+      "rf_level": {"value": -15.0, "unit": "dBm", "display": "-15.00 dBm"},
+      "alc_state": {"value": "AUTO", "display": "ALC-Auto"}
+    },
+    "menu_tree_visible": {
+      "opened_from_block": "Mod Gen > config...",
+      "menu_title": "Modulation Generator",
+      "visible_entries": ["LF Generator / Output", "LF Frequency Sweep..."],
+      "highlighted_entry": "LF Generator / Output"
+    },
+    "other_visible_blocks": {
+      "modulation_block": "config...入口可见,未勾选 On;顶部显示 MOD OFF",
+      "rf_block": "config...入口和 On 复选框可见,未勾选;顶部显示 RF OFF"
+    }
+  },
+  "pdf_screenshot_observed_values_from_pdf": {
+    "description_cn": "PDF 实际界面中 fig2 弹出菜单对应的实测显示。",
+    "pdf_pages_relevant_to_fig2": [7, 14],
+    "page_7_observations": {
+      "top_status": {
+        "RF": "RF ON",
+        "MOD": "MOD ON",
+        "Freq": "2.856 500 000 00 GHz",
+        "Level": "6.00 dBm",
+        "ALC": "ALC-Auto"
+      },
+      "menu_opened_from": "Modulation Generator 功能框图中的 config...",
+      "menu_title": "Modulation Generator",
+      "visible_menu_entries": [
+        {"name": "LF Generator / Output", "role": "打开 LF Generator / Output 对话框(fig3)"},
+        {"name": "LF Frequency Sweep...", "role": "打开 LF Frequency Sweep 对话框(fig7),注意三个点...表示会弹子菜单"}
+      ],
+      "highlighted": "LF Generator / Output",
+      "other_visible": {
+        "Modulation_block": "config...可见,On 复选框未勾选(因为此时 FM 调制的子菜单是另外打开的;顶层调制开关 Off 仅指 AM,不是 FM)",
+        "RF_block": "config...和 On 复选框可见,On 复选框未勾选(只是当前顶层未激活 RF 切换,实际 RF 输出仍为 ON)"
+      }
+    },
+    "page_14_observations": {
+      "description_cn": "PDF 第 14 页展示重新回到主框图界面,选中 Modulation Generator,符合 fig2 的子菜单上下文。",
+      "menu_opened_from": "Modulation Generator config...",
+      "menu_title": "Modulation Generator",
+      "visible_menu_entries": ["LF Generator / Output", "LF Frequency Sweep..."],
+      "highlighted": "Modulation Generator"
+    }
+  },
+  "get_to_menu_note": {
+    "how_to_open": [
+      "1. 机器处于主功能框图界面。",
+      "2. 点击或旋钮选中「Modulation Generator」功能框中的 config... 标签。",
+      "3. 在弹出菜单中选中「LF Generator / Output」可打开 fig3 对话框,选「LF Frequency Sweep...」可打开 fig7 对话框。"
+    ],
+    "front_panel_steps_to_reproduce_figure2_menu": [
+      {"step": 1, "instruction": "返回主功能框图界面,确认机器处于初始待机状态(可参考 figure1_snapshot)。"},
+      {"step": 2, "instruction": "在主框图界面中找到「Modulation Generator」框(图位置:左下方),框内有 LF 输出符号、Mod Gen 标签、On 复选框、config... 标签。"},
+      {"step": 3, "instruction": "点击或通过旋钮选中 config... 标签,弹出 fig2 菜单。"},
+      {"step": 4, "instruction": "菜单包含两项: LF Generator / Output 和 LF Frequency Sweep...;LF Generator / Output 高亮选中(默认)。"}
+    ]
+  },
+  "safe_scpi_sequence_for_visible_signal_state_only": [
+    {"step": 1, "command": "FREQ 2.882E9", "comment_cn": "复现 figure1 标头的频率状态(仅用于菜单截图,不真正发射信号)"},
+    {"step": 2, "command": "OUTP OFF", "comment_cn": "RF 输出关闭,菜单截图前应保证 RF OFF"},
+    {"step": 3, "command": "MOD:STAT OFF", "comment_cn": "全局调制关闭,菜单截图前应保证 MOD OFF"},
+    {"step": 4, "command": "FREQ?", "comment_cn": "查询以保证界面刷新(模拟打开菜单前的 Refresh)"}
+  ],
+  "visible_header_parameters": [
+    {"display": "Freq", "value_in_fig": "2.882 000 000 000 GHz", "scpi": "FREQ?"},
+    {"display": "RF", "value_in_fig": "OFF", "scpi": "OUTP?"},
+    {"display": "MOD", "value_in_fig": "OFF", "scpi": "MOD:STAT?"},
+    {"display": "Level", "value_in_fig": "-15.00 dBm", "scpi": "POW?"},
+    {"display": "ALC", "value_in_fig": "ALC-Auto", "scpi": "POW:ALC?"}
+  ],
+  "mod_gen_menu_entries": [
+    {"entry": "LF Generator / Output", "opens": "fig3 对话框,对应 SCPI:LFO:* 系列", "primary": true},
+    {"entry": "LF Frequency Sweep...", "opens": "fig7 对话框,对应 SCPI:SOUR:LF:SWEep:* 系列", "primary": false}
+  ],
+  "validation_queries": [
+    {"query": "OUTP?", "expected_cn": "0 表示 RF OFF(对照 figure1 标头)"},
+    {"query": "MOD:STAT?", "expected_cn": "0 表示 MOD OFF"},
+    {"query": "FREQ?", "expected_cn": "2.882000000000E+009(对照 figure1 标头)"},
+    {"query": "POW?", "expected_cn": "-15.00(对照 figure1 标头)"}
+  ],
+  "notes_for_use": [
+    "图2 仅展示 Modulation Generator 功能框图下的菜单,菜单项本身没有直接 SCPI 命令。",
+    "实际进行 ODMR 实验常用路径: 选 LF Generator / Output 进入 fig3,设置 LF 频率、电压、波形等。",
+    "PDF 第 7 页还出现「LF Frequency Sweep...」菜单项,这是 SMB100A 提供的另一种 LF 信号产生方式(扫频模式),不在 fig2 原 JSON 覆盖范围,详见 fig7 v2 JSON。"
+  ]
+}

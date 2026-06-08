@@ -1,24 +1,9 @@
 import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { path: "/", label: "Dashboard" },
-  { path: "/devices", label: "Devices" },
-  { path: "/recipe", label: "Recipe" },
-  { path: "/dry-run", label: "Dry Run" },
-  { path: "/safety", label: "Safety" },
-  { path: "/events", label: "Events" },
-  { path: "/raw-data", label: "Raw Data Preview" },
-  { path: "/analysis-viewer", label: "Analysis Viewer" },
-  { path: "/live-chart", label: "Live Chart" },
-  { path: "/recipe-viewer", label: "Recipe Viewer" },
-  { path: "/system-scan", label: "System Scan" },
-  { path: "/about", label: "About / Boundaries" },
-];
-
-const disabledItems = [
-  { label: "Run Control", reason: "requires executor backend" },
-  { label: "Magnetic Planner", reason: "future module" },
-  { label: "Settings", reason: "future module" },
+  { path: "/", label: "设备工作台" },
+  { path: "/experiment-plan", label: "实验计划" },
+  { path: "/live-chart", label: "实时曲线" },
 ];
 
 export default function SideNav() {
@@ -59,39 +44,6 @@ export default function SideNav() {
           {item.label}
         </NavLink>
       ))}
-      <div
-        style={{
-          marginTop: "var(--space-4)",
-          paddingTop: "var(--space-4)",
-          borderTop: "1px solid var(--color-border)",
-        }}
-      >
-        {disabledItems.map((item) => (
-          <div
-            key={item.label}
-            style={{
-              padding: "10px var(--space-4)",
-              fontSize: "var(--font-size-sm)",
-              color: "var(--color-disabled-text)",
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--space-2)",
-            }}
-          >
-            <span>{item.label}</span>
-            <span
-              style={{
-                fontSize: "var(--font-size-xs)",
-                padding: "1px 6px",
-                borderRadius: "var(--radius-sm)",
-                background: "var(--color-disabled-bg)",
-              }}
-            >
-              {item.reason}
-            </span>
-          </div>
-        ))}
-      </div>
     </nav>
   );
 }

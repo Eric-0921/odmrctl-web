@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# check-frontend-hardware.sh — forbid frontend code from accessing hardware directly.
+# check-frontend-hardware.sh — forbid frontend TypeScript/React code from accessing hardware directly.
 #
-# Rules:
-# - apps/desktop must not contain serial, usb, visa, scpi socket, tcp patterns
-# - frontend must not import hardware crates directly (odmr-smb100a, odmr-oe1022d, odmr-device)
+# Rules (M5C-A updated):
+# - apps/desktop/src (frontend TS/TSX) must not contain serial, usb, visa, scpi socket, tcp patterns
+# - Tauri backend (src-tauri) is ALLOWED to use hardware crates and transport via typed commands
+# - Frontend must NEVER import hardware driver crates or open raw sockets/serial
 #
 # Usage: bash scripts/check-frontend-hardware.sh (run from repo root)
 
@@ -23,9 +24,11 @@ fail() { echo -e "  ${RED}FAIL${NC} $1"; ERRORS=$((ERRORS + 1)); }
 echo "=== frontend hardware access check ==="
 echo ""
 
-FRONTEND_DIR="apps/desktop"
+# Only check frontend TypeScript/React code, NOT the Tauri backend.
+# M5C-A allows the Rust backend to use serialport / TCP / hardware crates.
+FRONTEND_SRC="apps/desktop/src"
 
-# Patterns that indicate direct hardware access in frontend code
+# Patterns that indicate direct hardware access in frontend TS/TSX code
 PATTERNS=(
     '\bserial(port|_port)?\b'
     '\busb(device|_device)?\b'
@@ -36,34 +39,37 @@ PATTERNS=(
 )
 
 for pat in "${PATTERNS[@]}"; do
-    matches=$(find "$FRONTEND_DIR/src-tauri" -type f \( -name '*.rs' -o -name 'Cargo.toml' \) \
+    matches=$(find "$FRONTEND_SRC" -type f \( -name '*.ts' -o -name '*.tsx' \) \
         -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/target/*' \
+        -not -name 'AboutBoundariesPage.tsx' \
         -print0 2>/dev/null | \
         xargs -0 grep -iE "$pat" 2>/dev/null || true)
     if [ -n "$matches" ]; then
-        fail "pattern '$pat' found in frontend:\n$matches"
+        fail "pattern '$pat' found in frontend TS/TSX:\n$matches"
     fi
 done
 
-# Check for direct imports of hardware driver crates
+# Check for direct imports of hardware driver crates in frontend source
 IMPORT_PATTERNS=(
     'odmr-smb100a'
     'odmr-oe1022d'
     'odmr-device'
+    'odmr-preflight'
+    'serialport'
 )
 
 for pat in "${IMPORT_PATTERNS[@]}"; do
-    matches=$(find "$FRONTEND_DIR/src-tauri" -type f \( -name '*.rs' -o -name 'Cargo.toml' \) \
+    matches=$(find "$FRONTEND_SRC" -type f \( -name '*.ts' -o -name '*.tsx' \) \
         -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' \
         -print0 2>/dev/null | \
-        xargs -0 grep -v '^#' | grep -F "$pat" 2>/dev/null || true)
+        xargs -0 grep -v '^\s*//' | grep -v '^\s*/\*' | grep -F "$pat" 2>/dev/null || true)
     if [ -n "$matches" ]; then
         fail "frontend imports hardware crate '$pat':\n$matches"
     fi
 done
 
 if [ "$ERRORS" -eq 0 ]; then
-    pass "no forbidden hardware access patterns in frontend"
+    pass "no forbidden hardware access patterns in frontend TS/TSX"
 fi
 
 echo ""
