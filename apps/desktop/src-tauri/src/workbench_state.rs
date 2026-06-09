@@ -10,10 +10,11 @@
 //! Locks are held across Tauri commands until `release_locks()` is called.
 
 use crate::panels::StationSafety;
+use odmr_executor::RunControl;
 use odmr_preflight::{DeviceLock, StationPreflightReport, StationProfile};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 /// Runtime zero baseline measured during this application session.
 ///
@@ -83,11 +84,13 @@ pub struct WorkbenchStateInner {
     pub experiment_run_status: Option<serde_json::Value>,
     /// Cooperative stop flag for the current experiment-plan run launcher.
     pub experiment_run_cancel_requested: bool,
+    /// Active hardware run control for cooperative stop.
+    pub experiment_run_control: Option<RunControl>,
 }
 
 /// Tauri-managed state wrapper.
 pub struct WorkbenchState {
-    pub inner: Mutex<WorkbenchStateInner>,
+    pub inner: Arc<Mutex<WorkbenchStateInner>>,
 }
 
 impl Default for WorkbenchState {
@@ -103,7 +106,7 @@ impl Default for WorkbenchState {
             .mag_coil_constant
             .insert("maynuo.mag_z".to_string(), 156.15);
         Self {
-            inner: Mutex::new(inner),
+            inner: Arc::new(Mutex::new(inner)),
         }
     }
 }

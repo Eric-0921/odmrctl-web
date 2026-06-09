@@ -6,7 +6,7 @@
 use super::{scpi_query, scpi_set, smb_connect, with_device_access};
 use crate::workbench_state::WorkbenchState;
 use odmr_smb100a::commands::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Smb100aStatus {
@@ -16,13 +16,33 @@ pub struct Smb100aStatus {
     pub output_on: Option<bool>,
     pub modulation_on: Option<bool>,
     pub fm_enabled: Option<bool>,
+    pub fm_source: Option<String>,
+    pub fm_mode: Option<String>,
     pub fm_deviation_hz: Option<f64>,
     pub lf_frequency_hz: Option<f64>,
     pub lf_voltage_v: Option<f64>,
     pub lf_output_on: Option<bool>,
     pub lf_shape: Option<String>,
+    pub lf_impedance: Option<String>,
     pub error_queue: Vec<String>,
     pub last_readback_time: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Smb100aWorkbenchApplyConfig {
+    pub frequency_hz: f64,
+    pub power_dbm: f64,
+    pub modulation_on: bool,
+    pub lf_output_on: bool,
+    pub lf_frequency_hz: f64,
+    pub lf_voltage_v: f64,
+    pub lf_shape: String,
+    pub lf_impedance: String,
+    pub fm_enabled: bool,
+    pub fm_source: String,
+    pub fm_mode: String,
+    pub fm_deviation_hz: f64,
 }
 
 fn now_rfc3339() -> String {
@@ -66,6 +86,8 @@ fn read_full_status(stream: &mut std::net::TcpStream) -> Result<Smb100aStatus, S
     let fm_on = scpi_query(stream, query_fm_state())
         .ok()
         .and_then(|s| parse_bool(&s));
+    let fm_source = scpi_query(stream, query_fm_source()).ok();
+    let fm_mode = scpi_query(stream, query_fm_mode()).ok();
     let fm_dev = scpi_query(stream, query_fm_deviation())
         .ok()
         .and_then(|s| s.trim().replace("Hz", "").parse().ok());
@@ -79,6 +101,7 @@ fn read_full_status(stream: &mut std::net::TcpStream) -> Result<Smb100aStatus, S
         .ok()
         .and_then(|s| parse_bool(&s));
     let lf_shp = scpi_query(stream, query_lf_shape()).ok();
+    let lf_impedance = scpi_query(stream, query_lf_impedance()).ok();
     let errors = drain_error_queue(stream);
 
     Ok(Smb100aStatus {
@@ -88,11 +111,14 @@ fn read_full_status(stream: &mut std::net::TcpStream) -> Result<Smb100aStatus, S
         output_on: output,
         modulation_on: mod_on,
         fm_enabled: fm_on,
+        fm_source,
+        fm_mode,
         fm_deviation_hz: fm_dev,
         lf_frequency_hz: lf_freq,
         lf_voltage_v: lf_volt,
         lf_output_on: lf_out,
         lf_shape: lf_shp,
+        lf_impedance,
         error_queue: errors,
         last_readback_time: now_rfc3339(),
     })
@@ -195,6 +221,54 @@ pub fn smb100a_set_fm(
 }
 
 #[tauri::command]
+pub fn smb100a_apply_workbench_config(
+    state: tauri::State<WorkbenchState>,
+    device_id: String,
+    config: Smb100aWorkbenchApplyConfig,
+) -> Result<Smb100aStatus, String> {
+    let safety = state.safety();
+    if config.frequency_hz < safety.smb100a_min_freq_hz
+        || config.frequency_hz > safety.smb100a_max_freq_hz
+    {
+        return Err(format!(
+            "Frequency {} Hz outside safety limits [{}, {}] Hz",
+            config.frequency_hz,
+            safety.smb100a_min_freq_hz, safety.smb100a_max_freq_hz
+        ));
+    }
+    if config.power_dbm > safety.smb100a_max_power_dbm {
+        return Err(format!(
+            "Power {} dBm exceeds safety limit {} dBm",
+            config.power_dbm,
+            safety.smb100a_max_power_dbm
+        ));
+    }
+
+    let lf_shape = normalize_lf_shape(&config.lf_shape)?;
+    let lf_impedance = normalize_lf_impedance(&config.lf_impedance)?;
+    let fm_source = normalize_fm_source(&config.fm_source)?;
+    let fm_mode = normalize_fm_mode(&config.fm_mode)?;
+
+    let address = with_device_access(&state, &device_id)?;
+    let mut stream = smb_connect(&address)?;
+
+    scpi_set(&mut stream, set_output(false))?;
+    scpi_set(&mut stream, &set_frequency_hz(config.frequency_hz))?;
+    scpi_set(&mut stream, &set_power_dbm(config.power_dbm))?;
+    scpi_set(&mut stream, &set_lf_frequency_hz(config.lf_frequency_hz))?;
+    scpi_set(&mut stream, &set_lf_shape(&lf_shape))?;
+    scpi_set(&mut stream, &set_lf_impedance(&lf_impedance))?;
+    scpi_set(&mut stream, &set_lf_voltage_v(config.lf_voltage_v))?;
+    scpi_set(&mut stream, set_lf_output(config.lf_output_on))?;
+    scpi_set(&mut stream, &set_fm_source(&fm_source))?;
+    scpi_set(&mut stream, &set_fm_mode(&fm_mode))?;
+    scpi_set(&mut stream, &set_fm_deviation_hz(config.fm_deviation_hz))?;
+    scpi_set(&mut stream, set_fm_state(config.fm_enabled))?;
+    scpi_set(&mut stream, set_modulation_global(config.modulation_on))?;
+    read_full_status(&mut stream)
+}
+
+#[tauri::command]
 pub fn smb100a_set_lf(
     state: tauri::State<WorkbenchState>,
     device_id: String,
@@ -225,4 +299,80 @@ pub fn smb100a_apply_safe_config(
     scpi_set(&mut stream, set_modulation_global(false))?;
     scpi_set(&mut stream, set_fm_state(false))?;
     read_full_status(&mut stream)
+}
+
+fn normalize_lf_shape(input: &str) -> Result<String, String> {
+    let upper = input.to_ascii_uppercase();
+    if upper.contains("SQU") {
+        Ok("SQUARE".into())
+    } else if upper.contains("SIN") {
+        Ok("SINE".into())
+    } else if upper.contains("TRI") {
+        Ok("TRIANGLE".into())
+    } else if upper.contains("SAW") || upper.contains("RAMP") {
+        Ok("RAMP".into())
+    } else {
+        Err(format!("Unsupported LF shape: {input}"))
+    }
+}
+
+fn normalize_lf_impedance(input: &str) -> Result<String, String> {
+    let upper = input.to_ascii_uppercase();
+    if upper.contains("LOW") {
+        Ok("LOW".into())
+    } else if upper.contains("HIGH") || upper.contains("G600") || upper.contains("600") {
+        Ok("G600".into())
+    } else {
+        Err(format!("Unsupported LF impedance: {input}"))
+    }
+}
+
+fn normalize_fm_source(input: &str) -> Result<String, String> {
+    let upper = input.to_ascii_uppercase();
+    if upper.contains("INT,EXT") || upper.contains("INTERNAL_EXTERNAL") {
+        Ok("INT,EXT".into())
+    } else if upper.contains("EXT") {
+        Ok("EXT".into())
+    } else if upper.contains("INT") {
+        Ok("INT".into())
+    } else {
+        Err(format!("Unsupported FM source: {input}"))
+    }
+}
+
+fn normalize_fm_mode(input: &str) -> Result<String, String> {
+    let upper = input.to_ascii_uppercase();
+    if upper.contains("HDEV") || upper.contains("HIGH") {
+        Ok("HDEV".into())
+    } else if upper.contains("LNO") || upper.contains("LOW") {
+        Ok("LNO".into())
+    } else if upper.contains("NORM") {
+        Ok("NORM".into())
+    } else {
+        Err(format!("Unsupported FM mode: {input}"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn normalizes_lf_shape_and_impedance_to_scpi_values() {
+        assert_eq!(normalize_lf_shape("方波 (SQUare)").unwrap(), "SQUARE");
+        assert_eq!(normalize_lf_shape("正弦 (SINE)").unwrap(), "SINE");
+        assert_eq!(normalize_lf_impedance("低阻抗 (LOW)").unwrap(), "LOW");
+        assert_eq!(normalize_lf_impedance("高阻抗 (HIGH)").unwrap(), "G600");
+    }
+
+    #[test]
+    fn normalizes_fm_source_and_mode_to_scpi_values() {
+        assert_eq!(
+            normalize_fm_source("内部+外部 (INT,EXT)").unwrap(),
+            "INT,EXT"
+        );
+        assert_eq!(normalize_fm_source("外部 (EXTernal)").unwrap(), "EXT");
+        assert_eq!(normalize_fm_mode("高偏差 (HDEViation)").unwrap(), "HDEV");
+        assert_eq!(normalize_fm_mode("低噪声 (LNOise)").unwrap(), "LNO");
+    }
 }

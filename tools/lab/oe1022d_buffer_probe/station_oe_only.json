@@ -1,0 +1,13 @@
+{
+  "name": "oe1022d-buffer-validation",
+  "devices": [
+    {
+      "device_id": "oe1022d.main",
+      "kind": "oe1022d",
+      "transport": "serial",
+      "address": "/dev/cu.usbmodem395D388533371",
+      "expected_sn": null,
+      "timeout_ms": 5000
+    }
+  ]
+}

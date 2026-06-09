@@ -42,6 +42,11 @@ pub fn set_freq_mode_cw() -> &'static str {
     "FREQ:MODE CW"
 }
 
+/// `FREQ:MODE SWE` — set internal RF sweep mode.
+pub fn set_freq_mode_sweep() -> &'static str {
+    "FREQ:MODE SWE"
+}
+
 // ---------------------------------------------------------------------------
 // RF Power / Level
 // ---------------------------------------------------------------------------
@@ -303,4 +308,58 @@ pub fn set_sweep_mode(mode: &str) -> String {
 /// `SWE:MODE?` — query sweep mode.
 pub fn query_sweep_mode() -> &'static str {
     "SWE:MODE?"
+}
+
+/// `SWE:SHAP SAWtooth|TRIangle` — set RF sweep shape.
+pub fn set_sweep_shape(shape: &str) -> String {
+    format!("SWE:SHAP {shape}")
+}
+
+/// `SWE:SHAP?` — query RF sweep shape.
+pub fn query_sweep_shape() -> &'static str {
+    "SWE:SHAP?"
+}
+
+/// `TRIG:FSW:SOUR SING|AUTO|EXT` — set RF sweep trigger source.
+pub fn set_sweep_trigger_source(source: &str) -> String {
+    format!("TRIG:FSW:SOUR {source}")
+}
+
+/// `TRIG:FSW:SOUR?` — query RF sweep trigger source.
+pub fn query_sweep_trigger_source() -> &'static str {
+    "TRIG:FSW:SOUR?"
+}
+
+/// `TRIG:FSW:IMM` — trigger one RF frequency sweep immediately.
+pub fn trigger_sweep_immediate() -> &'static str {
+    "TRIG:FSW:IMM"
+}
+
+/// `SWE:FREQ:EXEC` — execute one RF frequency sweep.
+pub fn execute_frequency_sweep() -> &'static str {
+    "SWE:FREQ:EXEC"
+}
+
+/// `SWE:RUNN?` — query whether RF sweep is running.
+pub fn query_sweep_running() -> &'static str {
+    "SWE:RUNN?"
+}
+
+/// `SWE:OUTP:VOLT:STAR <val>V` — set sweep output start voltage.
+pub fn set_sweep_output_start_v(v: f64) -> String {
+    format!("SWE:OUTP:VOLT:STAR {v}V")
+}
+
+/// `SWE:OUTP:VOLT:STOP <val>V` — set sweep output stop voltage.
+pub fn set_sweep_output_stop_v(v: f64) -> String {
+    format!("SWE:OUTP:VOLT:STOP {v}V")
+}
+
+/// `SWE:OUTP OFF|ON` — enable LF connector sweep output voltage.
+pub fn set_sweep_lf_output(state: bool) -> &'static str {
+    if state {
+        "SWE:OUTP ON"
+    } else {
+        "SWE:OUTP OFF"
+    }
 }

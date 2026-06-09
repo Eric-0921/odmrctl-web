@@ -9,7 +9,8 @@ pub mod oe1022d;
 pub mod smb100a;
 
 use crate::workbench_state::WorkbenchState;
-use serde::Deserialize;
+use odmr_config::load_station_config;
+use serde::{Deserialize, Serialize};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::TcpStream;
 use std::time::Duration;
@@ -19,7 +20,7 @@ use std::time::Duration;
 // ---------------------------------------------------------------------------
 
 /// Parsed safety limits from station.json.
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StationSafety {
     #[serde(default = "default_smb_max_power")]
     pub smb100a_max_power_dbm: f64,
@@ -71,16 +72,15 @@ impl Default for StationSafety {
 
 /// Load safety limits from a station.json file.
 pub fn load_station_safety(path: &str) -> Result<StationSafety, String> {
-    let text = std::fs::read_to_string(path).map_err(|e| format!("read {path}: {e}"))?;
-    let json: serde_json::Value =
-        serde_json::from_str(&text).map_err(|e| format!("parse {path}: {e}"))?;
-
-    let safety: StationSafety = json
-        .get("safety")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
-
-    Ok(safety)
+    let config = load_station_config(path).map_err(|e| format!("load {path}: {e}"))?;
+    Ok(StationSafety {
+        smb100a_max_power_dbm: config.safety.smb100a_max_power_dbm,
+        smb100a_min_freq_hz: config.safety.smb100a_min_freq_hz,
+        smb100a_max_freq_hz: config.safety.smb100a_max_freq_hz,
+        mag_max_current_a_per_axis: config.safety.mag_max_current_a_per_axis,
+        laser_max_power_mw: config.safety.laser_max_power_mw,
+        laser_default_enabled: false,
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -194,28 +194,4 @@ pub fn serial_query_ascii(
         .map_err(|e| format!("serial read '{cmd}': {e}"))?;
     let resp = String::from_utf8_lossy(&buf[..n]).trim().to_string();
     Ok(resp)
-}
-
-/// Send raw bytes over serial and optionally read back an echo.
-pub fn serial_send_raw(
-    port: &mut Box<dyn serialport::SerialPort>,
-    data: &[u8],
-    read_echo: bool,
-) -> Result<Option<Vec<u8>>, String> {
-    let _ = port.clear(serialport::ClearBuffer::Input);
-    port.write_all(data)
-        .map_err(|e| format!("serial write: {e}"))?;
-    port.flush().map_err(|e| format!("serial flush: {e}"))?;
-
-    if !read_echo {
-        return Ok(None);
-    }
-
-    std::thread::sleep(Duration::from_millis(150));
-    let mut buf = vec![0u8; data.len()];
-    let n = port
-        .read(&mut buf)
-        .map_err(|e| format!("serial read: {e}"))?;
-    buf.truncate(n);
-    Ok(Some(buf))
 }

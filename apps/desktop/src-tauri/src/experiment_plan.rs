@@ -4,9 +4,14 @@
 //!
 //! Loading/projecting/resolving commands do not send hardware commands and do
 //! not mutate device output state. Run-launcher commands are explicit and keep
-//! hardware execution blocked until the real raw-first collector path is wired.
+//! the hardware handoff visible through readiness/progress/artifacts.
 
 use crate::workbench_state::{RuntimeZeroBaseline, WorkbenchState};
+use odmr_config::load_station_config_str;
+use odmr_executor::{
+    run_hardware, HardwareLaserTarget, HardwareMagAxisTarget, HardwareOeAcquisition,
+    HardwareProgress, HardwareRfSweep, HardwareRunConfig, HardwareRunStep, RunControl,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use serde_json::Value;
@@ -14,6 +19,7 @@ use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::PathBuf;
+use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ExperimentPlanSummary {
@@ -242,6 +248,14 @@ pub struct ExperimentPlanRunStatus {
     pub estimated_measurements: usize,
     pub estimated_duration_s: Option<f64>,
     pub steps_completed: usize,
+    pub current_step_index: Option<usize>,
+    pub current_step_id: Option<String>,
+    pub current_b_nt: Option<[f64; 3]>,
+    pub current_phase: Option<String>,
+    pub smb_sweep_running: bool,
+    pub oe_frames_captured: u64,
+    pub cleanup_state: Option<String>,
+    pub recent_error: Option<String>,
     pub blocked_reasons: Vec<String>,
     pub warnings: Vec<String>,
     pub artifact_paths: HashMap<String, String>,
@@ -410,11 +424,10 @@ fn grouped_scan_entries(field_space: &Value) -> Vec<FieldPointEntry> {
 
     let mut out = Vec::new();
     for group in ordered {
-        if group
+        if !group
             .get("enabled")
             .and_then(Value::as_bool)
             .unwrap_or(true)
-            == false
         {
             continue;
         }
@@ -763,7 +776,7 @@ fn rf_points_from_plan(plan: &Value) -> Vec<Smb100aRfPointProjection> {
                 if !axis.contains("frequency_hz") {
                     return None;
                 }
-                Some(sweep.get("values")?.as_array()?)
+                sweep.get("values")?.as_array()
             })
         })
     {
@@ -830,6 +843,7 @@ fn laser_rows_from_plan(plan: &Value) -> Vec<LaserProjection> {
     }]
 }
 
+#[allow(clippy::too_many_arguments)]
 fn catalog_field(
     device: &str,
     panel_group: &str,
@@ -2021,8 +2035,8 @@ fn device_default_packages() -> Vec<DeviceDefaultPackage> {
             values_si: serde_json::json!({
                 "oe1022d_acquisition": {
                     "mode": "follow_rf_sweep",
-                    "pre_start_ms": 100.0,
-                    "post_stop_ms": 100.0,
+                    "pre_start_ms": 50.0,
+                    "post_stop_ms": 50.0,
                     "channels": {
                         "ch_a": {
                             "time_constant_s": 0.3,
@@ -2497,10 +2511,7 @@ fn experiment_run_readiness_for_plan(
         warnings.push("laser is enabled in the experiment template; verify optical safety before hardware run".into());
     }
 
-    let mut hardware_blocked_reasons = blocked_reasons.clone();
-    hardware_blocked_reasons.push(
-        "hardware run loop is not enabled yet: OE1022D RALL raw-first collector and executor handoff are not wired to this plan shape".into(),
-    );
+    let hardware_blocked_reasons = blocked_reasons.clone();
 
     ExperimentRunReadiness {
         kind: "experiment_plan_run_readiness".into(),
@@ -2524,6 +2535,40 @@ fn experiment_run_readiness_for_plan(
 fn run_root_dir() -> Result<PathBuf, String> {
     let cwd = std::env::current_dir().map_err(|e| format!("current dir: {e}"))?;
     Ok(cwd.join("target").join("odmr-runs"))
+}
+
+fn base_run_status(
+    run_id: String,
+    mode: String,
+    state: String,
+    started_at: String,
+    readiness: &ExperimentRunReadiness,
+) -> ExperimentPlanRunStatus {
+    ExperimentPlanRunStatus {
+        kind: "experiment_plan_run_status".into(),
+        run_id,
+        mode,
+        state,
+        started_at,
+        finished_at: None,
+        run_directory: None,
+        step_count: readiness.step_count,
+        rf_point_count: readiness.rf_point_count,
+        estimated_measurements: readiness.estimated_measurements,
+        estimated_duration_s: readiness.estimated_duration_s,
+        steps_completed: 0,
+        current_step_index: None,
+        current_step_id: None,
+        current_b_nt: None,
+        current_phase: None,
+        smb_sweep_running: false,
+        oe_frames_captured: 0,
+        cleanup_state: None,
+        recent_error: None,
+        blocked_reasons: Vec::new(),
+        warnings: readiness.warnings.clone(),
+        artifact_paths: HashMap::new(),
+    }
 }
 
 fn write_json_file(path: &PathBuf, value: &Value) -> Result<(), String> {
@@ -2628,6 +2673,17 @@ fn write_preview_run_artifacts(
     Ok((run_dir.to_string_lossy().to_string(), artifact_paths))
 }
 
+#[allow(dead_code)]
+fn write_hardware_run_artifacts(
+    _run_id: &str,
+    _plan: &Value,
+    _projection: &ExperimentPlanProjection,
+    _readiness: &ExperimentRunReadiness,
+    _operator_confirmed: bool,
+) -> Result<(String, HashMap<String, String>, u64), String> {
+    Err("obsolete placeholder writer: use odmr-executor::run_hardware".into())
+}
+
 fn default_experiment_plan_draft() -> Value {
     serde_json::json!({
         "schema_version": "0.1.0",
@@ -2657,8 +2713,8 @@ fn default_experiment_plan_draft() -> Value {
             },
             "oe1022d_acquisition": {
                 "mode": "follow_rf_sweep",
-                "pre_start_ms": 100.0,
-                "post_stop_ms": 100.0,
+                "pre_start_ms": 50.0,
+                "post_stop_ms": 50.0,
                 "channels": {
                     "ch_a": {
                         "time_constant_s": 0.3,
@@ -2812,6 +2868,176 @@ pub fn get_experiment_plan_run_status(
         .map_err(|e| format!("deserialize run status: {e}"))
 }
 
+fn station_config_from_profile(
+    profile: &odmr_preflight::StationProfile,
+    safety: &crate::panels::StationSafety,
+) -> Result<odmr_config::StationConfig, String> {
+    let mut station = load_station_config_str(
+        &serde_json::to_string(profile).map_err(|e| format!("serialize station profile: {e}"))?,
+    )
+    .map_err(|e| format!("convert station profile: {e}"))?;
+    station.safety.smb100a_max_power_dbm = safety.smb100a_max_power_dbm;
+    station.safety.smb100a_min_freq_hz = safety.smb100a_min_freq_hz;
+    station.safety.smb100a_max_freq_hz = safety.smb100a_max_freq_hz;
+    station.safety.mag_max_current_a_per_axis = safety.mag_max_current_a_per_axis;
+    station.safety.laser_max_power_mw = safety.laser_max_power_mw;
+    Ok(station)
+}
+
+fn build_hardware_run_config(
+    state: &WorkbenchState,
+    plan: &Value,
+    run_id: &str,
+) -> Result<HardwareRunConfig, String> {
+    let (profile, safety, zero_baseline) = {
+        let guard = state
+            .inner
+            .lock()
+            .map_err(|e| format!("lock poison: {e}"))?;
+        (
+            guard.profile.clone().ok_or("No station profile loaded.")?,
+            guard.safety.clone(),
+            guard
+                .runtime_zero_baseline
+                .clone()
+                .ok_or("Runtime zero baseline is missing.")?,
+        )
+    };
+    let station = station_config_from_profile(&profile, &safety)?;
+    let find_device_id = |device_type: &str| -> Result<String, String> {
+        station
+            .devices
+            .iter()
+            .find(|device| device.device_type == device_type)
+            .map(|device| device.device_id.clone())
+            .ok_or_else(|| format!("Missing device '{device_type}' in station profile"))
+    };
+    let smb_device_id = find_device_id("smb100a")?;
+    let oe_device_id = find_device_id("oe1022d")?;
+    let laser_device_id = station
+        .devices
+        .iter()
+        .find(|device| device.device_type == "laser")
+        .map(|device| device.device_id.clone());
+    let field_entries = magnetic_field_entries_from_plan(plan);
+    let mut steps = Vec::new();
+
+    for (idx, entry) in field_entries.iter().enumerate() {
+        let rf = rf_template_for_group(plan, entry.group_id.as_deref());
+        let oe = oe_template_for_group(plan, entry.group_id.as_deref());
+        let laser = laser_template_for_group(plan, entry.group_id.as_deref());
+
+        let mut magnetic_axes = Vec::new();
+        for (axis_idx, axis_name) in ["x", "y", "z"].iter().enumerate() {
+            if let Some(base) = zero_baseline.axes.get(*axis_name) {
+                let recur_a = (entry.point[axis_idx] / base.coil_constant_nt_per_ma) / 1000.0;
+                magnetic_axes.push(HardwareMagAxisTarget {
+                    device_id: base.device_id.clone(),
+                    current_a: base.zero_mean_a + recur_a,
+                });
+            }
+        }
+
+        let laser_power_mw = laser
+            .get("power_mw")
+            .or_else(|| laser.get("power_setpoint_mw"))
+            .and_then(Value::as_f64)
+            .unwrap_or(0.0)
+            .max(0.0) as u16;
+        let laser_enabled = laser.get("enabled").and_then(Value::as_bool).unwrap_or(false);
+
+        steps.push(HardwareRunStep {
+            step_id: format!("spectrum_{idx:04}"),
+            step_index: idx,
+            b_target_nt: entry.point,
+            magnetic_axes,
+            rf: HardwareRfSweep {
+                device_id: smb_device_id.clone(),
+                start_hz: rf.get("start_hz").and_then(Value::as_f64).unwrap_or(2.8e9),
+                stop_hz: rf.get("stop_hz").and_then(Value::as_f64).unwrap_or(2.9e9),
+                step_hz: rf.get("step_hz").and_then(Value::as_f64).unwrap_or(1.0e6),
+                dwell_ms: rf.get("dwell_ms").and_then(Value::as_f64).unwrap_or(300.0) as u64,
+                power_dbm: rf.get("power_dbm").and_then(Value::as_f64).unwrap_or(-30.0),
+                spacing: rf
+                    .get("spacing")
+                    .and_then(Value::as_str)
+                    .unwrap_or("LINear")
+                    .to_string(),
+                shape: rf
+                    .get("shape")
+                    .and_then(Value::as_str)
+                    .unwrap_or("SAWtooth")
+                    .to_string(),
+                sweep_mode: "AUTO".into(),
+                trigger_source: "SING".into(),
+                sweep_output_start_v: rf.get("sweep_output_start_v").and_then(Value::as_f64),
+                sweep_output_stop_v: rf.get("sweep_output_stop_v").and_then(Value::as_f64),
+            },
+            oe: HardwareOeAcquisition {
+                device_id: oe_device_id.clone(),
+                pre_start_ms: oe.get("pre_start_ms").and_then(Value::as_f64).unwrap_or(50.0)
+                    as u64,
+                post_stop_ms: oe
+                    .get("post_stop_ms")
+                    .and_then(Value::as_f64)
+                    .unwrap_or(50.0) as u64,
+                baud: 921_600,
+                read_interval_ms: 48,
+                timeout_ms: 5000,
+            },
+            laser: laser_device_id.clone().map(|device_id| HardwareLaserTarget {
+                device_id,
+                power_mw: laser_power_mw,
+                enabled: laser_enabled,
+            }),
+        });
+    }
+
+    Ok(HardwareRunConfig {
+        run_root: run_root_dir()?,
+        run_id: run_id.to_string(),
+        station_snapshot: json!({
+            "profile": profile,
+            "safety": safety,
+            "runtime_zero_baseline": zero_baseline,
+            "plan_id": plan.get("id").and_then(Value::as_str)
+        }),
+        station,
+        steps,
+    })
+}
+
+fn store_run_status(
+    state: &Arc<Mutex<crate::workbench_state::WorkbenchStateInner>>,
+    status: &ExperimentPlanRunStatus,
+) -> Result<(), String> {
+    let mut guard = state.lock().map_err(|e| format!("lock poison: {e}"))?;
+    guard.experiment_run_status =
+        Some(serde_json::to_value(status).map_err(|e| format!("serialize status: {e}"))?);
+    Ok(())
+}
+
+fn apply_progress_update(
+    state: &Arc<Mutex<crate::workbench_state::WorkbenchStateInner>>,
+    progress: HardwareProgress,
+) {
+    let Ok(mut guard) = state.lock() else {
+        return;
+    };
+    let Some(current) = guard.experiment_run_status.clone() else {
+        return;
+    };
+    let Ok(mut status) = serde_json::from_value::<ExperimentPlanRunStatus>(current) else {
+        return;
+    };
+    status.current_step_id = progress.step_id;
+    status.current_step_index = progress.step_index;
+    status.current_phase = Some(progress.phase);
+    status.steps_completed = progress.steps_completed;
+    status.oe_frames_captured = progress.oe_frames_captured;
+    guard.experiment_run_status = serde_json::to_value(status).ok();
+}
+
 #[tauri::command]
 pub fn start_experiment_plan_run(
     state: tauri::State<WorkbenchState>,
@@ -2841,53 +3067,111 @@ pub fn start_experiment_plan_run(
         if !operator_confirmed {
             blocked.push("operator confirmation is required before hardware execution".into());
         }
-        let status = ExperimentPlanRunStatus {
-            kind: "experiment_plan_run_status".into(),
-            run_id,
-            mode,
-            state: "blocked".into(),
-            started_at,
-            finished_at: Some(now_rfc3339()),
-            run_directory: None,
-            step_count: readiness.step_count,
-            rf_point_count: readiness.rf_point_count,
-            estimated_measurements: readiness.estimated_measurements,
-            estimated_duration_s: readiness.estimated_duration_s,
-            steps_completed: 0,
-            blocked_reasons: blocked,
-            warnings: readiness.warnings,
-            artifact_paths: HashMap::new(),
-        };
-        let mut guard = state
-            .inner
-            .lock()
-            .map_err(|e| format!("lock poison: {e}"))?;
-        guard.experiment_run_status =
-            Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
-        return Ok(status);
+        if !blocked.is_empty() {
+            let mut status =
+                base_run_status(run_id, mode, "blocked".into(), started_at, &readiness);
+            status.finished_at = Some(now_rfc3339());
+            status.blocked_reasons = blocked;
+            let mut guard = state
+                .inner
+                .lock()
+                .map_err(|e| format!("lock poison: {e}"))?;
+            guard.experiment_run_status =
+                Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
+            return Ok(status);
+        }
+
+        let mut running = base_run_status(
+            run_id.clone(),
+            mode.clone(),
+            "running".into(),
+            started_at.clone(),
+            &readiness,
+        );
+        running.current_step_index = Some(0);
+        running.current_step_id = Some("spectrum_0000".into());
+        running.current_b_nt = projection
+            .step_rows
+            .first()
+            .map(|row| [row.bx_nt, row.by_nt, row.bz_nt]);
+        running.current_phase = Some("preflight/locks ok; launching hardware runtime".into());
+
+        let shared_state = state.inner.clone();
+        let run_config = build_hardware_run_config(state.inner(), &plan, &run_id)?;
+        let control = RunControl::new();
+        {
+            let mut guard = state
+                .inner
+                .lock()
+                .map_err(|e| format!("lock poison: {e}"))?;
+            guard.experiment_run_control = Some(control.clone());
+            guard.experiment_run_status =
+                Some(serde_json::to_value(&running).map_err(|e| format!("serialize status: {e}"))?);
+        }
+        std::thread::spawn(move || {
+            let result = run_hardware(run_config, &control, |progress| {
+                apply_progress_update(&shared_state, progress);
+            });
+
+            let final_status = match result {
+                Ok(report) => {
+                    let mut status = base_run_status(
+                        report.run_id.clone(),
+                        "hardware".into(),
+                        if report.stopped {
+                            "stopped".into()
+                        } else {
+                            "completed".into()
+                        },
+                        started_at,
+                        &readiness,
+                    );
+                    status.finished_at = Some(now_rfc3339());
+                    status.run_directory = Some(report.run_directory.to_string_lossy().to_string());
+                    status.steps_completed = report.steps_completed;
+                    status.current_step_index = report.steps_completed.checked_sub(1);
+                    status.current_step_id = report
+                        .steps_completed
+                        .checked_sub(1)
+                        .map(|idx| format!("spectrum_{idx:04}"));
+                    status.current_phase = Some("hardware runtime finished".into());
+                    status.smb_sweep_running = false;
+                    status.oe_frames_captured = report.oe_frames_captured;
+                    status.cleanup_state = Some(report.cleanup_state);
+                    status.artifact_paths = report.artifact_paths;
+                    status
+                }
+                Err(error) => {
+                    let mut status = base_run_status(
+                        run_id.clone(),
+                        "hardware".into(),
+                        "failed_cleanup_incomplete".into(),
+                        started_at,
+                        &readiness,
+                    );
+                    status.finished_at = Some(now_rfc3339());
+                    status.recent_error = Some(error.to_string());
+                    status.cleanup_state = Some("cleanup_attempted_after_runtime_error".into());
+                    status.blocked_reasons = vec![error.to_string()];
+                    status
+                }
+            };
+
+            if let Ok(mut guard) = shared_state.lock() {
+                guard.experiment_run_control = None;
+            }
+            let _ = store_run_status(&shared_state, &final_status);
+        });
+        return Ok(running);
     }
 
     if mode != "preview" {
         return Err("mode must be 'preview' or 'hardware'".into());
     }
     if !readiness.ready_for_preview_execution {
-        let status = ExperimentPlanRunStatus {
-            kind: "experiment_plan_run_status".into(),
-            run_id,
-            mode,
-            state: "blocked".into(),
-            started_at,
-            finished_at: Some(now_rfc3339()),
-            run_directory: None,
-            step_count: readiness.step_count,
-            rf_point_count: readiness.rf_point_count,
-            estimated_measurements: readiness.estimated_measurements,
-            estimated_duration_s: readiness.estimated_duration_s,
-            steps_completed: 0,
-            blocked_reasons: readiness.blocked_reasons,
-            warnings: readiness.warnings,
-            artifact_paths: HashMap::new(),
-        };
+        let mut status = base_run_status(run_id, mode, "blocked".into(), started_at, &readiness);
+        status.finished_at = Some(now_rfc3339());
+        status.blocked_reasons = readiness.blocked_reasons;
         let mut guard = state
             .inner
             .lock()
@@ -2899,23 +3183,12 @@ pub fn start_experiment_plan_run(
 
     let (run_directory, artifact_paths) =
         write_preview_run_artifacts(&run_id, &plan, &projection, &readiness)?;
-    let status = ExperimentPlanRunStatus {
-        kind: "experiment_plan_run_status".into(),
-        run_id,
-        mode,
-        state: "completed".into(),
-        started_at,
-        finished_at: Some(now_rfc3339()),
-        run_directory: Some(run_directory),
-        step_count: readiness.step_count,
-        rf_point_count: readiness.rf_point_count,
-        estimated_measurements: readiness.estimated_measurements,
-        estimated_duration_s: readiness.estimated_duration_s,
-        steps_completed: readiness.step_count,
-        blocked_reasons: Vec::new(),
-        warnings: readiness.warnings,
-        artifact_paths,
-    };
+    let mut status = base_run_status(run_id, mode, "completed".into(), started_at, &readiness);
+    status.finished_at = Some(now_rfc3339());
+    status.run_directory = Some(run_directory);
+    status.steps_completed = readiness.step_count;
+    status.cleanup_state = Some("no_hardware_preview".into());
+    status.artifact_paths = artifact_paths;
     let mut guard = state
         .inner
         .lock()
@@ -2934,6 +3207,9 @@ pub fn stop_experiment_plan_run(
         .lock()
         .map_err(|e| format!("lock poison: {e}"))?;
     guard.experiment_run_cancel_requested = true;
+    if let Some(control) = &guard.experiment_run_control {
+        control.request_stop();
+    }
 
     let mut status = guard
         .experiment_run_status
@@ -2954,17 +3230,60 @@ pub fn stop_experiment_plan_run(
             estimated_measurements: 0,
             estimated_duration_s: None,
             steps_completed: 0,
+            current_step_index: None,
+            current_step_id: None,
+            current_b_nt: None,
+            current_phase: None,
+            smb_sweep_running: false,
+            oe_frames_captured: 0,
+            cleanup_state: None,
+            recent_error: None,
             blocked_reasons: Vec::new(),
             warnings: Vec::new(),
             artifact_paths: HashMap::new(),
         });
     if status.state == "running" {
-        status.state = "stop_requested".into();
-        status.finished_at = Some(now_rfc3339());
+        status.current_phase = Some("stop requested; waiting for cooperative cleanup".into());
+        status.smb_sweep_running = false;
     }
     guard.experiment_run_status =
         Some(serde_json::to_value(&status).map_err(|e| format!("serialize status: {e}"))?);
     Ok(status)
+}
+
+#[tauri::command]
+pub fn export_experiment_plan_json(
+    state: tauri::State<WorkbenchState>,
+    app: tauri::AppHandle,
+) -> Result<Option<String>, String> {
+    use tauri_plugin_dialog::DialogExt;
+    let plan = {
+        let guard = state
+            .inner
+            .lock()
+            .map_err(|e| format!("lock poison: {e}"))?;
+        guard
+            .experiment_plan_draft
+            .clone()
+            .or_else(|| guard.experiment_plan.clone())
+            .unwrap_or_else(default_experiment_plan_draft)
+    };
+    let default_name = format!(
+        "odmr_experiment_plan_{}.json",
+        chrono::Local::now().format("%Y%m%d_%H%M%S")
+    );
+    let Some(path) = app
+        .dialog()
+        .file()
+        .set_file_name(&default_name)
+        .blocking_save_file()
+    else {
+        return Ok(None);
+    };
+    let path_string = path.to_string();
+    let local_path = PathBuf::from(&path_string);
+    write_json_file(&local_path, &plan)?;
+    Ok(Some(path_string))
 }
 
 #[tauri::command]
@@ -3075,8 +3394,8 @@ pub fn capture_current_setup_as_plan_draft(
             },
             "oe1022d_acquisition": {
                 "mode": "follow_rf_sweep",
-                "pre_start_ms": 100.0,
-                "post_stop_ms": 100.0,
+                "pre_start_ms": 50.0,
+                "post_stop_ms": 50.0,
                 "channels": {
                     "ch_a": {
                         "time_constant_s": 0.3,
@@ -3332,7 +3651,7 @@ mod tests {
     }
 
     #[test]
-    fn run_readiness_allows_preview_but_blocks_hardware_executor_gap() {
+    fn run_readiness_allows_preview_but_blocks_real_missing_requirements() {
         let plan = load_example_plan("odmr_field_grid_1d.example.json");
         let state = WorkbenchState::default();
         let readiness = experiment_run_readiness_for_plan(&state, &plan);
@@ -3343,6 +3662,10 @@ mod tests {
         assert!(readiness
             .hardware_blocked_reasons
             .iter()
-            .any(|reason| reason.contains("RALL raw-first collector")));
+            .any(|reason| reason.contains("smb100a_main is not connected")));
+        assert!(readiness
+            .hardware_blocked_reasons
+            .iter()
+            .all(|reason| reason.contains("not connected") || reason.contains("zero")));
     }
 }

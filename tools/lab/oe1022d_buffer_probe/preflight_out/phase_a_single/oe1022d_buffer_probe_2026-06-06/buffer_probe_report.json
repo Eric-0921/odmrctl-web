@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "port": "/dev/cu.usbmodem395D388533371",
+  "baud": 921600,
+  "channel": 2,
+  "buffer": 1,
+  "parameter": 1,
+  "sample_step_s": 0.001,
+  "sample_length": 128,
+  "sample_run_mode": 0,
+  "run_ms": 3000,
+  "poll_ms": 200,
+  "configured_step_reply": "50",
+  "configured_length_reply": "1000",
+  "configured_buffer_reply": "0",
+  "configured_trigger_reply": "0",
+  "configured_run_mode_reply": "0",
+  "device_idn": "SSI LIA-OE1022D,SN:D6130220,Version:Ver6.3211110",
+  "final_stored_points": 0,
+  "effective_hz": 0.0,
+  "trace_points_read": 0,
+  "trace_preview": [],
+  "polls": [
+    {
+      "elapsed_ms": 205,
+      "response_elapsed_ms": 1014,
+      "stored_points": 0
+    },
+    {
+      "elapsed_ms": 1218,
+      "response_elapsed_ms": 2028,
+      "stored_points": 0
+    },
+    {
+      "elapsed_ms": 2233,
+      "response_elapsed_ms": 3041,
+      "stored_points": 0
+    }
+  ]
+}

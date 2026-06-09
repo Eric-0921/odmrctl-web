@@ -68,6 +68,23 @@ mod tests {
     }
 
     #[test]
+    fn golden_internal_rf_sweep_commands() {
+        assert_eq!(set_freq_mode_sweep(), "FREQ:MODE SWE");
+        assert_eq!(set_sweep_mode("AUTO"), "SWE:MODE AUTO");
+        assert_eq!(set_sweep_trigger_source("SING"), "TRIG:FSW:SOUR SING");
+        assert_eq!(set_sweep_spacing("LINear"), "SWE:SPAC LINear");
+        assert_eq!(set_sweep_shape("SAWtooth"), "SWE:SHAP SAWtooth");
+        assert_eq!(set_sweep_step_hz(1_000_000.0), "SWE:FREQ:STEP 1000000Hz");
+        assert_eq!(set_sweep_dwell_ms(500), "SWE:FREQ:DWEL 500ms");
+        assert_eq!(trigger_sweep_immediate(), "TRIG:FSW:IMM");
+        assert_eq!(execute_frequency_sweep(), "SWE:FREQ:EXEC");
+        assert_eq!(query_sweep_running(), "SWE:RUNN?");
+        assert_eq!(set_sweep_output_start_v(0.0), "SWE:OUTP:VOLT:STAR 0V");
+        assert_eq!(set_sweep_output_stop_v(3.0), "SWE:OUTP:VOLT:STOP 3V");
+        assert_eq!(set_sweep_lf_output(false), "SWE:OUTP OFF");
+    }
+
+    #[test]
     fn golden_set_lf_frequency_500_hz() {
         // Source: smb100a_fig3_lf_generator_output_settings_commands.json
         assert_eq!(set_lf_frequency_hz(500.0), "LFO:FREQ 500Hz");
@@ -215,10 +232,22 @@ mod tests {
         dev.send_command("FREQ:STOP 5GHz").unwrap();
         dev.send_command("SWE:SPAC LIN").unwrap();
         dev.send_command("SWE:MODE AUTO").unwrap();
+        dev.send_command("FREQ:MODE SWE").unwrap();
+        dev.send_command("SWE:SHAP SAWtooth").unwrap();
+        dev.send_command("TRIG:FSW:SOUR SING").unwrap();
+        dev.send_command("SWE:OUTP:VOLT:STAR 0V").unwrap();
+        dev.send_command("SWE:OUTP:VOLT:STOP 3V").unwrap();
+        dev.send_command("SWE:OUTP OFF").unwrap();
+        dev.send_command("TRIG:FSW:IMM").unwrap();
 
         assert_eq!(dev.state().freq_start_hz, 1e9);
         assert_eq!(dev.state().freq_stop_hz, 5e9);
         assert_eq!(dev.state().sweep_spacing, "LIN");
+        assert_eq!(dev.state().sweep_shape, "SAWTOOTH");
+        assert_eq!(dev.state().sweep_trigger_source, "SING");
+        assert_eq!(dev.state().sweep_output_stop_v, 3.0);
+        assert!(!dev.state().sweep_lf_output_enabled);
+        assert_eq!(dev.query("SWE:RUNN?").unwrap().to_string(), "0");
         assert_eq!(dev.state().sweep_mode, "AUTO");
 
         let resp = dev.query("FREQ:STAR?").unwrap();

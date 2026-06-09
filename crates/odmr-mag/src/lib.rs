@@ -1,9 +1,8 @@
-//! odmr-mag — Mock-only magnetic field planning and safety validation.
+//! odmr-mag — magnetic field planning, runtime bridge types, and safety validation.
 //!
-//! **IMPORTANT: This crate is mock-only for Mag-M0 and Mag-M1.**
-//!
-//! No code path in this crate connects to real hardware or emits real coil
-//! current.  All magnetic actions are represented as dry-run / mock events.
+//! This crate still does not perform serial I/O itself. Real transport remains
+//! in `odmr-maynuo-m8812`, while this layer owns typed magnetic-domain models,
+//! current planning, zero-lock state, and runtime command/report structures.
 //!
 //! ## Scope
 //!
@@ -215,6 +214,49 @@ impl fmt::Display for MagError {
 }
 
 impl std::error::Error for MagError {}
+
+// ---------------------------------------------------------------------------
+// Runtime bridge types
+// ---------------------------------------------------------------------------
+
+/// Typed runtime command emitted by higher-level executors for a magnetic axis.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum MagRuntimeCommand {
+    ApplyCurrent {
+        axis_id: String,
+        current_a: f64,
+        enable_output: bool,
+    },
+    QueryReadback {
+        axis_id: String,
+    },
+    LockZero {
+        axis_id: String,
+        zero_current_a: f64,
+    },
+    CleanupAxis {
+        axis_id: String,
+        verify_current_decay: bool,
+    },
+}
+
+/// Runtime readback from a magnetic axis after an apply or cleanup stage.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MagReadback {
+    pub axis_id: String,
+    pub measured_current_a: f64,
+    pub output_enabled: bool,
+    pub zero_locked: bool,
+}
+
+/// Cleanup result for one or more axes.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MagCleanupReport {
+    pub axes: Vec<MagReadback>,
+    pub all_outputs_disabled: bool,
+    pub max_residual_current_a: f64,
+}
 
 // ---------------------------------------------------------------------------
 // B-field vector (Cartesian)

@@ -322,11 +322,7 @@ fn read_rall_frame_fast(
 }
 
 /// Sleep until `interval_ms` has elapsed since `start`, checking stop signal.
-fn wait_remaining(
-    start: Instant,
-    interval_ms: u64,
-    stop_rx: &std::sync::mpsc::Receiver<()>,
-) {
+fn wait_remaining(start: Instant, interval_ms: u64, stop_rx: &std::sync::mpsc::Receiver<()>) {
     loop {
         let elapsed = start.elapsed().as_millis() as u64;
         if elapsed >= interval_ms {

@@ -7,7 +7,7 @@
 
 **odmrctl-web** 是 ODMR（Optically Detected Magnetic Resonance）自动化采集平台，面向 NV 色心 ODMR 实验。核心能力包括：设备编排、recipe 执行、高频采集、数据落盘与离线分析。
 
-当前阶段：**GUI-M0 Mock Viewer 已完成；M4.1 recipe dry-run viewer 已完成；M5A RF + Mag + OE 最小组合实验已真实硬件验证；P6 common_preflight / StationLedger / DeviceLock 已激活；连接层进入 P6 固化阶段。**
+当前阶段：**M5C-A Device Workbench V1 已激活（Station Workbench + 4×Minimal Device Panels + Experiment Planning）；M5B System Scan recipe + Artifact Viewer 已实现；M5A RF + Mag + OE 最小组合实验已真实硬件验证；P6 common_preflight / StationLedger / DeviceLock 已固化；odmr-config / odmr-replay 已从占位转正；odmr-laser 新驱动已就位；连接层进入 P6 固化阶段。**
 
 - **Rust 后端**：设备编排、recipe 编译与安全检查、执行引擎、高频采集、raw-first 数据落盘。
 - **前端**：Tauri v2 + React + Vite 桌面应用，仅做交互展示，**禁止任何硬件访问**。
@@ -17,7 +17,7 @@
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 后端核心 | Rust (Edition 2021) | 14 crate 的 Cargo workspace |
+| 后端核心 | Rust (Edition 2021) | 17 crate 的 Cargo workspace |
 | 桌面 GUI | Tauri v2 | 跨平台 Webview 桌面壳 |
 | 前端框架 | React 18 + TypeScript 5 | Vite 5 构建，React Router v6 路由 |
 | 包管理 | pnpm | `apps/desktop/` 内使用；`.npmrc` 启用 `shamefully-hoist=true`、`strict-peer-dependencies=false`、`auto-install-peers=true` |
@@ -33,12 +33,12 @@
 | `docs/architecture/ARCHITECTURE.md` | 分层模型、crate 职责、依赖方向 | 写代码前的入口 |
 | `docs/decisions/` | 进行中的设计决策 | 开发中遇到选择时写这里 |
 | `crates/` | Rust workspace 各 crate | 每个 crate 的 `README.md` 定义其边界 |
-| `apps/desktop/` | Tauri 桌面应用（GUI-M0） | GUI 入口；当前为 mock-only |
+| `apps/desktop/` | Tauri 桌面应用（M5C-A Device Workbench） | GUI 入口；Station + SMB100A/OE1022D/Magnetic/Laser panels |
 | `python/` | recipe 工具 + 离线分析（预留） | 不参与实时链路 |
 | `schemas/` | 9 份 JSON Schema（recipe、resolved_recipe、safety 等） | 验证 recipe 输入 |
 | `examples/` | 示例 recipe 与设备指令 JSON | 参考用法 |
 | `tests/` | 集成测试 fixture + golden 数据（预留） | mock-first 开发 |
-| `tools/` | Lab bring-up 工具（M2–M3 阶段） | 硬件发现、只读快照、受控微测试、双设备 sweep / recipe-shaped run |
+| `tools/` | Lab bring-up 工具（M2–M5 阶段） | 硬件发现、只读快照、受控微测试、双设备 sweep / recipe-shaped run / 组合实验 |
 | `reverse_application/` | 旧系统逆向工程产物（C# 反编译、日志、协议分析） | 参考遗留系统行为 |
 
 ## 架构硬约束
@@ -50,7 +50,7 @@
 3. **实时链路隔离**：采集线程只做 read/timestamp/parse/buffer/write。CSV 导出、拟合、分析不能进入实时链路。
 4. **Recipe 驱动**：实验执行必须来自 `recipe.json` → compiler → safety → dry-run → 人工批准 → executor。AI 不能直接发送硬件命令。
 5. **Raw-first 数据**：实时阶段只写 raw bin + `index.jsonl` + `events.jsonl`。实验后再生成 parquet/csv。
-6. **GUI-M0 硬件隔离**：`apps/desktop/src-tauri/Cargo.toml` 明确禁止依赖任何硬件 crate（`odmr-executor`、`odmr-smb100a`、`odmr-oe1022d`、`odmr-device`、`odmr-compiler`、`odmr-safety`、`odmr-logging`）。
+6. **M5C-A 硬件访问边界**：GUI 前端禁止直接访问硬件；所有设备交互必须通过类型化的 Tauri Command API。后端通过 `odmr-preflight` 和专用 driver crate 执行 discover/identify/lock/get/set。
 
 ### 分层模型（6 层 + Python 离线层）
 
@@ -58,9 +58,9 @@
 Layer 6: Python Offline   python/analysis/  python/recipe_tools/
 Layer 5: GUI              apps/desktop/     (Tauri/Web)
 Layer 4: Application API  Tauri commands    (apps/desktop/src-tauri/)
-Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness
-Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config
-Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-maynuo-m8812  odmr-device  odmr-mag
+Layer 3: Runtime          odmr-executor  odmr-logging  odmr-replay  odmr-harness  odmr-live-server
+Layer 2: Domain           odmr-recipe  odmr-compiler  odmr-safety  odmr-config  odmr-preflight
+Layer 1: Drivers          odmr-smb100a  odmr-oe1022d  odmr-maynuo-m8812  odmr-mag  odmr-laser  odmr-device
 Layer 0: Types            odmr-types
 ```
 
@@ -71,7 +71,7 @@ Layer 0: Types            odmr-types
 | `odmr-types` | 0 | `DeviceId`、`RecipeStep`、`Event`、`RunId`、`Timestamp`、错误枚举 | 无（std only） | 活跃 |
 | `odmr-device` | 1 | `Device` trait、`DeviceManager`、`ResourceLease`、`ConnectionState` | `odmr-types` | 活跃 |
 | `odmr-smb100a` | 1 | SMB100A SCPI 指令封装、频率/功率/扫描、LAN socket `Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
-| `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
+| `odmr-oe1022d` | 1 | OE1022D 串口协议、`RALL?` 帧解析、锁相参数、`Device` 实现、`RallCollector` | `odmr-device`, `odmr-types` | 活跃 |
 > **OE1022D 硬件实测要点**（固件 V6.3211110, SN:D6130220）：
 > - **RALL?** 是唯一数据读取路径。12288 字节 f64 BE 二进制帧（20参数×50点），帧内1ms间距硬件保证。
 > - **性能**：单帧读取 12.0ms（机械上限 83.7fps），设备刷新 ~48ms，有效去重帧率 20.8fps / ~1040 pts/sec。
@@ -82,17 +82,18 @@ Layer 0: Types            odmr-types
 > - **RallCollector**（`collector.rs`）：Producer-Consumer 模式，独立轮询生产线程 + bounded mpsc channel(8)。48ms 节拍、X[0] 去重、fast-poll 1ms 重试。Drop 非阻塞（不 join producer）。
 > - 详见 `docs/decisions/oe1022d-rall-continuous-benchmark.md`、`docs/decisions/oe1022d-rall-stability-validation.md`
 | `odmr-maynuo-m8812` | 1 | Maynuo M8812 串口 SCPI 指令封装、电流/电压/输出控制、`Device` 实现 | `odmr-device`, `odmr-types` | 活跃 |
-| `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划 | `odmr-device`, `odmr-types` | 活跃（M5A 真实硬件已验证） |
-| `odmr-config` | 2 | 配置文件解析、设备地址登记、采集参数默认值（预留） | `odmr-types` | **占位**（仅 `placeholder()`） |
-| `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开、SHA-256 哈希 | `odmr-types`, `serde`, `serde_json`, `sha2`, `hex` | 活跃 |
-| `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
-| `odmr-safety` | 2 | `SafetyPolicy` trait、`InterlockEngine`、参数边界检查、急停逻辑、安全报告 | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
-| `odmr-executor` | 3 | 执行状态机、step 调度、设备命令编排、实时采集协调 | `odmr-recipe`, `odmr-compiler`, `odmr-safety`, `odmr-logging`, `odmr-device`, `odmr-smb100a`, `odmr-oe1022d`, `odmr-types` | 活跃 |
+| `odmr-mag` | 1 | 三轴磁场控制数据模型、Maynuo M8812 协议规划层、零点锁定/命令计划/顺序轴运行、运行时桥接类型 | `odmr-device`, `odmr-types` | 活跃（M5A 真实硬件已验证） |
+| `odmr-laser` | 1 | CNI 激光器 PSU-SR 二进制串口协议帧封装、`LaserClient` 驱动 | `odmr-types`, `serialport` | 活跃 |
+| `odmr-config` | 2 | Canonical JSON 配置入口：`StationConfig`、`DeviceDefaults`、安全策略、清理策略；legacy profile 兼容加载；手册默认值固化 | `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-recipe` | 2 | Recipe JSON 反序列化、Schema 验证、遍历/展开、SHA-256 哈希；SystemScanRecipe | `odmr-types`, `serde`, `serde_json`, `sha2`, `hex` | 活跃 |
+| `odmr-compiler` | 2 | Recipe → `resolved_recipe` + `dry_run_plan.json`；参数展开、拓扑排序、timing；system scan 展开 | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-safety` | 2 | `SafetyPolicy` trait、`InterlockEngine`、参数边界检查、急停逻辑、安全报告；system scan 安全 | `odmr-recipe`, `odmr-types`, `serde`, `serde_json` | 活跃 |
+| `odmr-preflight` | 1+2 | 统一站级设备预检：发现、身份验证、安全状态探测、跨进程锁、StationLedger | `odmr-types`, `serialport`, `fs2`, `odmr-config` | 活跃（从 common_preflight 提取） |
+| `odmr-executor` | 3 | 执行状态机、step 调度、设备命令编排、实时采集协调；mock-run + hardware-run 双模式 | `odmr-recipe`, `odmr-compiler`, `odmr-safety`, `odmr-logging`, `odmr-device`, `odmr-smb100a`, `odmr-oe1022d`, `odmr-config`, `odmr-types` | 活跃 |
 | `odmr-logging` | 3 | `RawRecorder`（raw bin）、`IndexWriter`（`index.jsonl`）、`EventWriter`（`events.jsonl`） | `odmr-types`, `serde`, `serde_json` | 活跃 |
-| `odmr-replay` | 3 | 从 raw bin + index 重建采集数据流（预留） | `odmr-logging`, `odmr-types` | **占位**（仅 `placeholder()`） |
+| `odmr-replay` | 3 | Canonical `.rall` 运行产物回放：`ReplaySession`、`ReplayMode`、legacy rawbin → canonical 迁移 | `odmr-oe1022d`, `odmr-types`, `serde`, `serde_json` | 活跃 |
 | `odmr-harness` | 3 | `FakeDevice` 实现、mock 设备注册、测试 fixture 工具 | `odmr-device`, `odmr-types` | 活跃 |
-
-> **占位 crate 说明**：`odmr-config` 与 `odmr-replay` 当前为预留占位，源码仅含 `pub fn placeholder() {}`，`Cargo.toml` 无 `description` 字段。后续迭代中实现。
+| `odmr-live-server` | 3~4 | OE1022D 实时 trace HTTP sidecar（Actix-web, ring buffer, `/api/trace`） | `odmr-oe1022d`, `actix-web` | 活跃（Phase 1 demo） |
 
 ## 构建与运行
 
@@ -109,7 +110,7 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 ```
 
-### GUI-M0（Mock Viewer）
+### M5C-A Device Workbench
 
 ```bash
 cd apps/desktop
@@ -119,7 +120,7 @@ pnpm tauri dev        # 开发模式，热重载，端口 1420
 pnpm tauri build      # 发布构建
 ```
 
-> GUI-M0 当前为 **mock-only**：所有数据来自构建时 bundl 的静态 snapshot，运行时无 fs/fetch；Start Run / Pause / Stop / Emergency Stop 等按钮全部禁用；无 serial / USB / VISA / TCP / SCPI 代码。
+> M5C-A 提供 **真实设备工作台**：Station page 可加载 profile 并运行 preflight；SMB100A / OE1022D / Magnetic / Laser panels 提供 typed get/set 与 readback。所有 set 操作均带 safety gate。前端仍禁止直接发送 SCPI 或打开 socket/serial。
 
 ### Tauri 配置要点
 
@@ -130,12 +131,12 @@ pnpm tauri build      # 发布构建
 
 ### 近期里程碑状态
 
-- **GUI-M0**：已完成并保持 mock-only 边界。
+- **M5C-A Device Workbench V1**：Station + 4 minimal panels + Experiment Planning + Replay 集成已实现。Mock-only 边界已解除，但硬件访问仍仅限后端 typed API。
 - **M2**：已完成硬件发现、只读快照、OE1022D 实采、RALL 捕获、桥接与 shadow run。
-- **M3**：已进入 SMB100A 受控 RF / FM/MOD 微测试、双设备软件步进 sweep、extended sweep、recipe-shaped run。
-- **M5A**：RF + Mag + OE 最小组合实验已完成真实硬件验证；common_preflight 已统一设备预检；P6 连接层进入固化阶段。
-- **M5B**：未开始。目标为多磁轴 ODMR 采集。
-- **M4.2**：未开始。目标为 GUI run launcher（recipe 驱动的运行启动器）。
+- **M3**：已完成 SMB100A 受控 RF / FM/MOD 微测试、双设备软件步进 sweep、extended sweep、recipe-shaped run。
+- **M5A**：RF + Mag + OE 最小组合实验已完成真实硬件验证；`odmr-preflight` 已提取为 workspace crate；common_preflight 已统一设备预检；P6 连接层已固化。
+- **M5B**：System Scan recipe parser/compiler/safety 已实现；GUI System Scan Artifact Viewer 已实现。
+- **M4.2**：未开始。目标为 GUI run launcher（recipe 驱动的运行启动器）。Experiment Plan Execution Launcher preview 已添加。
 
 ### GUI 当前状态
 
@@ -143,7 +144,11 @@ pnpm tauri build      # 发布构建
 |------|------|
 | M4.1 recipe dry-run viewer | ✅ 已完成 |
 | M5A artifact viewer 类型 + Tauri 命令 | ✅ 已完成（read-only） |
-| M5A artifact viewer 页面/路由 | ⏳ 未实现 |
+| M5B-B System Scan Artifact Viewer | ✅ 已完成（7-tab read-only） |
+| Experiment Planning（场网格扫描 1D/2D/3D） | ✅ 已完成 |
+| Experiment Plan Execution Launcher | ✅ Preview 已添加 |
+| Canonical Run Replay（回放） | ✅ 已集成 |
+| Legacy Run Migration（rawbin → canonical） | ✅ 已集成 |
 | GUI run launcher | ⏳ 未实现 |
 | 硬件控制按钮 | ❌ 不存在（架构约束） |
 
@@ -157,7 +162,7 @@ pnpm tauri build      # 发布构建
 | 实验室联调专用 | `maynuo_m8812_identity_probe`、`zero_baseline`、`recur_microtest`、`sequential_axis_run`、`smb100a_*`、`oe1022d_*` 等 | M2–M4 单设备/单阶段工具 |
 | OE1022D 稳定性验证 | `oe1022d_buffer_probe --stability-test` | 30min 真机连续采集，输出 .rall 原始二进制 + .csv 元数据，已验证无泄漏 |
 | 诊断专用 | `visa_probe` | VISA A/B 基准测试 |
-| GUI 只读支持 | M5A artifact viewer 类型与命令 | 解析产物文件，无硬件访问 |
+| GUI 只读支持 | M5A/M5B artifact viewer 类型与命令 | 解析产物文件，无硬件访问 |
 | 废弃/遗留 | 无 | — |
 
 ## 测试策略
@@ -291,20 +296,21 @@ SMB cleanup：必须发送 `OUTP OFF`，无论正常完成还是异常退出。
 | 前端直接访问硬件（serial/USB/VISA/SCPI socket/TCP） | 架构约束：前端只能调 Tauri Command API | `check-frontend-hardware.sh` |
 | 实时 crate 中出现 CSV writer | ADR-005：实时阶段只允许 raw bin + jsonl | `check-realtime-csv.sh` |
 | AI 直接控制活硬件 | ADR-004：AI 只能操作 recipe/数据，不能绕过 safety 直接发硬件命令 | 架构审查 + PR 审核 |
-| 硬件 crate 被 GUI-M0 引入 | GUI-M0 为 mock-only，禁止引入真实驱动 | `apps/desktop/src-tauri/Cargo.toml` 显式注释禁止 |
+| 前端直接访问硬件（serial/USB/VISA/SCPI socket/TCP） | 架构约束：前端只能调 Tauri Command API | `check-frontend-hardware.sh` |
 
 ### 关键数据流
 
 ```
 实时采集链路（热路径）:
   OE1022D → odmr-oe1022d → odmr-executor → odmr-logging (raw bin + index)
+  OE1022D → odmr-oe1022d → odmr-live-server (HTTP sidecar 实时图表)
 
 Recipe 执行链路:
   recipe.json → odmr-recipe (validate) → odmr-compiler (resolve)
   → odmr-safety (check) → odmr-executor (run) → odmr-logging (record)
 
 离线分析链路:
-  raw bin + index.jsonl → python/analysis/ → parquet → ML/plot
+  raw bin + index.jsonl → odmr-replay (canonical playback) → python/analysis/ → parquet → ML/plot
 ```
 
 ## 机械化检查（CI / Pre-commit）
@@ -362,7 +368,7 @@ git config core.hooksPath .githooks
 
 ## 部署说明
 
-- **当前阶段**：GUI-M0 为 mock-only 桌面应用，无服务端部署需求。
+- **当前阶段**：M5C-A Device Workbench 为桌面应用，无服务端部署需求。
 - **构建产物**：`pnpm tauri build` 输出平台原生安装包（`.dmg` / `.app` / `.exe` / `.msi` / `.deb` / `.rpm` 等），由 Tauri v2 的 `tauri.conf.json` 中 `bundle.targets = "all"` 控制。
 - **发布**：尚未配置自动 release 流水线；构建产物在本地 `apps/desktop/src-tauri/target/release/bundle/` 生成。
 

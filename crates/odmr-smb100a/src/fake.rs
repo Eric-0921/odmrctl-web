@@ -25,6 +25,12 @@ pub struct Smb100aState {
     pub sweep_dwell_ms: u64,
     pub sweep_spacing: String,
     pub sweep_mode: String,
+    pub sweep_shape: String,
+    pub sweep_trigger_source: String,
+    pub sweep_running: bool,
+    pub sweep_output_start_v: f64,
+    pub sweep_output_stop_v: f64,
+    pub sweep_lf_output_enabled: bool,
 }
 
 impl Default for Smb100aState {
@@ -49,6 +55,12 @@ impl Default for Smb100aState {
             sweep_dwell_ms: 10,
             sweep_spacing: "LIN".to_string(),
             sweep_mode: "AUTO".to_string(),
+            sweep_shape: "SAW".to_string(),
+            sweep_trigger_source: "SING".to_string(),
+            sweep_running: false,
+            sweep_output_start_v: 0.0,
+            sweep_output_stop_v: 0.0,
+            sweep_lf_output_enabled: false,
         }
     }
 }
@@ -108,7 +120,7 @@ impl FakeSmb100a {
                     cmd: cmd.to_string(),
                     reason: "missing mode".to_string(),
                 })?;
-                if !mode.eq_ignore_ascii_case("CW") {
+                if !mode.eq_ignore_ascii_case("CW") && !mode.eq_ignore_ascii_case("SWE") {
                     return Err(DeviceError::InvalidParameter {
                         cmd: cmd.to_string(),
                         reason: format!("unsupported mode {mode}"),
@@ -265,6 +277,50 @@ impl FakeSmb100a {
                 self.state.sweep_mode = val.to_ascii_uppercase();
                 Ok(DeviceResponse::Ack)
             }
+            "SWE:SHAP" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing shape".to_string(),
+                })?;
+                self.state.sweep_shape = val.to_ascii_uppercase();
+                Ok(DeviceResponse::Ack)
+            }
+            "TRIG:FSW:SOUR" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing trigger source".to_string(),
+                })?;
+                self.state.sweep_trigger_source = val.to_ascii_uppercase();
+                Ok(DeviceResponse::Ack)
+            }
+            "TRIG:FSW:IMM" | "SWE:FREQ:EXEC" => {
+                self.state.sweep_running = false;
+                Ok(DeviceResponse::Ack)
+            }
+            "SWE:OUTP:VOLT:STAR" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing sweep output start voltage".to_string(),
+                })?;
+                self.state.sweep_output_start_v = parse_volt(val)?;
+                Ok(DeviceResponse::Ack)
+            }
+            "SWE:OUTP:VOLT:STOP" => {
+                let val = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing sweep output stop voltage".to_string(),
+                })?;
+                self.state.sweep_output_stop_v = parse_volt(val)?;
+                Ok(DeviceResponse::Ack)
+            }
+            "SWE:OUTP" => {
+                let st = tail.ok_or_else(|| DeviceError::InvalidParameter {
+                    cmd: cmd.to_string(),
+                    reason: "missing ON/OFF".to_string(),
+                })?;
+                self.state.sweep_lf_output_enabled = parse_on_off(st)?;
+                Ok(DeviceResponse::Ack)
+            }
             "*CLS" => {
                 // Clear status registers and error queue (no-op in fake)
                 Ok(DeviceResponse::Ack)
@@ -297,6 +353,15 @@ impl FakeSmb100a {
             "SWE:FREQ:DWEL" => format!("{}", self.state.sweep_dwell_ms),
             "SWE:SPAC" => self.state.sweep_spacing.clone(),
             "SWE:MODE" => self.state.sweep_mode.clone(),
+            "SWE:SHAP" => self.state.sweep_shape.clone(),
+            "TRIG:FSW:SOUR" => self.state.sweep_trigger_source.clone(),
+            "SWE:RUNN" => {
+                if self.state.sweep_running {
+                    "1".to_string()
+                } else {
+                    "0".to_string()
+                }
+            }
             "SYST:ERR" => "0,\"No error\"".to_string(),
             _ => {
                 return Err(DeviceError::UnknownCommand(cmd.to_string()));

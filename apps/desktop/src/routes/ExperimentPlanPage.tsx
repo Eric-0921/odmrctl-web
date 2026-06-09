@@ -1,15 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ReferenceDot,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import type {
   DeviceDefaultPackage,
   ExperimentPlanProjection,
@@ -187,8 +177,8 @@ const defaultRow = (id = "spectrum_0000"): StepDraftRow => ({
   sweepOutputStopUnit: "V",
   laserPowerMw: "",
   laserEnabled: false,
-  oePreStartMs: "100",
-  oePostStopMs: "100",
+  oePreStartMs: "50",
+  oePostStopMs: "50",
   chATimeConstantS: "0.3",
   chAFilterSlope: "12",
   chADynamicReserve: "正常 (NORMAL)",
@@ -294,8 +284,8 @@ const fallbackDefaultPackages: DeviceDefaultPackage[] = [
     values_si: {
       oe1022d_acquisition: {
         mode: "follow_rf_sweep",
-        pre_start_ms: 100,
-        post_stop_ms: 100,
+        pre_start_ms: 50,
+        post_stop_ms: 50,
         channels: {
           ch_a: { time_constant_s: 0.3, filter_slope_db_oct: 12, dynamic_reserve: "NORMAL", sensitivity: "100 mV/nA" },
           ch_b: { time_constant_s: 0.3, filter_slope_db_oct: 12, dynamic_reserve: "NORMAL", sensitivity: "100 mV/nA" },
@@ -374,6 +364,7 @@ export default function ExperimentPlanPage() {
   const [runReadiness, setRunReadiness] = useState<ExperimentRunReadiness | null>(null);
   const [runStatus, setRunStatus] = useState<ExperimentPlanRunStatus | null>(null);
   const [runBusy, setRunBusy] = useState<string | null>(null);
+  const [operatorConfirmed, setOperatorConfirmed] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTab>("packages");
   const [stepRows, setStepRows] = useState<StepDraftRow[]>([defaultRow()]);
   const [scanGroups, setScanGroups] = useState<MagneticScanGroupDraft[]>(defaultScanGroups);
@@ -419,7 +410,7 @@ export default function ExperimentPlanPage() {
 
   const requestHardwareRun = async () => {
     setRunBusy("hardware");
-    const status = await run(() => invoke<ExperimentPlanRunStatus>("start_experiment_plan_run", { mode: "hardware", operatorConfirmed: false }));
+    const status = await run(() => invoke<ExperimentPlanRunStatus>("start_experiment_plan_run", { mode: "hardware", operatorConfirmed }));
     if (status) setRunStatus(status);
     const readiness = await run(() => invoke<ExperimentRunReadiness>("get_experiment_plan_run_readiness"));
     if (readiness) setRunReadiness(readiness);
@@ -489,6 +480,12 @@ export default function ExperimentPlanPage() {
   const resolvePlan = async () => {
     const preview = await run(() => invoke<ResolvedPlanPreview>("resolve_plan_with_current_zero"));
     if (preview) setResolved(preview);
+  };
+
+  const exportPlanJson = async () => {
+    await applyDraft();
+    const path = await run(() => invoke<string | null>("export_experiment_plan_json"));
+    if (path) setError(`已导出实验计划 JSON：${path}`);
   };
 
   const applyDraft = async (rows = stepRows, base = planDraft) => {
@@ -563,10 +560,11 @@ export default function ExperimentPlanPage() {
 
       <div style={{ ...cardStyle, marginBottom: "var(--space-4)" }}>
         <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-          <button onClick={loadPlan} style={btnPrimary}>导入实验 JSON</button>
-          <button onClick={resolvePlan} style={btnSecondary}>用当前零场解析</button>
-          <button onClick={capturePreset} style={btnSecondary}>捕获参数包草稿</button>
-          <button onClick={capturePlan} style={btnSecondary}>捕获计划草稿</button>
+          <button onClick={loadPlan} style={btnPrimary}>导入实验计划 JSON</button>
+          <button onClick={resolvePlan} style={btnSecondary}>按当前零场计算电流预览</button>
+          <button onClick={capturePreset} style={btnSecondary}>从当前设备生成参数模板</button>
+          <button onClick={capturePlan} style={btnSecondary}>用当前设置新建实验计划</button>
+          <button onClick={exportPlanJson} style={btnSecondary}>导出计划 JSON</button>
           <button onClick={generateDemoSweep} style={btnSecondary}>生成 3 条 demo 谱线</button>
         </div>
         {error && <div style={{ marginTop: "var(--space-3)", color: "var(--color-danger)", fontSize: "var(--font-size-sm)" }}>{error}</div>}
@@ -580,6 +578,8 @@ export default function ExperimentPlanPage() {
         onPreview={startPreviewRun}
         onHardware={requestHardwareRun}
         onStop={stopRun}
+        operatorConfirmed={operatorConfirmed}
+        onOperatorConfirmed={setOperatorConfirmed}
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "320px minmax(0, 1fr)", gap: "var(--space-4)", alignItems: "start" }}>
@@ -588,7 +588,7 @@ export default function ExperimentPlanPage() {
           <div>
             <h2 style={{ fontSize: "var(--font-size-xl)", margin: 0 }}>实验步骤草稿编辑器</h2>
             <p style={{ margin: "4px 0 0", color: "var(--color-text-muted)", fontSize: "var(--font-size-sm)" }}>
-              一行 Step 表示一个磁场向量点下的一条 ODMR 谱线；RF 频点只在展开预览中显示，默认最多 200 行。
+              一行谱线步骤表示一个磁场向量点下的一条 ODMR 谱线；RF sweep 是谱线内部动作，不再作为单独步骤展示。
             </p>
           </div>
           <EditorTabs activeTab={activeTab} onChange={setActiveTab} />
@@ -624,7 +624,7 @@ export default function ExperimentPlanPage() {
             <div style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>
               表格编辑只更新 Tauri 会话中的 experiment JSON draft，不会控制已连接设备。
             </div>
-            <button onClick={() => void applyDraft()} style={btnPrimary}>应用表格编辑到 JSON 草稿</button>
+            <button onClick={() => void applyDraft()} style={btnPrimary}>保存表格修改到计划</button>
           </div>
           <DeviceParameterTables projection={projection} resolved={resolved} />
         </div>
@@ -641,6 +641,8 @@ function RunLauncherPanel({
   onPreview,
   onHardware,
   onStop,
+  operatorConfirmed,
+  onOperatorConfirmed,
 }: {
   readiness: ExperimentRunReadiness | null;
   status: ExperimentPlanRunStatus | null;
@@ -649,6 +651,8 @@ function RunLauncherPanel({
   onPreview: () => void;
   onHardware: () => void;
   onStop: () => void;
+  operatorConfirmed: boolean;
+  onOperatorConfirmed: (confirmed: boolean) => void;
 }) {
   const previewReady = readiness?.ready_for_preview_execution ?? false;
   const hardwareReady = readiness?.ready_for_hardware_execution ?? false;
@@ -659,23 +663,36 @@ function RunLauncherPanel({
         <div>
           <h2 style={{ fontSize: "var(--font-size-lg)", marginBottom: "var(--space-1)" }}>执行控制</h2>
           <p style={{ margin: 0, color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)" }}>
-            预览执行只锁定当前 JSON、生成 projection/run artifact，不发送硬件命令；真实硬件执行必须等待 RALL raw-first collector 与 executor handoff 接好。
+            先生成执行预案，再启动真实采集。真实采集必须通过后端 typed command 与 executor handoff，不允许前端直接访问硬件。
           </p>
         </div>
         <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "end" }}>
           <button onClick={onCheck} disabled={busy != null} style={btnSecondary}>{busy === "readiness" ? "检查中..." : "执行前检查"}</button>
-          <button onClick={onPreview} disabled={busy != null || (readiness != null && !previewReady)} style={btnPrimary}>{busy === "preview" ? "执行中..." : "启动预览执行"}</button>
-          <button onClick={onHardware} disabled={busy != null} style={btnDanger}>{busy === "hardware" ? "请求中..." : "请求真实硬件执行"}</button>
-          <button onClick={onStop} disabled={busy != null} style={btnSecondary}>{busy === "stop" ? "停止中..." : "停止/标记停止"}</button>
+          <button onClick={onPreview} disabled={busy != null || (readiness != null && !previewReady)} style={btnPrimary}>{busy === "preview" ? "生成中..." : "生成执行预案"}</button>
+          <button onClick={onHardware} disabled={busy != null || !operatorConfirmed} style={btnDanger}>{busy === "hardware" ? "启动中..." : "启动真实采集"}</button>
+          <button onClick={onStop} disabled={busy != null} style={btnSecondary}>{busy === "stop" ? "停止中..." : "停止采集并清理"}</button>
         </div>
       </div>
+      <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "var(--space-3)", fontSize: "var(--font-size-xs)", color: "var(--color-text)" }}>
+        <input
+          type="checkbox"
+          checked={operatorConfirmed}
+          onChange={(event) => onOperatorConfirmed(event.target.checked)}
+        />
+        我确认 RF、激光、磁场和长时间运行条件已检查，允许启动真实采集。
+      </label>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-3)", marginTop: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
         <div><strong>预览执行:</strong> <span style={badge(previewReady ? "ok" : "off")}>{previewReady ? "可启动" : "未检查/阻塞"}</span></div>
         <div><strong>真实硬件执行:</strong> <span style={badge(hardwareReady ? "ok" : "blocked")}>{hardwareReady ? "可启动" : "阻塞"}</span></div>
         <div><strong>Step:</strong> {readiness?.step_count ?? status?.step_count ?? "—"}</div>
         <div><strong>RF 点/谱线:</strong> {readiness?.rf_point_count ?? status?.rf_point_count ?? "—"}</div>
-        <div><strong>总测量点:</strong> {readiness?.estimated_measurements ?? status?.estimated_measurements ?? "—"}</div>
-        <div><strong>估算耗时:</strong> {readiness?.estimated_duration_s != null ? `${readiness.estimated_duration_s.toFixed(1)} s` : status?.estimated_duration_s != null ? `${status.estimated_duration_s.toFixed(1)} s` : "—"}</div>
+          <div><strong>总测量点:</strong> {readiness?.estimated_measurements ?? status?.estimated_measurements ?? "—"}</div>
+          <div><strong>估算耗时:</strong> {readiness?.estimated_duration_s != null ? `${readiness.estimated_duration_s.toFixed(1)} s` : status?.estimated_duration_s != null ? `${status.estimated_duration_s.toFixed(1)} s` : "—"}</div>
+          <div><strong>当前阶段:</strong> {status?.current_phase ?? "—"}</div>
+          <div><strong>当前 B:</strong> {status?.current_b_nt ? `[${status.current_b_nt.join(", ")}] nT` : "—"}</div>
+          <div><strong>SMB sweep:</strong> {status?.smb_sweep_running ? "运行中" : "未运行"}</div>
+          <div><strong>OE 帧:</strong> {status?.oe_frames_captured ?? "—"}</div>
+          <div><strong>Cleanup:</strong> {status?.cleanup_state ?? "—"}</div>
       </div>
       {readiness && (
         <div style={{ marginTop: "var(--space-3)", fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>
@@ -687,6 +704,7 @@ function RunLauncherPanel({
           <div><strong>最近执行:</strong> {status.run_id} · <span style={badge(runStateBadge(status.state))}>{status.state}</span> · {status.mode}</div>
           <div><strong>完成 Step:</strong> {status.steps_completed}/{status.step_count}</div>
           {status.run_directory && <div><strong>产物目录:</strong> <code>{status.run_directory}</code></div>}
+          {status.recent_error && <div style={{ color: "var(--color-danger)" }}><strong>最近错误:</strong> {status.recent_error}</div>}
         </div>
       )}
       {readiness?.warnings.length ? (
@@ -741,14 +759,14 @@ function PlanSummaryCard({
 
 function EditorTabs({ activeTab, onChange }: { activeTab: EditorTab; onChange: (tab: EditorTab) => void }) {
   const tabs: Array<[EditorTab, string]> = [
-    ["packages", "配置组"],
+    ["packages", "设备模板"],
     ["scan", "磁场扫描"],
     ["field", "磁场"],
     ["smb100a", "SMB100A"],
     ["oe1022d", "OE1022D"],
     ["laser", "激光"],
-    ["steps", "Step 表"],
-    ["json", "JSON 预览"],
+    ["steps", "谱线步骤"],
+    ["json", "计划 JSON"],
   ];
   return (
     <div style={{ ...cardStyle, display: "flex", gap: "var(--space-2)", flexWrap: "wrap", padding: "var(--space-3)" }}>
@@ -1218,85 +1236,11 @@ function DeviceParameterTables({ projection, resolved }: { projection: Experimen
         {projection.warnings.length > 0 && <div style={{ marginTop: "var(--space-2)", color: "var(--color-warning)", fontSize: "var(--font-size-xs)" }}>{projection.warnings.join(" · ")}</div>}
       </div>
       <ProjectedStepTable projection={projection} resolved={resolved} />
-      <OdmrSpectrumChart projection={projection} />
-      <div style={{ ...cardStyle, overflowX: "auto" }}>
-        <h3 style={{ fontSize: "var(--font-size-md)", marginBottom: "var(--space-1)" }}>谱线内部 RF 点预览</h3>
-        <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)", marginBottom: "var(--space-2)" }}>
-          这里显示单条 ODMR 谱线内部的 SMB100A RF frequency sweep 频点；这些 RF 点不是实验 Step。默认只显示第 0 条谱线的前 200 个 RF 点。
+      <div style={cardStyle}>
+        <h3 style={{ fontSize: "var(--font-size-md)", marginBottom: "var(--space-1)" }}>ODMR 谱线图</h3>
+        <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)", margin: 0 }}>
+          暂无真实谱线。完成一次真实采集后，从运行产物的 <code>.rall + index.jsonl</code> 解析并显示 RF frequency vs OE 信号；计划编辑阶段不再生成模拟谱线。
         </p>
-        <table style={{ ...tableStyle, minWidth: 900 }}>
-          <thead>
-            <tr>
-              <th style={thStyle}>行</th>
-              <th style={thStyle}>磁场点</th>
-              <th style={thStyle}>RF 点</th>
-              <th style={thStyle}>B 向量 nT</th>
-              <th style={thStyle}>SMB100A 频率</th>
-              <th style={thStyle}>Laser</th>
-              <th style={thStyle}>OE frames</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projection.combination_preview.filter((row) => row.magnetic_point_index === 0).map((row) => (
-              <tr key={row.row_index}>
-                <td style={tdStyle}>{row.row_index}</td>
-                <td style={tdStyle}>{row.magnetic_point_index}</td>
-                <td style={tdStyle}>{row.rf_point_index}</td>
-                <td style={tdStyle}>[{row.bx_nt}, {row.by_nt}, {row.bz_nt}]</td>
-                <td style={tdStyle}>{fmtHz(row.frequency_hz)}</td>
-                <td style={tdStyle}>{row.laser_mode}</td>
-                <td style={tdStyle}>{row.oe_frames_per_point ?? "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function OdmrSpectrumChart({ projection }: { projection: ExperimentPlanProjection }) {
-  const [source, setSource] = useState("Ch-B R");
-  const firstStep = projection.step_rows[0];
-  const rfPoints = projection.smb100a_rf_points.length > 0 ? projection.smb100a_rf_points : [];
-  const chartRows = useMemo(() => syntheticOdmrRows(rfPoints, source), [rfPoints, source]);
-  const minRow = chartRows.reduce<(typeof chartRows)[number] | null>((best, row) => !best || row.signal < best.signal ? row : best, null);
-  const maxRow = chartRows.reduce<(typeof chartRows)[number] | null>((best, row) => !best || row.signal > best.signal ? row : best, null);
-  return (
-    <div style={cardStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "var(--space-3)", marginBottom: "var(--space-3)" }}>
-        <div>
-          <h3 style={{ fontSize: "var(--font-size-md)", marginBottom: "var(--space-1)" }}>ODMR 谱线图</h3>
-          <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-xs)" }}>
-            预览当前 Step 的 RF frequency vs OE signal。当前为 projection 模拟信号占位；真实 run artifact 接入后使用 OE1022D RALL? 解析数据。
-          </p>
-        </div>
-        <SelectInput
-          label="OE 数据源"
-          value={source}
-          options={["Ch-A X", "Ch-A Y", "Ch-A R", "Ch-A θ", "Ch-A Noise", "Ch-B X", "Ch-B Y", "Ch-B R", "Ch-B θ", "Ch-B Noise"]}
-          onChange={setSource}
-        />
-      </div>
-      <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", marginBottom: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
-        <span style={badge("on")}>Step {firstStep?.step_id ?? "—"}</span>
-        <span style={badge("ok")}>B [{firstStep?.bx_nt ?? 0}, {firstStep?.by_nt ?? 0}, {firstStep?.bz_nt ?? 0}] nT</span>
-        <span style={badge("off")}>RF {fmtHz(firstStep?.rf_start_hz)} → {fmtHz(firstStep?.rf_stop_hz)}</span>
-        <span style={badge("off")}>dwell {firstStep?.dwell_ms ?? "—"} ms</span>
-        {minRow && <span style={badge("warning")}>dip 候选 {minRow.frequencyLabel}</span>}
-      </div>
-      <div style={{ width: "100%", height: 320 }}>
-        <ResponsiveContainer>
-          <LineChart data={chartRows} margin={{ top: 12, right: 24, left: 8, bottom: 12 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-            <XAxis dataKey="frequencyGhz" tickFormatter={(value) => `${Number(value).toFixed(4)}`} label={{ value: "RF 频率 (GHz)", position: "insideBottom", offset: -6 }} />
-            <YAxis tickFormatter={(value) => formatOeSignal(Number(value))} width={70} />
-            <Tooltip formatter={(value) => [formatOeSignal(Number(value)), source]} labelFormatter={(value) => `${Number(value).toFixed(6)} GHz`} />
-            <Line type="monotone" dataKey="signal" stroke="var(--color-primary)" dot={false} strokeWidth={2} />
-            {minRow && <ReferenceDot x={minRow.frequencyGhz} y={minRow.signal} r={5} fill="var(--color-danger)" stroke="none" />}
-            {maxRow && <ReferenceDot x={maxRow.frequencyGhz} y={maxRow.signal} r={5} fill="var(--color-success)" stroke="none" />}
-          </LineChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );
@@ -1381,37 +1325,6 @@ function StepUnit({
       </div>
     </td>
   );
-}
-
-function syntheticOdmrRows(rfPoints: Array<{ frequency_hz: number }>, source: string) {
-  const points = rfPoints.length > 0 ? rfPoints : [{ frequency_hz: 2.8e9 }, { frequency_hz: 2.85e9 }, { frequency_hz: 2.9e9 }];
-  const frequencies = points.map((point) => point.frequency_hz);
-  const min = Math.min(...frequencies);
-  const max = Math.max(...frequencies);
-  const center = (min + max) / 2;
-  const width = Math.max((max - min) / 8, 1);
-  const sourceScale = source.includes("Noise") ? 0.18 : source.includes("θ") ? 0.7 : source.includes("X") || source.includes("Y") ? 0.9 : 1;
-  return points.map((point, index) => {
-    const normalized = (point.frequency_hz - center) / width;
-    const dip = Math.exp(-normalized * normalized);
-    const ripple = Math.sin(index / 5) * 0.012;
-    const signal = sourceScale * (1 - 0.18 * dip + ripple);
-    return {
-      index,
-      frequency_hz: point.frequency_hz,
-      frequencyGhz: point.frequency_hz / 1e9,
-      frequencyLabel: fmtHz(point.frequency_hz),
-      signal,
-    };
-  });
-}
-
-function formatOeSignal(value: number) {
-  const abs = Math.abs(value);
-  if (abs >= 1) return `${value.toFixed(3)} V`;
-  if (abs >= 1e-3) return `${(value * 1e3).toFixed(3)} mV`;
-  if (abs >= 1e-6) return `${(value * 1e6).toFixed(3)} uV`;
-  return `${(value * 1e9).toFixed(3)} nV`;
 }
 
 function groupBy<T>(values: T[], keyFn: (value: T) => string) {
@@ -1617,8 +1530,8 @@ function laserFromRow(row: StepDraftRow) {
 function oeFromRow(row: StepDraftRow) {
   return {
     mode: "follow_rf_sweep",
-    pre_start_ms: parseNumber(row.oePreStartMs, 100),
-    post_stop_ms: parseNumber(row.oePostStopMs, 100),
+    pre_start_ms: parseNumber(row.oePreStartMs, 50),
+    post_stop_ms: parseNumber(row.oePostStopMs, 50),
     channels: {
       ch_a: {
         time_constant_s: optionalNumber(row.chATimeConstantS),

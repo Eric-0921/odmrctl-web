@@ -9,7 +9,7 @@ mod workbench_state;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tauri::Manager;
 
 /// Returns static application metadata.
@@ -574,6 +574,51 @@ async fn pick_m5a_run_directory(app: tauri::AppHandle) -> Result<Option<String>,
     Ok(path.map(|p| p.to_string()))
 }
 
+#[tauri::command]
+fn open_canonical_run_replay(path: String) -> Result<serde_json::Value, String> {
+    let session = odmr_replay::open_replay_session(odmr_replay::ReplaySource::CanonicalRunDirectory {
+        root: PathBuf::from(&path),
+    })
+    .map_err(|e| format!("open replay session: {e}"))?;
+    Ok(serde_json::json!({
+        "run_root": session.run_root,
+        "metadata": session.metadata,
+        "events": session.events,
+        "traces": session.traces
+    }))
+}
+
+#[tauri::command]
+fn replay_canonical_step(
+    path: String,
+    step_id: Option<String>,
+    mode: String,
+) -> Result<serde_json::Value, String> {
+    let session = odmr_replay::open_replay_session(odmr_replay::ReplaySource::CanonicalRunDirectory {
+        root: PathBuf::from(&path),
+    })
+    .map_err(|e| format!("open replay session: {e}"))?;
+    let replay_mode = match mode.as_str() {
+        "original_timestamp_paced" => odmr_replay::ReplayMode::OriginalTimestampPaced,
+        "parse_only" => odmr_replay::ReplayMode::ParseOnly,
+        _ => odmr_replay::ReplayMode::AsFastAsPossible,
+    };
+    let traces = odmr_replay::replay_trace(&session, step_id.as_deref(), replay_mode);
+    Ok(serde_json::json!({
+        "run_root": session.run_root,
+        "step_id": step_id,
+        "mode": mode,
+        "traces": traces
+    }))
+}
+
+#[tauri::command]
+fn migrate_legacy_run_directory(source: String, output: String) -> Result<serde_json::Value, String> {
+    let report = odmr_replay::migrate_legacy_run_to_canonical(&source, &output)
+        .map_err(|e| format!("migrate legacy run: {e}"))?;
+    serde_json::to_value(report).map_err(|e| format!("serialize migration report: {e}"))
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
@@ -586,6 +631,9 @@ fn main() {
             pick_recipe_file,
             read_m5a_run_directory,
             pick_m5a_run_directory,
+            open_canonical_run_replay,
+            replay_canonical_step,
+            migrate_legacy_run_directory,
             station::load_station_profile,
             station::load_example_station_profile,
             station::run_station_preflight_cmd,
@@ -614,16 +662,19 @@ fn main() {
             experiment_plan::get_experiment_plan_run_status,
             experiment_plan::start_experiment_plan_run,
             experiment_plan::stop_experiment_plan_run,
+            experiment_plan::export_experiment_plan_json,
             panels::smb100a::smb100a_get_status,
             panels::smb100a::smb100a_set_frequency,
             panels::smb100a::smb100a_set_power,
             panels::smb100a::smb100a_set_output,
+            panels::smb100a::smb100a_apply_workbench_config,
             panels::smb100a::smb100a_set_fm,
             panels::smb100a::smb100a_set_lf,
             panels::smb100a::smb100a_apply_safe_config,
             panels::oe1022d::oe1022d_get_status,
             panels::oe1022d::oe1022d_set_filter,
             panels::oe1022d::oe1022d_set_reference,
+            panels::oe1022d::oe1022d_apply_ch_b_config,
             panels::oe1022d::oe1022d_apply_default_config,
             panels::oe1022d::oe1022d_auto_phase,
             panels::magnetic::magnetic_get_status,

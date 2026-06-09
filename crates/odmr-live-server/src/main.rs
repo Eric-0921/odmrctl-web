@@ -60,39 +60,34 @@ fn main() {
     // samples, and pushes them into the shared ring buffer.
     let consumer = std::thread::spawn(move || {
         let start = Instant::now();
-        loop {
-            match rx.recv() {
-                Ok(frame) => {
-                    let elapsed_s = start.elapsed().as_secs_f64();
-                    let bx = &frame.frame.measurements.lockin_B_X_mv;
-                    let by = &frame.frame.measurements.lockin_B_Y_mv;
-                    let bf = &frame.frame.measurements.lockin_B_freq_hz;
+        while let Ok(frame) = rx.recv() {
+            let elapsed_s = start.elapsed().as_secs_f64();
+            let bx = &frame.frame.measurements.lockin_B_X_mv;
+            let by = &frame.frame.measurements.lockin_B_Y_mv;
+            let bf = &frame.frame.measurements.lockin_B_freq_hz;
 
-                    // Extract all 50 samples per frame (1ms spacing, 1kHz-equivalent).
-                    // Samples cover the prior 50ms: sample[0] at t-50ms, sample[49] at t-1ms.
-                    let points: [TracePoint; 50] = std::array::from_fn(|i| {
-                        TracePoint {
-                            elapsed_s: elapsed_s - (50 - i) as f64 * 0.001,
-                            bx_mv: bx.get(i).copied().unwrap_or(f64::NAN),
-                            by_mv: by.get(i).copied().unwrap_or(f64::NAN),
-                            freq_hz: bf.get(i).copied().unwrap_or(f64::NAN),
-                        }
-                    });
+            // Extract all 50 samples per frame (1ms spacing, 1kHz-equivalent).
+            // Samples cover the prior 50ms: sample[0] at t-50ms, sample[49] at t-1ms.
+            let points: [TracePoint; 50] = std::array::from_fn(|i| TracePoint {
+                elapsed_s: elapsed_s - (50 - i) as f64 * 0.001,
+                bx_mv: bx.get(i).copied().unwrap_or(f64::NAN),
+                by_mv: by.get(i).copied().unwrap_or(f64::NAN),
+                freq_hz: bf.get(i).copied().unwrap_or(f64::NAN),
+            });
 
-                    let mut buf = ring_clone.lock().unwrap();
-                    buf.push_frame(&points, frame.is_duplicate, frame.read_time_us);
-                }
-                Err(std::sync::mpsc::RecvError) => {
-                    break;
-                }
-            }
+            let mut buf = ring_clone.lock().unwrap();
+            buf.push_frame(&points, frame.is_duplicate, frame.read_time_us);
         }
     });
 
     println!("=== OE1022D Live Trace Server ===");
     println!("Port: {} @ {}", cli.port, cli.baud);
     println!("HTTP: http://127.0.0.1:{}/api/trace", cli.http_port);
-    println!("Ring capacity: {} points (~{:.1}s at 1kHz)", cli.ring_capacity, cli.ring_capacity as f64 / 1000.0);
+    println!(
+        "Ring capacity: {} points (~{:.1}s at 1kHz)",
+        cli.ring_capacity,
+        cli.ring_capacity as f64 / 1000.0
+    );
     println!();
     println!("Start the frontend: cd apps/desktop && pnpm tauri dev");
     println!("Then open Live Chart in the sidebar.");

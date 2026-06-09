@@ -1,3 +1,4 @@
+use odmr_config::{DeviceTransportConfig, StationConfig};
 use serde::{Deserialize, Serialize};
 
 /// Station profile loaded from JSON config.
@@ -9,8 +10,18 @@ pub struct StationProfile {
 
 impl StationProfile {
     pub fn load(path: &str) -> Result<Self, String> {
-        let text = std::fs::read_to_string(path).map_err(|e| format!("read profile: {e}"))?;
-        serde_json::from_str(&text).map_err(|e| format!("parse profile: {e}"))
+        let config = odmr_config::load_station_config(path)
+            .map_err(|e| format!("load station config: {e}"))?;
+        Ok(Self::from(config))
+    }
+}
+
+impl From<StationConfig> for StationProfile {
+    fn from(value: StationConfig) -> Self {
+        Self {
+            name: value.name,
+            devices: value.devices.into_iter().map(DeviceConfig::from).collect(),
+        }
     }
 }
 
@@ -23,6 +34,33 @@ pub struct DeviceConfig {
     pub address: String,
     pub expected_sn: Option<String>,
     pub timeout_ms: Option<u64>,
+}
+
+impl From<odmr_config::StationDeviceConfig> for DeviceConfig {
+    fn from(value: odmr_config::StationDeviceConfig) -> Self {
+        let (transport, address, timeout_ms) = match value.transport {
+            DeviceTransportConfig::TcpScpi {
+                host,
+                port,
+                timeout_ms,
+            } => (
+                "tcp".to_string(),
+                format!("{host}:{port}"),
+                Some(timeout_ms),
+            ),
+            DeviceTransportConfig::Serial {
+                port, timeout_ms, ..
+            } => ("serial".to_string(), port, Some(timeout_ms)),
+        };
+        Self {
+            device_id: value.device_id,
+            kind: value.device_type,
+            transport,
+            address,
+            expected_sn: value.identity.expected_sn,
+            timeout_ms,
+        }
+    }
 }
 
 /// Aggregate preflight report for the entire station.

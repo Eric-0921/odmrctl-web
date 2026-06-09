@@ -3,7 +3,7 @@ name = "odmr-mag"
 version = "0.1.0"
 edition = "2021"
 authors = ["ODMR Automation Team"]
-description = "Mock-only magnetic field planning, coil matrix computation, and safety validation"
+description = "Magnetic field planning, Maynuo runtime bridge types, and safety validation"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

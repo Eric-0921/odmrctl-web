@@ -26,12 +26,7 @@ impl TraceRingBuffer {
     }
 
     /// Push all 50 samples from a non-duplicate frame.
-    pub fn push_frame(
-        &mut self,
-        points: &[TracePoint; 50],
-        is_dup: bool,
-        read_time_us: u64,
-    ) {
+    pub fn push_frame(&mut self, points: &[TracePoint; 50], is_dup: bool, read_time_us: u64) {
         self.frames_total += 1;
         if !is_dup {
             self.frames_unique += 1;
@@ -57,11 +52,9 @@ impl TraceRingBuffer {
 
     /// Average read time in microseconds.
     pub fn avg_read_us(&self) -> u64 {
-        if self.read_samples == 0 {
-            0
-        } else {
-            self.total_read_us / self.read_samples
-        }
+        self.total_read_us
+            .checked_div(self.read_samples)
+            .unwrap_or(0)
     }
 
     /// Duplicate rate as a fraction.

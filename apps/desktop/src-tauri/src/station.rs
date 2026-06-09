@@ -109,8 +109,7 @@ fn serial_number_from_idn(idn: &str) -> Option<String> {
 
 fn smb100a_serial_from_idn(idn: &str) -> Option<String> {
     idn.split(|c: char| !c.is_ascii_alphanumeric())
-        .filter(|token| token.len() >= 4 && token.chars().all(|c| c.is_ascii_digit()))
-        .last()
+        .rfind(|token| token.len() >= 4 && token.chars().all(|c| c.is_ascii_digit()))
         .map(str::to_string)
 }
 
@@ -287,22 +286,21 @@ fn identify_serial_port(
         }
     }
 
-    if wants("laser") || wants("cni_laser") {
-        if serialport::new(port_name, 9600)
+    if (wants("laser") || wants("cni_laser"))
+        && serialport::new(port_name, 9600)
             .timeout(Duration::from_millis(250))
             .open()
             .is_ok()
-        {
-            return Some(IdentifiedSerialDevice {
-                port: port_name.to_string(),
-                detected_kind: "laser".to_string(),
-                idn: Some("CNI Laser candidate (open-only probe; no reliable IDN)".to_string()),
-                serial_number: None,
-                confidence: "low".to_string(),
-                suggested_role: Some("cni_laser".to_string()),
-                status: "identified_low_confidence".to_string(),
-            });
-        }
+    {
+        return Some(IdentifiedSerialDevice {
+            port: port_name.to_string(),
+            detected_kind: "laser".to_string(),
+            idn: Some("CNI Laser candidate (open-only probe; no reliable IDN)".to_string()),
+            serial_number: None,
+            confidence: "low".to_string(),
+            suggested_role: Some("cni_laser".to_string()),
+            status: "identified_low_confidence".to_string(),
+        });
     }
 
     None

@@ -4,7 +4,7 @@
   "id": "resolved_m5b_rf_mag_oe_system_scan",
   "description": "System-level RF + magnetic + OE scan recipe. Optional laser is declared but disabled by default.",
   "source_recipe_id": "m5b_rf_mag_oe_system_scan",
-  "source_recipe_hash": "bc3b7fe3ee180af81b609f1c917a8763449d447db86da1486eb75d7e91241f86",
+  "source_recipe_hash": "0436cf197323d3d27043326f649f64afc8dc97f9230f97ff66f16db866841133",
   "station_id": "examples/preflight/station.example.json",
   "safety_report_id": "safety_m5b_rf_mag_oe_system_scan",
   "estimated_duration_s": 11.1,

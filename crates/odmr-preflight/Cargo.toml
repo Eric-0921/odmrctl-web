@@ -6,10 +6,11 @@ license = "MIT OR Apache-2.0"
 description = "Unified station preflight: device discovery, identity probe, safe-state verification, device locks, and station ledger."
 
 [dependencies]
+odmr-config = { path = "../odmr-config" }
 odmr-types = { path = "../odmr-types" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serialport = "4.9"
 chrono = "0.4"
 fs2 = "0.4"
-cni_laser_fake_driver = { path = "../../tools/lab/cni_laser_fake_driver" }
+odmr-laser = { path = "../odmr-laser" }

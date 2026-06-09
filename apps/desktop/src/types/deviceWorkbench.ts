@@ -69,11 +69,14 @@ export interface Smb100aStatus {
   output_on?: boolean;
   modulation_on?: boolean;
   fm_enabled?: boolean;
+  fm_source?: string;
+  fm_mode?: string;
   fm_deviation_hz?: number;
   lf_frequency_hz?: number;
   lf_voltage_v?: number;
   lf_output_on?: boolean;
   lf_shape?: string;
+  lf_impedance?: string;
   error_queue: string[];
   last_readback_time: string;
 }
@@ -85,8 +88,13 @@ export interface Oe1022dStatus {
   phase_deg?: number;
   time_constant_s?: number;
   filter_slope_db_oct?: number;
+  input_source?: string;
+  input_grounding?: string;
   input_coupling?: string;
   input_notch?: string;
+  dynamic_reserve?: string;
+  sensitivity_index?: number;
+  sync_filter_on?: boolean;
   input_overload?: boolean;
   gain_overload?: boolean;
   pll_locked?: boolean;
@@ -322,6 +330,14 @@ export interface ExperimentPlanRunStatus {
   estimated_measurements: number;
   estimated_duration_s?: number | null;
   steps_completed: number;
+  current_step_index?: number | null;
+  current_step_id?: string | null;
+  current_b_nt?: [number, number, number] | null;
+  current_phase?: string | null;
+  smb_sweep_running: boolean;
+  oe_frames_captured: number;
+  cleanup_state?: string | null;
+  recent_error?: string | null;
   blocked_reasons: string[];
   warnings: string[];
   artifact_paths: Record<string, string>;

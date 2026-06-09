@@ -324,10 +324,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cni_laser_fake_driver"
-version = "0.1.0"
-
-[[package]]
 name = "combine"
 version = "4.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2141,6 +2137,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "odmr-compiler"
+version = "0.1.0"
+dependencies = [
+ "odmr-recipe",
+ "odmr-types",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "odmr-config"
+version = "0.1.0"
+dependencies = [
+ "odmr-types",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "odmr-device"
 version = "0.1.0"
 dependencies = [
@@ -2148,14 +2163,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "odmr-executor"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "odmr-compiler",
+ "odmr-config",
+ "odmr-device",
+ "odmr-laser",
+ "odmr-logging",
+ "odmr-mag",
+ "odmr-maynuo-m8812",
+ "odmr-oe1022d",
+ "odmr-recipe",
+ "odmr-safety",
+ "odmr-smb100a",
+ "odmr-types",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "odmr-gui-m0"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "cni_laser_fake_driver",
+ "odmr-config",
+ "odmr-executor",
+ "odmr-laser",
  "odmr-maynuo-m8812",
  "odmr-oe1022d",
  "odmr-preflight",
+ "odmr-replay",
  "odmr-smb100a",
  "odmr-types",
  "serde",
@@ -2165,6 +2204,30 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-shell",
+]
+
+[[package]]
+name = "odmr-laser"
+version = "0.1.0"
+dependencies = [
+ "odmr-types",
+ "serialport",
+]
+
+[[package]]
+name = "odmr-logging"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "odmr-mag"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2191,12 +2254,44 @@ name = "odmr-preflight"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "cni_laser_fake_driver",
  "fs2",
+ "odmr-config",
+ "odmr-laser",
  "odmr-types",
  "serde",
  "serde_json",
  "serialport",
+]
+
+[[package]]
+name = "odmr-recipe"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "odmr-types",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
+name = "odmr-replay"
+version = "0.1.0"
+dependencies = [
+ "odmr-oe1022d",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "odmr-safety"
+version = "0.1.0"
+dependencies = [
+ "odmr-compiler",
+ "odmr-recipe",
+ "odmr-types",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

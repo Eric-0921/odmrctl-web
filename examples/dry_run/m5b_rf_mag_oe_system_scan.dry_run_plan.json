@@ -10,8 +10,8 @@
     "estimated_duration_s": 11.1,
     "required_devices": [
       "maynuo_m8812_axes",
-      "oe1022d_main",
-      "smb100a_main"
+      "smb100a_main",
+      "oe1022d_main"
     ],
     "hazard_actions": 9,
     "outer_sweep": "mag_z_low_current_points",

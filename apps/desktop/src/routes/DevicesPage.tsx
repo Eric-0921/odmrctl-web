@@ -214,6 +214,7 @@ interface Oe1022dChannelDraft {
   sensitivity: string;
   timeConstantS: string;
   filterSlopeDbOct: string;
+  syncFilterOn: boolean;
   referenceSource: string;
   externalRefTrigger: string;
   internalFrequencyHz: string;
@@ -278,8 +279,9 @@ const defaultOeChannelDraft: Oe1022dChannelDraft = {
   sensitivity: "100 mV/nA",
   timeConstantS: "0.3",
   filterSlopeDbOct: "12",
+  syncFilterOn: false,
   referenceSource: "外部参考",
-  externalRefTrigger: "过零检测",
+  externalRefTrigger: "TTL 上升沿",
   internalFrequencyHz: "102000",
   phaseDeg: "0",
   sineoutMode: "固定幅值模式",
@@ -313,7 +315,7 @@ export default function DevicesPage() {
   const [discoveryReport, setDiscoveryReport] = useState<DeviceDiscoveryReport | null>(null);
   const [autoBindReport, setAutoBindReport] = useState<AutoBindReport | null>(null);
   const [smbTcpTargets, setSmbTcpTargets] = useState("169.254.2.20:5025\n192.168.1.20:5025\n192.168.0.20:5025");
-  const [discoveryBusy, setDiscoveryBusy] = useState<"discover" | "bind" | "connect" | null>(null);
+  const [discoveryBusy, setDiscoveryBusy] = useState<"all" | "discover" | "bind" | "connect" | null>(null);
 
   // Init addresses from defaults
   useEffect(() => {
@@ -499,6 +501,50 @@ export default function DevicesPage() {
     }
   };
 
+  const scanBindConnectDevices = async () => {
+    if (discoveryBusy) return;
+    setDiscoveryBusy("all");
+    try {
+      const request: DeviceProbeRequest = {
+        requested_kinds: ["smb100a", "rf_source", "oe1022d", "magnetic", "laser"],
+        smb100a_tcp_targets: [
+          addresses["smb100a_main"],
+          ...smbTcpTargets.split(/\s+/).map((target) => target.trim()).filter(Boolean),
+        ].filter(Boolean),
+        enable_usb_probe: false,
+      };
+      const discovery: DeviceDiscoveryReport = await invoke("discover_devices", { request });
+      setDiscoveryReport(discovery);
+      const requestedRoles: DeviceRoleRequest[] = [
+        { device_id: "smb100a_main", kind: "rf_source" },
+        { device_id: "oe1022d_main", kind: "oe1022d" },
+        { device_id: "maynuo.mag_x", kind: "magnetic", expected_sn: "2020" },
+        { device_id: "maynuo.mag_y", kind: "magnetic", expected_sn: "2022" },
+        { device_id: "maynuo.mag_z", kind: "magnetic", expected_sn: "2003" },
+        { device_id: "cni_laser", kind: "laser" },
+      ];
+      const bindReport: AutoBindReport = await invoke("auto_bind_discovered_devices", {
+        requestedRoles,
+        discovery,
+      });
+      setAutoBindReport(bindReport);
+      const nextAddresses: Record<string, string> = {};
+      const nextIdentities: Record<string, string> = {};
+      for (const item of bindReport.bound) {
+        if (item.address) nextAddresses[item.device_id] = item.address;
+        if (item.idn) nextIdentities[item.device_id] = item.idn;
+      }
+      setAddresses((prev) => ({ ...prev, ...nextAddresses }));
+      setIdentities((prev) => ({ ...prev, ...nextIdentities }));
+      await invoke("connect_bound_devices");
+      triggerRefresh();
+    } catch (e) {
+      alert(String(e));
+    } finally {
+      setDiscoveryBusy(null);
+    }
+  };
+
   const magAggregate = async <T,>(name: string, args?: Record<string, unknown>) => {
     try {
       const result = await invoke<T>(name, args);
@@ -614,6 +660,7 @@ export default function DevicesPage() {
           onDiscover={discoverAllDevices}
           onAutoBind={autoBindDevices}
           onConnectBound={connectBoundDevices}
+          onScanBindConnect={scanBindConnectDevices}
         />
       )}
 
@@ -773,6 +820,7 @@ function StationWorkbenchSummary({
   onDiscover,
   onAutoBind,
   onConnectBound,
+  onScanBindConnect,
 }: {
   snapshot: WorkbenchSnapshot | null;
   connected: Set<string>;
@@ -781,11 +829,12 @@ function StationWorkbenchSummary({
   discoveryReport: DeviceDiscoveryReport | null;
   autoBindReport: AutoBindReport | null;
   smbTcpTargets: string;
-  busy: "discover" | "bind" | "connect" | null;
+  busy: "all" | "discover" | "bind" | "connect" | null;
   onSmbTcpTargetsChange: (value: string) => void;
   onDiscover: () => void;
   onAutoBind: () => void;
   onConnectBound: () => void;
+  onScanBindConnect: () => void;
 }) {
   return (
     <div style={{ display: "grid", gap: "var(--space-4)" }}>
@@ -805,6 +854,9 @@ function StationWorkbenchSummary({
             <div style={smallMuted}>先扫描串口与 SMB100A TCP 候选，再按 probe profile 自动绑定角色；只发送只读 IDN，不开 RF、不改设备输出。</div>
           </div>
           <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "end" }}>
+            <button onClick={onScanBindConnect} disabled={busy !== null} style={busy ? btnDisabled : btnPrimary}>
+              {busy === "all" ? "扫描并连接中…" : "扫描并连接实验设备"}
+            </button>
             <button onClick={onDiscover} disabled={busy !== null} style={busy ? btnDisabled : btnSecondary}>
               {busy === "discover" ? "扫描中…" : "扫描所有设备"}
             </button>
@@ -818,7 +870,7 @@ function StationWorkbenchSummary({
         </div>
         {busy && (
           <div style={{ color: "var(--color-primary)", fontSize: "var(--font-size-xs)", marginBottom: "var(--space-2)" }}>
-            正在执行 {busy === "discover" ? "设备发现" : busy === "bind" ? "自动绑定" : "连接已绑定设备"}，请等待当前操作完成。
+            正在执行 {busy === "all" ? "扫描、绑定并连接" : busy === "discover" ? "设备发现" : busy === "bind" ? "自动绑定" : "连接已绑定设备"}，请等待当前操作完成。
           </div>
         )}
         <label style={{ display: "grid", gap: 6, marginBottom: "var(--space-3)", fontSize: "var(--font-size-xs)" }}>
@@ -857,31 +909,31 @@ function StationWorkbenchSummary({
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--font-size-xs)", minWidth: 1100 }}>
             <thead>
               <tr style={{ color: "var(--color-text-muted)", textAlign: "left", borderBottom: "1px solid var(--color-border)" }}>
-                <th style={{ padding: 8 }}>transport</th>
-                <th style={{ padding: 8 }}>address</th>
-                <th style={{ padding: 8 }}>detected_kind</th>
-                <th style={{ padding: 8 }}>model</th>
-                <th style={{ padding: 8 }}>idn</th>
-                <th style={{ padding: 8 }}>serial_number</th>
-                <th style={{ padding: 8 }}>confidence</th>
-                <th style={{ padding: 8 }}>suggested_role</th>
-                <th style={{ padding: 8 }}>status</th>
+                <th style={{ padding: 8 }}>建议角色</th>
+                <th style={{ padding: 8 }}>设备类型</th>
+                <th style={{ padding: 8 }}>地址</th>
+                <th style={{ padding: 8 }}>型号</th>
+                <th style={{ padding: 8 }}>SN</th>
+                <th style={{ padding: 8 }}>IDN</th>
+                <th style={{ padding: 8 }}>置信度</th>
+                <th style={{ padding: 8 }}>状态</th>
+                <th style={{ padding: 8 }}>Transport</th>
               </tr>
             </thead>
             <tbody>
               {(discoveryReport?.devices ?? []).map((device) => (
                 <tr key={`${device.transport}.${device.address}.${device.detected_kind}.${device.suggested_role ?? ""}`}>
-                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.transport}</td>
-                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.address}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)", fontWeight: 600 }}>{device.suggested_role ?? "需人工确认"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.detected_kind}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.address}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.model ?? "—"}</td>
-                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)", maxWidth: 360, overflowWrap: "anywhere" }}>{device.idn ?? "—"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.serial_number ?? "—"}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)", maxWidth: 360, overflowWrap: "anywhere" }}>{device.idn ?? "—"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>
                     <span style={stateBadge(device.confidence === "high" ? "ok" : device.confidence === "medium" ? "warning" : "off")}>{device.confidence}</span>
                   </td>
-                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.suggested_role ?? "—"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.status}</td>
+                  <td style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>{device.transport}</td>
                 </tr>
               ))}
               {!discoveryReport && (
@@ -1144,25 +1196,29 @@ function Smb100aCard({
     if (!isConnected) return;
     setApplyMessage(null);
     try {
-      let next: Smb100aStatus = await invoke("smb100a_set_output", { deviceId: info.id, on: false });
-      next = await invoke("smb100a_set_frequency", { deviceId: info.id, hz: draftFrequencyHz });
       const power = Number.parseFloat(draft.powerDbm);
-      if (Number.isFinite(power)) {
-        next = await invoke("smb100a_set_power", { deviceId: info.id, dbm: power });
+      if (!Number.isFinite(power)) {
+        throw new Error("SMB100A power is not a finite number");
       }
-      next = await invoke("smb100a_set_lf", {
+      const next: Smb100aStatus = await invoke("smb100a_apply_workbench_config", {
         deviceId: info.id,
-        frequencyHz: draftLfFrequencyHz,
-        voltageV: draftLfVoltageV,
-        outputOn: draft.lfOutputOn,
-      });
-      next = await invoke("smb100a_set_fm", {
-        deviceId: info.id,
-        enabled: draft.fmEnabled,
-        deviationHz: draftFmDeviationHz,
+        config: {
+          frequencyHz: draftFrequencyHz,
+          powerDbm: power,
+          modulationOn: draft.modStateOn,
+          lfOutputOn: draft.lfOutputOn,
+          lfFrequencyHz: draftLfFrequencyHz,
+          lfVoltageV: draftLfVoltageV,
+          lfShape: draft.lfShape,
+          lfImpedance: draft.lfImpedance,
+          fmEnabled: draft.fmEnabled,
+          fmSource: draft.fmSource,
+          fmMode: draft.fmMode,
+          fmDeviationHz: draftFmDeviationHz,
+        },
       });
       setStatus(next);
-      setApplyMessage("已应用主设置/LF/FM；RF 输出保持 OFF，RF sweep 参数已保存为工作台草稿。");
+      setApplyMessage("已应用主设置/LF/FM/MOD；RF 输出保持 OFF，RF sweep 参数已保存为工作台草稿。");
     } catch (e) {
       setApplyMessage(`阻塞：${String(e)}`);
     }
@@ -1190,7 +1246,7 @@ function Smb100aCard({
 
       {/* Identity */}
       <div style={{ marginBottom: "var(--space-3)", fontSize: "var(--font-size-xs)", lineHeight: 1.6 }}>
-        <div><strong>IDN:</strong> {identity ?? status?.last_readback_time ? (status ? "verified" : "—") : "—"}</div>
+        <div><strong>IDN:</strong> {identity ?? (status ? "verified" : "—")}</div>
         <div><strong>Connection:</strong> {isConnected ? "available" : "unavailable"}</div>
         <div><strong>Last readback:</strong> {status?.last_readback_time ?? "—"}</div>
       </div>
@@ -1222,7 +1278,7 @@ function Smb100aCard({
             <UnitField label="频率" value={draft.frequency} unit={draft.frequencyUnit} units={frequencyUnits} onValue={(value) => updateDraft({ frequency: value })} onUnit={(unit) => updateDraft({ frequencyUnit: unit as FrequencyUnit })} />
             <DraftField label="电平 dBm" value={draft.powerDbm} onChange={(value) => updateDraft({ powerDbm: value })} />
             <ToggleDraft label="RF 输出开关草稿" checked={draft.rfOutputOn} onChange={(checked) => updateDraft({ rfOutputOn: checked })} note="应用草稿不会自动 RF ON" />
-            <ToggleDraft label="调制总开关草稿" checked={draft.modStateOn} onChange={(checked) => updateDraft({ modStateOn: checked })} note="当前 typed command 尚未单独下发 MOD:STAT" />
+            <ToggleDraft label="调制总开关草稿" checked={draft.modStateOn} onChange={(checked) => updateDraft({ modStateOn: checked })} note="应用草稿会下发 MOD:STAT，但不会自动 RF ON" />
           </div>
           {status && (
             <div style={{ ...smallMuted, marginTop: "var(--space-2)" }}>
@@ -1362,18 +1418,25 @@ function Oe1022dCard({
     const slopeDbOct = Number.parseInt(draft.chB.filterSlopeDbOct, 10);
     const phaseDeg = Number.parseFloat(draft.chB.phaseDeg);
     try {
-      let next: Oe1022dStatus = await invoke("oe1022d_set_filter", {
+      const next: Oe1022dStatus = await invoke("oe1022d_apply_ch_b_config", {
         deviceId: info.id,
-        timeConstantS: Number.isFinite(timeConstantS) ? timeConstantS : 0.3,
-        slopeDbOct: Number.isFinite(slopeDbOct) ? slopeDbOct : 12,
-      });
-      next = await invoke("oe1022d_set_reference", {
-        deviceId: info.id,
-        source: draft.chB.referenceSource === "内部参考" ? "Internal" : "External",
-        phaseDeg: Number.isFinite(phaseDeg) ? phaseDeg : 0,
+        config: {
+          referenceSource: draft.chB.referenceSource,
+          externalRefTrigger: draft.chB.externalRefTrigger,
+          phaseDeg: Number.isFinite(phaseDeg) ? phaseDeg : 0,
+          inputSource: draft.chB.inputSource,
+          inputGrounding: draft.chB.inputShieldGrounding,
+          inputCoupling: draft.chB.inputCoupling,
+          inputNotch: draft.chB.inputNotchFilter,
+          dynamicReserve: draft.chB.dynamicReserve,
+          sensitivity: draft.chB.sensitivity,
+          timeConstantS: Number.isFinite(timeConstantS) ? timeConstantS : 0.3,
+          slopeDbOct: Number.isFinite(slopeDbOct) ? slopeDbOct : 12,
+          syncFilterOn: draft.chB.syncFilterOn,
+        },
       });
       setStatus(next);
-      setApplyMessage("已应用 Ch-B 滤波/参考配置；Ch-A 和输出/公式配置已保存为草稿，等待后续 typed command 扩展。");
+      setApplyMessage("已应用 Ch-B 输入/增益/滤波/参考配置；Ch-A 和输出/公式配置仍保存为草稿。");
     } catch (e) {
       setApplyMessage(`阻塞：${String(e)}`);
     }
@@ -1475,9 +1538,10 @@ function OeChannelWorkbenchEditor({
           <SelectDraft label="输入耦合" value={channel.inputCoupling} options={["交流耦合", "直流耦合"]} onChange={(value) => onChange({ inputCoupling: value })} />
           <SelectDraft label="输入陷波器" value={channel.inputNotchFilter} options={["关闭所有陷波器", "50 Hz", "100 Hz", "50/100 Hz"]} onChange={(value) => onChange({ inputNotchFilter: value })} />
           <SelectDraft label="动态储备" value={channel.dynamicReserve} options={["低噪声 (LNOise)", "正常 (NORMAL)", "高储备 (HIGH)"]} onChange={(value) => onChange({ dynamicReserve: value })} />
-          <SelectDraft label="灵敏度" value={channel.sensitivity} options={["10 uV/nA", "30 uV/nA", "100 uV/nA", "300 uV/nA", "1 mV/nA", "3 mV/nA", "10 mV/nA", "30 mV/nA", "100 mV/nA", "300 mV/nA"]} onChange={(value) => onChange({ sensitivity: value })} />
+          <SelectDraft label="灵敏度" value={channel.sensitivity} options={["1 mV/nA", "2 mV/nA", "5 mV/nA", "10 mV/nA", "20 mV/nA", "50 mV/nA", "100 mV/nA", "200 mV/nA", "500 mV/nA", "1 V/uA"]} onChange={(value) => onChange({ sensitivity: value })} />
           <DraftField label="滤波器时间常数 s" value={channel.timeConstantS} onChange={(value) => onChange({ timeConstantS: value })} />
           <SelectDraft label="滤波器陡降 dB/oct" value={channel.filterSlopeDbOct} options={["6", "12", "18", "24"]} onChange={(value) => onChange({ filterSlopeDbOct: value })} />
+          <ToggleDraft label="同步滤波器" checked={channel.syncFilterOn} onChange={(checked) => onChange({ syncFilterOn: checked })} />
         </div>
       </details>
       <details open>

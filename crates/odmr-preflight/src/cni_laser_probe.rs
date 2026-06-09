@@ -20,7 +20,7 @@
 
 use crate::error::PreflightError;
 use crate::types::{DeviceConfig, DevicePreflightReport, SafeState};
-use cni_laser_fake_driver::protocol::CniFrame;
+use odmr_laser::{LaserFrame, LaserSerialConfig};
 use std::io::{Read, Write};
 use std::time::Duration;
 
@@ -67,7 +67,11 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
     })?;
 
     // Open final port and send OFF
-    let mut port = serialport::new(&port_path, 9600)
+    let serial_config = LaserSerialConfig {
+        timeout_ms,
+        ..LaserSerialConfig::default()
+    };
+    let mut port = serialport::new(&port_path, serial_config.baud_rate)
         .timeout(Duration::from_millis(timeout_ms))
         .open()
         .map_err(|e| PreflightError::PhysicalUnreachable {
@@ -77,7 +81,7 @@ pub fn probe(device: &DeviceConfig) -> Result<DevicePreflightReport, PreflightEr
 
     let _ = port.clear(serialport::ClearBuffer::Input);
 
-    let off_frame = CniFrame::laser_off();
+    let off_frame = LaserFrame::laser_off();
     let off_bytes = off_frame.to_bytes();
 
     port.write_all(&off_bytes)
@@ -166,7 +170,7 @@ fn auto_discover_laser(timeout_ms: u64) -> Option<String> {
 
 /// Returns true if the port responds to SCPI *IDN?.
 fn scpi_responds(path: &str, timeout_ms: u64) -> bool {
-    let mut port = match serialport::new(path, 9600)
+    let mut port = match serialport::new(path, LaserSerialConfig::default().baud_rate)
         .timeout(Duration::from_millis(timeout_ms))
         .open()
     {
@@ -193,20 +197,20 @@ fn scpi_responds(path: &str, timeout_ms: u64) -> bool {
 ///
 /// Sends two different frames and verifies both echo back correctly.
 fn try_identify_laser(path: &str, timeout_ms: u64) -> Result<(), String> {
-    let mut port = serialport::new(path, 9600)
+    let mut port = serialport::new(path, LaserSerialConfig::default().baud_rate)
         .timeout(Duration::from_millis(timeout_ms))
         .open()
         .map_err(|e| format!("open: {}", e))?;
 
     // Test frame 1: laser_off
-    let frame1 = CniFrame::laser_off();
+    let frame1 = LaserFrame::laser_off();
     let bytes1 = frame1.to_bytes();
     if send_and_verify_echo(&mut port, &bytes1).is_err() {
         return Err("laser_off echo mismatch".into());
     }
 
     // Test frame 2: set_power(0) — different length and content
-    let frame2 = CniFrame::set_power(0);
+    let frame2 = LaserFrame::set_power(0);
     let bytes2 = frame2.to_bytes();
     if send_and_verify_echo(&mut port, &bytes2).is_err() {
         return Err("set_power(0) echo mismatch".into());
@@ -244,14 +248,14 @@ mod tests {
 
     #[test]
     fn test_laser_off_frame_bytes() {
-        let frame = CniFrame::laser_off();
+        let frame = LaserFrame::laser_off();
         let bytes = frame.to_bytes();
         assert_eq!(bytes, vec![0x55, 0xAA, 0x03, 0x00, 0x03]);
     }
 
     #[test]
     fn test_set_power_zero_bytes() {
-        let frame = CniFrame::set_power(0);
+        let frame = LaserFrame::set_power(0);
         let bytes = frame.to_bytes();
         // 55 AA 05 01 00 00 06
         assert_eq!(bytes, vec![0x55, 0xAA, 0x05, 0x01, 0x00, 0x00, 0x06]);

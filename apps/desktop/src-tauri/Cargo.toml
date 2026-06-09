@@ -22,8 +22,11 @@ chrono = "0.4"
 # M5C-A: Device Workbench V1 — typed hardware access via preflight and drivers.
 # All device interaction goes through Tauri commands; frontend never sends raw SCPI.
 odmr-types = { path = "../../../crates/odmr-types" }
+odmr-config = { path = "../../../crates/odmr-config" }
+odmr-executor = { path = "../../../crates/odmr-executor" }
+odmr-replay = { path = "../../../crates/odmr-replay" }
 odmr-preflight = { path = "../../../crates/odmr-preflight" }
+odmr-laser = { path = "../../../crates/odmr-laser" }
 odmr-smb100a = { path = "../../../crates/odmr-smb100a" }
 odmr-oe1022d = { path = "../../../crates/odmr-oe1022d" }
 odmr-maynuo-m8812 = { path = "../../../crates/odmr-maynuo-m8812" }
-cni_laser_fake_driver = { path = "../../../tools/lab/cni_laser_fake_driver" }

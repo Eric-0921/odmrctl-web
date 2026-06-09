@@ -4,9 +4,10 @@
 //! **IMPORTANT**: The CNI Laser protocol has no query commands.
 //! All "status" is session-local.
 
-use super::{serial_open, serial_send_raw, with_device_access};
+use super::with_device_access;
 use crate::workbench_state::WorkbenchState;
-use cni_laser_fake_driver::protocol::CniFrame;
+use odmr_laser::{LaserClient, LaserSerialConfig};
+use odmr_types::DeviceId;
 use serde::Serialize;
 use std::sync::{Mutex, OnceLock};
 
@@ -72,10 +73,18 @@ pub fn laser_set_power(
     let power = power_mw.min(safety.laser_max_power_mw);
 
     let port_path = with_device_access(&state, &device_id)?;
-    let mut port = serial_open(&port_path, 9600)?;
-
-    let frame = CniFrame::set_power(power);
-    serial_send_raw(&mut port, &frame.to_bytes(), false)?;
+    let mut client = LaserClient::open(
+        DeviceId::new(device_id.clone()),
+        port_path,
+        LaserSerialConfig {
+            max_power_mw: safety.laser_max_power_mw,
+            ..LaserSerialConfig::default()
+        },
+    )
+    .map_err(|e| format!("open laser client: {e}"))?;
+    let power = client
+        .set_power(power)
+        .map_err(|e| format!("set laser power: {e}"))?;
 
     set_state(power, get_state().enabled);
     Ok(LaserStatus {
@@ -99,14 +108,18 @@ pub fn laser_set_enabled(
     }
 
     let port_path = with_device_access(&state, &device_id)?;
-    let mut port = serial_open(&port_path, 9600)?;
-
-    let frame = if enabled {
-        CniFrame::laser_on()
-    } else {
-        CniFrame::laser_off()
-    };
-    serial_send_raw(&mut port, &frame.to_bytes(), false)?;
+    let mut client = LaserClient::open(
+        DeviceId::new(device_id.clone()),
+        port_path,
+        LaserSerialConfig {
+            max_power_mw: state.safety().laser_max_power_mw,
+            ..LaserSerialConfig::default()
+        },
+    )
+    .map_err(|e| format!("open laser client: {e}"))?;
+    client
+        .set_enabled(enabled)
+        .map_err(|e| format!("set laser enabled={enabled}: {e}"))?;
 
     set_state(st.power_mw, enabled);
     Ok(LaserStatus {
@@ -124,13 +137,13 @@ pub fn laser_emergency_off(
     device_id: String,
 ) -> Result<LaserStatus, String> {
     let port_path = with_device_access(&state, &device_id)?;
-    let mut port = serial_open(&port_path, 9600)?;
-
-    let off_frame = CniFrame::laser_off();
-    let zero_frame = CniFrame::set_power(0);
-
-    let _ = serial_send_raw(&mut port, &off_frame.to_bytes(), false);
-    let _ = serial_send_raw(&mut port, &zero_frame.to_bytes(), false);
+    let mut client = LaserClient::open(
+        DeviceId::new(device_id),
+        port_path,
+        LaserSerialConfig::default(),
+    )
+    .map_err(|e| format!("open laser client: {e}"))?;
+    let _ = client.emergency_off();
 
     set_state(0, false);
     Ok(LaserStatus {

@@ -462,10 +462,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
-name = "cni_laser_fake_driver"
-version = "0.1.0"
-
-[[package]]
 name = "colorchoice"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1204,6 +1200,11 @@ dependencies = [
 [[package]]
 name = "odmr-config"
 version = "0.1.0"
+dependencies = [
+ "odmr-types",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "odmr-device"
@@ -1216,9 +1217,14 @@ dependencies = [
 name = "odmr-executor"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "odmr-compiler",
+ "odmr-config",
  "odmr-device",
+ "odmr-laser",
  "odmr-logging",
+ "odmr-mag",
+ "odmr-maynuo-m8812",
  "odmr-oe1022d",
  "odmr-recipe",
  "odmr-safety",
@@ -1235,6 +1241,14 @@ version = "0.1.0"
 dependencies = [
  "odmr-device",
  "odmr-types",
+]
+
+[[package]]
+name = "odmr-laser"
+version = "0.1.0"
+dependencies = [
+ "odmr-types",
+ "serialport",
 ]
 
 [[package]]
@@ -1292,8 +1306,9 @@ name = "odmr-preflight"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "cni_laser_fake_driver",
  "fs2",
+ "odmr-config",
+ "odmr-laser",
  "odmr-types",
  "serde",
  "serde_json",
@@ -1315,6 +1330,12 @@ dependencies = [
 [[package]]
 name = "odmr-replay"
 version = "0.1.0"
+dependencies = [
+ "odmr-oe1022d",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
 
 [[package]]
 name = "odmr-safety"
