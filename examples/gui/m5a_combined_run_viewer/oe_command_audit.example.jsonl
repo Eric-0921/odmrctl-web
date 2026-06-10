@@ -1,5 +1,0 @@
-{"seq":0,"timestamp_unix_ms":1780576321839,"device_id":"oe1022d","command":"*IDN?","command_class":"query","allowed":true,"sent_to_transport":true,"response_preview":"SSI LIA-OE1022D,SN:D6522078,Version:Ver6.3200831","safety_relevant":false}
-{"seq":1,"timestamp_unix_ms":1780576328687,"device_id":"oe1022d","command":"RALL?","command_class":"oe_acquisition","allowed":true,"sent_to_transport":true,"response_preview":"12288 bytes","safety_relevant":false}
-{"seq":2,"timestamp_unix_ms":1780576329490,"device_id":"oe1022d","command":"RALL?","command_class":"oe_acquisition","allowed":true,"sent_to_transport":true,"response_preview":"12288 bytes","safety_relevant":false}
-{"seq":3,"timestamp_unix_ms":1780576330323,"device_id":"oe1022d","command":"RALL?","command_class":"oe_acquisition","allowed":true,"sent_to_transport":true,"response_preview":"12288 bytes","safety_relevant":false}
-{"seq":4,"timestamp_unix_ms":1780576331128,"device_id":"oe1022d","command":"RALL?","command_class":"oe_acquisition","allowed":true,"sent_to_transport":true,"response_preview":"12288 bytes","safety_relevant":false}

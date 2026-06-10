@@ -1,21 +1,15 @@
 [workspace]
-resolver = "2"
 members = [
-    "crates/odmr-types",
-    "crates/odmr-config",
-    "crates/odmr-device",
-    "crates/odmr-laser",
-    "crates/odmr-safety",
-    "crates/odmr-recipe",
-    "crates/odmr-compiler",
-    "crates/odmr-executor",
-    "crates/odmr-logging",
-    "crates/odmr-replay",
-    "crates/odmr-harness",
-    "crates/odmr-smb100a",
-    "crates/odmr-oe1022d",
-    "crates/odmr-mag",
-    "crates/odmr-maynuo-m8812",
-    "crates/odmr-preflight",
-    "crates/odmr-live-server",
+    "crates/smb100a-commands",
+    "crates/m8812-commands",
+    "crates/oe1022d-commands",
+    "crates/cni-laser-commands",
 ]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+version = "0.1.0"
+authors = ["OpenAI Codex"]
+

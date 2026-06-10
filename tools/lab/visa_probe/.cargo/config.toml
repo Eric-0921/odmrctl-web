@@ -1,4 +1,0 @@
-[env]
-# R&S VISA on macOS installs as RsVisa.framework, not VISA.framework.
-# visa-sys defaults to "framework=VISA" on macOS, so we override it here.
-LIB_VISA_NAME = "framework=RsVisa"
